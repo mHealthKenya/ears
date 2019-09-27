@@ -1,0 +1,255 @@
+{% extends "veoc/main_template.html" %}
+
+{% block main %}
+
+  <div id="main-container">
+    <div id="breadcrumb">
+      <ul class="breadcrumb">
+         <li><i class="fa fa-home"></i><a href="{% url 'veoc:access_dashboard' %}"> Dashboard</a></li>
+         <li class="active">Disease Mappings</li>
+      </ul>
+    </div><!-- /breadcrumb-->
+
+    <div class="padding-md">
+      <div class="row">
+        <div class="col-md-12">
+          <div class="panel panel-default">
+            <div class="panel-heading">DISEASE MAPPINGS FILTER</div>
+            <div class="panel-body" align="center">
+                <form class="form-inline" method="post" action="">{% csrf_token %}
+                    <div class="form-group">
+                        <label for="mydtype"><b>Select Disease to filter :&nbsp; &nbsp; </b></label>
+                        <select name="mydtype" id="mydtype" onchange="populateMap()">
+                          <!-- <option value="" disabled selected>Select Disease</option> -->
+                          <!-- {% for disease in diseases %}
+                              <option value="{{disease.name}}">{{disease.name}}</option>
+                          {% endfor %} -->
+                        </select>
+                    </div>
+                    &nbsp; &nbsp;
+
+                    <!-- <button type="submit" class="btn btn-primary">Update</button> -->
+                </form>
+              </div>
+          </div><!-- /div panel-default -->
+
+          <div class="panel panel-default">
+              <div class="panel-heading">DISEASE MAPPINGS</div>
+              <div class="panel-body">
+                <div class="tab-pane active well" id="logs" style="height: 530px; width: 100%;">
+
+                  <div id="map_div" style="height:480px;width:auto">
+
+                  </div>
+              </div>
+
+              </div><!-- panel-body -->
+          </div><!-- /div panel-default -->
+
+        </div>
+      </div>
+    </div>
+  </div><!-- /main-container -->
+
+{% endblock %}
+
+{% block script %}
+
+<script type="text/javascript" src="/static/js/canvasjs.min.js"></script>
+  <script type="text/javascript">
+    google.charts.load('current', {'packages': ['map']});
+    google.charts.setOnLoadCallback(showmap);
+
+     function showmap() {
+
+         var mydata = new google.visualization.DataTable();
+         mydata.addColumn('number', 'LATITUDE');
+         mydata.addColumn('number', 'LONGITUDE');
+         mydata.addColumn('string', 'NAME');
+         mydata.addColumn('string', 'Marker');
+
+         var options = {
+             icons: {
+                 default: {
+                     normal: 'http://icons.iconarchive.com/icons/icons-land/vista-map-markers/32/Map-Marker-Bubble-Chartreuse-icon.png',
+                     selected: 'http://icons.iconarchive.com/icons/icons-land/vista-map-markers/32/Map-Marker-Bubble-Chartreuse-icon.png'
+                 },
+                 police: {
+                     normal: 'http://icons.iconarchive.com/icons/icons-land/vista-map-markers/32/Map-Marker-Marker-Outside-Azure-icon.png',
+                     selected: 'http://icons.iconarchive.com/icons/icons-land/vista-map-markers/32/Map-Marker-Marker-Outside-Azure-icon.png'
+                 },
+                 referal: {
+                     normal: 'http://icons.iconarchive.com/icons/icons-land/vista-map-markers/32/Map-Marker-Ball-Pink-icon.png',
+                     selected: 'http://icons.iconarchive.com/icons/icons-land/vista-map-markers/32/Map-Marker-Ball-Pink-icon.png'
+                 }
+             },
+             showTip: true,
+             useMapTypeControl: true,
+             zoomLevel: 6,
+             enableScrollWheel: true,
+             mapType: 'styledMap',
+
+             maps: {
+                 // Your custom mapTypeId holding custom map styles.
+                 styledMap: {
+                     name: 'Styled Map', // This name will be displayed in the map type control.
+                     styles: [
+                         {
+                             featureType: 'poi.attraction',
+                             stylers: [{color: '#fce8b2'}]
+                         },
+                         {
+                             featureType: 'road.highway',
+                             stylers: [{hue: '#0277bd'}, {saturation: -50}]
+                         },
+                         {
+                             featureType: 'road.highway',
+                             elementType: 'labels.icon',
+                             stylers: [{hue: '#000'}, {saturation: 100}, {lightness: 50}]
+                         },
+                         {
+                             featureType: 'landscape',
+                             stylers: [{hue: '#259b24'}, {saturation: 10}, {lightness: -22}]
+                         }
+                     ]
+                 }
+             }
+
+
+         };
+
+         mydata.addRow([-1.2921, 36.8219, 'Nairobi', 'police']);
+         var map = new google.visualization.Map(document.getElementById('map_div'));
+         // map.controls[google.maps.ControlPosition.TOP_LEFT].push(input);
+         map.draw(mydata, options);
+
+     }
+
+    $(document).ready(function () {
+            $.ajax({
+                url: '/get_diseases/',
+                type: 'POST',
+                datatype: 'json',
+                data: {csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val()},
+
+                success: function (data) {
+                    // console.log("returned data : " + data)
+                    var options = '<option value="" selected disabled>select Disease</option>';
+                    $('#mydtype').html(options);
+
+                    for (var i = 0; i < data.length; i++) {
+                        // console.log(data);
+                        var options = '<option value="' + data[i].fields['name'] + '">' + data[i].fields['name'] + '</option>';
+                        $('#mydtype').append(options);
+                    }
+                },
+                error: function () {
+                    // alert("error getting data from server");
+                    console.log("Error returning data")
+                    var options = '<option value="" selected disabled>select county</option>';
+                    $('#mydtype').html(options);
+                }
+            });
+        });
+
+    function populateMap() {
+
+            var dtype = $('#mydtype').val();
+            console.log(dtype);
+            $.ajax({
+
+                url: '/get_disease_cordinates/',
+                type: 'POST',
+                datatype: 'json',
+                data: {dtype: dtype, csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val()},
+
+                success: function (data) {
+                    //    for(var i=0;i<data.length;i++){
+                    //   console.log(data[i]['county__description']);
+                    // }
+
+                    var mydata = new google.visualization.DataTable();
+                    mydata.addColumn('number', 'LATITUDE');
+                    mydata.addColumn('number', 'LONGITUDE');
+                    mydata.addColumn('string', 'NAME');
+                    mydata.addColumn('string', 'Marker');
+
+                    var options = {
+                        icons: {
+                            default: {
+                                normal: 'http://icons.iconarchive.com/icons/icons-land/vista-map-markers/32/Map-Marker-Bubble-Chartreuse-icon.png',
+                                selected: 'http://icons.iconarchive.com/icons/icons-land/vista-map-markers/32/Map-Marker-Bubble-Chartreuse-icon.png'
+                            },
+                            police: {
+                                normal: 'http://icons.iconarchive.com/icons/icons-land/vista-map-markers/32/Map-Marker-Marker-Outside-Azure-icon.png',
+                                selected: 'http://icons.iconarchive.com/icons/icons-land/vista-map-markers/32/Map-Marker-Marker-Outside-Azure-icon.png'
+                            },
+                            referal: {
+                                normal: 'http://icons.iconarchive.com/icons/icons-land/vista-map-markers/32/Map-Marker-Ball-Pink-icon.png',
+                                selected: 'http://icons.iconarchive.com/icons/icons-land/vista-map-markers/32/Map-Marker-Ball-Pink-icon.png'
+                            }
+                        },
+                        showTip: true,
+                        useMapTypeControl: true,
+                        zoomLevel: 6,
+                        enableScrollWheel: true,
+                        mapType: 'styledMap',
+
+                        maps: {
+                            // Your custom mapTypeId holding custom map styles.
+                            styledMap: {
+                                name: 'Styled Map', // This name will be displayed in the map type control.
+                                styles: [
+                                    {
+                                        featureType: 'poi.attraction',
+                                        stylers: [{color: '#fce8b2'}]
+                                    },
+                                    {
+                                        featureType: 'road.highway',
+                                        stylers: [{hue: '#0277bd'}, {saturation: -50}]
+                                    },
+                                    {
+                                        featureType: 'road.highway',
+                                        elementType: 'labels.icon',
+                                        stylers: [{hue: '#000'}, {saturation: 100}, {lightness: 50}]
+                                    },
+                                    {
+                                        featureType: 'landscape',
+                                        stylers: [{hue: '#259b24'}, {saturation: 10}, {lightness: -22}]
+                                    }
+                                ]
+                            }
+                        }
+
+                    };
+
+                    for (var i = 0; i < data.length; i++) {
+
+                        // console.log(data[i]['county__name']);
+                        // console.log(data[i]['county__latitude']);
+                        // console.log(data[i]['county__longitude']);
+
+                        x = data[i]['county__latitude'];//get the longitude from models
+                        y = data[i]['county__longitude'];//get latitude from models
+
+                        z = data[i]['county__name'];//get the position from models
+                        x = parseFloat(x);//convert the longitude to float from string
+                        y = parseFloat(y);//convert the latitude to float from string
+                        mydata.addRow([x, y, z, 'police']);//add the coordinates to the map
+                        console.log(x);
+                        console.log(y);
+                    }
+
+
+                    var map = new google.visualization.Map(document.getElementById('map_div'));
+                    // map.controls[google.maps.ControlPosition.TOP_LEFT].push(input);
+                    map.draw(mydata, options);
+
+                },
+
+            });
+        }
+
+  </script>
+
+{% endblock %}

@@ -1,0 +1,139 @@
+{% extends "veoc/main_template.html" %}
+
+{% load groups_filter %}
+{% block main %}
+    <div class="row">
+        <div class="panel panel-default">
+            <div class="panel-heading" style="background-color:#3c8dbc">
+                <h2 class="panel-title">Supervisors</h2>
+            </div>
+            <div class="table-responsive">
+                <table class="table table-bordered table-hover" id="eoc_table">
+                    <thead style="background-color: #ffffff">
+                    <tr>
+                        <th>First name</th>
+                        <th>Last name</th>
+                        <th>Organization</th>
+                        <th>Mobile number</th>
+                        <th>Email address</th>
+                        <th>Action</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for manager in managers %}
+                        <tr>
+                            <td>{{ manager.first_name }}</td>
+                            <td>{{ manager.second_name }}</td>
+                            <td>{{ manager.organization }}</td>
+                            <td>{{ manager.mobile }}</td>
+                            <td>{{ manager.email }}</td>
+                            <td><a href="/managers_edited/{{ manager.pk }}"><i class="fa fa-pencil-square-o"
+                                                                               aria-hidden="true"
+                                                                               style="font-size:20px;color:blue;"></i></a>
+                                {#                                &nbsp;|&nbsp;<a href=""><i class="fa fa-trash-o" aria-hidden="true" style="font-size:20px;color:red;"></i></a></td>#}
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    {% if request.user|has_group:"Manager" %}
+        <div class="row">
+            <div class="col-lg-2">
+                <button href="#add_contact" id="openBtn" data-toggle="modal" class="btn btn-primary btn-lg btn-block">
+                    Add Managers
+                </button>
+            </div>
+        </div>
+    {% else %}
+
+    {% endif %}
+
+
+    {#    //add contact modal#}
+    <div class="modal fade" id="add_contact">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                    <h3 class="modal-title">Add Manager</h3>
+                </div>
+                <div class="well">
+                    {#                <form method="post" action="{% url 'call_log_eoc_submit' %}">{% csrf_token %}#}
+                    <form method="post" action="{% url 'eoc_managers_create' %}">{% csrf_token %}
+                        <div class="form-group">
+                            <label for="first_name"><b>first_name : </b></label>
+                            <input class="form-control" type="text" id="first_name" name="first_name" size="45"
+                                   placeholder="first_name" required/>
+                        </div>
+                        <div class="form-group">
+                            <label for="last_name"><b>last_name : </b></label>
+                            <input class="form-control" type="text" id="last_name" name="last_name" size="45"
+                                   placeholder="last_name" required/>
+                        </div>
+                        <div class="form-group">
+                            <label for="designation"><b>Organization : </b></label>
+                            <input class="form-control" type="text" id="org" name="organization" size="45"
+                                   placeholder="organization" required/>
+
+                        </div>
+                        <div class="form-group">
+                            <label for="phone_number"><b>phone_number : </b></label>
+                            <input class="form-control" type="number" id="phone_number" name="phone_number" size="45"
+                                   placeholder="phone_number" required/>
+                        </div>
+                        <div class="form-group">
+                            <label for="email_address"><b>email_address : </b></label>
+                            <input class="form-control" type="email" id="email_address" name="email_address" size="45"
+                                   placeholder="email_address" required/>
+                        </div>
+                        <button type="submit" class="btn btn-primary btn-lg btn-block">Save</button>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default " data-dismiss="modal">Close</button>
+                </div>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div><!-- /.modal -->
+
+{% endblock %}
+
+{% block script %}
+    <script>
+        $(document).ready(function () {
+            $('#eoc_table').DataTable({
+                dom: 'Bfrtip',
+                buttons: [
+                    'copy', 'csv', 'excel', 'pdf', 'print'
+                ]
+            });
+
+            // Setup - add a text input to each footer cell
+            $('#eoc_table tfoot th').each(function () {
+                var title = $(this).text();
+                $(this).html('<input type="text" placeholder="Search ' + title + '" />');
+            });
+
+            // DataTable
+            var table = $('#eoc_table').DataTable();
+
+            // Apply the search
+            table.columns().every(function () {
+                var that = this;
+
+                $('input', this.footer()).on('keyup change', function () {
+                    if (that.search() !== this.value) {
+                        that
+                                .search(this.value)
+                                .draw();
+                    }
+                });
+            });
+        });
+
+    </script>
+{% endblock %}

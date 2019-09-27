@@ -1,0 +1,423 @@
+{% extends "veoc/main_template.html" %}
+
+{% block main %}
+
+    <script type="text/javascript"
+        src="https://cdn.datatables.net/v/dt/jqc-1.12.3/jszip-2.5.0/pdfmake-0.1.18/dt-1.10.12/b-1.2.2/b-flash-1.2.2/b-html5-1.2.2/b-print-1.2.2/datatables.min.js"></script>
+
+            <div id="main-container">
+        			<div id="breadcrumb">
+        				<ul class="breadcrumb">
+        					 <li><i class="fa fa-home"></i><a href="{% url 'veoc:access_dashboard' %}"> Dashboard</a></li>
+        					 <li class="active">Users</li>
+        				</ul>
+        			</div><!-- /breadcrumb-->
+
+        			<div class="padding-md">
+                <div class="row">
+        					<div class="col-sm-12 col-md-12">
+        						<div class="col-md-12" style="padding-bottom:10px">
+        							<button type="button" id="modalbtn" class="btn btn-info btn-sm pull-left" data-toggle="modal" data-target="#addUserModal"> <i class="fa fa-plus" aria-hidden="true"></i> Add User</button>
+        						</div>
+
+        					</div><!-- /.col -->
+        				</div>
+        				<div class="row">
+        					<div class="col-md-12">
+        						<div class="panel panel-default table-responsive">
+        							<div class="panel-heading">
+        								Users
+        								<span class="label label-info pull-right" id="totalspan">{{users_count}} Users</span>
+        							</div>
+        							<div class="padding-md clearfix">
+        							<table class="table table-hover" id="ongoing_task_table">
+        								<thead class="thead-dark">
+                          <tr>
+                              <th>Username</th>
+                              <th>First Name</th>
+                              <th>Last Name</th>
+                              <th>Email</th>
+                              <th>Active</th>
+                              <th>Date Registered</th>
+                              <th>Last Login</th>
+                              <th>Edit</th>
+                          </tr>
+                          </thead>
+                          <tbody>
+                          {% for user in users %}
+                          <tr>
+                            <td>{{ user.username }}</td>
+                            <td>{{ user.first_name }}</td>
+                            <td>{{ user.last_name }}</td>
+                            <td>{{ user.email }}</td>
+                            <td>{{ user.is_active }}</td>
+                            <td>{{ user.date_joined }}</td>
+                            <td>{{ user.last_login }}</td>
+                             <td>
+                              <!--<button type="button" class="btn btn-primary btn-xs view_button"
+                                data-toggle="modal" data-target="#view_disease_modal"
+                                data-id="{{ disease.pk }}>"
+                                data-date="{{ disease.eventDate }}"
+                                data-disease="{{ disease.disease_type.name }}"
+                                data-source="{{ disease.stored_by }}"
+                                data-status="{{ disease.status }}"
+                                data-org="{{ disease.org_unit_id.name }}"
+                                data-cases="Get case from table 2"
+                                data-period="{{ disease.period }}"
+                                title="View">
+                                <i class="fa fa-eye">
+                                </i>
+                            </button>-->
+                            <button type="button" class="btn btn-primary btn-xs edit_button"
+                              data-toggle="modal" data-target="#edit_user_modal"
+                              data-id="{{ user.pk }}>"
+                              data-username="{{ user.username }}"
+                              data-first_name="{{ user.first_name }}"
+                              data-last_name="{{ user.last_name }}"
+                              data-email="{{ user.email }}"
+                              data-is_active="{{ user.is_active }}"
+                              data-is_supeuser="{{ user.is_superuser}}"
+                              data-is_staff="{{ user.is_staff }}"
+                              title="Edit">
+                              <i class="fa fa-edit">
+                              </i>
+                            </button>
+                          </td>
+                        </tr>
+                        {% endfor %}
+                      </tbody>
+    							</table>
+                </div>
+              </div>
+    				</div>
+    			</div><!-- /row-->
+        </div><!-- /.padding-md -->
+      </div><!-- /main-container -->
+
+      <!-- Edit User modal -->
+      <div class="modal fade" id="edit_user_modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="exampleModalLabel">Edit User</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+              <form method="post" action="#">
+                  <div class="modal-body">
+                      <div class="form-group">
+                          <label for="heading">Username:</label>
+                          <input class="form-control username" name="username" readonly>
+                      </div>
+                      <div class="form-group">
+                          <label for="heading">Firstname:</label>
+                          <input class="form-control first_name" name="reported_disease" readonly>
+                      </div>
+                      <div class="form-group">
+                          <label for="heading">Lastname:</label>
+                          <input class="form-control last_name" name="last_name" readonly>
+                      </div>
+                      <div class="form-group">
+                          <label for="heading">Email:</label>
+                          <input class="form-control email" name="email" readonly>
+                      </div>
+                      <div class="form-group">
+                          <label for="heading">Is Active?</label>
+                          <input class="form-control is_active" name="is_active" readonly>
+                      </div>
+                      <div class="form-group">
+                          <label for="heading">Is Staff?</label>
+                          <input class="form-control is_staff" name="is_staff" readonly>
+                      </div>
+                      <div class="form-group">
+                          <label for="heading">Is Supeuser?</label>
+                          <input class="form-control is_supeuser" name="is_supeuser" readonly>
+                      </div>
+                  </div>
+              </form>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+              <button type="button" class="btn btn-primary">Save changes</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Add user modal -->
+		<div class="modal fade" id="addUserModal" tabindex="-1" role="dialog" aria-hidden="true">
+					<div class="modal-dialog" role="document">
+						<div class="modal-content">
+						<div class="modal-header">
+							<h5 class="modal-title" id="exampleModalLongTitle">Add User</h5>
+							<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+							</button>
+						</div>
+						<div class="modal-body">
+							<form onsubmit="return validateform()" role="form" method="POST" action="{% url 'veoc:user_register' %}" >
+								{% csrf_token %}
+								<div class="form-group">
+									<label>First Name</label>
+									<input type="text" class="form-control input-sm" name="first_name" id="first_name" placeholder="First Name">
+								</div><!-- /form-group -->
+								<div class="form-group">
+									<label>Last Name</label>
+									<input type="text" class="form-control input-sm" name="last_name" id="last_name" placeholder="Last Name">
+								</div><!-- /form-group -->
+								<div class="form-group">
+									<label>Username</label>
+								<input type="text" class="form-control input-sm"  name="user_name" id="user_name">
+								</div>
+								<div class="form-group">
+									<label>Phone Number</label>
+									<input type="text" class="form-control input-sm" name="phone_no" id="phone_no" placeholder="0700000000">
+								</div><!-- /form-group -->
+								<div class="form-group">
+									<label>Email</label>
+									<input type="email" class="form-control input-sm" name="email" id="email" placeholder="example@example.org">
+								</div><!-- /form-group -->
+                <div class="form-group">
+									<label>Access Level</label>
+									<select class="form-control input-sm access_level" data-width="100%" id="access_level" name="access_level" >//onchange="get_org_unit()">
+                    <option value="" disabled selected>Select Access Level</option>
+                        <option value="National">National User</option>
+                        <option value="County">County User</option>
+                        <option value="SubCounty">Sub-County User</option>
+								   </select>
+								</div><!-- /form-group -->
+								<div class="form-group" id="org_unit_div">
+									<label>Organization Unit</label>
+                  <select class="form-control" id="org_unit" name="org_unit">
+                      <option value="" disabled selected>Select organization Unit</option>
+                      {% for org_unit in org_units %}
+                          <option value="{{org_unit.organisationunitid}}">{{org_unit.name}}</option>
+                      {% endfor %}
+                  </select>
+								</div><!-- /form-group -->
+								<div class="form-group">
+									<label>User Group</label>
+									<select class="form-control input-sm usergroup" data-width="100%" id="user_group" name="user_group_id" >
+                    <option value="" disabled selected>Select Group</option>
+                    {% for user_group in user_groups %}
+                        <option value="{{user_group.id}}">{{user_group.name}}</option>
+                    {% endfor %}
+								   </select>
+								</div><!-- /form-group -->
+                <div class="form-group">
+									<label>Is SuperUser?</label>
+									<select class="form-control input-sm user_status" data-width="100%" id="user_status" name="user_status" >
+                    <option value="" disabled selected>Select Status</option>
+                        <option value="t">True</option>
+                        <option value="f">False</option>
+								   </select>
+								</div><!-- /form-group -->
+
+								<button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+								<button type="submit" id="adduserbtn" class="btn btn-success btn-sm pull-right"> <i class="fa fa-plus" aria-hidden="true"></i> Add User</button>
+							</form>
+						</div>
+						</div>
+					</div>
+        </div>
+        {% csrf_token %}
+{% endblock %}
+
+{% block script %}
+
+  <script>
+    $(document).ready(function () {
+        $('#ongoing_task_table').DataTable({
+            "order": [],
+            dom: 'Bfrtip',
+            buttons: [
+                'copy', 'csv', 'excel', 'pdf', 'print'
+            ]
+        });
+
+        // Setup - add a text input to each footer cell
+        $('#ongoing_task_table thead td').each(function () {
+            var title = $(this).text();
+            $(this).html('<input type="text" placeholder="Search ' + title + '" />');
+        });
+
+        // DataTable
+        var table = $('#ongoing_task_table').DataTable();
+
+        // Apply the search
+        table.columns().every(function () {
+            var that = this;
+
+            $('input', this.header()).on('keyup change', function () {
+                if (that.search() !== this.value) {
+                    that
+                            .search(this.value)
+                            .draw();
+                }
+            });
+        });
+    });
+
+    $(document).on( "click", '.edit_button',function(e) {
+
+      var id = $(this).data('id');
+      var first_name = $(this).data('first_name');
+      var last_name = $(this).data('last_name');
+      var user_name = $(this).data('username');
+      var email = $(this).data('email');
+      var is_active = $(this).data('is_active');
+      var is_staff = $(this).data('is_staff');
+      var is_supeuser = $(this).data('is_supeuser');
+
+      console.log(email);
+
+      $(".username").val(user_name);
+      $(".first_name").val(first_name);
+      $(".last_name").val(last_name);
+      $(".email").val(email);
+      $(".is_active").val(is_active);
+      $(".is_staff").val(is_staff);
+      $(".is_supeuser").val(is_supeuser);
+  });
+
+    function validateform(){
+
+    var first_name = document.getElementById('first_name').value;
+    var last_name = document.getElementById('last_name').value;
+    var user_name = document.getElementById('user_name').value;
+    var email = document.getElementById('email').value;
+    var org_unit = document.getElementById('org_unit').value;
+    var user_group = document.getElementById('user_group').value;
+
+
+      if(first_name == "" || first_name==null || last_name == "" || last_name== null){
+        bootbox.alert({
+           size: "small",
+           title: "Missed data input  : Warning",
+           message: "Please enter both first name and last name!!",
+           callback: function () { /* your callback code */
+           }
+       });
+
+       return false;
+
+      }
+      if(user_name == "" || user_name==null){
+        bootbox.alert({
+           size: "small",
+           title: "Missed data input  : Warning",
+           message: "Username cannot be empty !!",
+           callback: function () { /* your callback code */
+           }
+       });
+
+       return false;
+
+      }
+      if(email == "" || email==null){
+        bootbox.alert({
+           size: "small",
+           title: "Missed data input  : Warning",
+           message: "New User email cannot be empty !!",
+           callback: function () { /* your callback code */
+           }
+       });
+
+       return false;
+
+      }
+      if(org_unit == "" || org_unit==null){
+        bootbox.alert({
+           size: "small",
+           title: "Missed data input  : Warning",
+           message: "Select the Org Unit !!",
+           callback: function () { /* your callback code */
+           }
+       });
+
+       return false;
+
+      }
+
+      if(user_group == "" || user_group==null){
+        bootbox.alert({
+           size: "small",
+           title: "Missed data input  : Warning",
+           message: "Select the User group !!",
+           callback: function () { /* your callback code */
+           }
+       });
+
+       return false;
+
+      }
+
+    }
+
+    function getsubcounty(){
+
+      var county=$('#org_unit').val();
+      console.log(county);
+      $.ajax({
+        url:'/get_subcounty/',
+        type:'POST',
+        datatype:'json',
+        data:{county:county,csrfmiddlewaretoken:$('input[name=csrfmiddlewaretoken]').val()},
+
+        success:function(data){
+
+          var subcounty_view = document.getElementById('subcounty');
+          subcounty_view.style.display = 'block';
+
+          var options = '<option value="" selected disabled>Select Subcounty</option>';
+          console.log(data);
+          $('#subcounty').html(options);
+          if(data.length == 0){
+            var options = '<option value="'2620'">'None'</option>';
+            $('#subcounty').append(options);
+          }
+          for(var i=0;i<data.length;i++){
+
+            var options = '<option value="' + data[i].fields['organisationunitid'] + '">' + data[i].fields['name'] + '</option>';
+            $('#subcounty').append(options);
+          }
+        },error:function(){
+          console.log("in error");
+          var options = '<option value="" selected disabled>select county</option>';
+          $('#subcounty').html(options);
+        }
+      });
+    }
+
+    function get_org_unit(){
+      var access_level = $("#access_level").val();
+      if(access_level == "National"){
+        var county_view = document.getElementById('incident_status_div');
+        county_view.style.display = 'block';
+      }else if(access_level == "County"){
+        var county_view = document.getElementById('org_unit_div');
+        county_view.style.display = 'block';
+        $.ajax({
+            url: '/get_org_unit/',
+            type: 'POST',
+            datatype: 'json',
+            data: {access_level: access_level, csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val()},
+
+            success: function (data) {
+                console.log(data);
+            },
+            error: function (error) {
+                console.log("error occured" + error);
+            }
+        });
+
+      }
+
+
+
+    }
+  </script>
+{% endblock %}

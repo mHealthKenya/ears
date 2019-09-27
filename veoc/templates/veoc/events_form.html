@@ -1,0 +1,343 @@
+{% extends "veoc/main_template.html" %}
+
+{% block main %}
+
+      <div id="main-container">
+        <div id="breadcrumb">
+          <ul class="breadcrumb">
+             <li><i class="fa fa-home"></i><a href="{% url 'veoc:access_dashboard' %}"> Dashboard</a></li>
+             <li class="active">Public Health Events Register Form</li>
+          </ul>
+        </div><!-- /breadcrumb-->
+
+        <div class="padding-md">
+          <div class="row">
+            <div class="col-md-12">
+                  <form onsubmit="return validateform()" method="POST" action="{% url 'veoc:event_register' %}">
+                    {% csrf_token %}
+                    <div class="form-row">
+                       <div class="form-group col-md-12">
+                         <label for="disease_type">Event Type</label>
+                         <select class="form-control" id="eventType" name="eventType" required>
+                                <option value="" disabled selected>Select Event option</option>
+                                {% for dt in events %}
+                                    <option value="{{ dt.name }}">{{ dt.name }}</option>
+                                {% endfor %}
+                            </select>
+                       </div>
+                    </div>
+                     <div class="form-row">
+                         <div class="form-group col-md-6">
+                           <label for="region">Reporting Region</label>
+                           <select class="form-control" name="region" id="region" onchange="region_filter()" required>
+                                <option value="" disabled selected>Select Region</option>
+                                {% for reg in regions %}
+                                    <option value="{{reg.region_description}}">{{reg.region_description}}</option>
+                                {% endfor %}
+                            </select>
+                         </div>
+                         <div class="form-group col-md-6">
+                           <label for="data_source">Data Source</label>
+                           <select class="form-control" id="dataSource" name="dataSource" required>
+                                  <option value="" disabled selected>Select Data Source</option>
+                                  {% for ds in datasource %}
+                                      <option value="{{ ds.source_description }}">{{ ds.source_description }}</option>
+                                  {% endfor %}
+                              </select>
+                         </div>
+                     </div>
+                     <div class="form-row" id="county_div" style="display: none;">
+                         <div class="form-group col-md-4">
+                           <label for="county">County</label>
+                           <select class="form-control" name="county" id="county" onchange="getsubcounty()" >
+                                <option value="" disabled selected>Select County</option>
+                                {% for cty in county %}
+                                    <option value="{{cty.organisationunitid}}">{{cty.name}}</option>
+                                {% endfor %}
+                            </select>
+                         </div>
+                         <div class="form-group col-md-4">
+                           <label for="subcounty">Subcounty</label>
+                           <select class="form-control" name="subcounty" id="subcounty" onchange="getward()">
+                                <option value="" disabled selected>Select sub-county</option>
+                            </select>
+                         </div>
+                         <div class="form-group col-md-4">
+                           <label for="ward">Ward</label>
+                           <select class="form-control" name="ward" id="ward" >
+                                <option value="" disabled selected>Select Ward</option>
+                            </select>
+                        </div>
+                     </div>
+                     <div class="form-row">
+                         <div class="form-group col-md-6">
+                           <label for="status">Incident Status</label>
+                           <select class="form-control" name="status" id="status" required>
+                                <option value="" disabled selected>Select Status</option>
+                                {% for stat in incident_status %}
+                                    <option value="{{stat.status_description}}">{{stat.status_description}}</option>
+                                {% endfor %}
+                            </select>
+                         </div>
+                         <div class="form-group col-md-6">
+                           <label for="datereport">Date Reported</label>
+                           <input class="form-control" type="date" value="{{ day }}" id="dateReported" max='2000-13-13' name="dateReported" required>
+                         </div>
+                     </div>
+                     <div class="form-row">
+                        <div class="form-group col-md-6">
+                          <label for="cases">Number of Cases</label>
+                          <input type="number" min="0" class="form-control" id="cases" name="cases" placeholder="Cases" required>
+                        </div>
+                        <div class="form-group col-md-6">
+                          <label for="callernumber">Casualty (Deaths)</label>
+                          <input type="number" min="0" class="form-control" id="deaths" name="deaths" onfocusout="checkCases()" placeholder="Deaths" required >
+                        </div>
+                     </div>
+                     <div class="form-row">
+                       <div class="form-group col-md-12">
+                         <label for="description">Description/ Remarks</label>
+                         <textarea class="form-control" id="description" rows="3" name="description" required placeholder="Enter description"></textarea>
+                       </div>
+                     </div>
+                     <div class="form-row">
+                       <div class="form-group col-md-12">
+                         <label for="action">Action Taken</label>
+                         <textarea class="form-control" id="actionTaken" rows="3" name="actionTaken" placeholder="Enter action taken"></textarea>
+                       </div>
+                     </div>
+                     <div class="form-row">
+                       <div class="form-group col-md-12">
+                         <div class="form-check">
+                           <label class="form-check-label" for="diseasesignificant">
+                             Significant Event?
+                           </label>
+                           <input class="form-check-input" type="checkbox" id="callSignificant" name="callSignificant">
+                         </div>
+                       </div>
+                     </div>
+                     <div class="form-row">
+                       <div class="form-group col-md-12">
+                         <button type="submit" class="btn btn-primary">Save</button>
+                       </div>
+                     </div>
+                  </form>
+                </div>
+        			</div><!-- /row-->
+        </div><!-- /.padding-md -->
+      </div><!-- /main-container -->
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
+          integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+    <!-- Latest compiled and minified JavaScript -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"
+            integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
+            crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootbox.js/4.4.0/bootbox.min.js"></script>
+
+    <script>
+
+        window.onload = formFeedback;
+        function checkCases() {
+
+            var cases = $('#cases').val();
+            var deaths = $('#deaths').val();
+
+            if (Number(deaths) > Number(cases)) {
+                $('#deathserror').html("Deaths reported should be less than cases");
+                {#            $('#cases').html('1');#}
+                document.getElementById("cases").value = "";
+                document.getElementById("deaths").value = "";
+                {#            $('#deaths').html('');#}
+
+            }
+            else {
+                $('#deathserror').html("");
+
+            }
+        }
+        function formFeedback() {
+
+            var x = "{{success}}";
+            if (x == "") {
+                bootbox.alert({
+                    size: "small",
+                    title: "Event Action  : Error",
+                    message: x,
+                    callback: function () { /* your callback code */
+                    }
+                });
+            }
+            else {
+                bootbox.alert({
+                    size: "small",
+                    title: "Event Action",
+                    message: x,
+                    callback: function () { /* your callback code */
+                    }
+                });
+            }
+        }
+
+        $(function () {
+            $("#date_created").datepicker();
+        });
+
+        function region_filter(){
+           var _region = document.getElementById('region').value;
+           var _county = document.getElementById('county_div');
+
+           if(_region == "Kenya"){
+             _county.style.display = 'block';
+           }else{
+             _county.style.display = 'none';
+           }
+        }
+
+        function validateform(){
+          var reporing_reg = document.getElementById('region').value;
+
+          if(reporing_reg == "Kenya"){
+            //check if county details are selected
+            var cnty = document.getElementById('county').value;
+            var subcnty = document.getElementById('subcounty').value;
+            var wrd = document.getElementById('ward').value;
+
+            if(cnty == "" || cnty==null){
+              bootbox.alert({
+                 size: "small",
+                 title: "Missed data input  : Warning",
+                 message: "Select reported county!!",
+                 callback: function () { /* your callback code */
+                 }
+             });
+
+             return false;
+            }
+            if(subcnty == "" || subcnty==null){
+              bootbox.alert({
+                 size: "small",
+                 title: "Missed data input  : Warning",
+                 message: "Select reported  sub county !!",
+                 callback: function () { /* your callback code */
+                 }
+             });
+
+             return false;
+            }
+            if(wrd == "" || wrd==null){
+              bootbox.alert({
+                 size: "small",
+                 title: "Missed data input  : Warning",
+                 message: "Select reported ward !!",
+                 callback: function () { /* your callback code */
+                 }
+             });
+
+             return false;
+            }
+          }//reporting kenya
+        }
+
+        function getsubcounty(){
+
+          var county=$('#county').val();
+          console.log(county);
+          $.ajax({
+            url:'/get_subcounty/',
+            type:'POST',
+            datatype:'json',
+            data:{county:county,csrfmiddlewaretoken:$('input[name=csrfmiddlewaretoken]').val()},
+
+            success:function(data){
+              var options = '<option value="" selected disabled>Select Subcounty</option>';
+              console.log("in success");
+              console.log(data);
+              $('#subcounty').html(options);
+              for(var i=0;i<data.length;i++){
+
+                var options = '<option value="' + data[i].fields['organisationunitid'] + '">' + data[i].fields['name'] + '</option>';
+                $('#subcounty').append(options);
+              }
+            },error:function(){
+              console.log("in error");
+              var options = '<option value="" selected disabled>select county</option>';
+              $('#subcounty').html(options);
+            }
+          });
+        }
+
+        function getward(){
+
+          var subcounty=$('#subcounty').val();
+          console.log(subcounty);
+          $.ajax({
+            url:'/get_ward/',
+            type:'POST',
+            datatype:'json',
+            data:{subcounty:subcounty,csrfmiddlewaretoken:$('input[name=csrfmiddlewaretoken]').val()},
+
+            success:function(data){
+              var options = '<option value="" selected disabled>Select Ward</option>';
+              console.log("in success ward");
+              console.log(data);
+              $('#ward').html(options);
+              for(var i=0;i<data.length;i++){
+
+                var options = '<option value="' + data[i].fields['organisationunitid'] + '">' + data[i].fields['name'] + '</option>';
+                $('#ward').append(options);
+              }
+            },error:function(){
+              console.log("in error");
+              var options = '<option value="" selected disabled>Select Ward</option>';
+              $('#ward').html(options);
+            }
+          });
+        }
+
+        function getcounty() {
+
+            var region = $('#region').val();
+            var ctyrow = document.getElementById('ctyrow');
+            var subctyrow = document.getElementById('subctyrow');
+            if (region.toUpperCase() == "KENYA") {
+                ctyrow.style.display = 'block';
+                subctyrow.style.display = 'block';
+
+                $.ajax({
+                    url: '/get_county/',
+                    type: 'POST',
+                    datatype: 'json',
+                    data: {csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val()},
+
+                    success: function (data) {
+
+                        var options = '<option value="" selected disabled>select county</option>';
+                        $('#county').html(options);
+
+                        for (var i = 0; i < data.length; i++) {
+
+                            var options = '<option value="' + data[i].fields['description'] + '">' + data[i].fields['description'] + '</option>';
+                            $('#county').append(options);
+
+                        }
+                    },
+                    error: function () {
+
+                        // alert("error getting data from server");
+                        var options = '<option value="" selected disabled>select county</option>';
+                        $('#county').html(options);
+
+                    }
+                });
+            }
+            else {
+                ctyrow.style.display = 'none';
+                subctyrow.style.display = 'none';
+            }
+        }
+
+    </script>
+
+{% endblock %}

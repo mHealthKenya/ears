@@ -1,0 +1,446 @@
+{% extends "veoc/main_template.html" %}
+
+{% block main %}
+    <script type="text/javascript"
+            src="https://cdn.datatables.net/v/dt/jqc-1.12.3/jszip-2.5.0/pdfmake-0.1.18/dt-1.10.12/b-1.2.2/b-flash-1.2.2/b-html5-1.2.2/b-print-1.2.2/datatables.min.js"></script>
+
+    <div id="main-container">
+      <div id="breadcrumb">
+        <ul class="breadcrumb">
+           <li><i class="fa fa-home"></i><a href="{% url 'veoc:access_dashboard' %}"> Dashboard</a></li>
+           <li class="active">Watchers Schedule</li>
+        </ul>
+      </div><!-- /breadcrumb-->
+
+      <div class="padding-md">
+        <div class="row">
+          <div class="col-sm-12 col-md-12">
+            <div class="col-md-12" style="padding-bottom:10px">
+              <button type="button" id="modalbtn" class="btn btn-info btn-sm pull-left" data-toggle="modal" data-target="#search_shift"> <i class="fa fa-search" aria-hidden="true"></i> Search Old Shift</button>
+            </div>
+
+          </div><!-- /.col -->
+        </div>
+        <div class="row">
+          <div class="col-md-12">
+            <div class="panel panel-default table-responsive">
+              <div class="panel-heading">
+                Watchers Schedule
+                <span class="label label-info pull-right" id="totalspan">{{achedule_count}} Schedules </span>
+              </div>
+              <div class="padding-md clearfix">
+                <table class="table table-hover" id="watchers_table">
+                    <thead style="background-color: #ffffff">
+                    <tr>
+                        <th>Week number</th>
+                        <th>Start date</th>
+                        <th>End date</th>
+                        <th>Watchers name</th>
+                        <th>Action</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for cont in watchers %}
+                        <tr>
+                            <td>{{ cont.week_no }}</td>
+                            <td>{{ cont.from_date }}</td>
+                            <td>{{ cont.to_date }}</td>
+                            <td>{{ cont.watcher_details.first_name }}</td>
+                            <td><button type="button" class="btn btn-primary btn-xs view_button"
+                              data-toggle="modal" data-target="#view_schedule_modal"
+                              data-id="{{ cont.id }}"
+                              data-weekno="{{ cont.week_no }}"
+                              data-from="{{ cont.from_date }}"
+                              data-to="{{ cont.to_date }}"
+                              data-name="{{ cont.watcher_details.first_name }}"
+                              title="View">
+                              <i class="fa fa-eye">
+                              </i>
+                            </button>
+                            <button type="button" class="btn btn-primary btn-xs edit_button"
+                              data-toggle="modal" data-target="#edit_schedule_modal"
+                              data-id="{{ cont.id }}"
+                              data-weekno="{{ cont.week_no }}"
+                              data-from="{{ cont.from_date }}"
+                              data-to="{{ cont.to_date }}"
+                              data-name="{{ cont.watcher_details.first_name }}"
+                              title="Edit">
+                              <i class="fa fa-edit">
+                              </i>
+                            </button>
+                          </td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- add shift modal -->
+    <div class="modal fade" id="add_shift" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+      aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">Add watchers shift</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <form method="post" action="#">
+              <div class="control-group" style="text-align:center">
+                  <label class="control-label" for="inputType">Select working period</label>
+              </div>
+              <label class="control-label" for="inputType"></label>
+              <div class="control-group">
+                  <div class="controls form-inline">
+                      <input type="text" id="fromdate" class="form-control" readonly
+                             placeholder="Start date"/>
+                      <input type="text" id="todate" class="form-control" readonly placeholder="End date"/>
+                  </div>
+                </div>
+                <div class="control-group">
+                    <label class="control-label" for="inputType"></label>
+                </div>
+                <div class="control-group">
+                    <div class="controls">
+                        <select id='contacts' multiple='multiple'>
+                        </select>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label" for="inputType"></label>
+                    </div>
+                    <div class="form-group" style="text-align:center">
+                        <button type="button" class="btn btn-primary btn-lg btn-block" onclick="submitting()">
+                            Save
+                        </button>
+                    </div>
+                </div>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- search_shift modal -->
+    <div class="modal fade" id="search_shift" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+      aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">Search watchers shift</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <form method="post" action="{% url 'veoc:disease_report' %}">
+              {% csrf_token %}
+              <div class="form-horizontal">
+                  <div class="control-group" style="text-align:center">
+                      <label class="control-label" for="inputType">Select Week period</label>
+                  </div>
+                  <div class="control-group" style="text-align:center">
+                      <label class="control-label" for="datereportedrow"></label>
+                  </div>
+                  <div class="control-group" style="text-align:center">
+                      <div class="controls form-inline">
+                          <input class="control-group" type="date" value="{{ day }}" id="searchdate"
+                                 name="searchdate" required>
+                          <button type="button" class="btn" onclick="search()">Search watchers</button>
+                      </div>
+                  </div>
+              </div>
+              <div><label></label></div>
+              <div id="watch">
+
+              </div>
+              <div>
+                  <ul class="list-group" id="list_grp">
+                  </ul>
+              </div>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+{% endblock %}
+
+{% block script %}
+  <script type="text/javascript">
+    {% csrf_token %}
+
+    $(document).ready(function () {
+            $('#watchers_table').DataTable({
+                dom: 'Bfrtip',
+                buttons: [
+                    'copy', 'csv', 'excel', 'pdf', 'print'
+                ]
+            });
+
+            // Setup - add a text input to each footer cell
+            $('#watchers_table thead td').each(function () {
+                var title = $(this).text();
+                $(this).html('<input type="text" placeholder="Search ' + title + '" />');
+            });
+
+            // DataTable
+            var table = $('#watchers_table').DataTable();
+
+            // Apply the search
+            table.columns().every(function () {
+                var that = this;
+
+                $('input', this.header()).on('keyup change', function () {
+                    if (that.search() !== this.value) {
+                        that
+                                .search(this.value)
+                                .draw();
+                    }
+                });
+            });
+
+        });
+
+    $(document).ready(function () {
+
+            $.ajax({
+                url: '/contact_json/',
+                type: 'POST',
+                datatype: 'json',
+                data: {csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val()},
+
+                success: function (data) {
+                    for (var i = 0; i < data.length; i++) {
+                        $('#contacts').multiSelect('addOption', {
+                            value: data[i].fields['first_name'],
+                            text: data[i].fields['first_name'] + " " + data[i].fields['second_name'],
+                            index: i
+                        });
+                    }
+                },
+                error: function () {
+                    console.log("error occured")
+                }
+            });
+        });
+
+    var myarray = [];
+
+    $('#contacts').multiSelect({
+        afterSelect: function (values) {
+            // console.log(values[0]);
+            myarray.push(values[0]);
+            // alert(values);
+            // console.log(myarray);
+        },
+        afterDeselect: function (values) {
+            myarray.splice(myarray.indexOf(values[0]), 1);
+        },
+        selectableHeader: "<div class='custom-header'>All Contacts</div>",
+        selectionHeader: "<div class='custom-header'>Contacts On duty</div>",
+        selectableFooter: "<div class='custom-header'>All Contacts</div>",
+        selectionFooter: "<div class='custom-header'>Contacts On duty</div>",
+        keepOrder: true,
+    });
+
+    function submitting() {
+            var frmdate = $('#fromdate').val();
+            var todate = $('#todate').val();
+
+            if (frmdate == "") {
+                $('#success').html("");
+                $('#error').html("Please specify from date");
+            }
+            else if (todate == "") {
+                $('#success').html("");
+                $('#error').html("Please specify to date");
+            }
+            else {
+                if (myarray.length < 1) {
+                    $('#success').html("");
+                    $('#error').html("Please select contact first");
+                }
+                else {
+                    var truearray = [];
+
+                    // code to check date range
+                    $.ajax({
+                        url: '/get_existing_timetable/',
+                        type: 'POST',
+                        datatype: 'json',
+                        data: {csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val()},
+
+                        success: function (data) {
+                            for (var i = 0; i < data.length; i++) {
+                                var exfrmdate = data[i].fields['from_date'];
+                                var extodate = data[i].fields['to_date'];
+
+                                if ((frmdate <= extodate && frmdate >= exfrmdate)) {
+                                    truearray.push("true");
+                                }
+                                else {
+                                    truearray.push("false");
+                                }
+                            }
+                            console.log(truearray);
+
+                            //check if date range already exists in database
+                            if (truearray.indexOf("true") > -1) {
+                                $('#success').html("");
+                                $('#error').html("Date range selected already exists, Select another week");
+                            }
+                            //if does not exist process the following lines of codes
+                            else {
+                                $.ajax({
+                                    url: '/get_timetables/',
+                                    type: 'POST',
+                                    datatype: 'json',
+                                    data: {
+                                        contactsarray: myarray,
+                                        fromdate: frmdate,
+                                        todate: todate,
+                                        csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val()
+                                    },
+
+                                    success: function (mydata) {
+
+                                        console.log(mydata)
+                                        $('#success').html(mydata);
+                                        $('#error').html("");
+                                        $('#contacts').multiSelect('deselect_all');
+                                        $('#contacts').multiSelect('refresh');
+                                        myarray = [];
+                                        console.log(myarray);
+                                    },
+
+                                    error: function () {
+                                        $('#success').html("");
+                                        $('#error').html("error occured");
+                                    }
+                                });
+
+                            }//end of processing lines of code
+                        },
+
+                        error: function () {
+                            console.log("error geting data from server")
+                        }
+                    });
+                    // code to check date range
+                }
+            }
+        }
+
+    function search() {
+            var searchdate = $('#searchdate').val();
+
+            if (searchdate == "") {
+                $('#success').html("");
+                $('#error').html("Please select the date");
+            }
+            else {
+                var watchers_array = [];
+
+                // code to check date range
+                $.ajax({
+                    url: '/search_watchers/',
+                    type: 'POST',
+                    datatype: 'json',
+                    data: {searchdate: searchdate, csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val()},
+
+                    success: function (mydata) {
+                        console.log(mydata.length)
+                        console.log(mydata)
+                        var users = $('#list_grp');
+                        users.html('');
+                        if (mydata == 'No watchers set for the week selected') {
+                            $('#list_grp').append('<li class="list-group-item">' + mydata + '</li>');
+                        } else {
+                            for (var i = 0; i < mydata.length; i++) {
+                                $('#list_grp').append('<li class="list-group-item">' + mydata[i].fields['fname'] + '</li>');
+                            }
+                        }
+
+                    },
+
+                    error: function () {
+                        console.log("No watchers set for the week selected")
+                    }
+                });
+
+            }//end of processing lines of code
+        }
+
+    $(function () {
+            $("#fromdate").datepicker({
+                numberOfMonths: 1,
+                dateFormat: 'yy-mm-dd',
+                showAnim: 'drop',
+                onSelect: function (selected) {
+                    var dt = new Date(selected);
+                    dt.setDate(dt.getDate() + 6);
+                    $("#todate").datepicker("option", "minDate", dt);
+                    $("#todate").datepicker("option", "maxDate", dt);
+                }
+            });
+            $("#todate").datepicker({
+                numberOfMonths: 1,
+                dateFormat: 'yy-mm-dd',
+                showAnim: 'drop',
+                onSelect: function (selected) {
+                    var dt = new Date(selected);
+                    dt.setDate(dt.getDate() - 6);
+                    $("#fromdate").datepicker("option", "maxDate", dt);
+                    $("#fromdate").datepicker("option", "minDate", dt);
+                }
+            });
+        });
+
+    function checkDateRange(frmdate) {
+            var thearray = new Array();
+
+            // code to check date range
+            $.ajax({
+
+                url: '/get_existing_timetable/',
+                type: 'POST',
+                datatype: 'json',
+                data: {csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val()},
+
+                success: function (data) {
+                    for (var i = 0; i < data.length; i++) {
+
+                        var exfrmdate = data[i].fields['from_date'];
+                        var extodate = data[i].fields['to_date'];
+                        thearray[i] = "ten";
+                    }
+                },
+                error: function () {
+                }
+            });
+            return thearray;
+        }
+
+    // script to support using multiple jquery versions i.e 1.8 and 3.0.0
+    jQuery.browser = {};
+    (function () {
+        jQuery.browser.msie = false;
+        jQuery.browser.version = 0;
+        if (navigator.userAgent.match(/MSIE ([0-9]+)\./)) {
+            jQuery.browser.msie = true;
+            jQuery.browser.version = RegExp.$1;
+        }
+    })();
+
+  </script>
+{% endblock %}

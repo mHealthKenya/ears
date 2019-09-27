@@ -1,0 +1,154 @@
+{% extends "veoc/main_template.html" %}
+
+{% block main %}
+    <div class="panel panel-default">
+        <div class="panel-heading" style="background-color:#3c8dbc">
+            <h2 class="panel-title"> Unrelated Calls Capture Form</h2>
+        </div>
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="well">
+                  <form>
+                    <div class="form-row">
+                      <div class="form-group col-md-12">
+                        <label for="callCategory">Call Category</label>
+                        <select class="form-control" id="callCategory" name="callCategory" onchange="getcategory()">
+                            <option value="" disabled selected>Select call category</option>
+                            <option value="disease type">Disease Related Call</option>
+                            <option value="event type">Public health event Call</option>
+                            <option value="event type">Call Flashback</option>
+                            <option value="event type">Unrelated Call</option>
+                        </select>
+                      </div>
+                    </div>
+                    <div class="form-row">
+                       <div class="form-group col-md-6">
+                         <label for="callername">Caller Name</label>
+                         <input class="form-control" type="text" id="callername" name="caller_name" size="45" placeholder="caller_name" required/>
+                       </div>
+                       <div class="form-group col-md-6">
+                         <label for="callernumber">Caller Number</label>
+                         <input class="form-control" type="number" id="callernumber" name="caller_number" maxlength="10" size="45" placeholder="caller_number" required/>
+                       </div>
+                    </div>
+                     <div class="form-row">
+                         <div class="form-group col-md-4">
+                           <label for="region">Reporting Region</label>
+                           <select class="form-control" name="region" id="region" onchange="getregions()" required>
+                                <option value="" disabled selected>Select Region</option>
+                                <!-- {% for cty in county %}
+                                    <option value="{{cty.description}}">{{cty.description}}</option>
+                                {% endfor %} -->
+                            </select>
+                         </div>
+                         <div class="form-group col-md-4">
+                           <label for="status">Incident Status</label>
+                           <select class="form-control" name="status" id="status" onchange="getstatus()" required>
+                                <option value="" disabled selected>Select Status</option>{#
+                            </select>
+                         </div>
+                         <div class="form-group col-md-4">
+                           <label for="datereport">Date Reported</label>
+                           <input class="form-control" type="date" value="{{ day }}" id="datereported" max='2000-13-13' name="date_reported" required>
+                         </div>
+                     </div>
+                     <div class="form-row">
+                         <div class="form-group col-md-4">
+                           <label for="county">County</label>
+                           <select class="form-control" name="county" id="county" onchange="getsubcounty()" required>
+                                <option value="" disabled selected>Select County</option>
+                                <!-- {% for cty in county %}
+                                    <option value="{{cty.description}}">{{cty.description}}</option>
+                                {% endfor %} -->
+                            </select>
+                         </div>
+                         <div class="form-group col-md-4">
+                           <label for="subcounty">Subcounty</label>
+                           <select class="form-control" name="subcounty" id="subcounty" required>
+                                <option value="" disabled selected>Select sub-county</option>{#
+                            </select>
+                         </div>
+                         <div class="form-group col-md-4">
+                           <label for="location">Location</label>
+                           <input class="form-control" type="text" id="location" name="location" size="45" placeholder="Place of occurrence" required/>
+                         </div>
+                     </div>
+                     <!-- <div class="form-row">
+                      <div class="form-group col-md-6">
+                        <label for="datereport">Date Reported</label>
+                        <input class="form-control" type="date" value="{{ day }}" id="datereported" max='2000-13-13' name="date_reported" required>
+                      </div>
+                      <div class="form-group col-md-6">
+                        <label for="timereport">Time Reported</label>
+                        <input class="form-control" type="time" id="timereported"  name="time_reported" required>
+                      </div>
+                    </div> -->
+                     <div class="form-row">
+                       <div class="form-group col-md-12">
+                         <label for="description">Description</label>
+                         <textarea class="form-control" id="description" rows="3" name="description" required placeholder="Enter description"></textarea>
+                       </div>
+                     </div>
+                     <div class="form-row">
+                       <div class="form-group col-md-12">
+                         <label for="action">Action Taken</label>
+                         <textarea class="form-control" id="actiontaken" rows="3" name="action_taken" required placeholder="Enter action taken"></textarea>
+                       </div>
+                     </div>
+                     <div class="form-row">
+                       <div class="form-group col-md-12">
+                         <button type="submit" class="btn btn-primary">Save</button>
+                       </div>
+                     </div>
+                  </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
+          integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+    <!-- Latest compiled and minified JavaScript -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"
+            integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
+            crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootbox.js/4.4.0/bootbox.min.js"></script>
+
+    <script>
+
+        window.onload = formFeedback;
+
+        function formFeedback() {
+
+            var x = "{{success}}";
+            if (x == "") {
+                bootbox.alert({
+                    size: "small",
+                    title: "Event Action",
+                    message: x,
+                    callback: function () { /* your callback code */
+                    }
+                });
+            }
+            else {
+                bootbox.alert({
+                    size: "small",
+                    title: "Event Action",
+                    message: x,
+                    callback: function () { /* your callback code */
+                    }
+                });
+            }
+        }
+
+
+        function success(suc) {
+            if (suc == 'form inserted successfully') {
+                BootstrapDialog.show(suc);
+            }
+        }
+
+    </script>
+
+{% endblock %}

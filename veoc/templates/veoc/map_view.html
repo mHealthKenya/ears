@@ -1,0 +1,36 @@
+<html>
+<head>
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script type="text/javascript" src="https://www.google.com/jsapi"></script>
+    <script>
+        google.charts.load('current', {'packages': ['map']});
+        google.charts.setOnLoadCallback(drawMap);
+
+        function drawMap() {
+            var data = google.visualization.arrayToDataTable([
+                ['County', 'Malaria'],
+                ['Mombasa', 'Mombasa: 800,000'],
+                ['Nairobi', 'Nairobi: 620,000'],
+                ['Machakos', 'Machakos: 842,000'],
+                ['Kisumu', 'Kisumu: 424,598'],
+                ['Kitui', 'Kitui: 32,714'],
+                ['Kisii', 'Kisii: 134,000'],
+                ['Narok', 'Narok: 15,000'],
+                ['Kilifi', 'Kilifi: 518,015'],
+                ['Busia', 'Busia: 19,512'],
+                ['Nakuru', 'Nakuru: 120,000']
+            ]);
+
+            var options = {showTip: true};
+
+            var map = new google.visualization.Map(document.getElementById('chart_div'));
+
+            map.draw(data, options);
+        }
+        ;
+    </script>
+</head>
+<body>
+<div id="chart_div"></div>
+</body>
+</html>

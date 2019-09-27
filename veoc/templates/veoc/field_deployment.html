@@ -1,0 +1,53 @@
+{% extends "veoc/main_template.html" %}
+
+{% block main %}
+
+    <div class="panel panel-default">
+        <div class="panel-heading" style="background-color:#7676ff">
+            <h2 class="panel-title" align="center">Disease Capture Form</h2>
+        </div>
+
+        <div class="col-md-2">
+        </div>
+
+        <div class="row">
+            <div class="col-md-8">
+                <div class="well">
+                    <h2 style="text-align:center">{{ success }}</h2>
+
+                    <form method="post" action="{% url 'disease_create_submit' %}">{% csrf_token %}
+
+
+                        <div class="form-group">
+                            <label for="Significant_events"><b>Date : </b></label>
+                            <input class="form-control" type="date" value="2016-01-01" id="date_created"
+                                   name="date_created" required>
+                        </div>
+
+
+                        {#                        <div id='TextBoxesGroup2'>#}
+                        {#                            <div id="TextBoxDiv2">#}
+                        {#                                <label><b>EOC field deployments #1 :</b> </label><input class="form-control" rows="3" type='textarea' id='textbox2' >#}
+                        {#                            </div>#}
+                        {#                        </div>#}
+                        {#                        <input type='button' value='Add Field' id='addButton1'>#}
+                        {#                        <input type='button' value='Remove Field' id='removeButton2'>#}
+                        {#                        <input type='button' value='Get TextBox Value' id='getButtonValue2'>#}
+
+
+                        <div class="form-group">
+                            <label for="remarks"><b>Field deployments : </b></label>
+                            <textarea class="form-control" id="field_deployments" rows="3" name="field_deployments"
+                                      required placeholder="Enter field deployments"></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary btn-lg btn-block">Save</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-2">
+        </div>
+    </div>
+
+{% endblock %}

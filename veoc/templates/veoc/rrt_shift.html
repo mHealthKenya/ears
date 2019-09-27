@@ -1,0 +1,65 @@
+{% extends "veoc/main_template.html" %}
+
+{% block main %}
+    {#    <h3 class="sub-header">Daily Tabular Report</h3>#}
+    <div class="panel panel-default">
+        <div class="panel-heading" style="background-color:#7676ff">
+            <h2 class="panel-title">RRT shift</h2>
+        </div>
+        <br>
+
+        <p>
+
+        <h2>Shift still work in progress!!!</h2></p>
+        <!--<div class="table-responsive">
+            <table class="table table-bordered table-hover" id="daily_report">
+              <thead style="background-color: #a6e1ec">
+                <tr>
+                    <th>Disease</th>
+                    <th>District</th>
+                    <th>County</th>
+                    <th>Province</th>
+                    <th>Week Number</th>
+                    <th>Cases < 5</th>
+                    <th>Cases > 5</th>
+                    <th>Total Cases</th>
+                    <th>Death < 5</th>
+                    <th>Death > 5</th>
+                    <th>Total Deaths</th>
+                    <th>Year</th>
+                    <th>Reported</th>
+                    <th>Designation</th>
+                    <th>Date Reported</th>
+                </tr>
+              </thead>
+              <tbody>
+              {% for event in event_obj %}
+                <tr>
+                    <td>{{event.incident.description}}</td>
+                    <td>{{event.district}}</td>
+                    <td>{{event.county.description}}</td>
+                    <td>{{event.province}}</td>
+                    <td>{{event.wk_no}}</td>
+                    <td>{{event.cases_under_5}}</td>
+                    <td>{{event.cases_over_5}}</td>
+                    <td>{{event.total_cases}}</td>
+                    <td>{{event.death_under_5}}</td>
+                    <td>{{event.death_over_5}}</td>
+                    <td>{{event.total_death}}</td>
+                    <td>{{event.year}}</td>
+                    <td>{{event.reported}}</td>
+                    <td>{{event.designation}}</td>
+                    <td>{{event.date_reported}}</td>
+                </tr>
+              {% endfor %}
+              </tbody>
+            </table>
+          </div>-->
+    </div>
+{% endblock %}
+
+{% block script %}
+    <!-- <script>
+        $("#daily_report").dataTable();
+     </script>-->
+{% endblock %}

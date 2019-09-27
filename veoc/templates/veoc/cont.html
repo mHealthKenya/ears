@@ -1,0 +1,493 @@
+{% extends "veoc/main_template.html" %}
+
+{% block main %}
+<!-- <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.12/css/dataTables.bootstrap.min.css">
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/buttons/1.2.2/css/buttons.bootstrap.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.10.2/jquery.js"></script> -->
+
+  <div id="main-container">
+    <div id="breadcrumb">
+      <ul class="breadcrumb">
+         <li><i class="fa fa-home"></i><a href="{% url 'veoc:access_dashboard' %}"> Dashboard</a></li>
+         <li class="active">Contacts</li>
+      </ul>
+    </div><!-- /breadcrumb-->
+
+    <div class="padding-md">
+      <div class="row">
+        <div class="col-sm-12 col-md-12">
+          <div class="col-md-12" style="padding-bottom:10px">
+            <button type="button" id="modalbtn" class="btn btn-info btn-sm pull-left" data-toggle="modal" data-target="#addContactModal"> <i class="fa fa-plus" aria-hidden="true"></i> Add Contact</button>
+          </div>
+
+        </div><!-- /.col -->
+      </div>
+      <div class="row">
+        <div class="col-md-12">
+            <div class="padding-md clearfix">
+              <table id="example" class="table table-striped table-bordered" cellspacing="0" width="100%">
+                <thead class="thead-dark">
+                  <tr>
+                      <th>First Name</th>
+                      <th>Last Name</th>
+                      <th>Designation</th>
+                      <th>Phone Number</th>
+                      <th>Email</th>
+                      <th>Contact Type</th>
+                      <th>County</th>
+                      <th>Subcounty</th>
+                      <th>Edit</th>
+                  </tr>
+                  </thead>
+                  <tbody>
+                  {% for contact in contacts %}
+                  <tr>
+                    <td>{{ contact.first_name }}</td>
+                    <td>{{ contact.last_name }}</td>
+                    <td>{{ contact.designation.designation_description }}</td>
+                    <td>{{ contact.phone_number }}</td>
+                    <td>{{ contact.email_address }}</td>
+                    <td>{{ contact.type_of_contact.contact_description }}</td>
+                    <td>{{ contact.county.name }}</td>
+                    <td>{{ contact.subcounty.name }}</td>
+                     <td>
+                      <button type="button" class="btn btn-primary btn-xs view_button"
+                        data-toggle="modal" data-target="#view_contact_modal"
+                        data-id="{{ contact.pk }}>"
+                        data-first_name="{{ contact.first_name }}"
+                        data-last_name="{{ contact.last_name }}"
+                        data-designation="{{ contact.designation.designation_description }}"
+                        data-phone_number="{{ contact.phone_number }}"
+                        data-email_address="{{ contact.email_address }}"
+                        data-contact_type="{{ contact.type_of_contact.contact_description }}"
+                        data-county="{{ contact.county.name }}"
+                        data-subcounty="{{ contact.subcounty.name }}"
+                        data-reporter="{{ contact.created_by.username }}"
+                        title="View">
+                        <i class="fa fa-eye">
+                        </i>
+                    </button>
+                    <button type="button" class="btn btn-primary btn-xs edit_button"
+                      data-toggle="modal" data-target="#edit_contact_modal"
+                      data-id="{{ contact.pk }}>"
+                      data-first_name="{{ contact.first_name }}"
+                      data-last_name="{{ contact.last_name }}"
+                      data-designation="{{ contact.designation.designation_description }}"
+                      data-phone_number="{{ contact.phone_number }}"
+                      data-email_address="{{ contact.email_address }}"
+                      data-contact_type="{{ contact.type_of_contact.contact_description }}"
+                      data-county="{{ contact.county.name }}"
+                      data-subcounty="{{ contact.subcounty.name }}"
+                      data-reporter="{{ contact.created_by.username }}"
+                      title="Edit">
+                      <i class="fa fa-edit">
+                      </i>
+                    </button>
+                  </td>
+                </tr>
+                {% endfor %}
+              </tbody>
+              </table>
+            </div>
+        </div>
+      </div><!-- /row-->
+    </div><!-- /.padding-md -->
+  </div><!-- /main-container -->
+
+  <!-- Add contact modal -->
+  <div class="modal fade" id="addContactModal" tabindex="-1" role="dialog" aria-hidden="true">
+  		<div class="modal-dialog" role="document">
+  			<div class="modal-content">
+  			<div class="modal-header">
+  				<h5 class="modal-title" id="exampleModalLongTitle">Add Contact</h5>
+  				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+  				<span aria-hidden="true">&times;</span>
+  				</button>
+  			</div>
+  			<div class="modal-body">
+  				<form onsubmit="return validateform()" role="form" method="POST" action="{% url 'veoc:add_contact' %}" >
+  					{% csrf_token %}
+  					<div class="form-group">
+  						<label>First Name</label>
+  						<input type="text" class="form-control input-sm" name="first_name" id="first_name" placeholder="First Name">
+  					</div><!-- /form-group -->
+  					<div class="form-group">
+  						<label>Last Name</label>
+  						<input type="text" class="form-control input-sm" name="last_name" id="last_name" placeholder="Last Name">
+  					</div><!-- /form-group -->
+            <div class="form-group">
+                <label for="heading">Designation :</label>
+                <select name="designation" class="form-control designation" id="designation">
+                  <option value="" disabled selected>Select Designation</option>
+                  {% for designation in designations %}
+                      <option value="{{ designation.id }}">{{ designation.designation_description }}</option>
+                  {% endfor %}
+                </select>
+            </div>
+  					<div class="form-group">
+  						<label>Phone Number :</label>
+  						<input type="text" class="form-control input-sm" name="phone_no" id="phone_no" placeholder="0700000000">
+  					</div><!-- /form-group -->
+  					<div class="form-group">
+  						<label>Email Address :</label>
+  						<input type="email" class="form-control input-sm" name="email" id="email" placeholder="example@example.org">
+  					</div><!-- /form-group -->
+            <div class="form-group">
+  						<label>Contact Type :</label>
+              <select name="contact_type" class="form-control contact_type" id="contact_type">
+                <option value="" disabled selected>Select Contact Type</option>
+                {% for contact_type in contact_types %}
+                    <option value="{{ contact_type.id }}">{{ contact_type.contact_description }}</option>
+                {% endfor %}
+              </select>
+  					</div><!-- /form-group -->
+  					<div class="form-group" id="org_unit_div">
+  						<label>County</label>
+              <select class="form-control" name="county" id="county" onchange="getsubcounty()" >
+                   <option value="" disabled selected>Select County</option>
+                   {% for cty in county %}
+                       <option value="{{cty.name}}">{{cty.name}}</option>
+                   {% endfor %}
+               </select>
+  					</div><!-- /form-group -->
+  					<div class="form-group">
+              <label for="subcounty">Subcounty</label>
+              <select class="form-control" name="subcounty" id="subcounty">
+                   <option value="" disabled selected>Select sub-county</option>
+               </select>
+  					</div><!-- /form-group -->
+
+  					<button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+  					<button type="submit" id="addcontactbtn" class="btn btn-success btn-sm pull-right"> <i class="fa fa-plus" aria-hidden="true"></i> Add Contact</button>
+  				</form>
+  			</div>
+  			</div>
+  		</div>
+    </div>
+
+  <!-- View contact modal -->
+  <div class="modal fade" id="view_contact_modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Contact View</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <form method="post" action="#">
+            <div class="modal-body">
+              <div class="form-group">
+    						<label>First Name</label>
+    						<input class="form-control first_name" name="first_name" readonly>
+    					</div><!-- /form-group -->
+    					<div class="form-group">
+    						<label>Last Name</label>
+    						<input class="form-control last_name" name="last_name" readonly>
+    					</div><!-- /form-group -->
+              <div class="form-group">
+                  <label for="heading">Designation :</label>
+                  <input class="form-control designation" name="designation" readonly>
+              </div>
+    					<div class="form-group">
+    						<label>Phone Number :</label>
+    						<input class="form-control phone_no" name="phone_no" readonly>
+    					</div><!-- /form-group -->
+    					<div class="form-group">
+    						<label>Email Address :</label>
+    						<input class="form-control email" name="email" readonly>
+    					</div><!-- /form-group -->
+              <div class="form-group">
+    						<label>Contact Type :</label>
+                <input class="form-control contact_type" name="contact_type" readonly>
+    					</div><!-- /form-group -->
+    					<div class="form-group" id="org_unit_div">
+    						<label>County</label>
+                <input class="form-control county" name="county" readonly>
+    					</div><!-- /form-group -->
+    					<div class="form-group">
+                <label for="subcounty">Subcounty</label>
+                <input class="form-control subcounty" name="subcounty" readonly>
+    					</div><!-- /form-group -->
+              <div class="form-group">
+                <label for="subcounty">Saved By :</label>
+                <input class="form-control user" name="user" readonly>
+    					</div><!-- /form-group -->
+            </div>
+        </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Edit Contact modal -->
+  <div class="modal fade" id="edit_contact_modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Edit User</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <form method="post" action="#">
+              <div class="modal-body">
+                <div class="form-group">
+      						<label>First Name</label>
+      						<input type="text" class="form-control input-sm first_name" name="first_name" id="first_name" placeholder="First Name">
+      					</div><!-- /form-group -->
+      					<div class="form-group">
+      						<label>Last Name</label>
+      						<input type="text" class="form-control input-sm last_name" name="last_name" id="last_name" placeholder="Last Name">
+      					</div><!-- /form-group -->
+                <div class="form-group">
+                    <label for="heading">Designation :</label>
+                    <select name="designation" class="form-control designation" id="designation">
+                      <option value="" disabled selected>Select Designation</option>
+                      {% for designation in designations %}
+                          <option value="{{ designation.id }}">{{ designation.designation_description }}</option>
+                      {% endfor %}
+                    </select>
+                </div>
+      					<div class="form-group">
+      						<label>Phone Number :</label>
+      						<input type="text" class="form-control input-sm phone_no" name="phone_no" id="phone_no" placeholder="0700000000">
+      					</div><!-- /form-group -->
+      					<div class="form-group">
+      						<label>Email Address :</label>
+      						<input type="email" class="form-control input-sm email" name="email" id="email" placeholder="example@example.org">
+      					</div><!-- /form-group -->
+                <div class="form-group">
+      						<label>Contact Type :</label>
+                  <select name="contact_type" class="form-control contact_type" id="contact_type">
+                    <option value="" disabled selected>Select Contact Type</option>
+                    {% for contact_type in contact_types %}
+                        <option value="{{ contact_type.id }}">{{ contact_type.contact_description }}</option>
+                    {% endfor %}
+                  </select>
+      					</div><!-- /form-group -->
+      					<div class="form-group" id="org_unit_div">
+      						<label>County</label>
+                  <select class="form-control" name="county" id="county" onchange="getsubcounty()" >
+                       <option value="" disabled selected>Select County</option>
+                       {% for cty in county %}
+                           <option value="{{cty.name}}">{{cty.name}}</option>
+                       {% endfor %}
+                   </select>
+      					</div><!-- /form-group -->
+      					<div class="form-group">
+                  <label for="subcounty">Subcounty</label>
+                  <select class="form-control" name="subcounty" id="subcounty">
+                       <option value="" disabled selected>Select sub-county</option>
+                   </select>
+      					</div><!-- /form-group -->
+              </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          <button type="button" class="btn btn-primary">Save changes</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+{% endblock %}
+
+{% block script %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.3.2/jspdf.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/0.4.1/html2canvas.min.js" integrity="sha256-c3RzsUWg+y2XljunEQS0LqWdQ04X1D3j22fd/8JCAKw=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+<script src="https://cdn.datatables.net/1.10.12/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/1.2.2/js/dataTables.buttons.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/1.2.2/js/buttons.colVis.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/1.2.2/js/buttons.html5.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/1.2.2/js/buttons.print.min.js"></script>
+<script src="https://cdn.datatables.net/1.10.12/js/dataTables.bootstrap.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/1.2.2/js/buttons.bootstrap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/2.5.0/jszip.min.js"></script>
+<script src="https://cdn.rawgit.com/bpampuch/pdfmake/0.1.18/build/vfs_fonts.js"></script>
+<script src="https://cdn.rawgit.com/bpampuch/pdfmake/0.1.18/build/pdfmake.min.js"></script>
+<script>
+  $(document).ready(function() {
+    $('#example').DataTable(
+      {
+        "dom": '<"dt-buttons"Bf><"clear">lirtp',
+        "paging": true,
+        "autoWidth": true,
+        "buttons": [
+          'colvis',
+          'copyHtml5',
+          'csvHtml5',
+          'excelHtml5',
+          'pdfHtml5',
+          'print'
+        ]
+      }
+    );
+  });
+
+  $(document).on( "click", '.view_button',function(e) {
+
+      var id = $(this).data('id');
+      var first_name = $(this).data('first_name');
+      var last_name = $(this).data('last_name');
+      var designation = $(this).data('designation');
+      var phone_number = $(this).data('phone_number');
+      var email_address = $(this).data('email_address');
+      var contact_type = $(this).data('contact_type');
+      var county = $(this).data('county');
+      var subcounty = $(this).data('subcounty');
+      var reporter = $(this).data('reporter');
+
+      console.log(first_name);
+
+      $(".first_name").val(first_name);
+      $(".last_name").val(last_name);
+      $(".designation").val(designation);
+      $(".phone_no").val(phone_number);
+      $(".email").val(email_address);
+      $(".contact_type").val(contact_type);
+      $(".county").val(county);
+      $(".subcounty").val(subcounty);
+      $(".user").val(reporter);
+  });
+
+  $(document).on( "click", '.edit_button',function(e) {
+
+      var id = $(this).data('id');
+      var first_name = $(this).data('first_name');
+      var last_name = $(this).data('last_name');
+      var designation = $(this).data('designation');
+      var phone_number = $(this).data('phone_number');
+      var email_address = $(this).data('email_address');
+      var contact_type = $(this).data('contact_type');
+      var county = $(this).data('county');
+      var subcounty = $(this).data('subcounty');
+      var reporter = $(this).data('reporter');
+
+      console.log(first_name);
+
+      $(".first_name").val(first_name);
+      $(".last_name").val(last_name);
+      $(".designation").val(designation);
+      $(".phone_no").val(phone_number);
+      $(".email").val(email_address);
+      $(".contact_type").val(contact_type);
+      $(".county").val(county);
+      $(".subcounty").val(subcounty);
+      $(".user").val(reporter);
+  });
+
+  function validateform(){
+
+  var first_name = document.getElementById('first_name').value;
+  var last_name = document.getElementById('last_name').value;
+  var user_name = document.getElementById('user_name').value;
+  var email = document.getElementById('email').value;
+  var org_unit = document.getElementById('org_unit').value;
+  var user_group = document.getElementById('user_group').value;
+
+
+    if(first_name == "" || first_name==null || last_name == "" || last_name== null){
+      bootbox.alert({
+         size: "small",
+         title: "Missed data input  : Warning",
+         message: "Please enter both first name and last name!!",
+         callback: function () { /* your callback code */
+         }
+     });
+
+     return false;
+
+    }
+    if(user_name == "" || user_name==null){
+      bootbox.alert({
+         size: "small",
+         title: "Missed data input  : Warning",
+         message: "Username cannot be empty !!",
+         callback: function () { /* your callback code */
+         }
+     });
+
+     return false;
+
+    }
+    if(email == "" || email==null){
+      bootbox.alert({
+         size: "small",
+         title: "Missed data input  : Warning",
+         message: "New User email cannot be empty !!",
+         callback: function () { /* your callback code */
+         }
+     });
+
+     return false;
+
+    }
+    if(org_unit == "" || org_unit==null){
+      bootbox.alert({
+         size: "small",
+         title: "Missed data input  : Warning",
+         message: "Select the Org Unit !!",
+         callback: function () { /* your callback code */
+         }
+     });
+
+     return false;
+
+    }
+
+    if(user_group == "" || user_group==null){
+      bootbox.alert({
+         size: "small",
+         title: "Missed data input  : Warning",
+         message: "Select the User group !!",
+         callback: function () { /* your callback code */
+         }
+     });
+
+     return false;
+
+    }
+
+  }
+
+  function getsubcounty(){
+
+    var county=$('#county').val();
+    console.log(county);
+    $.ajax({
+      url:'/get_subcounty/',
+      type:'POST',
+      datatype:'json',
+      data:{county:county,csrfmiddlewaretoken:$('input[name=csrfmiddlewaretoken]').val()},
+
+      success:function(data){
+        var options = '<option value="" selected disabled>Select Subcounty</option>';
+        console.log("in success");
+        console.log(data);
+        $('#subcounty').html(options);
+        for(var i=0;i<data.length;i++){
+
+          var options = '<option value="' + data[i].fields['organisationunitid'] + '">' + data[i].fields['name'] + '</option>';
+          $('#subcounty').append(options);
+        }
+      },error:function(){
+        console.log("in error");
+        var options = '<option value="" selected disabled>select county</option>';
+        $('#subcounty').html(options);
+      }
+    });
+  }
+
+</script>
+{% endblock %}

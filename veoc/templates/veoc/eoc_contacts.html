@@ -1,0 +1,117 @@
+{% extends "veoc/main_template.html" %}
+
+{% block main %}
+    <div class="row">
+        <div class="col-lg-6">
+            <div class="panel panel-default">
+                <div class="panel-heading" style="background-color:#3c8dbc">
+                    <h2 class="panel-title">EOC Contacts</h2>
+                </div>
+                <div class="table-responsive">
+                    <table class="table table-bordered table-hover table-striped nowrap" id="eoc_table">
+                        <thead style="background-color: #b1b1ff">
+                        <tr>
+                            <th>first_name</th>
+                            <th>last_name</th>
+                            <th>designation</th>
+                            <th>phone_number</th>
+                            <th>email_address</th>
+                        </tr>
+                        </thead>
+                        <tfoot>
+                        <tr>
+                            <th>first_name</th>
+                            <th>last_name</th>
+                            <th>designation</th>
+                            <th>phone_number</th>
+                            <th>email_address</th>
+                        </tr>
+                        </tfoot>
+                        <tbody>
+                        <tr>
+                            <td>{{ eoc_conts.first_name }}</td>
+                            <td>{{ eoc_conts.last_name }}</td>
+                            <td>{{ eoc_conts.designation }}</td>
+                            <td>{{ eoc_conts.mobile }}</td>
+                            <td>{{ eoc_conts.email }}</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-6">
+            {#            FORM#}
+            <div class="well">
+                <form method="post" action="{% url 'call_log_eoc_submit' %}">{% csrf_token %}
+                    <div class="form-group">
+                        <label for="first_name"><b>first_name : </b></label>
+                        <input class="form-control" type="text" id="first_name" name="first_name" size="45"
+                               placeholder="first_name" required/>
+                    </div>
+                    <div class="form-group">
+                        <label for="last_name"><b>last_name : </b></label>
+                        <input class="form-control" type="text" id="last_name" name="last_name" size="45"
+                               placeholder="last_name" required/>
+                    </div>
+                    <div class="form-group">
+                        <label for="designation"><b>designation : </b></label>
+                        <select class="form-control" id="designation" name="designation" required>
+                            <option value="" disabled selected>Select designation</option>
+                            {% for sts in designation %}
+                                <option value="{{ sts.description }}">{{ sts.description }}</option>
+                                {#                                    #change in db#}
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="phone_number"><b>phone_number : </b></label>
+                        <input class="form-control" type="number" id="phone_number" name="phone_number" size="45"
+                               placeholder="phone_number" required/>
+                    </div>
+                    <div class="form-group">
+                        <label for="email_address"><b>email_address : </b></label>
+                        <input class="form-control" type="email" id="email_address" name="email_address" size="45"
+                               placeholder="email_address" required/>
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-lg btn-block">Save</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+{% block script %}
+    <script>
+        $(document).ready(function () {
+            $('#eoc_table').DataTable({
+                dom: 'Bfrtip',
+                buttons: [
+                    'copy', 'csv', 'excel', 'pdf', 'print'
+                ]
+            });
+
+            // Setup - add a text input to each footer cell
+            $('#eoc_table tfoot th').each(function () {
+                var title = $(this).text();
+                $(this).html('<input type="text" placeholder="Search ' + title + '" />');
+            });
+
+            // DataTable
+            var table = $('#eoc_table').DataTable();
+
+            // Apply the search
+            table.columns().every(function () {
+                var that = this;
+
+                $('input', this.footer()).on('keyup change', function () {
+                    if (that.search() !== this.value) {
+                        that
+                                .search(this.value)
+                                .draw();
+                    }
+                });
+            });
+        });
+    </script>
+{% endblock %}

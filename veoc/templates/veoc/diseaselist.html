@@ -1,0 +1,244 @@
+{% extends "veoc/main_template.html" %}
+
+{% block main %}
+
+    <script type="text/javascript"
+        src="https://cdn.datatables.net/v/dt/jqc-1.12.3/jszip-2.5.0/pdfmake-0.1.18/dt-1.10.12/b-1.2.2/b-flash-1.2.2/b-html5-1.2.2/b-print-1.2.2/datatables.min.js"></script>
+
+            <div id="main-container">
+        			<div id="breadcrumb">
+        				<ul class="breadcrumb">
+        					 <li><i class="fa fa-home"></i><a href="{% url 'veoc:access_dashboard' %}"> Dashboard</a></li>
+        					 <li class="active">Diseases</li>
+        				</ul>
+        			</div><!-- /breadcrumb-->
+
+        			<div class="padding-md">
+                <div class="row">
+        					<div class="col-sm-12 col-md-12">
+        						<div class="col-md-12" style="padding-bottom:10px">
+        							<button type="button" id="modalbtn" class="btn btn-info btn-sm pull-left" data-toggle="modal" data-target="#addDesignationModal"> <i class="fa fa-plus" aria-hidden="true"></i> Add Disease</button>
+        						</div>
+
+        					</div><!-- /.col -->
+        				</div>
+        				<div class="row">
+        					<div class="col-md-12">
+        						<div class="panel panel-default table-responsive">
+        							<div class="panel-heading">
+        								Diseases
+        								<span class="label label-info pull-right" id="totalspan">{{diseases_count}} Diseases</span>
+        							</div>
+        							<div class="padding-md clearfix">
+        							<table class="table table-hover" id="ongoing_task_table">
+        								<thead class="thead-dark">
+                          <tr>
+                              <th>Disease Type</th>
+                              <th>UID</th>
+                              <th>Priority Disease</th>
+                              <th>Action</th>
+                          </tr>
+                          </thead>
+                          <tbody>
+                          {% for disease in disease_vals %}
+                          <tr>
+                          <td>{{ disease.name }}</td>
+                          <td>{{ disease.uid }}</td>
+                          <td>{{ disease.priority_disease }}</td>
+                          <td>
+                              <button type="button" class="btn btn-primary btn-xs view_button"
+                                data-toggle="modal" data-target="#view_disease_modal"
+                                data-id="{{ disease.pk }}>"
+                                data-name="{{ disease.name }}"
+                                data-uid="{{ disease.uid }}"
+                                data-priority="{{ disease.priority_disease }}"
+                                title="View">
+                                <i class="fa fa-eye">
+                                </i>
+                            </button>
+                            <button type="button" class="btn btn-primary btn-xs edit_button"
+                              data-toggle="modal" data-target="#edit_disease_modal"
+                              data-id="{{ disease.pk }}>"
+                              data-name="{{ disease.name }}"
+                              data-uid="{{ disease.uid }}"
+                              data-priority="{{ disease.priority_disease }}"
+                              title="Edit">
+                              <i class="fa fa-edit">
+                              </i>
+                            </button>
+                          </td>
+                        </tr>
+                        {% endfor %}
+                      </tbody>
+    							</table>
+                </div>
+              </div>
+    				</div>
+    			</div><!-- /row-->
+        </div><!-- /.padding-md -->
+      </div><!-- /main-container -->
+
+      <!-- Add Disease modal -->
+		   <div class="modal fade" id="addDesignationModal" tabindex="-1" role="dialog" aria-hidden="true">
+					<div class="modal-dialog" role="document">
+						<div class="modal-content">
+						<div class="modal-header">
+							<h5 class="modal-title" id="exampleModalLongTitle">Add Disease</h5>
+							<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+							</button>
+						</div>
+						<div class="modal-body">
+							<form onsubmit="return validateform()" enctype="multipart/form-data" method="POST" action="{% url 'veoc:diseases_list' %}" >
+								{% csrf_token %}
+                <div class="form-group">
+									<label>Disease</label>
+								  <input type="text" class="form-control input-sm"  name="disease_name" id="disease_name">
+								</div>
+                <div class="form-check">
+                  <label class="form-check-label" for="diseasesignificant">
+                    priority Disease?
+                  </label>
+                  <input class="form-check-input" type="checkbox" id="priority" name="priority">
+                </div>
+
+								<button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+								<button type="submit" id="adddescriptionbtn" class="btn btn-success btn-sm pull-right"> <i class="fa fa-plus" aria-hidden="true"></i> Add Disease</button>
+							</form>
+						</div>
+						</div>
+					</div>
+        </div>
+
+      <!-- View Disease modal -->
+      <div class="modal fade" id="view_disease_modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="exampleModalLabel">Disease View</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+              <form method="post" action="#">
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="heading">Disease :</label>
+                        <input class="form-control disease_name" name="disease_name" readonly>
+                    </div>
+                    <div class="form-group">
+                        <label for="heading">UID</label>
+                        <input class="form-control uid" name="uid" readonly>
+                    </div>
+                    <div class="form-check">
+                      <label class="form-check-label" for="diseasesignificant">
+                        Priority Disease?
+                      </label>
+                      <input class="form-check-input" type="checkbox" id="priority" name="priority">
+                    </div>
+                </div>
+            </form>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Edit Disease modal -->
+      <div class="modal fade" id="edit_disease_modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="exampleModalLabel">Disease Edit</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+              <form method="post" action="#">
+                <div class="modal-body">
+                  <div class="form-group">
+                      <label for="heading">Disease Description :</label>
+                      <input class="form-control disease_name" name="disease_name">
+                  </div>
+                  <div class="form-group">
+                      <label for="heading">Priority Disease :</label>
+                      <input class="form-control priority" name="priority">
+                  </div>
+                </div>
+              </form>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+              <button type="button" class="btn btn-primary">Save changes</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+{% endblock %}
+
+{% block script %}
+
+    <script>
+      $(document).ready(function () {
+          $('#ongoing_task_table').DataTable({
+              "order": [],
+              dom: 'Bfrtip',
+              buttons: [
+                  'copy', 'csv', 'excel', 'pdf', 'print'
+              ]
+          });
+
+          // Setup - add a text input to each footer cell
+          $('#ongoing_task_table thead td').each(function () {
+              var title = $(this).text();
+              $(this).html('<input type="text" placeholder="Search ' + title + '" />');
+          });
+
+          // DataTable
+          var table = $('#ongoing_task_table').DataTable();
+
+          // Apply the search
+          table.columns().every(function () {
+              var that = this;
+
+              $('input', this.header()).on('keyup change', function () {
+                  if (that.search() !== this.value) {
+                      that
+                              .search(this.value)
+                              .draw();
+                  }
+              });
+          });
+      });
+
+      $(document).on( "click", '.view_button',function(e) {
+        var id = $(this).data('id');
+        var name = $(this).data('name');
+        var uid = $(this).data('uid');
+
+        console.log(name);
+
+        $(".disease_name").val(name);
+        $(".uid").val(uid);
+    });
+
+    $(document).on( "click", '.edit_button',function(e) {
+      var id = $(this).data('id');
+      var name = $(this).data('name');
+      var uid = $(this).data('uid');
+
+      console.log(name);
+
+      $(".disease_name").val(name);
+      $(".uid").val(uid);
+  });
+
+    </script>
+{% endblock %}

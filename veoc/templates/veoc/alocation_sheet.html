@@ -1,0 +1,321 @@
+{% extends "veoc/main_template.html" %}
+
+{% block main %}
+  <script src="/static/js/jquery.multi-select.js"></script>
+  <link rel="stylesheet" type="text/css" href="/static/css/multi-select.css">
+  <link href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/base/jquery-ui.css" rel="Stylesheet"
+        type="text/css"/>
+
+  <div id="main-container">
+    <div id="breadcrumb">
+      <ul class="breadcrumb">
+         <li><i class="fa fa-home"></i><a href="{% url 'veoc:access_dashboard' %}"> Dashboard</a></li>
+         <li class="active">EOC Watchers Work Schedule Alloction</li>
+      </ul>
+    </div><!-- /breadcrumb-->
+
+    <div class="padding-md">
+      <div class="row">
+        <div class="col-md-12">
+          <div class="panel panel-default">
+              <div class="panel-heading">SELECT OFFICERS ON SCHEDULE</div>
+              <div class="panel-body">
+                <!-- Div for displaying the selection team for the week -->
+                <div class="col-lg-1">
+            </div>
+            <div class="col-lg-6" align="center">
+                <div class="well">
+                  <form class="form-horizontal">
+                    <div class="control-group" style="text-align:center">
+                        <label class="control-label">Select working period</label>
+                    </div>
+                    <label class="control-label"></label>
+
+                    <div class="control-group">
+                        <div class="controls form-inline">
+                            <input type="text" id="fromdate" class="form-control" readonly placeholder="Start date"/>
+                            <input type="text" id="todate" class="form-control" readonly placeholder="End date"/>
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label"></label>
+                    </div>
+                    <div class="control-group">
+                        <div class="controls">
+                            <select id='contacts' multiple='multiple'>
+                            </select>
+                        </div>
+                        <div class="control-group">
+                            <label class="control-label"></label>
+                        </div>
+                        <div class="form-group" style="text-align:center">
+                          <button type="submit" class="btn btn-primary" onclick="submitting()">Save Selected Working Period</button>
+                        </div>
+                    </div>
+                  </form>
+                </div>
+            </div>
+            <!-- Div for displaying the selected team for the week -->
+            <div class="col-lg-4" align="center">
+                <div class="well">
+                    <form role="form">
+                        <div class="form-horizontal">
+                            <div class="control-group" style="text-align:center">
+                                <label class="control-label" for="inputType">Select Week period</label>
+                            </div>
+                            <div class="control-group">
+                                <label class="control-label" for="datereportedrow"></label>
+                            </div>
+                            <div class="control-group">
+                                <div class="controls form-inline">
+                                    <input class="control-group" type="date" value="{{ day }}" id="searchdate"
+                                           name="searchdate" required>
+                                    <button type="button" class="btn" onclick="search()">Search watchers</button>
+                                </div>
+                                <!-- <input class="control-group" type="date" value="{{ day }}" id="datereported" name="date_reported" required> -->
+                            </div>
+                        </div>
+                        <div><label></label></div>
+                        <div id="watch">
+
+                        </div>
+                        <div>
+                            <ul class="list-group" id="list_grp">
+                            </ul>
+                        </div>
+
+                    </form>
+                </div>
+            </div>
+              </div><!-- panel-body -->
+          </div><!-- /div panel-default -->
+        </div>
+      </div>
+    </div>
+  </div><!-- /main-container -->
+  {% csrf_token %}
+
+{% endblock %}
+
+{% block script %}
+
+  <script type="text/javascript">
+
+      $(document).ready(function () {
+
+          $.ajax({
+              url: '/contact_json/',
+              type: 'POST',
+              datatype: 'json',
+              data: {csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val()},
+
+              success: function (data) {
+                  for (var i = 0; i < data.length; i++) {
+                      $('#contacts').multiSelect('addOption', {
+                          value: data[i].fields['first_name'],
+                          text: data[i].fields['first_name'] + " " + data[i].fields['last_name'],
+                          index: i
+                      });
+                  }
+              },
+              error: function () {
+                  // alert("error occured");
+                  console.log("error occured");
+              }
+          });
+      });
+
+      var myarray = [];
+
+      $('#contacts').multiSelect({
+          afterSelect: function (values) {
+              // console.log(values[0]);
+              myarray.push(values[0]);
+              // alert(values);
+              // console.log(myarray);
+          },
+          afterDeselect: function (values) {
+              myarray.splice(myarray.indexOf(values[0]), 1);
+          },
+          selectableHeader: "<div class='custom-header'>All Contacts</div>",
+          selectionHeader: "<div class='custom-header'>Contacts On duty</div>",
+          selectableFooter: "<div class='custom-header'>All Contacts</div>",
+          selectionFooter: "<div class='custom-header'>Contacts On duty</div>",
+          keepOrder: true,
+      });
+
+      function submitting() {
+          var frmdate = $('#fromdate').val();
+          var todate = $('#todate').val();
+
+          if (frmdate == "") {
+              $('#success').html("");
+              $('#error').html("Please specify from date");
+          }
+          else if (todate == "") {
+              $('#success').html("");
+              $('#error').html("Please specify to date");
+          }
+          else {
+              if (myarray.length < 1) {
+                  $('#success').html("");
+                  $('#error').html("Please select contact first");
+              }
+              else {
+                var truearray = [];
+
+                $.ajax({
+                    url: '/get_existing_timetable/',
+                    type: 'POST',
+                    datatype: 'json',
+                    data: {csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val()},
+                    success: function (data) {
+                      for (var i = 0; i < data.length; i++) {
+                          var exfrmdate = data[i].fields['from_date'];
+                          var extodate = data[i].fields['to_date'];
+
+                          if ((frmdate <= extodate && frmdate >= exfrmdate)) {
+                              truearray.push("true");
+                          }
+                          else {
+                              truearray.push("false");
+                          }
+                      }
+                      console.log(truearray);
+
+                      //check if date range already exists in database
+                      if (truearray.indexOf("true") > -1) {
+                          $('#success').html("");
+                          $('#error').html("Date range selected already exists, Select another week");
+                      }
+                      //if does not exist process the following lines of codes
+                      else {
+                          $.ajax({
+                              url: '/get_timetables/',
+                              type: 'POST',
+                              datatype: 'json',
+                              data: {
+                                  contactsarray: myarray,
+                                  fromdate: frmdate,
+                                  todate: todate,
+                                  csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val()
+                              },
+                              success: function (mydata) {
+                                  console.log(mydata)
+                                  $('#success').html(mydata);
+                                  $('#error').html("");
+                                  $('#contacts').multiSelect('deselect_all');
+                                  $('#contacts').multiSelect('refresh');
+                                  myarray = [];
+                                  console.log(myarray);
+                              },
+                              error: function () {
+                                  $('#success').html("");
+                                  $('#error').html("error occured");
+                              }
+                          });
+
+                        }//end of processing lines of code
+                    },
+                    error: function () {
+                        console.log("error geting data from server")
+                    }
+                });
+                  // code to check date range
+              }
+          }
+      }
+
+      function search() {
+          var searchdate = $('#searchdate').val();
+
+          if (searchdate == "") {
+              $('#success').html("");
+              $('#error').html("Please select the date");
+          }
+          else {
+              var watchers_array = [];
+
+              $.ajax({
+                  url: '/search_watchers/',
+                  type: 'POST',
+                  datatype: 'json',
+                  data: {searchdate: searchdate, csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val()},
+                  success: function (mydata) {
+                      console.log(mydata.length)
+                      var users = $('#list_grp');
+                      users.html('');
+                      if (mydata == 'No watchers set for the week selected') {
+                          $('#list_grp').append('<li class="list-group-item">' + mydata + '</li>');
+                      } else {
+                          for (var i = 0; i < mydata.length; i++) {
+                              $('#list_grp').append('<li class="list-group-item">' + mydata[i].fields['fname'] + '</li>');
+                          }
+                      }
+                  },
+                  error: function () {
+                      console.log("No watchers set for the week selected")
+                  }
+              });
+          }//end of processing lines of code
+      }
+
+      $(function () {
+          $("#fromdate").datepicker({
+              numberOfMonths: 1,
+              dateFormat: 'yy-mm-dd',
+              showAnim: 'drop',
+              onSelect: function (selected) {
+                  var dt = new Date(selected);
+                  dt.setDate(dt.getDate() + 6);
+                  $("#todate").datepicker("option", "minDate", dt);
+                  $("#todate").datepicker("option", "maxDate", dt);
+              }
+          });
+          $("#todate").datepicker({
+              numberOfMonths: 1,
+              dateFormat: 'yy-mm-dd',
+              showAnim: 'drop',
+              onSelect: function (selected) {
+                  var dt = new Date(selected);
+                  dt.setDate(dt.getDate() - 6);
+                  $("#fromdate").datepicker("option", "maxDate", dt);
+                  $("#fromdate").datepicker("option", "minDate", dt);
+              }
+          });
+      });
+
+      function checkDateRange(frmdate) {
+          var thearray = new Array();
+
+          $.ajax({
+              url: '/get_existing_timetable/',
+              type: 'POST',
+              datatype: 'json',
+              data: {csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val()},
+              success: function (data) {
+                  for (var i = 0; i < data.length; i++) {
+                      var exfrmdate = data[i].fields['from_date'];
+                      var extodate = data[i].fields['to_date'];
+                      thearray[i] = "ten";
+                  }
+              },
+              error: function () {
+              }
+          });
+          return thearray;
+      }
+
+   // script to support using multiple jquery versions i.e 1.8 and 3.0.0
+      jQuery.browser = {};
+      (function () {
+          jQuery.browser.msie = false;
+          jQuery.browser.version = 0;
+          if (navigator.userAgent.match(/MSIE ([0-9]+)\./)) {
+              jQuery.browser.msie = true;
+              jQuery.browser.version = RegExp.$1;
+          }
+      })();
+
+  </script>
+{% endblock %}

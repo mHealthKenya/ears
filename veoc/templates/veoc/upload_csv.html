@@ -1,0 +1,42 @@
+{% extends "veoc/main_template.html" %}
+
+{% block main %}
+
+<div id="main-container">
+  <div id="breadcrumb">
+    <ul class="breadcrumb">
+       <li><i class="fa fa-home"></i><a href="{% url 'veoc:access_dashboard' %}"> Dashboard</a></li>
+       <li class="active">MOH 503 Upload</li>
+    </ul>
+  </div><!-- /breadcrumb-->
+
+  <div class="padding-md">
+
+    <div class="row">
+      <div class="col-md-12">
+          <form action="{% url 'veoc:upload_csv' %}" method="POST" enctype="multipart/form-data" class="form-horizontal">
+            {% csrf_token %}
+            <div class="form-group">
+              <label for="name" class="col-md-1 col-sm-3 col-xs-12 control-label">File: </label>
+              <div class="col-md-9">
+                  <input type="file" name="csv_file" id="csv_file" required="True" class="form-control">
+              </div>
+            </div>
+            <div class="form-group">
+              <div class="col-md-3 col-sm-3 col-xs-12 col-md-offset-1" style="margin-bottom:10px;">
+                   <button class="btn btn-primary"> <span class="glyphicon glyphicon-upload" style="margin-right:5px;"></span>Upload </button>
+              </div>
+              <div class="col-md-3 col-sm-3 col-xs-12 col-md-offset-3" style="margin-bottom:10px;">
+                   <button class="btn btn-primary"> <span class="glyphicon glyphicon-download" style="margin-right:5px;"></span>Download MOH 503 Sample </button>
+              </div>
+            </div>
+          </form>
+      </div>
+    </div><!-- /row-->
+    <div class="row">
+      <!-- Enter instructions of how to upload the form -->
+    </div><!-- /row-->
+  </div><!-- /.padding-md -->
+</div><!-- /main-container -->
+
+{% endblock %}

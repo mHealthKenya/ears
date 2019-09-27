@@ -1,0 +1,43 @@
+{% extends "veoc/main_template.html" %}
+
+{% block main %}
+    <div class="panel panel-default">
+        <div class="panel-heading" style="background-color:#3c8dbc">
+            <h2 class="panel-title" align="center" style="color: #ffffff">Event View</h2>
+        </div>
+
+        <div class="col-lg-2">
+        </div>
+
+        <div class="row">
+            <div class="col-lg-8">
+                <div class="well">
+                    <div class="form-group">
+                        <label for="event_type"><b>Event Type : </b></label>
+                        <label for="event_type">{{ event_instance.event_type.description }}</label>
+                    </div>
+                    <div class="form-group">
+                        <label for="event_type"><b>Data source : </b></label>
+                        <label for="event_type">{{ event_instance.data_source.description }} </label>
+                    </div>
+                    <div class="form-group">
+                        <label for="event_type"><b>Region : </b></label>
+                        <label for="event_type">{{ event_instance.region.description }} </label>
+                    </div>
+                    <div class="form-group">
+                        <label for="event_type"><b>Date reported : </b></label>
+                        <label for="event_type">{{ event_instance.date_created }} </label>
+                    </div>
+                    <div class="form-group">
+                        <label for="event_type"><b>Remarks : </b></label>
+                        <label for="event_type">{{ event_instance.remarks }}</label>
+                    </div>
+
+
+                </div>
+            </div>
+            <div class="col-lg-2">
+            </div>
+        </div>
+    </div>
+{% endblock %}
