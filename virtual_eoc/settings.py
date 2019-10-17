@@ -49,7 +49,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'veoc.apps.VeocConfig',
-    'rest_framework'
+    'rest_framework'#,
+    # 'django_mobile'
 ]
 
 LOGIN_URL = '/login/'
@@ -66,6 +67,8 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    # 'django_mobile.middleware.MobileDetectionMiddleware',
+    # 'django_mobile.middleware.SetFlavourMiddleware',
 ]
 
 ROOT_URLCONF = 'virtual_eoc.urls'

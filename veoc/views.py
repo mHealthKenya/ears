@@ -906,16 +906,17 @@ def get_county(request):
         return HttpResponse(json.dumps(obj_list),content_type="application/json")
 
 def get_subcounty(request):
+    obj_list = None
     if request.method == "POST":
         mycounty = request.POST.get('county','')
-
+        print(mycounty)
         county_parent_id = organizational_units.objects.get(name = mycounty)
         sub_counties = organizational_units.objects.filter(parentid = county_parent_id)
 
         serialized=serialize('json',sub_counties)
         obj_list=json.loads(serialized)
 
-    return HttpResponse(json.dumps(obj_list),content_type="application/json")
+        return HttpResponse(json.dumps(obj_list),content_type="application/json")
 
 def get_ward(request):
     if request.method == "POST":
@@ -927,7 +928,7 @@ def get_ward(request):
         serialized=serialize('json',wards)
         obj_list=json.loads(serialized)
 
-    return HttpResponse(json.dumps(obj_list),content_type="application/json")
+        return HttpResponse(json.dumps(obj_list),content_type="application/json")
 
 def call_report(request):
     # check if there is an edit on an entry and save
