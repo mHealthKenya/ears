@@ -50,12 +50,14 @@
                 <!-- <div class="card-heading"></div> -->
                 <div class="card-body">
                     <form method="POST" action="#">
-			<div class="p-t-20">
+                       <div class="p-t-20">
                             <button type="button" class="btn btn--radius btn--green" style="display: block; margin: 0 auto;" onClick="location.href='{% url 'veoc:public_document' %}'">View Public Documents</button>
                             <!-- <a class="btn btn--radius btn--green" href="{% url 'veoc:public_document' %}" role="button" style="float:center;margin-center:20px;">View Public Documents</a> -->
-                        </div>
-
-                    </form>
+                        </div> <div class="p-t-20">
+                            <!-- <button class="btn btn--radius btn--green" type="submit">Login</button> -->
+                            <!-- <button type="button" id="public_documents" class="btn btn--radius btn--green" style="display: block; margin: 0 auto;">View Public Documents</button> -->
+                            <a class="btn btn--radius btn--green" href="{% url 'veoc:public_document' %}" role="button" style="float:center;margin-center:20px;">View Public Documents</a>
+                        </div>                    </form>
                 </div>
             </div>
             <!-- card doing nothing -->
