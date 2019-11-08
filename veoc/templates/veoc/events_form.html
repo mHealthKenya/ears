@@ -52,7 +52,7 @@
                            <select class="form-control" name="county" id="county" onchange="getsubcounty()" >
                                 <option value="" disabled selected>Select County</option>
                                 {% for cty in county %}
-                                    <option value="{{cty.organisationunitid}}">{{cty.name}}</option>
+                                    <option value="{{cty.name}}">{{cty.name}}</option>
                                 {% endfor %}
                             </select>
                          </div>
@@ -146,10 +146,10 @@
 
             if (Number(deaths) > Number(cases)) {
                 $('#deathserror').html("Deaths reported should be less than cases");
-                {#            $('#cases').html('1');#}
+                // $('#cases').html('1');
                 document.getElementById("cases").value = "";
                 document.getElementById("deaths").value = "";
-                {#            $('#deaths').html('');#}
+                // $('#deaths').html('');
 
             }
             else {
@@ -257,7 +257,7 @@
               $('#subcounty').html(options);
               for(var i=0;i<data.length;i++){
 
-                var options = '<option value="' + data[i].fields['organisationunitid'] + '">' + data[i].fields['name'] + '</option>';
+                var options = '<option value="' + data[i].fields['name'] + '">' + data[i].fields['name'] + '</option>';
                 $('#subcounty').append(options);
               }
             },error:function(){

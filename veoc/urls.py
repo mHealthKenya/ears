@@ -66,6 +66,8 @@ urlpatterns = [
     #Settings Urls
     url(r'^users_list/$', views.users_list, name='users_list'),
     url(r'^user_register/$', views.user_register, name='user_register'),
+    url(r'^usersubcounty/$', views.usersubcounty, name='usersubcounty'),
+    url(r'^get_group/$', views.get_group, name='get_group'),
     url(r'^diseases_list/$', views.diseases_list, name='diseases_list'),
     url(r'^events_list/$', views.events_list, name='events_list'),
     url(r'^disgnation_list/$', views.disgnation_list, name='disgnation_list'),
@@ -120,6 +122,7 @@ urlpatterns = [
     url(r'^publications/$', views.publications, name='publications'),
     url(r'^case_documents/$', views.case_documents, name='case_documents'),
     url(r'^others/$', views.others, name='others'),
+    url(r'^sops/$', views.sops, name='sops'),
     url(r'^add_document/$', views.add_document, name='add_document'),
     url(r'^public_document/$', views.public_document, name='public_document'),
 

@@ -92,7 +92,7 @@
                            <select class="form-control" name="county" id="county" onchange="getsubcounty()">
                                 <option value="" disabled selected>Select County</option>
                                 {% for cnty in county %}
-                                    <option value="{{cnty.organisationunitid}}">{{cnty.name}}</option>
+                                    <option value="{{cnty.name}}">{{cnty.name}}</option>
                                 {% endfor %}
                             </select>
                          </div>
@@ -300,17 +300,17 @@ catch(e){
 
                 return false;
                }
-               if(inci_stat == "" || inci_stat == null){
-                 bootbox.alert({
-                    size: "small",
-                    title: "Missed data input  : Warning",
-                    message: "Select incident status !!",
-                    callback: function () { /* your callback code */
-                    }
-                });
-                return false;
-
-               }
+               // if(inci_stat == "" || inci_stat == null){
+               //   bootbox.alert({
+               //      size: "small",
+               //      title: "Missed data input  : Warning",
+               //      message: "Select incident status !!",
+               //      callback: function () { /* your callback code */
+               //      }
+               //  });
+               //  return false;
+               //
+               // }
                if(descr == "" || descr==null){
                  bootbox.alert({
                     size: "small",
@@ -679,7 +679,7 @@ catch(e){
                  $('#subcounty').html(options);
                  for(var i=0;i<data.length;i++){
 
-                   var options = '<option value="' + data[i].fields['organisationunitid'] + '">' + data[i].fields['name'] + '</option>';
+                   var options = '<option value="' + data[i].fields['name'] + '">' + data[i].fields['name'] + '</option>';
                    $('#subcounty').append(options);
                  }
                },error:function(){
@@ -707,7 +707,7 @@ catch(e){
                  $('#ward').html(options);
                  for(var i=0;i<data.length;i++){
 
-                   var options = '<option value="' + data[i].fields['organisationunitid'] + '">' + data[i].fields['name'] + '</option>';
+                     var options = '<option value="' + data[i].fields['organisationunitid'] + '">' + data[i].fields['name'] + '</option>';
                    $('#ward').append(options);
                  }
                },error:function(){

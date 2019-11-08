@@ -146,8 +146,16 @@ def user_register(request):
         phone_no = request.POST.get('phone_no','')
         access_level = request.POST.get('access_level','')
         org_unit = request.POST.get('org_unit','')
+        sub_cnty = request.POST.get('subcounty','')
         user_group = request.POST.get('user_group','')
         super_user = request.POST.get('user_status','')
+
+        # if user is National user, default county and subcounty id to the
+        # national id (Kenya id)
+        if org_unit == '':
+            org_unit = 18
+        if sub_cnty == '':
+            sub_cnty = 18
 
         user = User.objects.create_user(username= user_name, email=email, password=email, first_name=first_name,
                 last_name=last_name, is_superuser=super_user, is_staff="t", is_active="t")
@@ -156,15 +164,16 @@ def user_register(request):
         user_id = user.pk
         userObject = User.objects.get(pk = user_id)
         orgunitObject = organizational_units.objects.get(organisationunitid = org_unit)
-        print(user_id)
+        subcntyObject = organizational_units.objects.get(organisationunitid = sub_cnty)
+        # print(user_id)
 
         #save the user in persons tables
         user_person = persons.objects.create(user=userObject, org_unit=orgunitObject, phone_number=phone_no,
-            access_level=access_level)
+            access_level=access_level, county=orgunitObject, sub_county=subcntyObject)
 
     users_count = User.objects.all().count()
     users = User.objects.all()
-    org_units = organizational_units.objects.all().filter(hierarchylevel__lt=3).order_by('name')
+    org_units = organizational_units.objects.all().filter(hierarchylevel=2).order_by('name')
     user_groups = Group.objects.all()
 
     values = {'users_count': users_count, 'users':users, 'org_units': org_units, 'user_groups':user_groups}
@@ -843,8 +852,8 @@ def call_register(request):
 
             else :
                 callcategoryObject = call_incident_category.objects.get(incident_description = callcategory)
-                countyObject = organizational_units.objects.get(organisationunitid = cnty)
-                subcountyObject = organizational_units.objects.get(organisationunitid = sub_cnty)
+                countyObject = organizational_units.objects.get(name = cnty)
+                subcountyObject = organizational_units.objects.get(name = sub_cnty)
                 wardObject = organizational_units.objects.get(organisationunitid = ward)
                 regionObject = reporting_region.objects.get(region_description = region)
                 incidentObject = incident_status.objects.get(status_description = status)
@@ -906,16 +915,43 @@ def get_county(request):
         return HttpResponse(json.dumps(obj_list),content_type="application/json")
 
 def get_subcounty(request):
+    obj_list = None
     if request.method == "POST":
         mycounty = request.POST.get('county','')
-
+        print(mycounty)
         county_parent_id = organizational_units.objects.get(name = mycounty)
         sub_counties = organizational_units.objects.filter(parentid = county_parent_id)
 
         serialized=serialize('json',sub_counties)
         obj_list=json.loads(serialized)
 
-    return HttpResponse(json.dumps(obj_list),content_type="application/json")
+        return HttpResponse(json.dumps(obj_list),content_type="application/json")
+
+def usersubcounty(request):
+    obj_list = None
+    if request.method == "POST":
+        org_id = request.POST.get('county','')
+        print(org_id)
+        county_parent_id = organizational_units.objects.get(organisationunitid = org_id)
+        sub_counties = organizational_units.objects.filter(parentid = county_parent_id)
+
+        serialized=serialize('json',sub_counties)
+        obj_list=json.loads(serialized)
+
+        return HttpResponse(json.dumps(obj_list),content_type="application/json")
+
+def get_group(request):
+    obj_list = None
+    if request.method == "POST":
+        _name = request.POST.get('name','')
+
+        group_name = Group.objects.all()
+        _group = group_name.filter(name__icontains=_name)
+
+        serialized=serialize('json',_group)
+        obj_list=json.loads(serialized)
+
+        return HttpResponse(json.dumps(obj_list),content_type="application/json")
 
 def get_ward(request):
     if request.method == "POST":
@@ -927,7 +963,7 @@ def get_ward(request):
         serialized=serialize('json',wards)
         obj_list=json.loads(serialized)
 
-    return HttpResponse(json.dumps(obj_list),content_type="application/json")
+        return HttpResponse(json.dumps(obj_list),content_type="application/json")
 
 def call_report(request):
     # check if there is an edit on an entry and save
@@ -1041,8 +1077,8 @@ def disease_register(request):
             # checks if data values for county exists, if not, selected region not Kenya
             # NB : organizational_unit 18 is Kenya in the database
         if region == "Kenya" :
-            countyObject = organizational_units.objects.get(organisationunitid = cnty)
-            subcountyObject = organizational_units.objects.get(organisationunitid = sub_cnty)
+            countyObject = organizational_units.objects.get(name = cnty)
+            subcountyObject = organizational_units.objects.get(name = sub_cnty)
             wardObject = organizational_units.objects.get(organisationunitid = ward)
         else :
             countyObject = organizational_units.objects.get(organisationunitid = 18)
@@ -1144,8 +1180,8 @@ def event_register(request):
             significant_events = "f"
 
         if region == "Kenya" :
-            countyObject = organizational_units.objects.get(organisationunitid = cnty)
-            subcountyObject = organizational_units.objects.get(organisationunitid = sub_cnty)
+            countyObject = organizational_units.objects.get(name = cnty)
+            subcountyObject = organizational_units.objects.get(name = sub_cnty)
             wardObject = organizational_units.objects.get(organisationunitid = ward)
         else :
             countyObject = organizational_units.objects.get(organisationunitid = 18)
@@ -1901,7 +1937,8 @@ def analytics(request):
 def users_list(request):
     users_count = User.objects.all().count()
     users = User.objects.all()
-    org_units = organizational_units.objects.all().filter(hierarchylevel__lt=3).order_by('name')
+    # org_units = organizational_units.objects.all().filter(hierarchylevel__lt=3).order_by('name')
+    org_units = organizational_units.objects.all().filter(hierarchylevel=2).order_by('name')
     user_groups = Group.objects.all()
 
     values = {'users_count': users_count, 'users':users, 'org_units': org_units, 'user_groups':user_groups}
@@ -2678,6 +2715,16 @@ def case_documents(request):
 
     return render(request, 'veoc/case_documents.html', values)
 
+def sops(request):
+    document_categories = repository_categories.objects.all()
+    documents_count = document_repository.objects.all().filter(category=9).count
+    documents = document_repository.objects.all().filter(category=9)
+
+    values = {'document_categories': document_categories, 'documents_count': documents_count,
+        'documents': documents}
+
+    return render(request, 'veoc/sops.html', values)
+
 def others(request):
     document_categories = repository_categories.objects.all()
     documents_count = document_repository.objects.all().filter(category=5).count
@@ -2748,10 +2795,14 @@ def add_document(request):
             documents_count = document_repository.objects.all().filter(category=7).count
             documents = document_repository.objects.all().filter(category=7)
             template = 'veoc/out_report.html'
-        else:
+        elif cat=='8':
             documents_count = document_repository.objects.all().filter(category=8).count
             documents = document_repository.objects.all().filter(category=8)
             template = 'veoc/case_documents.html'
+        else:
+            documents_count = document_repository.objects.all().filter(category=9).count
+            documents = document_repository.objects.all().filter(category=9)
+            template = 'veoc/sops.html'
 
         document_categories = repository_categories.objects.all()
 
