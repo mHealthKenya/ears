@@ -31,9 +31,6 @@
         <div class="wrapper wrapper--w680">
             <div class="card card-1">
                 <div class="card-heading"></div>
-                <!-- <div >
-                  <img src="../images/bg-head-02.jpg" style="margin:auto; width:200px;display:block" />
-                </div> -->
                 <div class="card-body">
                     <h2 class="title">Please sign in</h2>
                     <form method="POST" action=".?next={{ redirect_to }}"> {% csrf_token %}
@@ -51,14 +48,16 @@
             </div>
             <div class="card card-2">
                 <!-- <div class="card-heading"></div> -->
-		<div class="card-body">
+                <div class="card-body">
                     <form method="POST" action="#">
-                        <div class="p-t-20">
+                       <div class="p-t-20">
                             <button type="button" class="btn btn--radius btn--green" style="display: block; margin: 0 auto;" onClick="location.href='{% url 'veoc:public_document' %}'">View Public Documents</button>
                             <!-- <a class="btn btn--radius btn--green" href="{% url 'veoc:public_document' %}" role="button" style="float:center;margin-center:20px;">View Public Documents</a> -->
-                        </div>
-
-                    </form>
+                        </div> <div class="p-t-20">
+                            <!-- <button class="btn btn--radius btn--green" type="submit">Login</button> -->
+                            <!-- <button type="button" id="public_documents" class="btn btn--radius btn--green" style="display: block; margin: 0 auto;">View Public Documents</button> -->
+                            <a class="btn btn--radius btn--green" href="{% url 'veoc:public_document' %}" role="button" style="float:center;margin-center:20px;">View Public Documents</a>
+                        </div>                    </form>
                 </div>
             </div>
             <!-- card doing nothing -->

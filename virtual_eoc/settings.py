@@ -29,7 +29,8 @@ SECRET_KEY = '-lzpgy!&kbv)#k*cyg2is#6wlnsehrb+&h%dz&_peh+v5xl5gs'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['41.215.24.110','localhost','127.0.0.1','ears.health.go.ke','192.168.10.8']
+
 
 # CELERY STUFF
 BROKER_URL = 'redis://localhost:6379'
@@ -105,9 +106,9 @@ DATABASES = {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
         'NAME': os.environ.get('DB_NAME','virtual_eoc'),
         'USER': os.environ.get('DB_USER','postgres'),
-        'PASSWORD': os.environ.get('DB_PASS','root'),
+        'PASSWORD': os.environ.get('DB_PASS','NC`{}?!lmn45'),
         'HOST': 'localhost',
-        'PORT': '',
+        'PORT': '5432',
     }
 }
 
