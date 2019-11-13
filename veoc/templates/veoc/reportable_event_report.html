@@ -70,7 +70,7 @@
                           <tbody>
                             <tr>
                           {% for dhis_reported_events_report, dhis_case_values in dhis_reported_events_report %}
-                              <td>{{ dhis_reported_events_report.eventDate }}</td>
+                              <td>{{ dhis_reported_events_report.eventDate|date:'d-m-Y' }}</td>
                               <td>{{ dhis_reported_events_report.event_type.name }}</td>
                               {% if dhis_reported_events_report.stored_by == 'eoc_user' %}
                                 <td>EOC System</td>
@@ -86,7 +86,7 @@
                                 <button type="button" class="btn btn-primary btn-xs view_button"
                                   data-toggle="modal" data-target="#view_event_modal"
                                   data-id="{{ dhis_reported_events_report.pk }}>"
-                                  data-date="{{ dhis_reported_events_report.eventDate }}"
+                                  data-date="{{ dhis_reported_events_report.eventDate|date:'d-m-Y' }}"
                                   data-disease="{{ dhis_reported_events_report.event_type.name }}"
                                   data-source="{{ dhis_reported_events_report.stored_by }}"
                                   data-status="{{ dhis_reported_events_report.status }}"
