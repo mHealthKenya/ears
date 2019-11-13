@@ -1510,13 +1510,25 @@ def ongoing_tasks(request):
     _event_count = event.objects.all().filter(case_status = 1).count
     # total_count = _disease_count+_event_count
     disease_status_desr = incident_status.objects.all()
-    _disease = disease.objects.filter(case_status = 1)
+    my_disease = disease.objects.filter(case_status = 1)
     _event = event.objects.all().filter(case_status = 1)
-    current_date = date.today().strftime('%Y-%m-%d')
+    current_date = date.today()#.strftime('%Y-%m-%d')
 
-    result_list = sorted(chain(_disease, _event), key=attrgetter('date_reported'))
+    print(current_date)
 
-    diseas = {'disease_vals': _disease, 'disease_vals_count': _disease_count,
+    date_incident = []
+    for inc_date in my_disease:
+        d_reported = inc_date.date_reported
+        print(d_reported.date())
+        delta = current_date - d_reported.date()
+        print(delta.days)
+        date_incident.append(delta.days)
+
+    my_disease_data = zip(my_disease, date_incident)
+
+    result_list = sorted(chain(my_disease, _event), key=attrgetter('date_reported'))
+
+    diseas = {'disease_vals': my_disease_data, 'disease_vals_count': _disease_count,
         'status_descriptions':disease_status_desr, 'current_date' :current_date}
 
     return render(request, 'veoc/ongoing_tasks.html', diseas)
@@ -1532,12 +1544,25 @@ def filter_ongoing_tasks(request):
         _event_count = event.objects.all().filter(case_status = 1).filter(date_reported__range=[date_from, date_to]).count
         # total_count = _disease_count+_event_count
         disease_status_desr = incident_status.objects.all()
-        _disease = disease.objects.filter(case_status = 1).filter(date_reported__range=[date_from, date_to])
+        my_disease = disease.objects.filter(case_status = 1).filter(date_reported__range=[date_from, date_to])
         _event = event.objects.all().filter(case_status = 1).filter(date_reported__range=[date_from, date_to])
+        current_date = date.today()
 
-        result_list = sorted(chain(_disease, _event), key=attrgetter('date_reported'))
+        print(current_date)
 
-        diseas = {'disease_vals': _disease, 'disease_vals_count': _disease_count,
+        date_incident = []
+        for inc_date in my_disease:
+            d_reported = inc_date.date_reported
+            print(d_reported.date())
+            delta = current_date - d_reported.date()
+            print(delta.days)
+            date_incident.append(delta.days)
+
+        my_disease_data = zip(my_disease, date_incident)
+
+        result_list = sorted(chain(my_disease, _event), key=attrgetter('date_reported'))
+
+        diseas = {'disease_vals': my_disease_data, 'disease_vals_count': _disease_count,
             'disease_status_desr': disease_status_desr, 'day_from':day_from, 'day_to': day_to}
 
         return render(request, 'veoc/ongoing_tasks.html', diseas)

@@ -33,49 +33,77 @@
                   </form>
               </div>
 
-        			<div class="padding-md">
-        				<div class="row">
-        					<div class="col-md-12">
-        						<div class="panel panel-default table-responsive">
-        							<div class="panel-heading">
-        								Ongoing Tasks
-        								<span class="label label-info pull-right" id="totalspan">{{disease_vals_count}} Open Incidents </span>
-        							</div>
-        							<div class="padding-md clearfix">
-        							<table class="table table-hover" id="ongoing_task_table">
-        								<thead class="thead-dark">
-                          <tr>
-                              <th>Date</th>
-                              <th>Incident Reported</th>
-                              <th>Status</th>
-                              <th>Region</th>
-                              <th>Cases</th>
-                              <th>Deaths</th>
-                              <!-- <th>Remarks</th> -->
-                              <th>Case status</th>
-                              <th>Officer</th>
-                              <th>Action</th>
-                          </tr>
-                          </thead>
-                          <tbody>
-                          {% for disease in disease_vals %}
-                              {% if disease.incident_status_id == 2 %}
-                                  <tr style="background-color: #00FFFF">
-                                      {% else %}
-                                  </tr>
-                              {% endif %}
-                          <td>{{ disease.date_reported }}</td>
-                          <td>{{ disease.disease_type.name }}</td>
-                          <td>{{ disease.incident_status.status_description }}</td>
-                          <td>{{ disease.reporting_region.region_description }}</td>
-                          <td>{{ disease.cases }}</td>
-                          <td>{{ disease.deaths }}</td>
-                          <!-- <td>{{ disease.remarks }}</td> -->
-                          <td>Open Incident</td>
-                          <td>{{ disease.created_by.username }}</td>
-                          <td>
-                              <button type="button" class="btn btn-primary btn-xs view_button"
-                                data-toggle="modal" data-target="#view_disease_modal"
+    			<div class="padding-md">
+    				<div class="row">
+    					<div class="col-md-12">
+    						<div class="panel panel-default table-responsive">
+    							<div class="panel-heading">
+    								Ongoing Tasks
+    								<span class="label label-info pull-right" id="totalspan">{{disease_vals_count}} Open Incidents </span>
+    							</div>
+    							<div class="padding-md clearfix">
+    							<table class="table table-hover" id="ongoing_task_table">
+    								<thead class="thead-dark">
+                      <tr>
+                          <th>Date</th>
+                          <th>Incident</th>
+                          <th>Status</th>
+                          <th>Region</th>
+                          <th>Cases</th>
+                          <th>Deaths</th>
+                          <!-- <th>Remarks</th> -->
+                          <th>Status</th>
+                          <th>Officer</th>
+                          <th>Case Duration</th>
+                          <th>Action</th>
+                      </tr>
+                      </thead>
+                      <tbody>
+                        {% for disease, date_incident in disease_vals %}
+                            <!-- {% if date_incident > 3 %}
+                                <tr style="background-color: #F51B00">
+                            {% else %} -->
+                                <tr>
+                            <!-- {% endif %} -->
+                            <td>{{ disease.date_reported|date:'d-m-Y' }}</td>
+                            <td>{{ disease.disease_type.name }}</td>
+                            <td>{{ disease.incident_status.status_description }}</td>
+                            <td>{{ disease.reporting_region.region_description }}</td>
+                            <td>{{ disease.cases }}</td>
+                            <td>{{ disease.deaths }}</td>
+                            <!-- <td>{{ disease.remarks }}</td> -->
+                            <td>Open Incident</td>
+                            <td>{{ disease.created_by.username }}</td>
+                            {% if date_incident > 3 %}
+                            <td style="background-color: #F51B00">
+                              {{ date_incident }}</td>
+                            {% else %}
+                                <td>{{ date_incident }}</td>
+                            {% endif %}
+                            <td>
+                                <button type="button" class="btn btn-primary btn-xs view_button"
+                                  data-toggle="modal" data-target="#view_disease_modal"
+                                  data-id="{{ disease.pk }}"
+                                  data-date="{{ disease.date_reported }}"
+                                  data-disease="{{ disease.disease_type.name }}"
+                                  data-status="{{ disease.incident_status.status_description }}"
+                                  data-cases="{{ disease.cases }}"
+                                  data-deaths="{{ disease.deaths }}"
+                                  data-source="{{ disease.data_source.source_description }}"
+                                  data-region="{{ disease.reporting_region.region_description }}"
+                                  data-county="{{ disease.county.name }}"
+                                  data-subcounty="{{ disease.subcounty.name }}"
+                                  data-ward="{{ disease.ward.name }}"
+                                  data-remarks="{{ disease.remarks }}"
+                                  data-action="{{ disease.action_taken }}"
+                                  data-closed="Open Incident"
+                                  data-reporter="{{ disease.created_by.username }}"
+                                  title="View">
+                                  <i class="fa fa-eye">
+                                  </i>
+                              </button>
+                              <button type="button" class="btn btn-primary btn-xs edit_button"
+                                data-toggle="modal" data-target="#edit_disease_modal"
                                 data-id="{{ disease.pk }}"
                                 data-date="{{ disease.date_reported }}"
                                 data-disease="{{ disease.disease_type.name }}"
@@ -91,33 +119,12 @@
                                 data-action="{{ disease.action_taken }}"
                                 data-closed="Open Incident"
                                 data-reporter="{{ disease.created_by.username }}"
-                                title="View">
-                                <i class="fa fa-eye">
+                                title="Edit">
+                                <i class="fa fa-edit">
                                 </i>
-                            </button>
-                            <button type="button" class="btn btn-primary btn-xs edit_button"
-                              data-toggle="modal" data-target="#edit_disease_modal"
-                              data-id="{{ disease.pk }}"
-                              data-date="{{ disease.date_reported }}"
-                              data-disease="{{ disease.disease_type.name }}"
-                              data-status="{{ disease.incident_status.status_description }}"
-                              data-cases="{{ disease.cases }}"
-                              data-deaths="{{ disease.deaths }}"
-                              data-source="{{ disease.data_source.source_description }}"
-                              data-region="{{ disease.reporting_region.region_description }}"
-                              data-county="{{ disease.county.name }}"
-                              data-subcounty="{{ disease.subcounty.name }}"
-                              data-ward="{{ disease.ward.name }}"
-                              data-remarks="{{ disease.remarks }}"
-                              data-action="{{ disease.action_taken }}"
-                              data-closed="Open Incident"
-                              data-reporter="{{ disease.created_by.username }}"
-                              title="Edit">
-                              <i class="fa fa-edit">
-                              </i>
-                            </button>
-                          </td>
-                        </tr>
+                              </button>
+                            </td>
+                          </tr>
                         {% endfor %}
                       </tbody>
     							</table>

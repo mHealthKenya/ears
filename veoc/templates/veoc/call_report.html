@@ -52,7 +52,7 @@
                             <th>Status</th>
                             <th>County</th>
                             <th>Subcounty</th>
-                            <th>Ward</th>
+                            <!-- <th>Ward</th> -->
                             <th>Location</th>
                             <th>Caller Name</th>
                             <th>Caller No</th>
@@ -70,12 +70,12 @@
                                         {% else %}
                                     </tr>
                                 {% endif %}
-                            <td>{{ call_log.date_reported }}</td>
+                            <td>{{ call_log.date_reported|date:'d-m-Y' }}</td>
                             <td>{{call_cat_incident}}</td>
                             <td>{{ call_log.incident_status.status_description }}</td>
                             <td>{{ call_log.county.name }}</td>
                             <td>{{ call_log.subcounty.name }}</td>
-                            <td>{{ call_log.ward.name }}</td>
+                            <!-- <td>{{ call_log.ward.name }}</td> -->
                             <td>{{ call_log.location }}</td>
                             <td>{{ call_log.caller_name}}</td>
                             <td>{{ call_log.caller_number }}</td>
@@ -87,7 +87,7 @@
                               <button type="button" class="btn btn-primary btn-xs view_button"
                                 data-toggle="modal" data-target="#view_call_modal"
                                 data-id="{{ call_log.pk }}"
-                                data-date="{{ call_log.date_reported }}"
+                                data-date="{{ call_log.date_reported|date:'d-m-Y' }}"
                                 data-county="{{ call_log.county.name }}"
                                 data-subcounty="{{ call_log.subcounty.name }}"
                                 data-ward="{{ call_log.ward.name }}"
@@ -106,7 +106,7 @@
                             <button type="button" class="btn btn-primary btn-xs edit_button"
                               data-toggle="modal" data-target="#edit_call_modal"
                               data-id="{{ call_log.pk }}"
-                              data-date="{{ call_log.date_reported }}"
+                              data-date="{{ call_log.date_reported|date:'d-m-Y' }}"
                               data-county="{{ call_log.county.name }}"
                               data-subcounty="{{ call_log.subcounty.name }}"
                               data-ward="{{ call_log.ward.name }}"

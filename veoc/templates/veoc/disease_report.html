@@ -60,7 +60,7 @@
                             <th>Region</th>
                             <th>County</th>
                             <th>Subcounty</th>
-                            <th>Ward</th>
+                            <!-- <th>Ward</th> -->
                             <th>Officer</th>
                             <!-- <th>Remarks</th> -->
                             <th>Action</th>
@@ -73,7 +73,7 @@
                                     {% else %}
                                 <tr>
                             {% endif %}
-                        <td>{{ disease.date_reported }}</td>
+                        <td>{{ disease.date_reported|date:'d-m-Y' }}</td>
                         <td>{{ disease.disease_type.name }}</td>
                         <td>{{ disease.incident_status.status_description }}</td>
                         <td>{{ disease.cases }}</td>
@@ -83,11 +83,11 @@
                         {% if disease.reporting_region.region_description == 'Kenya' %}
                           <td>{{ disease.county.name }}</td>
                           <td>{{ disease.subcounty.name }}</td>
-                          <td>{{ disease.ward.name }}</td>
+                          <!-- <td>{{ disease.ward.name }}</td> -->
                         {% else %}
                             <td>N/A</td>
                             <td>N/A</td>
-                            <td>N/A</td>
+                            <!-- <td>N/A</td> -->
                         {% endif %}
                         <td>{{ disease.created_by.username }}</td>
                         <!-- <td>{{ disease.remarks }}</td> -->
@@ -95,7 +95,7 @@
                             <button type="button" class="btn btn-primary btn-xs view_button"
                               data-toggle="modal" data-target="#view_disease_modal"
                               data-id="{{ disease.pk }}"
-                              data-date="{{ disease.date_reported }}"
+                              data-date="{{ disease.date_reported|date:'d-m-Y' }}"
                               data-disease="{{ disease.disease_type.name }}"
                               data-status="{{ disease.incident_status.status_description }}"
                               data-cases="{{ disease.cases }}"

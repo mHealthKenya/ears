@@ -54,7 +54,7 @@
                             <th>Region</th>
                             <th>County</th>
                             <th>Subcounty</th>
-                            <th>Ward</th>
+                            <!-- <th>Ward</th> -->
                             <th>User</th>
                             <th>Action</th>
                           </tr>
@@ -66,7 +66,7 @@
                                       {% else %}
                                   <tr>
                               {% endif %}
-                          <td>{{ event.date_reported }}</td>
+                          <td>{{ event.date_reported|date:'d-m-Y' }}</td>
                           <td>{{ event.event_type.name }}</td>
                           <td>{{ event.incident_status.status_description }}</td>
                           <td>{{ event.cases }}</td>
@@ -76,18 +76,18 @@
                           {% if event.reporting_region.region_description == 'Kenya' %}
                             <td>{{ event.county.name }}</td>
                             <td>{{ event.subcounty.name }}</td>
-                            <td>{{ event.ward.name }}</td>
+                            <!-- <td>{{ event.ward.name }}</td> -->
                           {% else %}
                               <td>N/A</td>
                               <td>N/A</td>
-                              <td>N/A</td>
+                              <!-- <td>N/A</td> -->
                           {% endif %}
                           <td>{{ event.created_by.username }}</td>
                           <td>
                               <button type="button" class="btn btn-primary btn-xs view_button"
                                 data-toggle="modal" data-target="#view_event_modal"
                                 data-id="{{ event.pk }}"
-                                data-date="{{ event.date_reported }}"
+                                data-date="{{ event.date_reported|date:'d-m-Y' }}"
                                 data-event="{{ event.event_type.name }}"
                                 data-status="{{ event.incident_status.status_description }}"
                                 data-cases="{{ event.cases }}"
