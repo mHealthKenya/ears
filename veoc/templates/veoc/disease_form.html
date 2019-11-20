@@ -13,8 +13,8 @@
           <div class="padding-md">
             <div class="row">
               <div class="col-md-12">
-                  <!-- <form id="disease_form" onsubmit="return validateform()" > -->
-                  <form class="capture_disease_form" onsubmit="return validateform()" method="POST" action="{% url 'veoc:disease_register' %}">
+                  <!-- <form class="capture_disease_form" onsubmit="return validateform()" method="POST" action="{% url 'veoc:disease_register' %}"> -->
+                  <form class="capture_disease_form" method="POST" action="{% url 'veoc:disease_register' %}">
                     {% csrf_token %}
                     <div class="form-row">
                        <div class="form-group col-md-12">
@@ -141,8 +141,6 @@
 
     <script>
 
-        window.onload = formFeedback;
-
         function checkCases() {
 
             var cases = $('#cases').val();
@@ -162,29 +160,6 @@
             }
         }
 
-        function formFeedback() {
-
-            var x = "{{success}}";
-            if (x == "") {
-                bootbox.alert({
-                    size: "small",
-                    title: "Disease Action  : Error",
-                    message: x,
-                    callback: function () { /* your callback code */
-                    }
-                });
-            }
-            else {
-                bootbox.alert({
-                    size: "small",
-                    title: "Disease Action",
-                    message: x,
-                    callback: function () { /* your callback code */
-                    }
-                });
-            }
-        }
-        
         $(document).ready(function(e){
           var diseaseForm = $(".capture_disease_form")
 
@@ -236,51 +211,6 @@
            }else{
              _county.style.display = 'none';
            }
-        }
-
-        function validateform(){
-          var reporing_reg = document.getElementById('region').value;
-
-          if(reporing_reg == "Kenya"){
-            //check if county details are selected
-            var cnty = document.getElementById('county').value;
-            var subcnty = document.getElementById('subcounty').value;
-            var wrd = document.getElementById('ward').value;
-
-            if(cnty == "" || cnty==null){
-              bootbox.alert({
-                 size: "small",
-                 title: "Missed data input  : Warning",
-                 message: "Select reported county!!",
-                 callback: function () { /* your callback code */
-                 }
-             });
-
-             return false;
-            }
-            if(subcnty == "" || subcnty==null){
-              bootbox.alert({
-                 size: "small",
-                 title: "Missed data input  : Warning",
-                 message: "Select reported  sub county !!",
-                 callback: function () { /* your callback code */
-                 }
-             });
-
-             return false;
-            }
-            if(wrd == "" || wrd==null){
-              bootbox.alert({
-                 size: "small",
-                 title: "Missed data input  : Warning",
-                 message: "Select reported ward !!",
-                 callback: function () { /* your callback code */
-                 }
-             });
-
-             return false;
-            }
-          }//reporting kenya
         }
 
         function getsubcounty(){
