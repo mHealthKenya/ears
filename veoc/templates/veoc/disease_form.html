@@ -13,7 +13,8 @@
           <div class="padding-md">
             <div class="row">
               <div class="col-md-12">
-                  <form onsubmit="return validateform()" method="POST" action="{% url 'veoc:disease_register' %}">
+                  <!-- <form id="disease_form" onsubmit="return validateform()" > -->
+                  <form class="capture_disease_form" onsubmit="return validateform()" method="POST" action="{% url 'veoc:disease_register' %}">
                     {% csrf_token %}
                     <div class="form-row">
                        <div class="form-group col-md-12">
@@ -135,10 +136,13 @@
             integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
             crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootbox.js/4.4.0/bootbox.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
+    <script src="https://cdn.jsdelivr.net/npm/promise-polyfill"></script>
 
     <script>
 
         window.onload = formFeedback;
+
         function checkCases() {
 
             var cases = $('#cases').val();
@@ -157,6 +161,7 @@
 
             }
         }
+
         function formFeedback() {
 
             var x = "{{success}}";
@@ -179,6 +184,44 @@
                 });
             }
         }
+        
+        $(document).ready(function(e){
+          var diseaseForm = $(".capture_disease_form")
+
+          diseaseForm.submit(function(e){
+            e.preventDefault();
+            console.log("inside disease_form");
+            var thisForm = $(this);
+            var endPoint = thisForm.attr("action") || window.location.href;
+            var method = thisForm.attr("method");
+            var formData = thisForm.serialize();
+
+            $.ajax({
+              type:method,
+              url:endPoint,
+              data: formData,
+              success:function(){
+                Swal.fire({
+                  title: 'Success!',
+                  text: 'Disease Details Saved',
+                  icon: 'success'
+                });
+                diseaseForm[0].reset();
+              },
+              error:function(er){
+                console.log("Disease saving error");
+                console.log(er.responseText);
+                Swal.fire({
+                  title: 'Error!',
+                  text: 'Disease Details Cannot be Saved',
+                  icon: 'error'
+                });
+              }
+            });
+
+          });
+
+        });
 
         $(function () {
             $("#date_created").datepicker();

@@ -48,6 +48,10 @@ urlpatterns = [
     url(r'^filter_ongoing_tasks/$', views.filter_ongoing_tasks, name='filter_ongoing_tasks'),
     url(r'^case_definition/$', views.case_definition, name='case_definition'),
 
+    url(r'^(?P<id>\d+)/disease_view/$', views.disease_view),
+    url(r'^(?P<id>\d+)/event_view/$', views.event_view),
+    url(r'^(?P<id>\d+)/call_log_view/$', views.call_log_view),
+
     url(r'^daily_reports/$', views.daily_reports, name='daily_reports'),
     url(r'^daily_report_submit/$', views.daily_report_submit, name='daily_report_submit'),
     url(r'^weekly_reports/$', views.weekly_report, name='weekly_report'),

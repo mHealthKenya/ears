@@ -89,18 +89,18 @@ def login(request):
                     print('inside county dashboard')
                     next = '/county_dashboard/'
                     print(next)
-
                 else:
                     print('inside subcounty dashboard')
                     next = '/subcounty_dashboard/'
                     print(next)
 
-                messages.info(request, 'Your password was updated successfully!')
+                # messages.info(request, 'Login successfully!')
                 return HttpResponseRedirect(next)
             else:
-                messages.info(request, 'User Not Registered!')
+                # messages.info(request, 'Username or Password NOT matching!')
                 return HttpResponse("Inactive user.")
         else:
+            # messages.error(request, 'User Not Registered!')
             return HttpResponseRedirect(settings.LOGIN_URL)
     else:
         return render(request, 'veoc/login.html')
@@ -1154,6 +1154,35 @@ def disease_register(request):
     data = {'diseases':diseases, 'datasource':datasource, 'regions':regions, 'incident_status':status, 'county':county, 'day':day}
 
     return render(request, 'veoc/disease_form.html', data)
+
+
+@login_required
+def disease_view(request, id = None):
+    instance = get_object_or_404(disease, id = id)
+
+    context = {
+        "disease_instance":instance,
+    }
+    return render(request, "veoc/disease_view.html",context)
+
+@login_required
+def event_view(request, id = None):
+    instance = get_object_or_404(event, id = id)
+
+    context = {
+        "event_instance":instance,
+    }
+    return render(request, "veoc/event_view.html",context)
+
+@login_required
+def call_log_view(request, id = None):
+    instance = get_object_or_404(call_log, id = id)
+
+    context = {
+        "call_log_instance":instance,
+    }
+    return render(request, "veoc/call_log_view.html",context)
+
 
 def event_register(request):
 
