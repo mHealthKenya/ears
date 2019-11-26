@@ -784,6 +784,7 @@ def call_register(request):
 
         #Check call_category_incident
         call_inc_category = ""
+        callcategoryObject = ""
         if not diseasetype:
             print("category incident not diseasetype")
             if not eventtype:
