@@ -157,7 +157,7 @@
                 $('#deathserror').html("");
 
             }
-        }        
+        }
 
         $(document).ready(function(e){
           var eventsForm = $(".capture_events_form")
@@ -170,6 +170,13 @@
             var method = thisForm.attr("method");
             var formData = thisForm.serialize();
 
+            Swal.fire({
+              title: "Please wait!, Saving Details!",
+              // text: "Please wait",
+              imageUrl: "/static/images/ajax-loader.gif",
+              showConfirmButton: false,
+              allowOutsideClick: false
+            });
             $.ajax({
               type:method,
               url:endPoint,
@@ -192,9 +199,7 @@
                 });
               }
             });
-
           });
-
         });
 
         $(function () {

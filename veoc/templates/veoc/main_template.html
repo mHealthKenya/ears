@@ -1,4 +1,5 @@
-{% load staticfiles %}
+<!-- {% load staticfiles %} -->
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -68,11 +69,8 @@
         <!-- <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" id="menu-toggle">
             <span class="glyphicon glyphicon-th-large" aria-hidden="true"></span>
         </button> -->
-        <a class="navbar-brand" href="/dashboard" style="color: #ffffff ; font-size:100%;">Emergency Alert Reporting System</i>
-          <!-- <img src="{{ MEDIA_URL }}/ears_logo.png"></a> -->
-          <!-- <img src="/media/veoc/ears_logo.png"> -->
-          <!-- {% load static %} -->
-          <!-- <img src="{% static "/images/EARS_logo.jpeg" %}"> -->
+        <a href="/dashboard">
+          <img src="{% static "images/header.jpg" %}">
         </a>
     </div>
     <!-- navbar-header-->
