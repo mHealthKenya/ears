@@ -1,4 +1,4 @@
-<!-- {% load staticfiles %} -->
+{% load groups_filter %}
 {% load static %}
 <!DOCTYPE html>
 <html lang="en">
@@ -87,7 +87,7 @@
 
             <li>
                 <a href="#" data-toggle="dropdown" role="button"
-                   style="color: #ffffff">Welcome {{ request.user.username }}</a>
+                   style="color: #ffffff">Welcome {{ request.user.first_name }}</a>
             </li>
 
             <li>
@@ -182,8 +182,9 @@
               </ul>
           </li>
           <li>
-              <a href="#"><span class="fa-stack fa-lg pull-left"><i class="fa fa-clipboard fa-stack-1x "></i></span>TABULAR
-                  REPORTS</a>
+              <a href="#"><span class="fa-stack fa-lg pull-left">
+                <i class="fa fa-clipboard fa-stack-1x "></i>
+              </span>TABULAR REPORTS</a>
               <ul class="nav-pills nav-stacked" style="list-style-type:none;">
                   <li><a href="/call_report">EOC Call report</a></li>
                   <li><a href="/unrelated_call_report">Unrelated Calls report</a></li>
@@ -195,7 +196,8 @@
           </li>
           <li>
               <a href="#"><span class="fa-stack fa-lg pull-left">
-                      <i class="fa fa-credit-card fa-stack-1x"></i></span>TEMPLATE REPORTS</a>
+                  <i class="fa fa-credit-card fa-stack-1x"></i>
+                    </span>TEMPLATE REPORTS</a>
               <ul class="nav-pills nav-stacked" style="list-style-type:none;">
                   <li><a href="/daily_reports">Daily report</a></li>
                   <li><a href="/weekly_reports">Weekly report</a></li>
@@ -214,6 +216,7 @@
                   <li><a href="/heat_maps">Disease heat maps</a></li>
               </ul>
           </li>
+          {% if request.user|has_group:"County Managers" %}
           <li>
               <a href="#"><span class="fa-stack fa-lg pull-left"><i
                       class="fa fa-calendar fa-stack-1x "></i></span>EOC STAFF</a>
@@ -226,11 +229,18 @@
                   <li><a href="/allocation_sheet">EOC watchers allocation</a></li>
                   <!-- <li><a href="/managers">EOC Managers contacts</a></li> -->
                   <li><a href="/watchers_schedule">Watchers Schedule</a></li>
-
-                  <!-- </ul>
-                  <a href="#"><span class="fa-stack fa-lg pull-left"><i class="fa fa-youtube-play fa-stack-1x "></i></span>EOC CONTACTS</a>
-                  <ul>
-                  </ul> -->
+              </ul>
+          </li>
+          {% else %}
+          {% endif %}
+          <li>
+              <a href="#"><span class="fa-stack fa-lg pull-left"><i
+                      class="fa fa-calendar fa-stack-1x "></i></span>EOC STAFF</a>
+              <ul class="nav-pills nav-stacked" style="list-style-type:none;">
+                  <!-- <a href="#"><span class="fa-stack fa-lg pull-left"><i class="fa fa-youtube-play fa-stack-1x "></i></span>EOC DUTY REGISTER</a> -->
+                  <!-- <ul > -->
+                  <li><a href="/week_shift">EOC events</a></li>
+                  <li><a href="/eoc_cont">EOC Personnel Contacts</a></li>
               </ul>
           </li>
           <li>
@@ -240,25 +250,6 @@
                   <li>
                       <a href="/all_contact">All Contacts</a>
                   </li>
-                  <!-- <li>
-                      <a href="/cec_contacts">CEC Contacts</a>
-                  </li>
-                  <li>
-                      <a href="/cdsc_contacts">CDSC/SCDS Contacts</a>
-                  </li>
-                  <li>
-                      <a href="/hospital">Hospital Contacts</a>
-                  </li>
-                  <li>
-                      <a href="/ambullance">Ambullance Contacts</a>
-                  </li>
-                  <li>
-                      <a href="/police">Police Contacts</a>
-                  </li> -->
-                  <!-- <li><a href="/create_contact">Add contacts</a></li>
-                  {% for contact_type in contact_type_vals %}
-                      <li><a href="/{{ contact_type.id }}/contact_type">{{ contact_type.description }}</a></li>
-                  {% endfor %} -->
               </ul>
           </li>
           <li>
@@ -294,6 +285,7 @@
                   </li>
               </ul>
           </li>
+
           <li>
               <a href="#"><span class="fa-stack fa-lg pull-left"><i
                 class="fa fa-leanpub fa-stack-1x "></i></span>SYSTEM FEEDBACK</a>

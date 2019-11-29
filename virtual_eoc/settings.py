@@ -29,6 +29,8 @@ SECRET_KEY = '-lzpgy!&kbv)#k*cyg2is#6wlnsehrb+&h%dz&_peh+v5xl5gs'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
+ADMINS = [('Jeffa', 'jeffadavid@gmail.com'), ('David', 'djeffa@mhealthkenya.org')]
+
 ALLOWED_HOSTS = ['41.215.24.110','localhost','127.0.0.1','ears.health.go.ke','192.168.10.8']
 
 

@@ -581,6 +581,21 @@
 
             }
 
+            function pad(num) {
+              return String("0" + num).slice(-2);
+            }
+
+            //function to pick weeknumbers to help sort in order
+            function sortYearWeek(elem1, elem2) {
+              var as = elem1.split('W'),
+                  bs = elem2.split('W'),
+                  aa = as[0]+pad(as[1]), // yyyymm
+                  bb = bs[0]+pad(bs[1]);
+              return aa - bb;
+            }
+
+            weeknum.sort(sortYearWeek);
+
             Highcharts.chart('dhis_data', {
               chart: {
                   type: 'spline'

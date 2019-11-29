@@ -22,10 +22,13 @@ from veoc.serializer import *
 from veoc.tasks import pull_dhis_idsr_data
 from datetime import date, timedelta, datetime
 from collections import Counter
+from django import template
 import time
 import json
 from itertools import chain
 from operator import attrgetter
+
+register = template.Library()
 
 # Create your views here.
 contacts = contact_type.objects.all()
@@ -61,6 +64,11 @@ class incident_status_view(viewsets.ModelViewSet):
 class organizational_unit_view(viewsets.ModelViewSet):
     queryset = organizational_units.objects.all()
     serializer_class = OrganizationalUnitsSerializer
+
+def not_in_manager_group(user):
+    if user:
+        return user.groups.filter(name='National Managers').count() == 0
+    return False
 
 def login(request):
     global next
@@ -374,8 +382,8 @@ def county_dashboard(request):
     county_object = organizational_units.objects.get(pk = user_county_id)
     county_name = county_object.name
 
-    print(county_name)
-    print(user_county_id)
+    # print(county_name)
+    # print(user_county_id)
 
     _dcall_logs = disease.objects.all().filter(county = user_county_id).filter(data_source = 1).filter(incident_status = 2).filter(date_reported__gte = date.today()- timedelta(days=30)).order_by("-date_reported")
     _ecall_logs = event.objects.all().filter(county = user_county_id).filter(data_source = 1).filter(incident_status = 2).filter(date_reported__gte = date.today()- timedelta(days=7)).order_by("-date_reported")
@@ -570,8 +578,8 @@ def subcounty_dashboard(request):
     county_object = organizational_units.objects.get(pk = user_county_id)
     sub_county_name = county_object.name
 
-    print(user_county_id)
-    print(sub_county_name)
+    # print(user_county_id)
+    # print(sub_county_name)
 
     _dcall_logs = disease.objects.all().filter(subcounty = user_county_id).filter(data_source = 1).filter(incident_status = 2).filter(date_reported__gte = date.today()- timedelta(days=30)).order_by("-date_reported")
     _ecall_logs = event.objects.all().filter(subcounty = user_county_id).filter(data_source = 1).filter(incident_status = 2).filter(date_reported__gte = date.today()- timedelta(days=7)).order_by("-date_reported")
@@ -797,7 +805,7 @@ def call_register(request):
                     call_inc_category = unrelatedObject.id
                     print("category urelated incident: ")
                     print("call_inc_category: ")
-                    print(call_inc_category)
+                    # print(call_inc_category)
 
                     #getting objects of foreignKeys
                     #checks if county data is chosen
@@ -814,7 +822,7 @@ def call_register(request):
                 call_inc_category = eventObject.id
                 print("category event type: ")
                 print("call_inc_category: ")
-                print(call_inc_category)
+                # print(call_inc_category)
 
                 #getting objects of foreignKeys
                 #checks if county data is chosen
@@ -839,7 +847,7 @@ def call_register(request):
             call_inc_category = diseaseObject.id
             print("category disease type: ")
             print("call_inc_category: ")
-            print(call_inc_category)
+            # print(call_inc_category)
 
             #getting objects of foreignKeys
             #checks if county data is chosen
@@ -864,7 +872,7 @@ def call_register(request):
 
         #get current user
         current_user = request.user
-        print(current_user)
+        # print(current_user)
         userObject = User.objects.get(pk = current_user.id)
 
         #saving values to databse
@@ -1156,7 +1164,6 @@ def disease_register(request):
 
     return render(request, 'veoc/disease_form.html', data)
 
-
 @login_required
 def disease_view(request, id = None):
     instance = get_object_or_404(disease, id = id)
@@ -1183,7 +1190,6 @@ def call_log_view(request, id = None):
         "call_log_instance":instance,
     }
     return render(request, "veoc/call_log_view.html",context)
-
 
 def event_register(request):
 
