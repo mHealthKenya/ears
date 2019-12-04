@@ -15,9 +15,12 @@
             <div class="col-md-12">
                 <form class="capture_events_form" method="POST" action="{% url 'veoc:event_register' %}">
                   {% csrf_token %}
+                  <div class="form-group col-md-12">
+                    <label><i><u>NB</u> : Inputs with * must have values</i></label>
+                  </div>
                   <div class="form-row">
                      <div class="form-group col-md-12">
-                       <label for="disease_type">Event Type</label>
+                       <label for="disease_type">Public Health Event : *</label>
                        <select class="form-control" id="eventType" name="eventType" required>
                               <option value="" disabled selected>Select Event option</option>
                               {% for dt in events %}
@@ -28,7 +31,7 @@
                   </div>
                    <div class="form-row">
                        <div class="form-group col-md-6">
-                         <label for="region">Reporting Region</label>
+                         <label for="region">Reporting Region : *</label>
                          <select class="form-control" name="region" id="region" onchange="region_filter()" required>
                               <option value="" disabled selected>Select Region</option>
                               {% for reg in regions %}
@@ -37,7 +40,7 @@
                           </select>
                        </div>
                        <div class="form-group col-md-6">
-                         <label for="data_source">Data Source</label>
+                         <label for="data_source">Data Source : *</label>
                          <select class="form-control" id="dataSource" name="dataSource" required>
                                 <option value="" disabled selected>Select Data Source</option>
                                 {% for ds in datasource %}
@@ -48,7 +51,7 @@
                    </div>
                    <div class="form-row" id="county_div" style="display: none;">
                        <div class="form-group col-md-4">
-                         <label for="county">County</label>
+                         <label for="county">County : *</label>
                          <select class="form-control" name="county" id="county" onchange="getsubcounty()" >
                               <option value="" disabled selected>Select County</option>
                               {% for cty in county %}
@@ -57,13 +60,13 @@
                           </select>
                        </div>
                        <div class="form-group col-md-4">
-                         <label for="subcounty">Subcounty</label>
+                         <label for="subcounty">Subcounty : *</label>
                          <select class="form-control" name="subcounty" id="subcounty" onchange="getward()">
                               <option value="" disabled selected>Select sub-county</option>
                           </select>
                        </div>
                        <div class="form-group col-md-4">
-                         <label for="ward">Ward</label>
+                         <label for="ward">Ward : *</label>
                          <select class="form-control" name="ward" id="ward" >
                               <option value="" disabled selected>Select Ward</option>
                           </select>
@@ -71,7 +74,7 @@
                    </div>
                    <div class="form-row">
                        <div class="form-group col-md-6">
-                         <label for="status">Incident Status</label>
+                         <label for="status">Incident Status : *</label>
                          <select class="form-control" name="status" id="status" required>
                               <option value="" disabled selected>Select Status</option>
                               {% for stat in incident_status %}
@@ -80,29 +83,29 @@
                           </select>
                        </div>
                        <div class="form-group col-md-6">
-                         <label for="datereport">Date Reported</label>
+                         <label for="datereport">Date Reported : *</label>
                          <input class="form-control" type="date" value="{{ day }}" id="dateReported" max='2000-13-13' name="dateReported" required>
                        </div>
                    </div>
                    <div class="form-row">
                       <div class="form-group col-md-6">
-                        <label for="cases">Number of Cases</label>
+                        <label for="cases">Number of Cases : *</label>
                         <input type="number" min="0" class="form-control" id="cases" name="cases" placeholder="Cases" required>
                       </div>
                       <div class="form-group col-md-6">
-                        <label for="callernumber">Casualty (Deaths)</label>
+                        <label for="callernumber">Casualty (Deaths) : *</label>
                         <input type="number" min="0" class="form-control" id="deaths" name="deaths" onfocusout="checkCases()" placeholder="Deaths" required >
                       </div>
                    </div>
                    <div class="form-row">
                      <div class="form-group col-md-12">
-                       <label for="description">Description/ Remarks</label>
+                       <label for="description">Description/ Remarks :</label>
                        <textarea class="form-control" id="description" rows="3" name="description" required placeholder="Enter description"></textarea>
                      </div>
                    </div>
                    <div class="form-row">
                      <div class="form-group col-md-12">
-                       <label for="action">Action Taken</label>
+                       <label for="action">Action Taken :</label>
                        <textarea class="form-control" id="actionTaken" rows="3" name="actionTaken" placeholder="Enter action taken"></textarea>
                      </div>
                    </div>

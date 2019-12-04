@@ -14,9 +14,12 @@
             <div class="col-md-12">
                   <form class="calls_form" method="POST" action="{% url 'veoc:call_register' %}" >
                     {% csrf_token %}
+                    <div class="form-group col-md-12">
+                      <label><i><u>NB</u> : Inputs with * must have values</i></label>
+                    </div>
                     <div class="form-row">
                       <div class="form-group col-md-12">
-                        <label for="callCategory">Call Category</label>
+                        <label for="callCategory">Call Category : *</label>
                         <select class="form-control" id="callCategory" name="callCategory" onchange="formfilter();">
                             <option value="" disabled selected>Select call category</option>
                             {% for category in call_category %}
@@ -28,7 +31,7 @@
                     <!-- Diseases dropdowm -->
                     <div class="form-row" id="disease_div" style="display: none;">
                       <div class="form-group col-md-12">
-                        <label for="diseaseType">Disease Type</label>
+                        <label for="diseaseType">Disease : *</label>
                         <select class="form-control" id="diseaseType" name="diseaseType">
                             <option value="" disabled selected>Select Disease</option>
                             {% for disease in diseases %}
@@ -40,7 +43,7 @@
                     <!-- Events dropdown -->
                     <div class="form-row" id="events_div" style="display: none;">
                       <div class="form-group col-md-12">
-                        <label for="eventType">Event Type</label>
+                        <label for="eventType">Public Health Event : *</label>
                         <select class="form-control" id="eventType" name="eventType">
                             <option value="" disabled selected>Select Event</option>
                             {% for event in events %}
@@ -52,7 +55,7 @@
                     <!-- Unrelated calls dropdown -->
                     <div class="form-row" id="unrelated_div" style="display: none;">
                       <div class="form-group col-md-12">
-                        <label for="incidentType">Call Incident Type</label>
+                        <label for="incidentType">Call Incident : *</label>
                         <select class="form-control" id="incidentType" name="incidentType" onchange="unrelatedCallfilter();">
                             <option value="" disabled selected>Select Call Incident</option>
                             {% for unrelated_call in unrelated_calls %}
@@ -63,17 +66,17 @@
                     </div>
                     <div class="form-row" id="caller_details_div" style="display: none;">
                        <div class="form-group col-md-6">
-                         <label for="callername">Caller Name</label>
+                         <label for="callername">Caller Name : *</label>
                          <input class="form-control" type="text" id="callerName" name="callerName" size="45" placeholder="caller_name" required/>
                        </div>
                        <div class="form-group col-md-6">
-                         <label for="callernumber">Caller Number</label>
+                         <label for="callernumber">Caller Number : *</label>
                          <input class="form-control" type="number" id="callerNumber" name="callerNumber" maxlength="10" size="45" placeholder="caller_number" required/>
                        </div>
                     </div>
                      <div class="form-row" id="regions_div" style="display: none;">
                          <div class="form-group col-md-6">
-                           <label for="region">Reporting Region</label>
+                           <label for="region">Reporting Region : *</label>
                            <select class="form-control" name="region" id="region" onchange="region_filter()">
                                 <option value="" disabled selected>Select Region</option>
                                 {% for region in regions %}
@@ -82,13 +85,13 @@
                             </select>
                          </div>
                          <div class="form-group col-md-6">
-                           <label for="location">Location</label>
+                           <label for="location">Location : *</label>
                            <input class="form-control" type="text" id="location" name="location" size="45" placeholder="Place of occurrence"/>
                          </div>
                      </div>
                      <div class="form-row" id="county_div" style="display: none;">
                          <div class="form-group col-md-4">
-                           <label for="county">County</label>
+                           <label for="county">County : *</label>
                            <select class="form-control" name="county" id="county" onchange="getsubcounty()">
                                 <option value="" disabled selected>Select County</option>
                                 {% for cnty in county %}
@@ -97,13 +100,13 @@
                             </select>
                          </div>
                          <div class="form-group col-md-4">
-                           <label for="subcounty">Subcounty</label>
+                           <label for="subcounty">Subcounty : *</label>
                            <select class="form-control" name="subcounty" id="subcounty" onchange="getward()">
                                 <option value="" disabled selected>Select sub-county</option>
                             </select>
                          </div>
                          <div class="form-group col-md-4">
-                           <label for="ward">Ward</label>
+                           <label for="ward">Ward : *</label>
                            <select class="form-control" name="ward" id="ward">
                                 <option value="" disabled selected>Select ward</option>
                             </select>
@@ -111,7 +114,7 @@
                      </div>
                      <div class="form-row" id="incident_status_div" style="display: none;">
                        <div class="form-group col-md-6">
-                         <label for="status">Incident Status</label>
+                         <label for="status">Incident Status : *</label>
                          <select class="form-control" name="status" id="_status">
                               <option value="" disabled selected>Select Status</option>
                               {% for status in incident_status %}
@@ -120,7 +123,7 @@
                           </select>
                        </div>
                        <div class="form-group col-md-6">
-                         <label for="datereport">Date Reported</label>
+                         <label for="datereport">Date Reported : *</label>
                          <input class="form-control" type="date" value="{{ day }}" id="dateReported" max='2000-13-13' name="dateReported">
                        </div>
                      </div>
@@ -136,13 +139,13 @@
                     </div> -->
                      <div class="form-row" id="description_div" style="display: none;">
                        <div class="form-group col-md-12">
-                         <label for="description">Description</label>
+                         <label for="description">Description :</label>
                          <textarea class="form-control" id="description" rows="3" name="description" placeholder="Enter description"></textarea>
                        </div>
                      </div>
                      <div class="form-row" id="action_div" style="display: none;">
                        <div class="form-group col-md-12">
-                         <label for="action">Action Taken</label>
+                         <label for="action">Action Taken :</label>
                          <textarea class="form-control" id="actionTaken" rows="3" name="actionTaken" placeholder="Enter action taken"></textarea>
                        </div>
                      </div>

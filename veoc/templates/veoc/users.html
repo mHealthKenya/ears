@@ -30,7 +30,7 @@
       								<span class="label label-info pull-right" id="totalspan">{{users_count}} Users</span>
       							</div>
       							<div class="padding-md clearfix">
-      							<table class="table table-hover" id="ongoing_task_table">
+      							<table class="table table-hover" id="user_table">
       								<thead class="thead-dark">
                         <tr>
                             <th>Username</th>
@@ -148,7 +148,7 @@
     </div>
 
     <!-- Add user modal -->
-	<div class="modal fade" id="addUserModal" tabindex="-1" role="dialog" aria-hidden="true">
+	   <div class="modal fade" id="addUserModal" tabindex="-1" role="dialog" aria-hidden="true">
 				<div class="modal-dialog" role="document">
 					<div class="modal-content">
 					<div class="modal-header">
@@ -158,7 +158,7 @@
 						</button>
 					</div>
 					<div class="modal-body">
-						<form onsubmit="return validateform()" role="form" method="POST" action="{% url 'veoc:user_register' %}" >
+						<form class="user_register_form" onsubmit="return validateform()" method="POST" action="{% url 'veoc:user_register' %}" >
 							{% csrf_token %}
 							<div class="form-group">
 								<label>First Name</label>
@@ -237,9 +237,12 @@
 
 {% block script %}
 
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
+<script src="https://cdn.jsdelivr.net/npm/promise-polyfill"></script>
+
   <script>
     $(document).ready(function () {
-        $('#ongoing_task_table').DataTable({
+        $('#user_table').DataTable({
             "order": [],
             dom: 'Bfrtip',
             buttons: [
@@ -248,13 +251,13 @@
         });
 
         // Setup - add a text input to each footer cell
-        $('#ongoing_task_table thead td').each(function () {
+        $('#user_table thead td').each(function () {
             var title = $(this).text();
             $(this).html('<input type="text" placeholder="Search ' + title + '" />');
         });
 
         // DataTable
-        var table = $('#ongoing_task_table').DataTable();
+        var table = $('#user_table').DataTable();
 
         // Apply the search
         table.columns().every(function () {
@@ -292,6 +295,48 @@
       $(".is_supeuser").val(is_supeuser);
   });
 
+    var registerForm = $(".user_register_form");
+
+    registerForm.submit(function(e){
+      e.preventDefault();
+      console.log("inside registration_form");
+      var thisForm = $(this);
+      var endPoint = thisForm.attr("action") || window.location.href;
+      var method = thisForm.attr("method");
+      var formData = thisForm.serialize();
+
+      Swal.fire({
+        title: "Please wait!, Saving Details!",
+        // text: "Please wait",
+        imageUrl: "/static/images/ajax-loader.gif",
+        showConfirmButton: false,
+        allowOutsideClick: false
+      });
+      $.ajax({
+        type:method,
+        url:endPoint,
+        data: formData,
+        success:function(){
+          Swal.fire({
+            title: 'Success!',
+            text: 'User Registered Successfully!',
+            icon: 'success'
+          });
+          registerForm[0].reset();
+        },
+        error:function(er){
+          console.log("Registration saving error");
+          // console.log(er.responseText);
+          Swal.fire({
+            title: 'Error!',
+            text: 'Registration Details Cannot be Saved',
+            icon: 'error'
+          });
+        }
+      });
+
+    });
+
     function validateform(){
 
     var first_name = document.getElementById('first_name').value;
@@ -299,7 +344,7 @@
     var user_name = document.getElementById('user_name').value;
     var email = document.getElementById('email').value;
     var org_unit = document.getElementById('org_unit').value;
-    var user_group = document.getElementById('user_group').value;
+    var user_group = document.getElementById('usergroup').value;
 
 
       if(first_name == "" || first_name==null || last_name == "" || last_name== null){
@@ -388,7 +433,7 @@
        }else{
          _access_level_div.style.display = 'block';
          _access_county_div.style.display = 'block';
-         _super_user_div.style.display = 'none';
+         _super_user_div.style.display = 'block';
          // create ajax to pull user populate group where name contains Sub-County
          group_select("Sub-County");
        }
@@ -396,6 +441,8 @@
 
     function group_select(arg){
       var name=arg;
+
+      console.log(name);
 
       $.ajax({
         url:'/get_group/',
@@ -409,6 +456,7 @@
           $('#usergroup').html(options);
           for(var i=0;i<data.length;i++){
             var options = '<option value="' + data[i].fields['name'] + '">' + data[i].fields['name'] + '</option>';
+            console.log(data[i].fields['name']);
             $('#usergroup').append(options);
           }
         },error:function(){

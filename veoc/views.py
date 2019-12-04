@@ -155,8 +155,12 @@ def user_register(request):
         access_level = request.POST.get('access_level','')
         org_unit = request.POST.get('org_unit','')
         sub_cnty = request.POST.get('subcounty','')
-        user_group = request.POST.get('user_group','')
+        user_group = request.POST.get('usergroup','')
         super_user = request.POST.get('user_status','')
+
+        # Getting users group id
+        # group_name = Group.objects.get(name=user_group)
+        # print(group_name.id)
 
         # if user is National user, default county and subcounty id to the
         # national id (Kenya id)
@@ -171,9 +175,14 @@ def user_register(request):
         user.save()
         user_id = user.pk
         userObject = User.objects.get(pk = user_id)
+        # userGroupObject = Group.objects.get(pk = group_name.id)
         orgunitObject = organizational_units.objects.get(organisationunitid = org_unit)
         subcntyObject = organizational_units.objects.get(organisationunitid = sub_cnty)
         # print(user_id)
+
+        #save user groups tables
+        # create_usergroup(userObject, userGroupObject)
+        # user_grps = User_groups.objects.create()
 
         #save the user in persons tables
         user_person = persons.objects.create(user=userObject, org_unit=orgunitObject, phone_number=phone_no,
@@ -954,11 +963,15 @@ def get_group(request):
     if request.method == "POST":
         _name = request.POST.get('name','')
 
+        print(_name)
         group_name = Group.objects.all()
+        print(group_name)
         _group = group_name.filter(name__icontains=_name)
 
+        print(_group)
         serialized=serialize('json',_group)
         obj_list=json.loads(serialized)
+        print(obj_list)
 
         return HttpResponse(json.dumps(obj_list),content_type="application/json")
 
