@@ -106,7 +106,7 @@
   				</button>
   			</div>
   			<div class="modal-body">
-  				<form onsubmit="return validateform()" role="form" method="POST" action="{% url 'veoc:add_contact' %}" >
+  				<form class="contacts_form" onsubmit="return validateform()" method="POST" action="{% url 'veoc:add_contact' %}" >
   					{% csrf_token %}
   					<div class="form-group">
   						<label>First Name</label>
@@ -316,6 +316,8 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/2.5.0/jszip.min.js"></script>
 <script src="https://cdn.rawgit.com/bpampuch/pdfmake/0.1.18/build/vfs_fonts.js"></script>
 <script src="https://cdn.rawgit.com/bpampuch/pdfmake/0.1.18/build/pdfmake.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
+<script src="https://cdn.jsdelivr.net/npm/promise-polyfill"></script>
 <script>
   $(document).ready(function() {
     $('#example').DataTable(
@@ -387,11 +389,53 @@
       $(".user").val(reporter);
   });
 
+  var contactsForm = $(".contacts_form");
+
+  contactsForm.submit(function(e){
+    e.preventDefault();
+    console.log("inside contacts_form");
+    var thisForm = $(this);
+    var endPoint = thisForm.attr("action") || window.location.href;
+    var method = thisForm.attr("method");
+    var formData = thisForm.serialize();
+
+    Swal.fire({
+      title: "Please wait!, Saving Contacts!",
+      // text: "Please wait",
+      imageUrl: "/static/images/ajax-loader.gif",
+      showConfirmButton: false,
+      allowOutsideClick: false
+    });
+    $.ajax({
+      type:method,
+      url:endPoint,
+      data: formData,
+      success:function(){
+        Swal.fire({
+          title: 'Success!',
+          text: 'Contact Saved Successfully!',
+          icon: 'success'
+        });
+        contactsForm[0].reset();
+      },
+      error:function(er){
+        console.log("Contact saving error");
+        // console.log(er.responseText);
+        Swal.fire({
+          title: 'Error!',
+          text: 'Contact Details Cannot be Saved',
+          icon: 'error'
+        });
+      }
+    });
+
+  });
+
   function validateform(){
 
   var first_name = document.getElementById('first_name').value;
   var last_name = document.getElementById('last_name').value;
-  var user_name = document.getElementById('user_name').value;
+  // var user_name = document.getElementById('user_name').value;
   var email = document.getElementById('email').value;
   var org_unit = document.getElementById('org_unit').value;
   var user_group = document.getElementById('user_group').value;
@@ -409,18 +453,18 @@
      return false;
 
     }
-    if(user_name == "" || user_name==null){
-      bootbox.alert({
-         size: "small",
-         title: "Missed data input  : Warning",
-         message: "Username cannot be empty !!",
-         callback: function () { /* your callback code */
-         }
-     });
+    // if(user_name == "" || user_name==null){
+    //   bootbox.alert({
+    //      size: "small",
+    //      title: "Missed data input  : Warning",
+    //      message: "Username cannot be empty !!",
+    //      callback: function () { /* your callback code */
+    //      }
+    //  });
 
-     return false;
+     // return false;
 
-    }
+    // }
     if(email == "" || email==null){
       bootbox.alert({
          size: "small",
