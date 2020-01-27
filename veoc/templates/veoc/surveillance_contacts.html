@@ -48,6 +48,7 @@
                             <td>{{ eoc.designation.designation_description }}</td>
                             <td>{{ eoc.phone_number }}</td>
                             <td>{{ eoc.email_address }}</td>
+                            <td>{{ eoc.team_lead }}</td>
                             <td><button type="button" class="btn btn-primary btn-xs view_button"
                               data-toggle="modal" data-target="#view_contact_modal"
                               data-id="{{ eoc.pk }}"
@@ -56,6 +57,7 @@
                               data-designation="{{ eoc.designation.designation_description }}"
                               data-mobile="{{ eoc.phone_number }}"
                               data-email="{{ eoc.email_address }}"
+                              data-team-lead="{{ eoc.team_lead }}"
                               data-reporter="{{ eoc.created_by.username }}"
                               title="View">
                               <i class="fa fa-eye">
@@ -69,6 +71,7 @@
                             data-designation="{{ eoc.designation.designation_description }}"
                             data-mobile="{{ eoc.phone_number }}"
                             data-email="{{ eoc.email_address }}"
+                            data-team-lead="{{ eoc.team_lead }}"
                             data-reporter="{{ eoc.created_by.username }}"
                             title="Edit">
                             <i class="fa fa-edit">
@@ -116,7 +119,7 @@
                     <select class="form-control" id="designation" name="designation" required>
                         <option value="" disabled selected>Select designation</option>
                         {% for sts in designation %}
-                            <option value="{{ sts.description }}">{{ sts.description }}</option>
+                            <option value="{{ sts.designation_description }}">{{ sts.designation_description }}</option>
                         {% endfor %}
                     </select>
                 </div>

@@ -2502,6 +2502,7 @@ def get_lab_posts(request):
 
 def week_shift(request):
     event = {'events': eoc_events_calendar.objects.all()}
+    print(event)
     return render(request, 'veoc/weekly_shift.html', event)
 
 def calendar_events_create(request):
@@ -2511,10 +2512,14 @@ def calendar_events_create(request):
         description = request.POST.get('description', '')
         start_date=request.POST.get('start_date','')
         end_date=request.POST.get('end_date','')
-        # time = request.POST.get('time', '')
+        time = request.POST.get('time', '')
 
-        insert = eoc_events_calendar(event_name=name, start_date=start_date,
-                end_date=end_date, event_description=description)
+        cur_user=request.user.username
+        created_by=User.objects.get(username=cur_user)
+
+        insert = eoc_events_calendar(event_name=name, start_date=start_date, time=time,
+                end_date=end_date, event_description=description, created_by=created_by, updated_by=created_by)
+
         insert.save()
         #find ways of retrieving the saved id and loop to send the success message after confirmation
         success="Event created successfully"
@@ -2541,7 +2546,7 @@ def eoc_contacts_create(request):
     if request.method=='POST':
         first_name=request.POST.get('first_name','')
         last_name=request.POST.get('last_name','')
-        designation=request.POST.get('designation','')
+        designatn=request.POST.get('designation','')
         phone_number=request.POST.get('phone_number','')
         email_address=request.POST.get('email_address','')
         team_lead=request.POST.get('lead','')
@@ -2549,14 +2554,14 @@ def eoc_contacts_create(request):
         if not team_lead:
             team_lead=False
 
-        designation_source=designation.objects.get(description=designation)
+        designation_source=designation.objects.get(designation_description=designatn)
         cur_user=request.user.username
         created_by=User.objects.get(username=cur_user)
 
         day = time.strftime("%Y-%m-%d")
 
-        insert = staff_contact(first_name=first_name, second_name=last_name, designation=designation_source, mobile=phone_number,
-                                  email=email_address, last_login=day, shift_id=0, team_lead=team_lead, created_by=created_by)
+        insert = staff_contact(first_name=first_name, last_name=last_name, designation=designation_source, phone_number=phone_number,
+                                  email_address=email_address, team_lead=team_lead, created_by=created_by, updated_by=created_by)
         insert.save()
 
         success="Contact created successfully"

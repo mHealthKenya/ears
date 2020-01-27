@@ -31,7 +31,7 @@ DEBUG = True
 
 ADMINS = [('Jeffa', 'jeffadavid@gmail.com'), ('David', 'djeffa@mhealthkenya.org')]
 
-ALLOWED_HOSTS = ['41.215.24.110','localhost','127.0.0.1','ears.health.go.ke','192.168.10.8']
+ALLOWED_HOSTS = ['41.215.24.110','localhost','127.0.0.1','ears.health.go.ke','192.168.10.8','192.168.10.9']
 
 
 # CELERY STUFF

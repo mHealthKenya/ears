@@ -559,6 +559,7 @@ class watchers_shifts(models.Model):
 class eoc_events_calendar(models.Model):
     event_name = models.CharField(max_length=50)
     event_description = models.CharField(max_length=200)
+    time = models.TimeField()
     start_date = models.DateTimeField(default=datetime.now)
     end_date = models.DateTimeField(default=datetime.now)
     created_at = models.DateField(default=date.today)
@@ -611,6 +612,7 @@ class staff_contact(models.Model):
     designation = models.ForeignKey(designation, on_delete=models.CASCADE, related_name='contact_staff_designation')
     phone_number = models.CharField(validators=[person_phone_regex], max_length=12, blank=False)
     email_address = models.EmailField(max_length=20, blank=True)
+    team_lead = models.BooleanField(default=False)
     created_at = models.DateField(default=date.today)
     updated_at = models.DateField(default=date.today)
     created_by = models.ForeignKey(User, on_delete=models.CASCADE, related_name='contact_staff_updated_by')
