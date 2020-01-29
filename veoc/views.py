@@ -338,7 +338,8 @@ def dashboard(request):
     dhis_cases = []
     dhis_status = []
     for crt_tpye in chart_dhis_type:
-        dhis_descriptions = idsr_weekly_national_report.objects.filter(idsr_disease_id_id = crt_tpye.id).values('idsr_disease_id__name', 'org_unit_id_id__name', 'idsr_incident_id_id__name', 'period', 'data_value').distinct()
+        # dhis_descriptions = idsr_weekly_national_report.objects.filter(idsr_disease_id_id = crt_tpye.id).values('idsr_disease_id__name', 'org_unit_id_id__name', 'idsr_incident_id_id__name', 'period', 'data_value').distinct()
+        dhis_descriptions = idsr_weekly_national_report.objects.filter(idsr_disease_id_id = crt_tpye.id).values('idsr_disease_id__name', 'org_unit_id_id__name', 'period', 'data_value').distinct()
         dhis_cases.append(dhis_descriptions)
 
     #pulling all eoc status for the drop down for change
@@ -2328,7 +2329,8 @@ def get_dhis_disease(request):
         # my_disease_id = mydisease_type.id
         # print(my_disease_id)
 
-        dhis_graph_data = list(v_dhis_national_data_view.objects.all().filter(idsr_disease_id = mydisease_type).values('data_value', 'period', 'idsr_incident_id__name'))
+        # dhis_graph_data = list(v_dhis_national_data_view.objects.all().filter(idsr_disease_id = mydisease_type).values('data_value', 'period', 'idsr_incident_id__name'))
+        dhis_graph_data = list(v_dhis_national_report_data_view.objects.all().filter(idsr_disease_id = mydisease_type).values('cases', 'deaths', 'period'))
         print(dhis_graph_data)
 
         #pull cases associated with this deseases

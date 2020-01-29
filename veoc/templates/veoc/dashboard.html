@@ -565,15 +565,30 @@
             for(var i=0; i < data.length; i++){
                var cas = data[i]['idsr_incident_id__name'];
                var week = data[i]['period'];
-               var data_val = data[i]['data_value'];
+               // var data_val = data[i]['data_value'];
+               var case_data = data[i]['cases'];
+               var death_data = data[i]['deaths'];
 
-               if(cas == "Cases"){
-                 cases.push(data_val);
-                 if(weeknum.indexOf(week) === -1){
-                   weeknum.push(week);
-                 }
+               // if(cas == "Cases"){
+               //   cases.push(data_val);
+               //   if(weeknum.indexOf(week) === -1){
+               //     weeknum.push(week);
+               //   }
+               // }else{
+               //   deaths.push(data_val);
+               // }
+               //check the legth of the weeknum
+               var week_len = week.length;
+
+               cases.push(case_data);
+               deaths.push(death_data);
+
+               if(week_len < 7){
+                 //add 0 on second last character
+                 var wk = week.slice(0, 5)+"0"+week.slice(5);
+                 weeknum.push(wk);
                }else{
-                 deaths.push(data_val);
+                 weeknum.push(week);
                }
 
             }
@@ -591,7 +606,7 @@
               return aa - bb;
             }
 
-            weeknum.sort(sortYearWeek);
+            // weeknum.sort(sortYearWeek);
 
             Highcharts.chart('dhis_data', {
               chart: {

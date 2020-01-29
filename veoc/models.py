@@ -393,6 +393,18 @@ class v_dhis_national_data_view(models.Model):
         managed = False
         db_table = 'v_dhis_national_data_view'
 
+class v_dhis_national_report_data_view(models.Model):
+    id = models.BigIntegerField(primary_key=True)
+    period = models.CharField(max_length=100)
+    idsr_disease_id = models.ForeignKey(idsr_diseases, on_delete=models.DO_NOTHING)
+    # idsr_incident_id = models.ForeignKey(idsr_reported_incidents, on_delete=models.DO_NOTHING)
+    cases = models.FloatField(max_length=50)
+    deaths = models.FloatField(max_length=50)
+
+    class Meta:
+        managed = False
+        db_table = 'v_dhis_national_report_data_view'
+
 class standard_case_definitions(models.Model):
     code = models.CharField(max_length=20)
     condition = models.CharField(max_length=50)

@@ -561,34 +561,50 @@
             // console.log(data);
 
             for(var i=0; i < data.length; i++){
-               var cas = data[i]['idsr_incident_id__name'];
-               var week = data[i]['period'];
-               var data_val = data[i]['data_value'];
+              var cas = data[i]['idsr_incident_id__name'];
+              var week = data[i]['period'];
+              // var data_val = data[i]['data_value'];
+              var case_data = data[i]['cases'];
+              var death_data = data[i]['deaths'];
 
-               if(cas == "Cases"){
-                 cases.push(data_val);
-                 if(weeknum.indexOf(week) === -1){
-                   weeknum.push(week);
-                 }
-               }else{
-                 deaths.push(data_val);
-               }
-            }
+              // if(cas == "Cases"){
+              //   cases.push(data_val);
+              //   if(weeknum.indexOf(week) === -1){
+              //     weeknum.push(week);
+              //   }
+              // }else{
+              //   deaths.push(data_val);
+              // }
+              //check the legth of the weeknum
+              var week_len = week.length;
 
-            function pad(num) {
-              return String("0" + num).slice(-2);
-            }
+              cases.push(case_data);
+              deaths.push(death_data);
 
-            //function to pick weeknumbers to help sort in order
-            function sortYearWeek(elem1, elem2) {
-              var as = elem1.split('W'),
-                  bs = elem2.split('W'),
-                  aa = as[0]+pad(as[1]), // yyyymm
-                  bb = bs[0]+pad(bs[1]);
-              return aa - bb;
-            }
+              if(week_len < 7){
+                //add 0 on second last character
+                var wk = week.slice(0, 5)+"0"+week.slice(5);
+                weeknum.push(wk);
+              }else{
+                weeknum.push(week);
+              }
 
-            weeknum.sort(sortYearWeek);
+           }
+
+           function pad(num) {
+             return String("0" + num).slice(-2);
+           }
+
+           //function to pick weeknumbers to help sort in order
+           function sortYearWeek(elem1, elem2) {
+             var as = elem1.split('W'),
+                 bs = elem2.split('W'),
+                 aa = as[0]+pad(as[1]), // yyyymm
+                 bb = bs[0]+pad(bs[1]);
+             return aa - bb;
+           }
+
+           // weeknum.sort(sortYearWeek);
 
             Highcharts.chart('dhis_data', {
               chart: {
