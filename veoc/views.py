@@ -2937,8 +2937,8 @@ def add_feedback(request):
 
         #get current user
         current_user = request.user
-        print(current_user)
-        print(challnge)
+        # print(current_user)
+        # print(challnge)
         userObject = User.objects.get(pk = current_user.id)
         moduleTypeObject = system_modules.objects.get(pk = module)
 
@@ -2955,29 +2955,27 @@ def add_feedback(request):
 
     return render(request, 'veoc/feedback.html', values)
 
-def general_feedback(request):
+def module_general_feedback(request):
 
     if request.method == 'POST':
-        id = request.POST.get('id','')
         challnge = request.POST.get('challange','')
         is_adressed = request.POST.get('is_adressed','')
 
         # get user to update_by
         current_user = request.user
         userObject = User.objects.get(pk = current_user.id)
+        # print(userObject)
 
         #get todays date
         current_date = date.today().strftime('%Y-%m-%d')
 
-        general_feedback.objects.filter(pk=id).update(challenge=challnge,
-                challange_addressed=is_adressed, updated_by=userObject,
-                updated_at=current_date)
+        general_feedback.objects.create(challenge=challnge,
+                challange_addressed=is_adressed, updated_at=current_date,
+                created_by=userObject, updated_by=userObject, created_at=current_date)
 
-    # feedback_count = general_feedback.objects.all().count
-    # feedbacks = general_feedback.objects.all()
-    feedback_count = [1]
-    feedbacks = [4]
+    feedback_count = general_feedback.objects.all().count
+    feedbacks = general_feedback.objects.all()
 
     values = {'feedback_count': feedback_count, 'feedbacks': feedbacks}
 
-    return render(request, 'veoc/general_feedback.html', values)
+    return render(request, 'veoc/gen_feedback.html', values)

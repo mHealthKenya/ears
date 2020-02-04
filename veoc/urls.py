@@ -133,7 +133,7 @@ urlpatterns = [
     #Feedback section
     url(r'^module_feedback/$', views.module_feedback, name='module_feedback'),
     url(r'^add_feedback/$', views.add_feedback, name='add_feedback'),
-    url(r'^general_feedback/$', views.general_feedback, name='general_feedback'),
+    url(r'^module_general_feedback/$', views.module_general_feedback, name='module_general_feedback'),
 
     url(r'^call_flashback/$', views.call_flashback, name='call_flashback'),
     url(r'^google_map/$', views.google_map, name='google_map'),

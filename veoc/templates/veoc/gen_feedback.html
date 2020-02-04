@@ -134,7 +134,7 @@
               </button>
             </div>
             <div class="modal-body">
-              <form method="post" action="{% url 'veoc:general_feedback' %}">
+              <form method="post" action="{% url 'veoc:module_general_feedback' %}">
                   <div class="modal-body">
                     <div class="form-group">
                         <label for="heading">Date Reported:</label>
@@ -177,11 +177,15 @@
 					</button>
 				</div>
 				<div class="modal-body">
-					<form role="form" method="POST" action="{% url 'veoc:add_feedback' %}" >
+					<form role="form" method="POST" action="{% url 'veoc:module_general_feedback' %}" >
 						{% csrf_token %}
             <div class="form-group">
                 <label for="heading">Challenge:</label>
                 <textarea class="form-control challange" id="challange" rows="3" name="challange" placeholder="Enter Challanges"></textarea>
+            </div>
+            <div class="form-group" style="display: none;">
+                <label for="heading">Is Adressed?</label>
+                <input class="form-control is_adressed" value="False" name="is_adressed">
             </div>
 						<button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
 						<button type="submit" id="addfeedbackbtn" class="btn btn-success btn-sm pull-right"> <i class="fa fa-plus" aria-hidden="true"></i> Add Feedback</button>
