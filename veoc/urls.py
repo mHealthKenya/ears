@@ -76,6 +76,7 @@ urlpatterns = [
     url(r'^events_list/$', views.events_list, name='events_list'),
     url(r'^disgnation_list/$', views.disgnation_list, name='disgnation_list'),
     url(r'^data_list/$', views.data_list, name='data_list'),
+    url(r'^edit_data_list/$', views.edit_data_list, name='edit_data_list'),
     url(r'^contact_list/$', views.contact_list, name='contact_list'),
 
     url(r'^get_county/$', views.get_county, name='get_county'),

@@ -2042,6 +2042,11 @@ def diseases_list(request):
         disease_name = request.POST.get('disease_name','')
         priority = request.POST.get('priority','')
 
+        if not priority:
+            priority=False
+        else:
+            priority=True
+
         #get todays date
         current_date = date.today().strftime('%Y-%m-%d')
 
@@ -2061,7 +2066,7 @@ def diseases_list(request):
 def events_list(request):
     if request.method == "POST":
         uid = request.POST.get('uid','')
-        event_name = request.POST.get('event_type','')
+        event_name = request.POST.get('event_name','')
 
         #get todays date
         current_date = date.today().strftime('%Y-%m-%d')
@@ -2113,6 +2118,28 @@ def data_list(request):
 
         #saving values to databse
         data_source.objects.create(source_description=source, updated_at=current_date,
+                created_by=userObject, updated_by=userObject, created_at=current_date)
+
+    data_source_count = data_source.objects.all().count
+    data_sources = data_source.objects.all()
+    values = {'data_source_count':data_source_count, 'data_sources': data_sources}
+
+    return render(request, 'veoc/datasourcelist.html', values)
+
+def edit_data_list(request):
+    if request.method == "POST":
+        myid = request.POST.get('id','')
+        source = request.POST.get('data_source','')
+
+        #get todays date
+        current_date = date.today().strftime('%Y-%m-%d')
+        print(myid)
+        #get current user
+        current_user = request.user
+        userObject = User.objects.get(pk = current_user.id)
+
+        #saving values to databse
+        data_source.objects.filter(pk=myid).update(source_description=source, updated_at=current_date,
                 created_by=userObject, updated_by=userObject, created_at=current_date)
 
     data_source_count = data_source.objects.all().count
@@ -3079,8 +3106,8 @@ def edit_feedback(request):
         #get current user
         current_user = request.user
         # print(current_user)
-        print(module)
-        print(myid)
+        # print(challnge)
+        # print(myid)
         userObject = User.objects.get(pk = current_user.id)
         moduleTypeObject = system_modules.objects.get(pk = module)
 
