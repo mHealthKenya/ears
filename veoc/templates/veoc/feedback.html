@@ -54,7 +54,7 @@
                              <td>
                               <button type="button" class="btn btn-primary btn-xs view_button"
                                 data-toggle="modal" data-target="#view_feedback_modal"
-                                data-id="{{ fback.pk }}>"
+                                data-id="{{ fback.pk }}"
                                 data-module="{{ fback.module_type.module_name }}"
                                 data-challenge="{{ fback.challenge }}"
                                 data-date="{{ fback.created_at }}"
@@ -67,7 +67,7 @@
                             </button>
                             <button type="button" class="btn btn-primary btn-xs edit_button"
                               data-toggle="modal" data-target="#edit_feedback_modal"
-                              data-id="{{ fback.pk }}>"
+                              data-id="{{fback.pk}}"
                               data-module="{{ fback.module_type.module_name }}"
                               data-date="{{ fback.created_at }}"
                               data-challenge="{{ fback.challenge }}"
@@ -150,8 +150,12 @@
               </button>
             </div>
             <div class="modal-body">
-              <form method="post" action="{% url 'veoc:module_feedback' %}">
+              <form method="post" action="{% url 'veoc:edit_feedback' %}">
+                {% csrf_token %}
                   <div class="modal-body">
+                    <div class="form-group" style="display: none;">
+                        <input class="form-control feedback_id" name="feedback_id" style="display: none;">
+                    </div>
                     <div class="form-group">
                       <label>Module :</label>
                       <select class="form-control" id="module" name="module">
@@ -167,11 +171,11 @@
                     </div>
                     <div class="form-group">
                         <label for="heading">Challenge:</label>
-                        <input class="form-control challange" name="challange" readonly>
+                        <input class="form-control challange" name="challange">
                     </div>
                     <div class="form-group">
                         <label for="heading">Recommendation:</label>
-                        <input class="form-control recommendation" name="recommendation" readonly>
+                        <input class="form-control recommendation" name="recommendation">
                     </div>
                     <div class="form-group">
                         <label for="heading">Created By:</label>
@@ -189,7 +193,7 @@
             </div>
             <div class="modal-footer">
               <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-              <button type="button" class="btn btn-primary">Save changes</button>
+              <!-- <button type="button" class="btn btn-primary">Save changes</button> -->
             </div>
           </div>
         </div>
@@ -275,7 +279,7 @@
       });
   });
 
-  $(document).on( "click", '.edit_button',function(e) {
+  $(document).on( "click", '.view_button',function(e) {
 
       var id = $(this).data('id');
       var modul = $(this).data('module');
@@ -287,6 +291,7 @@
 
       console.log(modul);
 
+      $(".id").val(id);
       $(".module").val(modul);
       $(".challenge").val(challenge);
       $(".date").val(date);
@@ -306,7 +311,7 @@
 
   console.log(modul);
 
-  $(".id").val(id);
+  $(".feedback_id").val(id);
   $(".module").val(modul);
   $(".challenge").val(challenge);
   $(".date").val(date);

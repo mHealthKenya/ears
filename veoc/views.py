@@ -2930,6 +2930,76 @@ def add_document(request):
 
         return render(request, template, values)
 
+def edit_document(request):
+
+    if request.method=='POST':
+        myid = request.POST.get('id','')
+        cat = request.POST.get('category','')
+        descriptn = request.POST.get('description','')
+        authr = request.POST.get('author','')
+        file=request.FILES.get('file','')
+        public = request.POST.get('public','')
+
+        #get todays date
+        current_date = date.today().strftime('%Y-%m-%d')
+
+        #get current user
+        current_user = request.user
+        print(current_user)
+        print(file)
+        userObject = User.objects.get(pk = current_user.id)
+        categoryObject = repository_categories.objects.get(pk = cat)
+
+        #saving edited values to database
+        document_repository.objects.filter(pk=myid).update(category=categoryObject,
+        description=descriptn, author=authr, myfile=file, public_document=public,
+        updated_at=current_date, created_by=userObject, updated_by=userObject,
+        created_at=current_date)
+
+        if cat == '1':
+            documents_count = document_repository.objects.all().filter(category=1).count
+            documents = document_repository.objects.all().filter(category=1)
+            template = 'veoc/minutes.html'
+        elif cat=='2':
+            documents_count = document_repository.objects.all().filter(category=2).count
+            documents = document_repository.objects.all().filter(category=2)
+            template = 'veoc/sitrep.html'
+        elif cat=='3':
+            documents_count = document_repository.objects.all().filter(category=3).count
+            documents = document_repository.objects.all().filter(category=3)
+            template = 'veoc/bulletins.html'
+        elif cat=='4':
+            documents_count = document_repository.objects.all().filter(category=4).count
+            documents = document_repository.objects.all().filter(category=4)
+            template = 'veoc/publications.html'
+        elif cat=='5':
+            documents_count = document_repository.objects.all().filter(category=5).count
+            documents = document_repository.objects.all().filter(category=5)
+            template = 'veoc/others.html'
+        elif cat=='6':
+            documents_count = document_repository.objects.all().filter(category=6).count
+            documents = document_repository.objects.all().filter(category=6)
+            template = 'veoc/protocol.html'
+        elif cat=='7':
+            documents_count = document_repository.objects.all().filter(category=7).count
+            documents = document_repository.objects.all().filter(category=7)
+            template = 'veoc/out_report.html'
+        elif cat=='8':
+            documents_count = document_repository.objects.all().filter(category=8).count
+            documents = document_repository.objects.all().filter(category=8)
+            template = 'veoc/case_documents.html'
+        else:
+            documents_count = document_repository.objects.all().filter(category=9).count
+            documents = document_repository.objects.all().filter(category=9)
+            template = 'veoc/sops.html'
+
+        document_categories = repository_categories.objects.all()
+
+        values = {'document_categories': document_categories, 'documents_count': documents_count,
+            'documents': documents}
+
+        return render(request, template, values)
+
 def public_document(request):
     documents = document_repository.objects.all().filter(public_document='t')
     values = {'documents': documents}
@@ -2992,6 +3062,42 @@ def add_feedback(request):
     values = {'modules': modules, 'feedback_count': feedback_count, 'feedbacks': feedbacks}
 
     return render(request, 'veoc/feedback.html', values)
+
+def edit_feedback(request):
+    if request.method=='POST':
+        myid = request.POST.get('feedback_id','')
+        module = request.POST.get('module','')
+        report_date = request.POST.get('report_date','')
+        challnge = request.POST.get('challange','')
+        recomm = request.POST.get('recommendation','')
+        reporter = request.POST.get('user','')
+        is_adressed = request.POST.get('is_adressed','')
+
+        #get todays date
+        current_date = date.today().strftime('%Y-%m-%d')
+
+        #get current user
+        current_user = request.user
+        # print(current_user)
+        print(module)
+        print(myid)
+        userObject = User.objects.get(pk = current_user.id)
+        moduleTypeObject = system_modules.objects.get(pk = module)
+
+        #saving edited values to database
+        feedback.objects.filter(pk=myid).update(module_type=moduleTypeObject,
+                challenge=challnge, recommendation=recomm, challange_addressed=is_adressed,
+                updated_at=current_date, created_by=userObject, updated_by=userObject,
+                created_at=current_date)
+
+    modules=system_modules.objects.all()
+    feedback_count=feedback.objects.all().count
+    feedbacks=feedback.objects.all()
+
+    values = {'modules': modules, 'feedback_count': feedback_count, 'feedbacks': feedbacks}
+
+    return render(request, 'veoc/feedback.html', values)
+
 
 def module_general_feedback(request):
 

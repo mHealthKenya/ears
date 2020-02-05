@@ -40,7 +40,7 @@
                             <th>Active</th>
                             <th>Date Registered</th>
                             <th>Last Login</th>
-                            <th>Edit</th>
+                            <th>Action</th>
                         </tr>
                         </thead>
                         <tbody>
@@ -54,23 +54,23 @@
                           <td>{{ user.date_joined }}</td>
                           <td>{{ user.last_login }}</td>
                            <td>
-                            <!--<button type="button" class="btn btn-primary btn-xs view_button"
-                              data-toggle="modal" data-target="#view_disease_modal"
-                              data-id="{{ disease.pk }}>"
-                              data-date="{{ disease.eventDate }}"
-                              data-disease="{{ disease.disease_type.name }}"
-                              data-source="{{ disease.stored_by }}"
-                              data-status="{{ disease.status }}"
-                              data-org="{{ disease.org_unit_id.name }}"
-                              data-cases="Get case from table 2"
-                              data-period="{{ disease.period }}"
+                            <!-- <button type="button" class="btn btn-primary btn-xs view_button"
+                              data-toggle="modal" data-target="#edit_user_modal"
+                              data-id="{{ user.pk }}>"
+                              data-username="{{ user.username }}"
+                              data-first_name="{{ user.first_name }}"
+                              data-last_name="{{ user.last_name }}"
+                              data-email="{{ user.email }}"
+                              data-is_active="{{ user.is_active }}"
+                              data-is_supeuser="{{ user.is_superuser}}"
+                              data-is_staff="{{ user.is_staff }}"
                               title="View">
                               <i class="fa fa-eye">
                               </i>
-                          </button>-->
+                          </button> -->
                           <button type="button" class="btn btn-primary btn-xs edit_button"
                             data-toggle="modal" data-target="#edit_user_modal"
-                            data-id="{{ user.pk }}>"
+                            data-id="{{ user.pk }}"
                             data-username="{{ user.username }}"
                             data-first_name="{{ user.first_name }}"
                             data-last_name="{{ user.last_name }}"
@@ -78,8 +78,8 @@
                             data-is_active="{{ user.is_active }}"
                             data-is_supeuser="{{ user.is_superuser}}"
                             data-is_staff="{{ user.is_staff }}"
-                            title="Edit">
-                            <i class="fa fa-edit">
+                            title="View Record">
+                            <i class="fa fa-eye">
                             </i>
                           </button>
                         </td>

@@ -129,11 +129,13 @@ urlpatterns = [
     url(r'^others/$', views.others, name='others'),
     url(r'^sops/$', views.sops, name='sops'),
     url(r'^add_document/$', views.add_document, name='add_document'),
+    url(r'^edit_document/$', views.edit_document, name='edit_document'),
     url(r'^public_document/$', views.public_document, name='public_document'),
 
     #Feedback section
     url(r'^module_feedback/$', views.module_feedback, name='module_feedback'),
     url(r'^add_feedback/$', views.add_feedback, name='add_feedback'),
+    url(r'^edit_feedback/$', views.edit_feedback, name='edit_feedback'),
     url(r'^module_general_feedback/$', views.module_general_feedback, name='module_general_feedback'),
 
     url(r'^call_flashback/$', views.call_flashback, name='call_flashback'),
