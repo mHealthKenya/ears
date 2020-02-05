@@ -101,6 +101,7 @@ urlpatterns = [
     url(r'^calendar_events_create/', views.calendar_events_create, name='calendar_events_create'),
     url(r'^eoc_cont/$', views.eoc_contacts, name='eoc_cont'),
     url(r'^eoc_contacts_create/', views.eoc_contacts_create, name='eoc_contacts_create'),
+    url(r'^eoc_contact_edit/', views.contact_edit, name='eoc_contact_edit'),
     url(r'^allocation_sheet/$', views.allocation_sheet, name='allocation_sheet'),
     url(r'^contact_json/$', views.contact_json, name='contact_json'),
     url(r'^get_existing_timetable/$', views.get_existing_timetable, name='get_existing_timetable'),

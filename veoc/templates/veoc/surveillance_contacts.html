@@ -37,6 +37,7 @@
                         <th>Designation</th>
                         <th>Mobile number</th>
                         <th>Email address</th>
+                        <th>Team Leader</th>
                         <th>Action</th>
                     </tr>
                     </thead>
@@ -207,13 +208,13 @@
       <div class="modal-dialog" role="document">
         <div class="modal-content">
           <div class="modal-header">
-            <h5 class="modal-title" id="exampleModalLabel">Disease Report Incident Edit</h5>
+            <h5 class="modal-title" id="exampleModalLabel">Sureveillance Personnel Contacts Edit</h5>
             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
               <span aria-hidden="true">&times;</span>
             </button>
           </div>
           <div class="modal-body">
-            <form method="post" action="{% url 'veoc:disease_report' %}">
+            <form method="post" action="{% url 'veoc:eoc_contact_edit' %}">
               {% csrf_token %}
                 <div class="modal-body">
                   <div class="form-group" style="display: none;">

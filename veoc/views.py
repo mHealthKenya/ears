@@ -2555,6 +2555,8 @@ def eoc_contacts_create(request):
 
         if not team_lead:
             team_lead=False
+        else:
+            team_lead=True
 
         designation_source=designation.objects.get(designation_description=designatn)
         cur_user=request.user.username
@@ -2575,6 +2577,42 @@ def eoc_contacts_create(request):
         success="Contact not created,try again"
         messages.error(request, success)
         return render(request,"veoc/surveillance_contacts.html",{"success":success,'eocContacts': staff_contact.objects.all(), 'designation': designation.objects.all()})
+
+def contact_edit(request):
+    if request.method=='POST':
+        contacts_id = request.POST.get('id','')
+        first_name=request.POST.get('first_name','')
+        last_name=request.POST.get('last_name','')
+        designatn=request.POST.get('designation','')
+        phone_number=request.POST.get('phone_number','')
+        email_address=request.POST.get('email_address','')
+        team_lead=request.POST.get('lead','')
+
+        if not team_lead:
+            team_lead=False
+        else:
+            team_lead=True
+
+        designation_source=designation.objects.get(pk=designatn)
+        cur_user=request.user.username
+        created_by=User.objects.get(username=cur_user)
+
+        day = time.strftime("%Y-%m-%d")
+
+        staff_contact.objects.filter(pk=contacts_id).update(first_name=first_name,
+            last_name=last_name, designation=designation_source, phone_number=phone_number,
+            email_address=email_address, team_lead=team_lead, created_by=created_by, updated_by=created_by)
+
+        success="Contact updated successfully"
+        messages.success(request, success)
+
+        return render(request,"veoc/surveillance_contacts.html",{"success":success,'eocContacts': staff_contact.objects.all(), 'designation': designation.objects.all()})
+
+    else:
+        success="Contact not created,try again"
+        messages.error(request, success)
+        return render(request,"veoc/surveillance_contacts.html",{"success":success,'eocContacts': staff_contact.objects.all(), 'designation': designation.objects.all()})
+
 
 def allocation_sheet(request):
     return render(request, 'veoc/alocation_sheet.html')
