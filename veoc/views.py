@@ -2105,6 +2105,28 @@ def disgnation_list(request):
 
     return render(request, 'veoc/disgnationlist.html', values)
 
+def edit_disgnation_list(request):
+    if request.method == "POST":
+        myid = request.POST.get('id','')
+        design = request.POST.get('description','')
+
+        #get todays date
+        current_date = date.today().strftime('%Y-%m-%d')
+
+        #get current user
+        current_user = request.user
+        userObject = User.objects.get(pk = current_user.id)
+
+        #updating values to database
+        designation.objects.filter(pk=myid).update(designation_description=design, updated_at=current_date,
+                created_by=userObject, updated_by=userObject, created_at=current_date)
+
+    designations_count = designation.objects.all().count
+    designation_vals = designation.objects.all()
+    values = {'designation_vals_count':designations_count, 'designation_vals': designation_vals}
+
+    return render(request, 'veoc/disgnationlist.html', values)
+
 def data_list(request):
     if request.method == "POST":
         source = request.POST.get('data_source','')

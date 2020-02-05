@@ -48,7 +48,7 @@
                             <td>
                               <button type="button" class="btn btn-primary btn-xs view_button"
                                 data-toggle="modal" data-target="#view_designation_modal"
-                                data-id="{{ designation.pk }}>"
+                                data-id="{{ designation.pk }}"
                                 data-description="{{ designation.designation_description }}"
                                 data-date="{{ designation.created_at }}"
                                 data-user="{{ designation.created_by.username }}"
@@ -58,7 +58,7 @@
                               </button>
                               <button type="button" class="btn btn-primary btn-xs edit_button"
                                 data-toggle="modal" data-target="#edit_designation_modal"
-                                data-id="{{ designation.pk }}>"
+                                data-id="{{ designation.pk }}"
                                 data-description="{{ designation.designation_description }}"
                                 data-date="{{ designation.created_at }}"
                                 data-user="{{ designation.created_by.username }}"
@@ -146,28 +146,26 @@
         <div class="modal-dialog" role="document">
           <div class="modal-content">
             <div class="modal-header">
-              <h5 class="modal-title" id="exampleModalLabel">Designation</h5>
+              <h5 class="modal-title" id="exampleModalLabel">Edit Designation</h5>
               <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
               </button>
             </div>
             <div class="modal-body">
-              <form method="post" action="#">
+              <form method="post" action="{% url 'veoc:edit_disgnation_list' %}">
+                {% csrf_token %}
                   <div class="modal-body">
-                    <div class="form-group" style="display: none;">
-                        <input class="form-control" id="id" name="id" style="display: none;">
-                    </div>
-                    <div class="form-group">
-                        <label for="heading">Designation Description :</label>
-                        <input class="form-control description" name="description">
-                    </div>
+                      <div class="form-group" style="display: none;">
+                          <input class="form-control id" name="id" style="display: none;">
+                      </div>
+                      <div class="form-group">
+                          <label for="heading">Designation Description :</label>
+                          <input class="form-control description" name="description">
+                      </div>
                   </div>
+                  <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                  <button type="submit" id="adddescriptionbtn" class="btn btn-success btn-sm pull-right">Save Changes</button>
               </form>
-            </div>
-            <div class="modal-footer">
-              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-              <button type="button" class="btn btn-primary">Save changes</button>
-            </div>
           </div>
         </div>
       </div>
