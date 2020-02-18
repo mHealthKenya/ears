@@ -17,7 +17,8 @@
 
               <div class="panel-heading">DHIS DISEASE DATA FILTERS</div>
               <div class="panel-body" align="left">
-                  <form class="form-inline" method="post" action="">{% csrf_token %}
+                  <form class="form-inline" method="post" action="{% url 'veoc:reportable_diseases_filters' %}">
+                    {% csrf_token %}
                       <div class="form-group">
                           <label for="idsr_disease"><b>Filter by IDSR Disease :&nbsp; &nbsp; </b></label>
                           <select class="form-control" id="idsr_disease" name="idsr_disease">
@@ -31,9 +32,9 @@
                       <div class="form-group">
                           <label for="period"><b>FIlter by Period :&nbsp; &nbsp; </b></label>
                           <select class="form-control" id="period" name="period">
-                             <option value="" disabled selected>Select Period</option>
-                             {% for drop_down_period in drop_down_diseases %}
-                                 <option value="{{ drop_down_period.id }}">{{ drop_down_period.period }}</option>
+                             <option value="" disabled selected>Select available periods</option>
+                             {% for drop_down_period in drop_down_periods %}
+                                 <option value="{{ drop_down_period.period }}">{{ drop_down_period.period }}</option>
                              {% endfor %}
                          </select>
                       </div>
@@ -41,11 +42,12 @@
                       <div class="form-group">
                           <label for="date_reported"><b>Filter by Date Reported :&nbsp; &nbsp; </b></label>
                           <input class="form-control" type="date" id="date_reported" name="date_reported"
-                                 value="{{ day }}" required>
+                                 value="{{ day }}" >
                       </div>
                       &nbsp; &nbsp;
+                      <button type="submit" class="btn btn-primary" align="right">Update</button>
                   </form>
-                  <button type="submit" class="btn btn-primary" align="right">Update</button>
+                  <!-- <button type="submit" class="btn btn-primary" align="right">Update</button> -->
               </div>
 
         			<div class="padding-md">

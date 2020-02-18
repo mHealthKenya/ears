@@ -62,6 +62,7 @@ urlpatterns = [
 
     url(r'^idsr_data/$', views.idsr_data, name='idsr_data'),
     url(r'^reportable_diseases/$', views.reportable_diseases, name='reportable_diseases'),
+    url(r'^reportable_diseases_filters/$', views.reportable_diseases_filters, name='reportable_diseases_filters'),
     url(r'^reportable_event/$', views.reportable_event, name='reportable_event'),
     url(r'^upload_csv/$', views.process_idsr_data, name='process_idsr_data'),
     url(r'^generate_pdf/$', views.generate_pdf, name='generate_pdf'),

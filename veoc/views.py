@@ -1721,6 +1721,9 @@ def reportable_diseases(request):
     _organizations = organizational_units.objects.all()
     _dhis_reported_diseases_report = dhis_reported_diseases.objects.all()
     _drop_down_diseases = dhis_reported_diseases.objects.all()
+    # _drop_down_diseases = dhis_reported_diseases.objects.order_by('disease_type_id').values('disease_type_id').distinct()
+    # print(_drop_down_diseases)
+    _drop_down_periods = dhis_reported_diseases.objects.order_by().values('period').distinct()
     dhis_case_values = []
     for _dhis_reported_cases in _dhis_reported_diseases_report:
         dhis_data_values = dhis_disease_data_values.objects.filter(dhis_reported_disease_id = _dhis_reported_cases).values_list('data_value', flat=True).first()
@@ -1730,7 +1733,84 @@ def reportable_diseases(request):
     my_list_data = zip(_dhis_reported_diseases_report, dhis_case_values)
 
     values = {'dhis_reported_diseases_count': _dhis_reported_diseases_count, 'organizations':_organizations,
-    'dhis_reported_diseases_reports': my_list_data, 'dhis_cases': _dhis_cases, 'drop_down_diseases': _drop_down_diseases }
+    'dhis_reported_diseases_reports': my_list_data, 'dhis_cases': _dhis_cases,
+    'drop_down_diseases': _drop_down_diseases, 'drop_down_periods': _drop_down_periods }
+
+    return render(request, 'veoc/reportable_diseases_report.html', values)
+
+def reportable_diseases_filters(request):
+    global filt_data
+    if request.method == 'POST':
+        filter_disease = request.POST.get('idsr_disease','')
+        filter_period = request.POST.get('period','')
+        filter_date = request.POST.get('date_reported','')
+
+        print(filter_disease)
+        print(filter_period)
+        print(filter_date)
+
+        #check for null values then filter based on values
+        if (filter_disease == "") and (filter_period == "") and (filter_date == ""):
+            print('No values sent')
+        else:
+            print('values sent')
+            if filter_disease:
+                print('disease ipo')
+                if filter_period:
+                    print('period ipo pia')
+                    if filter_date:
+                        print('date ipo pia')
+                        # variable_column = 'disease_type_id'
+                        # filt_data = variable_column + filter_disease
+                        # print(filt_data)
+
+                        variable_column = "disease_type_id"
+                        search_type = "contains"
+                        filter = variable_column + '__' + search_type
+                        #stopped at find a way of passing the filter to the query
+                        # _dhis_reported_diseases_count = dhis_reported_diseases.objects.filter(**{ filter: filter_disease }).count()
+                        # filt_data = {filter : filter_disease}
+                        # print(_dhis_reported_diseases_count)
+                    else:
+                        print('date hamna')
+                else:
+                    print('period hamna')
+                    if filter_date:
+                        print('date ipo pia')
+                    else:
+                        print('date hamna')
+            else:
+                print('disease hamna')
+                if filter_period:
+                    print('period ipo pia')
+                    if filter_date:
+                        print('date ipo pia')
+                    else:
+                        print('date hamna')
+                else:
+                    print('period hamna')
+                    if filter_date:
+                        print('date ipo pia')
+                    else:
+                        print('date hamna')
+
+    # print(filt_data)
+    _dhis_reported_diseases_count = dhis_reported_diseases.objects.all().count()
+    _organizations = organizational_units.objects.all()
+    _dhis_reported_diseases_report = dhis_reported_diseases.objects.all()
+    _drop_down_diseases = dhis_reported_diseases.objects.all()
+    _drop_down_periods = dhis_reported_diseases.objects.order_by().values('period').distinct()
+    dhis_case_values = []
+    for _dhis_reported_cases in _dhis_reported_diseases_report:
+        dhis_data_values = dhis_disease_data_values.objects.filter(dhis_reported_disease_id = _dhis_reported_cases).values_list('data_value', flat=True).first()
+        dhis_case_values.append(dhis_data_values)
+
+    _dhis_cases = dhis_disease_data_values.objects.all()
+    my_list_data = zip(_dhis_reported_diseases_report, dhis_case_values)
+
+    values = {'dhis_reported_diseases_count': _dhis_reported_diseases_count, 'organizations':_organizations,
+    'dhis_reported_diseases_reports': my_list_data, 'dhis_cases': _dhis_cases,
+    'drop_down_diseases': _drop_down_diseases, 'drop_down_periods': _drop_down_periods }
 
     return render(request, 'veoc/reportable_diseases_report.html', values)
 
