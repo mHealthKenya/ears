@@ -1,0 +1,67 @@
+{#{% extends "overview/main_header.html" %}#}
+{% extends "overview/index.html" %}
+
+{% block main %}
+    <div class="panel panel-default">
+        <div class="panel-heading" style="background-color:#3c8dbc">
+            <h2 class="panel-title" align="center" style="color: #ffffff">Call Log View</h2>
+        </div>
+
+        <div class="col-lg-2">
+        </div>
+
+        <div class="row">
+            <div class="col-lg-8">
+                <div class="well">
+
+                    {% if  call_log_instance.event_type == "none" %}
+
+                        <div class="form-group">
+                            <label for="event_type"><b>Event Type : </b></label>
+                            <label for="event_type">{{ call_log_instance.event_type.event_description }}</label>
+                        </div>
+
+                    {% else %}
+                        <div class="form-group">
+                            <label for="event_type"><b>Disease Type : </b></label>
+                            <label for="event_type">{{ call_log_instance.disease_type.disease_description }} </label>
+                        </div>
+                    {% endif %}
+
+                    <div class="form-group">
+                        <label for="event_type"><b>Sub county : </b></label>
+                        <label for="event_type">{{ call_log_instance.location }} </label>
+                    </div>
+                    <div class="form-group">
+                        <label for="event_type"><b>Caller name : </b></label>
+                        <label for="event_type">{{ call_log_instance.caller_name }} </label>
+                    </div>
+                    <div class="form-group">
+                        <label for="event_type"><b>Caller number : </b></label>
+                        <label for="event_type">{{ call_log_instance.caller_number }} </label>
+                    </div>
+                    <div class="form-group">
+                        <label for="event_type"><b>Date reported : </b></label>
+                        <label for="event_type">{{ call_log_instance.date_reported }} </label>
+                    </div>
+                    <div class="form-group">
+                        <label for="event_type"><b>Description : </b></label>
+                        <label for="event_type">{{ call_log_instance.call_description }}</label>
+                    </div>
+                    <div class="form-group">
+                        <label for="event_type"><b>Action Taken : </b></label>
+                        <label for="event_type">{{ call_log_instance.action_taken }}</label>
+                    </div>
+                    <div class="form-group">
+                        <label for="event_type"><b>Watcher : </b></label>
+                        <label for="event_type">{{ call_log_instance.user }}</label>
+                    </div>
+
+
+                </div>
+            </div>
+            <div class="col-lg-2">
+            </div>
+        </div>
+    </div>
+{% endblock %}

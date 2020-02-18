@@ -1,0 +1,166 @@
+{% block content %}
+
+    {#    <h3 class="sub-header">Call Log Table</h3>#}
+    <div class="panel panel-default">
+        <!--<div class="panel-heading">
+            <h3 class="panel-title"> Call-Logs Table</h3>
+        </div>-->
+        <!-- <div class="panel-body"> Sample Log Table Data</div>-->
+        <div id="map_div" style="height:250px;width:auto"></div>
+    </div>
+
+
+    {% csrf_token %}
+
+
+    <script>
+
+        google.charts.load('current', {'packages': ['map']});
+        google.charts.setOnLoadCallback(showmap);
+
+        function showmap() {
+
+            $.ajax({
+
+                url: '/call_logs_cordinates/',
+                type: 'POST',
+                datatype: 'json',
+                data: {csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val()},
+
+                success: function (data) {
+                    console.log(data);
+
+
+                    var mydata = new google.visualization.DataTable();
+                    mydata.addColumn('number', 'LATITUDE');
+                    mydata.addColumn('number', 'LONGITUDE');
+                    mydata.addColumn('string', 'NAME');
+                    mydata.addColumn('string', 'Marker');
+
+
+                    // for(var i=0;i<data.length;i++){
+
+
+                    //   x=data[i].longitude;//get the longitude from models
+                    //   y=data[i].latitude;//get latitude from models
+
+                    //   z=data[i].position;//get the position from models
+                    //   x=parseFloat(x);//convert the longitude to float from string
+                    //   y=parseFloat(y);//convert the latitude to float from string
+                    //   mydata.addRow([x,y,z]);//add the coordinates to the map
+
+                    // }
+
+                    // for(i in data){
+                    //   // console.log("latitude: "+data[x]['latitude']);
+
+                    //   x=data[i].dlatitude;//get the longitude from models
+                    //   y=data[i].dlongitude;//get latitude from models
+
+                    //   z=data[i].dposition;//get the position from models
+                    //   x=parseFloat(x);//convert the longitude to float from string
+                    //   y=parseFloat(y);//convert the latitude to float from string
+                    //   mydata.addRow([x,y,z,'disease']);//add the coordinates to the map
+                    // }
+
+                    for (i in data) {
+                        // console.log("latitude: "+data[x]['latitude']);
+
+                        x = data[i].latitude;//get the longitude from models
+                        y = data[i].longitude;//get latitude from models
+
+                        z = data[i].position;//get the position from models
+                        x = parseFloat(x);//convert the longitude to float from string
+                        y = parseFloat(y);//convert the latitude to float from string
+                        mydata.addRow([x, y, z, 'disease']);//add the coordinates to the map
+                    }
+
+                    var options = {
+                        icons: {
+                            default: {
+                                normal: 'http://icons.iconarchive.com/icons/icons-land/vista-map-markers/32/Map-Marker-Marker-Inside-Chartreuse-icon.png',
+                                selected: 'http://icons.iconarchive.com/icons/icons-land/vista-map-markers/32/Map-Marker-Marker-Inside-Chartreuse-icon.png'
+                            },
+                            disease: {
+                                normal: 'http://icons.iconarchive.com/icons/icons-land/vista-map-markers/32/Map-Marker-Marker-Outside-Pink-icon.png',
+                                selected: 'http://icons.iconarchive.com/icons/icons-land/vista-map-markers/32/Map-Marker-Marker-Outside-Pink-icon.png'
+                            }
+                        },
+
+                        showTip: true,
+                        useMapTypeControl: true,
+                        zoomLevel: 7,
+                        enableScrollWheel: true,
+                        mapType: 'styledMap',
+                        center: {lat: -33.8688, lng: 151.2195},
+
+                        maps: {
+                            // Your custom mapTypeId holding custom map styles.
+                            styledMap: {
+                                name: 'Styled Map', // This name will be displayed in the map type control.
+                                styles: [
+                                    {
+                                        featureType: 'poi.attraction',
+                                        stylers: [{color: '#fce8b2'}]
+                                    },
+                                    {
+                                        featureType: 'road.highway',
+                                        stylers: [{hue: '#0277bd'}, {saturation: -50}]
+                                    },
+                                    {
+                                        featureType: 'road.highway',
+                                        elementType: 'labels.icon',
+                                        stylers: [{hue: '#000'}, {saturation: 100}, {lightness: 50}]
+                                    },
+                                    {
+                                        featureType: 'landscape',
+                                        stylers: [{hue: '#259b24'}, {saturation: 10}, {lightness: -22}]
+                                    }
+                                ]
+                            }
+                        }
+
+
+                    };
+
+                    // var input = document.getElementById('pac-input');
+                    // var searchBox = new google.maps.places.SearchBox(input);
+
+
+                    var map = new google.visualization.Map(document.getElementById('map_div'));
+                    // map.controls[google.maps.ControlPosition.TOP_LEFT].push(input);
+                    map.draw(mydata, options);
+
+                    var input = document.getElementById('pac-input');
+                    var searchBox = new google.maps.places.SearchBox(input);
+                    map.controls[google.maps.ControlPosition.TOP_LEFT].push(input);
+
+                    map.addListener('bounds_changed', function () {
+                        searchBox.setBounds(map.getBounds());
+                    });
+
+
+                },
+
+
+                error: function () {
+
+                    alert("error in getting coordinates, try again");
+
+                }
+
+            });
+
+        }
+
+
+    </script>
+
+
+
+{% endblock %}
+{% block script %}
+    <script>
+        $("#logs_table").dataTable();
+    </script>
+{% endblock %}

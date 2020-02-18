@@ -1,0 +1,231 @@
+{% extends "veoc/main_template.html" %}
+{% block main %}
+<div id="main-container">
+  <div id="breadcrumb">
+    <ul class="breadcrumb">
+       <li><i class="fa fa-home"></i><a href="{% url 'veoc:access_dashboard' %}"> Dashboard</a></li>
+       <li class="active">Police Post Mappings</li>
+    </ul>
+  </div>
+
+  <div class="padding-md">
+    <div class="row">
+      <div class="col-md-12">
+        <div class="panel panel-default">
+            <div class="panel-heading">POLICE POSTS FILTERS</div>
+            <div class="panel-body" align="center">
+              <form class="form-inline" method="post" action="#">
+                {% csrf_token %}
+                  <div class="form-group">
+                      <label for="facility_county"><b>Filter by County Police Stations: </b></label>
+                      <select class="form-control" id="facility_county" name="facility_county" onchange="getsubcounty()" required>
+                          <option value="" selected>All Counties</option>
+                      </select>
+                  </div>
+                  <div class="form-group">
+                      <label for="facility_subcounty"><b>Filter by Sub-County Police Stations : </b></label>
+                      <select class="form-control" id="facility_subcounty" name="facility_subcounty"><!-- onchange="getward()">-->
+                        <option value="" disabled selected>Select Sub-County</option>
+                      </select>
+                  </div>
+                  <!-- <div class="form-group">
+                      <label for="facility_ward"><b>Filter by Ward : </b></label>
+                      <select class="form-control" id="facility_ward" name="facility_ward" onchange="get_facilities_ward()">
+                        <option value="" disabled selected>Select Ward</option>
+                      </select>
+                  </div> -->
+              </form>
+            </div>
+        </div><!-- /div panel-default -->
+
+        <div class="panel panel-default">
+            <div class="panel-heading">POLICE POST MAPPINGS</div>
+            <div class="panel-body">
+              <div id="police_map_div">
+                  <!-- div to hold map -->
+              </div>
+            </div><!-- panel-body -->
+          </div><!-- /div panel-default -->
+        </div>
+      </div>
+    </div>
+  </div><!-- /main-container -->
+
+{% endblock %}
+
+{% block script %}
+
+{% csrf_token %}
+
+  <script type="text/javascript">
+
+    $(document).ready(function () {
+
+      $.ajax({
+          url: '/get_county/',
+          type: 'POST',
+          datatype: 'json',
+          async: false,
+          data: {csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val()},
+          success: function (data) {
+              var options = '<option value="" selected disabled>Select County</option>';
+              $('#facility_county').html(options);
+
+              for (var i = 0; i < data.length; i++) {
+                  var options = '<option value="' + data[i].fields['name'] + '">' + data[i].fields['name'] + '</option>';
+                  $('#facility_county').append(options);
+              }
+          },
+          error: function () {
+              console.log("Error, loading counties");
+              // alert("Error getting Counties. Check internet connection!");
+          }
+
+      });
+
+      google.charts.load('current', {'packages': ['map']});
+      google.charts.setOnLoadCallback(drawCountyChart);
+
+    });
+
+    function getsubcounty() {
+
+      var county = $('#facility_county').val();
+      console.log("inside getsubcounty");
+      console.log(county);
+      $.ajax({
+          url: '/get_subcounty/',
+          type: 'POST',
+          datatype: 'json',
+          data: {county: county, csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val()},
+          success: function (data) {
+              var options = '<option value="" selected disabled>select subcounty</option>';
+              $('#facility_subcounty').html(options);
+
+              for (var i = 0; i < data.length; i++) {
+                  var options = '<option value="' + data[i].fields['name'] + '">' + data[i].fields['name'] + '</option>';
+                  $('#facility_subcounty').append(options);
+              }
+          },
+          error: function () {
+              var options = '<option value="" selected disabled>select county</option>';
+              $('#facility_subcounty').html(options);
+          }
+      });
+  }
+
+    function getward(){
+
+      var subcounty=$('#facility_subcounty').val();
+      console.log(subcounty);
+      $.ajax({
+        url:'/get_ward/',
+        type:'POST',
+        datatype:'json',
+        data:{subcounty:subcounty,csrfmiddlewaretoken:$('input[name=csrfmiddlewaretoken]').val()},
+        success:function(data){
+          var options = '<option value="" selected disabled>Select Ward</option>';
+          console.log("in success ward");
+          console.log(data);
+          $('#facility_ward').html(options);
+          for(var i=0;i<data.length;i++){
+            var options = '<option value="' + data[i].fields['organisationunitid'] + '">' + data[i].fields['name'] + '</option>';
+            $('#facility_ward').append(options);
+          }
+        },error:function(){
+          console.log("in error");
+          var options = '<option value="" selected disabled>Select Ward</option>';
+          $('#ward').html(options);
+        }
+      });
+    }
+
+    function drawCountyChart() {
+
+      $.ajax({
+          url: '/get_facilities_county/',
+          type: 'POST',
+          datatype: 'json',
+          data: {csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val()},
+          success: function (data) {
+              // console.log(JSON.stringify(data));
+              var mydata = new google.visualization.DataTable();
+              mydata.addColumn('number', 'LATITUDE');
+              mydata.addColumn('number', 'LONGITUDE');
+              mydata.addColumn('string', 'NAME');
+
+              for (var i = 0; i < data.length; i++) {
+                  x = data[i].latitude;//get the longitude from models
+                  y = data[i].longitude;//get latitude from models
+                  z = data[i].name;//get the position from models
+                  x = parseFloat(x);//convert the longitude to float from string
+                  y = parseFloat(y);//convert the latitude to float from string
+                  mydata.addRow([x, y, z]);//add the coordinates to the map
+
+              }
+
+              var options = {
+                  icons: {
+                      default: {
+                          normal: 'http://icons.iconarchive.com/icons/icons-land/vista-map-markers/32/Map-Marker-Bubble-Chartreuse-icon.png',
+                          selected: 'http://icons.iconarchive.com/icons/icons-land/vista-map-markers/32/Map-Marker-Bubble-Chartreuse-icon.png'
+                      }
+                  },
+                  showTip: true,
+                  useMapTypeControl: true,
+                  zoomLevel: 6,
+                  enableScrollWheel: true,
+                  mapType: 'styledMap',
+                  center: {lat: -33.8688, lng: 151.2195},
+                  maps: {
+                      // Your custom mapTypeId holding custom map styles.
+                      styledMap: {
+                          name: 'Styled Map', // This name will be displayed in the map type control.
+                          styles: [
+                              {
+                                  featureType: 'poi.attraction',
+                                  stylers: [{color: '#fce8b2'}]
+                              },
+                              {
+                                  featureType: 'road.highway',
+                                  stylers: [{hue: '#0277bd'}, {saturation: -50}]
+                              },
+                              {
+                                  featureType: 'road.highway',
+                                  elementType: 'labels.icon',
+                                  stylers: [{hue: '#000'}, {saturation: 100}, {lightness: 50}]
+                              },
+                              {
+                                  featureType: 'landscape',
+                                  stylers: [{hue: '#259b24'}, {saturation: 10}, {lightness: -22}]
+                              }
+                          ]
+                      }
+                  }
+              };
+
+              // var input = document.getElementById('pac-input');
+              // var searchBox = new google.maps.places.SearchBox(input);
+
+              var map = new google.visualization.Map(document.getElementById('police_map_div'));
+              // map.controls[google.maps.ControlPosition.TOP_LEFT].push(input);
+              map.draw(mydata, options);
+
+              // var input = document.getElementById('pac-input');
+              // var searchBox = new google.maps.places.SearchBox(input);
+              // map.controls[google.maps.ControlPosition.TOP_LEFT].push(input);
+              //
+              // map.addListener('bounds_changed', function () {
+              //     searchBox.setBounds(map.getBounds());
+              // });
+          },
+          error: function () {
+              // alert("error in getting coordinates, try again");
+          }
+      });
+
+  }
+
+  </script>
+
+{% endblock %}

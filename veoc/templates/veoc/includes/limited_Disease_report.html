@@ -1,0 +1,39 @@
+{% block content %}
+
+    {#    <h3 class="sub-header">Call Log Table</h3>#}
+    <div class="panel panel-default">
+        <div class="table-responsive">
+            <table class="table table-bordered table-hover" id="disease_report">
+                {#              <thead style="background-color: #a6e1ec">#}
+                <thead>
+                <tr>
+                    <th>Date Reported</th>
+                    <th>Region</th>
+                    <th>Data Source</th>
+                    <th>Reported Disease</th>
+                    {#                    <th>Officer</th>#}
+                    {#                    <th>Remarks</th>#}
+                </tr>
+                </thead>
+                <tbody>
+                {#              {{ valz }}#}
+                {% for disease in valz.disease_vals %}
+                    <tr>
+                        <td>{{ disease.date_created }}</td>
+                        <td>{{ disease.region.description }}</td>
+                        <td>{{ disease.data_source.description }}</td>
+                        <td>{{ disease.disease_type.description }}</td>
+                        {#                    <td>{{disease.user.username}}</td>#}
+                        {#                    <td>{{disease.remarks}}</td>#}
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+{% endblock %}
+{% block script %}
+    <script>
+        $("#disease_report").dataTable();
+    </script>
+{% endblock %}

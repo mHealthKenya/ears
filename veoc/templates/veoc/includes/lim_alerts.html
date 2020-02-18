@@ -1,0 +1,38 @@
+{% block content %}
+
+    {#    <h3 class="sub-header">Call Log Table</h3>#}
+    <div class="panel panel-default">
+        <div class="table-responsive">
+            <table class="table table-bordered table-hover" id="disease_report">
+                {#              <thead style="background-color: #a6e1ec">#}
+                <thead>
+                <tr>
+                    <th>Date Reported</th>
+                    <th>Data Source</th>
+                    <th>Reported Event</th>
+                    <th>Region</th>
+                    {#                    <th>User</th>#}
+                    {#                    <th>Remarks</th>#}
+                </tr>
+                </thead>
+                <tbody>
+                {% for event in valz.event_vals %}
+                    <tr>
+                        <td>{{ event.date_created }}</td>
+                        <td>{{ event.data_source.description }}</td>
+                        <td>{{ event.event_type.description }}</td>
+                        <td>{{ event.region.description }}</td>
+                        {#                    <td>{{event.user.username}}</td>#}
+                        {#                    <td>{{event.remarks}}</td>#}
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+{% endblock %}
+{% block script %}
+    <script>
+        $("#disease_report").dataTable();
+    </script>
+{% endblock %}

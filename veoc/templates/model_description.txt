@@ -1,0 +1,17 @@
+idsr_weekly_report
+- Model stores all reported incidences of MOH 505 data from DHIS2
+
+dhis_disease_type
+- Model stores all disease types with their UID from DHIS2
+
+dhis_event_type
+- Model stores all event types with their UID from DHIS2
+
+dhis_event_data_elements
+- model saves the data elements associated  a reportable event reporting from DHIS2
+
+dhis_reported_events
+- Model stores organizational unit associated with data that has been reported. This data unique id will be used to pull the actual reported values (dhis_event_data_values)
+
+dhis_event_data_values
+- Model stores actual data values of data elements and is linking with dhis_reported_events keyfield to identify its reported organizational unit

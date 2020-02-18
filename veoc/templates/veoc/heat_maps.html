@@ -1,0 +1,337 @@
+{% extends "veoc/main_template.html" %}
+
+{% block main %}
+<div id="main-container">
+  <div id="breadcrumb">
+    <ul class="breadcrumb">
+       <li><i class="fa fa-home"></i><a href="{% url 'veoc:access_dashboard' %}"> Dashboard</a></li>
+       <li class="active">Heat Maps</li>
+    </ul>
+  </div>
+
+  <div class="padding-md">
+    <div class="row">
+      <div class="col-md-12">
+        <div class="panel panel-default">
+            <div class="panel-heading">HEAT MAP FILTERS</div>
+            <div class="panel-body" align="center">
+                <form class="form-inline" method="post" action="#">
+                  {% csrf_token %}
+                    <div class="form-group">
+                      <label for="mydtype"><b>Select Disease to filter :&nbsp; &nbsp; </b></label>
+                      <select name="mydtype" id="mydtype" onchange="getPoints()">
+                        <!-- <option value="" disabled selected>Select Disease</option> -->
+                        <!-- {% for disease in diseases %}
+                            <option value="{{disease.name}}">{{disease.name}}</option>
+                        {% endfor %} -->
+                      </select>
+                    </div>
+                </form>
+            </div>
+        </div><!-- /div panel-default -->
+
+        <div class="panel panel-default">
+            <div class="panel-heading">DISEASE MAPPINGS</div>
+            <div class="panel-body">
+              <div id="floating-panel">
+                  <button onclick="toggleHeatmap()">Toggle Heatmap</button>
+                  <button onclick="changeGradient()">Change gradient</button>
+                  <button onclick="changeRadius()">Change radius</button>
+                  <button onclick="changeOpacity()">Change opacity</button>
+              </div>
+              <div id="map"></div>
+            </div><!-- panel-body -->
+          </div><!-- /div panel-default -->
+        </div>
+      </div>
+    </div>
+  </div><!-- /main-container -->
+
+{% endblock %}
+
+{% block script %}
+  {% csrf_token %}
+  <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAc-WwoLvPhsVHIKQ3OHLXYr2S4rV8QQP8&libraries=visualization&callback=initMap">
+  </script>
+  <script>
+
+    $(document).ready(function () {
+      $.ajax({
+        url: '/get_diseases/',
+        type: 'POST',
+        datatype: 'json',
+        data: {csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val()},
+        success: function (data) {
+            // console.log("returned data : " + data)
+            var options = '<option value="" selected disabled>select Disease</option>';
+            $('#mydtype').html(options);
+
+            for (var i = 0; i < data.length; i++) {
+                // console.log(data);
+                var options = '<option value="' + data[i].fields['name'] + '">' + data[i].fields['name'] + '</option>';
+                $('#mydtype').append(options);
+            }
+        },
+        error: function () {
+            // alert("error getting data from server");
+            console.log("Error returning data")
+            var options = '<option value="" selected disabled>select county</option>';
+            $('#mydtype').html(options);
+        }
+      });
+  });
+
+    var map, heatmap;
+
+    function initMap() {
+        map = new google.maps.Map(document.getElementById('map'), {
+            zoom: 5,
+            center: {lat: -0.5388, lng: 37.4596},
+            mapTypeId: 'roadmap'//(satellite,terrain,hybrid,roadmap)
+        });
+
+        heatmap = new google.maps.visualization.HeatmapLayer({
+            data: getPoints(),
+            map: map
+        });
+    }
+
+    function toggleHeatmap() {
+        heatmap.setMap(heatmap.getMap() ? null : map);
+    }
+
+    function changeGradient() {
+        var gradient = [
+            'rgba(0, 255, 255, 0)',
+            'rgba(0, 255, 255, 1)',
+            'rgba(0, 191, 255, 1)',
+            'rgba(0, 127, 255, 1)',
+            'rgba(0, 63, 255, 1)',
+            'rgba(0, 0, 255, 1)',
+            'rgba(0, 0, 223, 1)',
+            'rgba(0, 0, 191, 1)',
+            'rgba(0, 0, 159, 1)',
+            'rgba(0, 0, 127, 1)',
+            'rgba(63, 0, 91, 1)',
+            'rgba(127, 0, 63, 1)',
+            'rgba(191, 0, 31, 1)',
+            'rgba(255, 0, 0, 1)'
+        ]
+        heatmap.set('gradient', heatmap.get('gradient') ? null : gradient);
+    }
+
+    function changeRadius() {
+        heatmap.set('radius', heatmap.get('radius') ? null : 20);
+    }
+
+    function changeOpacity() {
+        heatmap.set('opacity', heatmap.get('opacity') ? null : 0.2);
+    }
+
+    // Heatmap data: 500 Points
+    function getPoints() {
+
+        var dtype = $('#mydtype').val();
+        var cordinates = [];
+
+        if(dtype == null){
+          console.log("inside null");
+          cordinates.push(new google.maps.LatLng(-1.165999, 36.49001));
+        }else{
+          console.log(dtype);
+          $.ajax({
+              url: '/get_disease_cordinates/',
+              type: 'POST',
+              datatype: 'json',
+              data: {dtype: dtype, csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val()},
+              success: function (data) {
+                  for (var i = 0; i < data.length; i++) {
+
+                      x = data[i].county__longitude;//get the longitude from models
+                      y = data[i].county__latitude;//get latitude from models
+
+                      x = parseFloat(x);//convert the longitude to float from string
+                      y = parseFloat(y);
+                      console.log(x);
+                      console.log(y);
+                      cordinates.push(new google.maps.LatLng(x, y));
+                  }
+              },
+              error: function () {
+                  // alert("error getting coordinates");
+              }
+          });
+        }
+
+        return cordinates;
+    }
+
+    function getheat_map() {
+
+        var level = $('#level').val();
+
+        $.ajax({
+            url: '/get_level/',
+            type: 'POST',
+            data: {level: level, csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val()},
+
+            success: function (data) {
+
+                var mydata = new google.visualization.DataTable();
+                mydata.addColumn('number', 'LATITUDE');
+                mydata.addColumn('number', 'LONGITUDE');
+                mydata.addColumn('string', 'NAME');
+
+                for (var i = 0; i < data.length; i++) {
+
+                    x = data[i].longitude;//get the longitude from models
+                    y = data[i].latitude;//get latitude from models
+                    z = data[i].facilityname;//get the position from models
+                    x = parseFloat(x);//convert the longitude to float from string
+                    y = parseFloat(y);//convert the latitude to float from string
+                    mydata.addRow([x, y, z]);//add the coordinates to the map
+
+                }
+
+                var options = {
+                    icons: {
+                        default: {
+                            normal: 'http://icons.iconarchive.com/icons/icons-land/vista-map-markers/32/Map-Marker-Bubble-Chartreuse-icon.png',
+                            selected: 'http://icons.iconarchive.com/icons/icons-land/vista-map-markers/32/Map-Marker-Bubble-Chartreuse-icon.png'
+                        }
+                    },
+                    showTip: true,
+                    useMapTypeControl: true,
+                    zoomLevel: 6,
+                    enableScrollWheel: true,
+                    mapType: 'styledMap',
+                    center: {lat: -33.8688, lng: 151.2195},
+
+                    maps: {
+                        // Your custom mapTypeId holding custom map styles.
+                        styledMap: {
+                            name: 'Styled Map', // This name will be displayed in the map type control.
+                            styles: [
+                                {
+                                    featureType: 'poi.attraction',
+                                    stylers: [{color: '#fce8b2'}]
+                                },
+                                {
+                                    featureType: 'road.highway',
+                                    stylers: [{hue: '#0277bd'}, {saturation: -50}]
+                                },
+                                {
+                                    featureType: 'road.highway',
+                                    elementType: 'labels.icon',
+                                    stylers: [{hue: '#000'}, {saturation: 100}, {lightness: 50}]
+                                },
+                                {
+                                    featureType: 'landscape',
+                                    stylers: [{hue: '#259b24'}, {saturation: 10}, {lightness: -22}]
+                                }
+                            ]
+                        }
+                    }
+                };
+                var map = new google.visualization.Map(document.getElementById('map'));
+                // map.controls[google.maps.ControlPosition.TOP_LEFT].push(input);
+                map.draw(mydata, options);
+
+                // var input = document.getElementById('pac-input');
+                // var searchBox = new google.maps.places.SearchBox(input);
+                // map.controls[google.maps.ControlPosition.TOP_LEFT].push(input);
+                //
+                // map.addListener('bounds_changed', function () {
+                //     searchBox.setBounds(map.getBounds());
+                // });
+            },
+            error: function () {
+                console.log("error in getting coordinates, try again");
+            }
+        });
+    }
+
+    function getdisease_map() {
+
+        var level = $('#level').val();
+        $.ajax({
+            url: '/get_level/',
+            type: 'POST',
+            data: {level: level, csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val()},
+            success: function (data) {
+
+                var mydata = new google.visualization.DataTable();
+                mydata.addColumn('number', 'LATITUDE');
+                mydata.addColumn('number', 'LONGITUDE');
+                mydata.addColumn('string', 'NAME');
+
+                for (var i = 0; i < data.length; i++) {
+                    x = data[i].longitude;//get the longitude from models
+                    y = data[i].latitude;//get latitude from models
+                    z = data[i].facilityname;//get the position from models
+                    x = parseFloat(x);//convert the longitude to float from string
+                    y = parseFloat(y);//convert the latitude to float from string
+                    mydata.addRow([x, y, z]);//add the coordinates to the map
+
+                }
+
+                var options = {
+                    icons: {
+                        default: {
+                            normal: 'http://icons.iconarchive.com/icons/icons-land/vista-map-markers/32/Map-Marker-Bubble-Chartreuse-icon.png',
+                            selected: 'http://icons.iconarchive.com/icons/icons-land/vista-map-markers/32/Map-Marker-Bubble-Chartreuse-icon.png'
+                        }
+                    },
+                    showTip: true,
+                    useMapTypeControl: true,
+                    zoomLevel: 6,
+                    enableScrollWheel: true,
+                    mapType: 'styledMap',
+                    center: {lat: -33.8688, lng: 151.2195},
+                    maps: {
+                        // Your custom mapTypeId holding custom map styles.
+                        styledMap: {
+                            name: 'Styled Map', // This name will be displayed in the map type control.
+                            styles: [
+                                {
+                                    featureType: 'poi.attraction',
+                                    stylers: [{color: '#fce8b2'}]
+                                },
+                                {
+                                    featureType: 'road.highway',
+                                    stylers: [{hue: '#0277bd'}, {saturation: -50}]
+                                },
+                                {
+                                    featureType: 'road.highway',
+                                    elementType: 'labels.icon',
+                                    stylers: [{hue: '#000'}, {saturation: 100}, {lightness: 50}]
+                                },
+                                {
+                                    featureType: 'landscape',
+                                    stylers: [{hue: '#259b24'}, {saturation: 10}, {lightness: -22}]
+                                }
+                            ]
+                        }
+                    }
+                };
+                var map = new google.visualization.Map(document.getElementById('map_div'));
+                // map.controls[google.maps.ControlPosition.TOP_LEFT].push(input);
+                map.draw(mydata, options);
+
+                var input = document.getElementById('pac-input');
+                var searchBox = new google.maps.places.SearchBox(input);
+                map.controls[google.maps.ControlPosition.TOP_LEFT].push(input);
+
+                map.addListener('bounds_changed', function () {
+                    searchBox.setBounds(map.getBounds());
+                });
+            },
+            error: function () {
+                // console.log("error in getting coordinates, try again");
+            }
+        });
+    }
+
+  </script>
+
+{% endblock %}

@@ -1,0 +1,269 @@
+{% extends "veoc/main_template.html" %}
+
+{% block main %}
+
+    <script type="text/javascript"
+        src="https://cdn.datatables.net/v/dt/jqc-1.12.3/jszip-2.5.0/pdfmake-0.1.18/dt-1.10.12/b-1.2.2/b-flash-1.2.2/b-html5-1.2.2/b-print-1.2.2/datatables.min.js"></script>
+
+            <div id="main-container">
+        			<div id="breadcrumb">
+        				<ul class="breadcrumb">
+        					 <li><i class="fa fa-home"></i><a href="{% url 'veoc:access_dashboard' %}"> Dashboard</a></li>
+        					 <li class="active">General Feedback</li>
+        				</ul>
+        			</div><!-- /breadcrumb-->
+
+        			<div class="padding-md">
+                <div class="row">
+        					<div class="col-sm-12 col-md-12">
+        						<div class="col-md-12" style="padding-bottom:10px">
+        							<button type="button" id="modalbtn" class="btn btn-info btn-sm pull-left" data-toggle="modal" data-target="#addFeedbackModal"> <i class="fa fa-plus" aria-hidden="true"></i> Add Feedback</button>
+        						</div>
+
+        					</div><!-- /.col -->
+        				</div>
+        				<div class="row">
+        					<div class="col-md-12">
+        						<div class="panel panel-default table-responsive">
+        							<div class="panel-heading">
+        								Users General System Feedback
+        								<span class="label label-info pull-right" id="totalspan">{{feedback_count}} Concerns</span>
+        							</div>
+        							<div class="padding-md clearfix">
+        							<table class="table table-hover" id="feedback_table">
+        								<thead class="thead-dark">
+                          <tr>
+                              <th>Date Reported</th>
+                              <th>Reported Challange</th>
+                              <th>Reported by</th>
+                              <th>Challange Addressed</th>
+                              <th>Action</th>
+                          </tr>
+                          </thead>
+                          <tbody>
+                          {% for fback in feedbacks %}
+                          <tr>
+                            <td>{{ fback.created_at }}</td>
+                            <td>{{ fback.challenge }}</td>
+                            <td>{{ fback.created_by.username }}</td>
+                            <td>{{ fback.challange_addressed }}</td>
+                             <td>
+                              <button type="button" class="btn btn-primary btn-xs view_button"
+                                data-toggle="modal" data-target="#view_feedback_modal"
+                                data-id="{{ fback.pk }}>"
+                                data-challenge="{{ fback.challenge }}"
+                                data-date="{{ fback.created_at }}"
+                                data-user="{{ fback.created_by.username }}"
+                                data-adressed="{{ fback.challange_addressed }}"
+                                title="View">
+                                <i class="fa fa-eye">
+                                </i>
+                            </button>
+                            <button type="button" class="btn btn-primary btn-xs edit_button"
+                              data-toggle="modal" data-target="#edit_feedback_modal"
+                              data-id="{{ fback.pk }}>"
+                              data-date="{{ fback.created_at }}"
+                              data-challenge="{{ fback.challenge }}"
+                              data-user="{{ fback.created_by.username }}"
+                              data-adressed="{{ fback.challange_addressed }}"
+                              title="Edit">
+                              <i class="fa fa-edit">
+                              </i>
+                            </button>
+                          </td>
+                        </tr>
+                        {% endfor %}
+                      </tbody>
+    							</table>
+                </div>
+              </div>
+    				</div>
+    			</div><!-- /row-->
+        </div><!-- /.padding-md -->
+      </div><!-- /main-container -->
+
+      <!-- View Feedback modal -->
+      <div class="modal fade" id="view_feedback_modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="exampleModalLabel">Reported Feedback View</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+              <form method="post" action="#">
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="heading">Date Reported:</label>
+                        <input class="form-control date" name="date" readonly>
+                    </div>
+                    <div class="form-group">
+                        <label for="heading">Challenge:</label>
+                        <input class="form-control challange" name="challange" readonly>
+                    </div>
+                    <div class="form-group">
+                        <label for="heading">Created By:</label>
+                        <input class="form-control user" name="user" readonly>
+                    </div>
+                    <div class="form-group">
+                        <label for="heading">Is Adressed?</label>
+                        <input class="form-control is_adressed" name="is_adressed" readonly>
+                    </div>
+                </div>
+            </form>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Edit Feedback modal -->
+      <div class="modal fade" id="edit_feedback_modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="exampleModalLabel">Edit Feedback</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+              <form method="post" action="{% url 'veoc:edit_feedback' %}">
+                  <div class="modal-body">
+                    <div class="form-group">
+                        <label for="heading">Date Reported:</label>
+                        <input class="form-control date" name="date" readonly>
+                    </div>
+                    <div class="form-group">
+                        <label for="heading">Challenge:</label>
+                        <input class="form-control challange" name="challange" readonly>
+                    </div>
+                    <div class="form-group">
+                        <label for="heading">Created By:</label>
+                        <input class="form-control user" name="user" readonly>
+                    </div>
+                    <div class="form-group">
+                        <label for="heading">Is Adressed?</label>
+                        <input class="form-control is_adressed" name="is_adressed" readonly>
+                    </div>
+                    <div class="form-group">
+                        <input type="submit" value="Update" class=" btn btn-primary">
+                    </div>
+                  </div>
+              </form>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+              <button type="button" class="btn btn-primary">Save changes</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Add feedback modal -->
+		<div class="modal fade" id="addFeedbackModal" tabindex="-1" role="dialog" aria-hidden="true">
+			<div class="modal-dialog" role="document">
+				<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="exampleModalLongTitle">Add Feedback</h5>
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+					</button>
+				</div>
+				<div class="modal-body">
+					<form role="form" method="POST" action="{% url 'veoc:module_general_feedback' %}" >
+						{% csrf_token %}
+            <div class="form-group">
+                <label for="heading">Challenge:</label>
+                <textarea class="form-control challange" id="challange" rows="3" name="challange" placeholder="Enter Challanges"></textarea>
+            </div>
+            <div class="form-group" style="display: none;">
+                <label for="heading">Is Adressed?</label>
+                <input class="form-control is_adressed" value="False" name="is_adressed">
+            </div>
+						<button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+						<button type="submit" id="addfeedbackbtn" class="btn btn-success btn-sm pull-right"> <i class="fa fa-plus" aria-hidden="true"></i> Add Feedback</button>
+					</form>
+				</div>
+				</div>
+			</div>
+    </div>
+
+    {% csrf_token %}
+{% endblock %}
+
+{% block script %}
+
+<script>
+  $(document).ready(function () {
+      $('#feedback_table').DataTable({
+          "order": [],
+          dom: 'Bfrtip',
+          buttons: [
+              'copy', 'csv', 'excel', 'pdf', 'print'
+          ]
+      });
+
+      // Setup - add a text input to each footer cell
+      $('#feedback_table thead td').each(function () {
+          var title = $(this).text();
+          $(this).html('<input type="text" placeholder="Search ' + title + '" />');
+      });
+
+      // DataTable
+      var table = $('#feedback_table').DataTable();
+
+      // Apply the search
+      table.columns().every(function () {
+          var that = this;
+
+          $('input', this.header()).on('keyup change', function () {
+              if (that.search() !== this.value) {
+                  that
+                          .search(this.value)
+                          .draw();
+              }
+          });
+      });
+  });
+
+  $(document).on( "click", '.edit_button',function(e) {
+
+      var id = $(this).data('id');
+      var challenge = $(this).data('challenge');
+      var date = $(this).data('date');
+      var usr = $(this).data('user');
+      var adressed = $(this).data('adressed');
+
+      console.log(modul);
+
+      $(".challenge").val(challenge);
+      $(".date").val(date);
+      $(".user").val(usr);
+      $(".is_adressed").val(adressed);
+  });
+
+  $(document).on( "click", '.edit_button',function(e) {
+    var id = $(this).data('id');
+    var challenge = $(this).data('challenge');
+    var date = $(this).data('date');
+    var usr = $(this).data('user');
+    var adressed = $(this).data('adressed');
+
+    console.log(modul);
+
+    $(".id").val(id);
+    $(".challenge").val(challenge);
+    $(".date").val(date);
+    $(".user").val(usr);
+    $(".is_adressed").val(adressed);
+  });
+
+</script>
+{% endblock %}

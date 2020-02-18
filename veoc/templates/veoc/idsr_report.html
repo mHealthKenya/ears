@@ -1,0 +1,128 @@
+{% extends "veoc/main_template.html" %}
+
+{% block main %}
+    <!-- <script type="text/javascript" src="/static/jsPDF-1.3.2/jspdf.js"></script> -->
+    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.5.3/jspdf.debug.js" integrity="sha384-NaWTHo/8YCBYJ59830LTz/P4aQZK1sS0SneOgAvhsIl3zBu8r9RevNg5lHCHAuQ/" crossorigin="anonymous"></script> -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.3.2/jspdf.min.js"></script>
+    <script type="text/javascript"
+        src="https://cdn.datatables.net/v/dt/jqc-1.12.3/jszip-2.5.0/pdfmake-0.1.18/dt-1.10.12/b-1.2.2/b-flash-1.2.2/b-html5-1.2.2/b-print-1.2.2/datatables.min.js"></script>
+
+            <div id="main-container">
+        			<div id="breadcrumb">
+        				<ul class="breadcrumb">
+        					 <li><i class="fa fa-home"></i><a href="{% url 'veoc:access_dashboard' %}"> Dashboard</a></li>
+        					 <li class="active">IDSR MOH 505 Data</li>
+        				</ul>
+        			</div><!-- /breadcrumb-->
+
+              <div class="panel panel-default">
+                <div class="panel-heading">DHIS DATA FILTERS</div>
+                <div class="panel-body" align="left">
+                    <form class="form-inline" method="post" action="">{% csrf_token %}
+                        <div class="form-group">
+                            <label for="date_reported"><b>Filter Week Number :&nbsp; &nbsp; </b></label>
+                            <select class="form-control" id="week_num" name="week_num">
+                                   <option value="" disabled selected>Select Week Num</option>
+                                   <!-- {% for wk in week_no %}
+                                       <option value="{{ wk.period }}">{{ wk.period }}</option>
+                                   {% endfor %} -->
+                               </select>
+                        </div>
+                        &nbsp; &nbsp;
+                        <div class="form-group">
+                            <label for="date_reported"><b>FIlter Org Unit :&nbsp; &nbsp; </b></label>
+                            <input class="form-control" type="date" id="date_reported" name="date_reported"
+                                   value="{{ day }}" required>
+                        </div>
+                        &nbsp; &nbsp;
+                        <div class="form-group">
+                            <label for="date_reported"><b>Filter IDSR Disease :&nbsp; &nbsp; </b></label>
+                            <input class="form-control" type="date" id="date_reported" name="date_reported"
+                                   value="{{ day }}" required>
+                        </div>
+                        &nbsp; &nbsp;
+
+                        <button type="submit" class="btn btn-primary" align="right">Update</button>
+                    </form>
+                  </div><!-- /div panel-default -->
+
+        			<div class="padding-md">
+        				<div class="row">
+        					<div class="col-md-12">
+        						<div class="panel panel-default table-responsive">
+        							<div class="panel-heading">
+        								DHIS2 Cases
+        								<span class="label label-info pull-right" id="totalspan">{{dhis_cases}} Total cases </span>
+        							</div>
+        							<div class="padding-md clearfix" id="disease_part">
+        							<table class="table table-hover" id="dhis_disease_report">
+        								<thead class="thead-dark">
+                          <tr>
+                              <th>IDSR Disease</th>
+                              <th>Period</th>
+                              <th>Organizational Unit</th>
+                              <th>Reported Incident</th>
+                              <th>Data Value</th>
+                              <th>Data Source</th>
+                          </tr>
+                          </thead>
+                          <tbody>
+                            <tr>
+                          {% for dhis_reported_diseases_report in dhis_reported_diseases_reports %}
+                              <td>{{ dhis_reported_diseases_report.disease_type.name }}</td>
+                              <td>{{ dhis_reported_diseases_report.status }}</td>
+                              <td>{{ dhis_reported_diseases_report.org_unit_id.name }}</td>
+                              <td>Get case from table 2</td>
+                              <td>{{ dhis_reported_diseases_report.period }}</td>
+                              <td>DHIS 2</td>
+                            </tr>
+                            {% endfor %}
+                          </tbody>
+    							      </table>
+                </div>
+              </div>
+    				</div>
+    			</div><!-- /row-->
+        </div><!-- /.padding-md -->
+      </div><!-- /main-container -->
+
+
+{% endblock %}
+
+{% block script %}
+
+    <script>
+      $(document).ready(function () {
+          $('#dhis_disease_report').DataTable({
+              "order": [],
+              dom: 'Bfrtip',
+              buttons: [
+                  'copy', 'csv', 'excel', 'pdf', 'print'
+              ]
+          });
+
+          // Setup - add a text input to each footer cell
+          $('#dhis_disease_report thead td').each(function () {
+              var title = $(this).text();
+              $(this).html('<input type="text" placeholder="Search ' + title + '" />');
+          });
+
+          // DataTable
+          var table = $('#dhis_disease_report').DataTable();
+
+          // Apply the search
+          table.columns().every(function () {
+              var that = this;
+
+              $('input', this.header()).on('keyup change', function () {
+                  if (that.search() !== this.value) {
+                      that
+                              .search(this.value)
+                              .draw();
+                  }
+              });
+          });
+      });
+
+    </script>
+{% endblock %}

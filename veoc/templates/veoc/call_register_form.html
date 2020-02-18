@@ -1,0 +1,881 @@
+{% extends "veoc/main_template.html" %}
+
+{% block main %}
+      <div id="main-container">
+        <div id="breadcrumb">
+          <ul class="breadcrumb">
+             <li><i class="fa fa-home"></i><a href="{% url 'veoc:access_dashboard' %}"> Dashboard</a></li>
+             <li class="active">Call Logs Form</li>
+          </ul>
+        </div><!-- /breadcrumb-->
+
+        <div class="padding-md">
+          <div class="row">
+            <div class="col-md-12">
+                  <form class="calls_form" method="POST" action="{% url 'veoc:call_register' %}" >
+                    {% csrf_token %}
+                    <div class="form-group col-md-12">
+                      <label><i><u>NB</u> : Inputs with * must have values</i></label>
+                    </div>
+                    <div class="form-row">
+                      <div class="form-group col-md-12">
+                        <label for="callCategory">Call Category : *</label>
+                        <select class="form-control" id="callCategory" name="callCategory" onchange="formfilter();">
+                            <option value="" disabled selected>Select call category</option>
+                            {% for category in call_category %}
+                                <option value="{{category.incident_description}}">{{category.incident_description}}</option>
+                            {% endfor %}
+                        </select>
+                      </div>
+                    </div>
+                    <!-- Diseases dropdowm -->
+                    <div class="form-row" id="disease_div" style="display: none;">
+                      <div class="form-group col-md-12">
+                        <label for="diseaseType">Disease : *</label>
+                        <select class="form-control" id="diseaseType" name="diseaseType">
+                            <option value="" disabled selected>Select Disease</option>
+                            {% for disease in diseases %}
+                                <option value="{{disease.name}}">{{disease.name}}</option>
+                            {% endfor %}
+                        </select>
+                      </div>
+                    </div>
+                    <!-- Events dropdown -->
+                    <div class="form-row" id="events_div" style="display: none;">
+                      <div class="form-group col-md-12">
+                        <label for="eventType">Public Health Event : *</label>
+                        <select class="form-control" id="eventType" name="eventType">
+                            <option value="" disabled selected>Select Event</option>
+                            {% for event in events %}
+                                <option value="{{event.name}}">{{event.name}}</option>
+                            {% endfor %}
+                        </select>
+                      </div>
+                    </div>
+                    <!-- Unrelated calls dropdown -->
+                    <div class="form-row" id="unrelated_div" style="display: none;">
+                      <div class="form-group col-md-12">
+                        <label for="incidentType">Call Incident : *</label>
+                        <select class="form-control" id="incidentType" name="incidentType" onchange="unrelatedCallfilter();">
+                            <option value="" disabled selected>Select Call Incident</option>
+                            {% for unrelated_call in unrelated_calls %}
+                                <option value="{{unrelated_call.description}}">{{unrelated_call.description}}</option>
+                            {% endfor %}
+                        </select>
+                      </div>
+                    </div>
+                    <div class="form-row" id="caller_details_div" style="display: none;">
+                       <div class="form-group col-md-6">
+                         <label for="callername">Caller Name : *</label>
+                         <input class="form-control" type="text" id="callerName" name="callerName" size="45" placeholder="caller_name" required/>
+                       </div>
+                       <div class="form-group col-md-6">
+                         <label for="callernumber">Caller Number : *</label>
+                         <input class="form-control" type="number" id="callerNumber" name="callerNumber" maxlength="10" size="45" placeholder="caller_number" required/>
+                       </div>
+                    </div>
+                     <div class="form-row" id="regions_div" style="display: none;">
+                         <div class="form-group col-md-6">
+                           <label for="region">Reporting Region : *</label>
+                           <select class="form-control" name="region" id="region" onchange="region_filter()">
+                                <option value="" disabled selected>Select Region</option>
+                                {% for region in regions %}
+                                    <option value="{{region.region_description}}">{{region.region_description}}</option>
+                                {% endfor %}
+                            </select>
+                         </div>
+                         <div class="form-group col-md-6">
+                           <label for="location">Location : *</label>
+                           <input class="form-control" type="text" id="location" name="location" size="45" placeholder="Place of occurrence"/>
+                         </div>
+                     </div>
+                     <div class="form-row" id="county_div" style="display: none;">
+                         <div class="form-group col-md-4">
+                           <label for="county">County : *</label>
+                           <select class="form-control" name="county" id="county" onchange="getsubcounty()">
+                                <option value="" disabled selected>Select County</option>
+                                {% for cnty in county %}
+                                    <option value="{{cnty.name}}">{{cnty.name}}</option>
+                                {% endfor %}
+                            </select>
+                         </div>
+                         <div class="form-group col-md-4">
+                           <label for="subcounty">Subcounty : *</label>
+                           <select class="form-control" name="subcounty" id="subcounty" onchange="getward()">
+                                <option value="" disabled selected>Select sub-county</option>
+                            </select>
+                         </div>
+                         <div class="form-group col-md-4">
+                           <label for="ward">Ward : *</label>
+                           <select class="form-control" name="ward" id="ward">
+                                <option value="" disabled selected>Select ward</option>
+                            </select>
+                         </div>
+                     </div>
+                     <div class="form-row" id="incident_status_div" style="display: none;">
+                       <div class="form-group col-md-6">
+                         <label for="status">Incident Status : *</label>
+                         <select class="form-control" name="status" id="_status">
+                              <option value="" disabled selected>Select Status</option>
+                              {% for status in incident_status %}
+                                  <option value="{{status.status_description}}">{{status.status_description}}</option>
+                              {% endfor %}
+                          </select>
+                       </div>
+                       <div class="form-group col-md-6">
+                         <label for="datereport">Date Reported : *</label>
+                         <input class="form-control" type="date" value="{{ day }}" id="dateReported" max='2000-13-13' name="dateReported">
+                       </div>
+                     </div>
+                     <!-- <div class="form-row">
+                      <div class="form-group col-md-6">
+                        <label for="datereport">Date Reported</label>
+                        <input class="form-control" type="date" value="{{ day }}" id="datereported" max='2000-13-13' name="date_reported" required>
+                      </div>
+                      <div class="form-group col-md-6">
+                        <label for="timereport">Time Reported</label>
+                        <input class="form-control" type="time" id="timereported"  name="time_reported" required>
+                      </div>
+                    </div> -->
+                     <div class="form-row" id="description_div" style="display: none;">
+                       <div class="form-group col-md-12">
+                         <label for="description">Description :</label>
+                         <textarea class="form-control" id="description" rows="3" name="description" placeholder="Enter description"></textarea>
+                       </div>
+                     </div>
+                     <div class="form-row" id="action_div" style="display: none;">
+                       <div class="form-group col-md-12">
+                         <label for="action">Action Taken :</label>
+                         <textarea class="form-control" id="actionTaken" rows="3" name="actionTaken" placeholder="Enter action taken"></textarea>
+                       </div>
+                     </div>
+                     <div class="form-row" id="significant_div" style="display: none;">
+                       <div class="form-group col-md-12">
+                         <div class="form-check">
+                           <label class="form-check-label" for="callsignificant">
+                             Significant Event?
+                           </label>
+                           <input class="form-check-input" type="checkbox" id="callSignificant" name="callSignificant">
+                         </div>
+                       </div>
+                     </div>
+                     <div class="form-row" id="save_div" style="display: none;">
+                       <div class="form-group col-md-12">
+                         <button type="submit" id="save_button" class="btn btn-primary">Save</button>
+                       </div>
+                     </div>
+                  </form>
+                </div>
+        			</div><!-- /row-->
+        		<div class="row">
+        	</div><!-- /.row -->
+        </div><!-- /.padding-md -->
+      </div><!-- /main-container -->
+
+{% endblock %}
+
+{% block script %}
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <!-- Latest compiled and minified JavaScript -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+   <script src="https://cdnjs.cloudflare.com/ajax/libs/bootbox.js/4.4.0/bootbox.min.js"> </script>
+   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
+   <script src="https://cdn.jsdelivr.net/npm/promise-polyfill"></script>
+
+    <script>
+
+    var today = new Date();
+    var dd = today.getDate();
+    var mm = today.getMonth()+1; //January is 0!
+    var yyyy = today.getFullYear();
+    if(dd<10){
+        dd='0'+dd
+    }
+    if(mm<10){
+        mm='0'+mm
+    }
+
+    today = yyyy+'-'+mm+'-'+dd;
+    // document.getElementById("datereported").setAttribute("max", today);
+
+    $(document).ready(function(e){
+      var callsForm = $(".calls_form")
+      var call_category = $("#callCategory")
+      console.log(call_category);
+
+      if (call_category == ""){
+
+      }
+      callsForm.submit(function(e){
+        e.preventDefault();
+        console.log("inside calls_form");
+        var thisForm = $(this);
+        var endPoint = thisForm.attr("action") || window.location.href;
+        var method = thisForm.attr("method");
+        var formData = thisForm.serialize();
+
+        Swal.fire({
+          title: "Please wait!,Saving Details!",
+          // text: "Please wait",
+          imageUrl: "/static/images/ajax-loader.gif",
+          showConfirmButton: false,
+          allowOutsideClick: false
+        });
+        $.ajax({
+          type:method,
+          url:endPoint,
+          data: formData,
+          success:function(){
+            Swal.fire({
+              title: 'Success!',
+              text: 'Call Log Details Saved',
+              icon: 'success'
+            });
+            callsForm[0].reset();
+          },
+          error:function(er){
+            console.log("Call Log saving error");
+            console.log(er.responseText);
+            Swal.fire({
+              title: 'Error!',
+              text: 'Call Log Details Cannot be Saved',
+              icon: 'error'
+            });
+          }
+        });
+
+      });
+
+    });
+
+    function get_checkbox_value() {
+        if ($('#priority').attr('checked')) {
+            $('#priority').val('1');
+        } else {
+            $('#priority').val('0');
+        }
+    }
+
+    // $( function() {
+    //     $( "#date_created" ).datepicker();
+    //   } );
+
+     function region_filter(){
+        var _region = document.getElementById('region').value;
+        var _county = document.getElementById('county_div');
+
+        if(_region == "Kenya"){
+          _county.style.display = 'block';
+        }else{
+          _county.style.display = 'none';
+        }
+     }
+
+           // function validateform(){
+           //
+           //   var call_category = document.getElementById('callCategory').value;
+           //
+           //   if(call_category == "Disease related call"){
+           //     var disease_type = document.getElementById('diseaseType').value;
+           //     var caller_name = document.getElementById('callerName').value;
+           //     var caller_num = document.getElementById('callerNumber').value;
+           //     var reporing_reg = document.getElementById('region').value;
+           //     var loc = document.getElementById('location').value;
+           //     var inci_stat = document.getElementById('_status').value;
+           //     var descr = document.getElementById('description').value;
+           //
+           //     if(disease_type == "" || disease_type==null){
+           //       bootbox.alert({
+           //          size: "small",
+           //          title: "Missed data input  : Warning",
+           //          message: "Please select the disease type !!",
+           //          callback: function () { /* your callback code */
+           //          }
+           //      });
+           //
+           //      return false;
+           //
+           //     }
+           //     if(caller_name == "" || caller_name==null || caller_num == "" || caller_num== null){
+           //       bootbox.alert({
+           //          size: "small",
+           //          title: "Missed data input  : Warning",
+           //          message: "Caller Name and number cannot be empty !!",
+           //          callback: function () { /* your callback code */
+           //          }
+           //      });
+           //
+           //      return false;
+           //
+           //     }
+           //     if(reporing_reg == "" || reporing_reg==null || loc == "" || loc == null){
+           //       bootbox.alert({
+           //          size: "small",
+           //          title: "Missed data input  : Warning",
+           //          message: "Reporting region and location cannot be empty !!",
+           //          callback: function () { /* your callback code */
+           //          }
+           //      });
+           //
+           //      return false;
+           //     }
+           //     // if(inci_stat == "" || inci_stat == null){
+           //     //   bootbox.alert({
+           //     //      size: "small",
+           //     //      title: "Missed data input  : Warning",
+           //     //      message: "Select incident status !!",
+           //     //      callback: function () { /* your callback code */
+           //     //      }
+           //     //  });
+           //     //  return false;
+           //     //
+           //     // }
+           //     if(descr == "" || descr==null){
+           //       bootbox.alert({
+           //          size: "small",
+           //          title: "Missed data input  : Warning",
+           //          message: "Description cannot be empty !!",
+           //          callback: function () { /* your callback code */
+           //          }
+           //      });
+           //
+           //      return false;
+           //
+           //     }
+           //     if(reporing_reg == "Kenya"){
+           //       //check if county details are selected
+           //       var cnty = document.getElementById('county').value;
+           //       var subcnty = document.getElementById('subcounty').value;
+           //       var wrd = document.getElementById('ward').value;
+           //
+           //       if(cnty == "" || cnty==null){
+           //         bootbox.alert({
+           //            size: "small",
+           //            title: "Missed data input  : Warning",
+           //            message: "Select reported county!!",
+           //            callback: function () { /* your callback code */
+           //            }
+           //        });
+           //
+           //        return false;
+           //       }
+           //       if(subcnty == "" || subcnty==null){
+           //         bootbox.alert({
+           //            size: "small",
+           //            title: "Missed data input  : Warning",
+           //            message: "Select reported  sub county !!",
+           //            callback: function () { /* your callback code */
+           //            }
+           //        });
+           //
+           //        return false;
+           //       }
+           //       if(wrd == "" || wrd==null){
+           //         bootbox.alert({
+           //            size: "small",
+           //            title: "Missed data input  : Warning",
+           //            message: "Select reported ward !!",
+           //            callback: function () { /* your callback code */
+           //            }
+           //        });
+           //
+           //        return false;
+           //       }
+           //
+           //
+           //     }//reporting kenya
+           //
+           //   }else if(call_category == "Public health related call"){
+           //     var event_type = document.getElementById('eventType').value;
+           //     var caller_name = document.getElementById('callerName').value;
+           //     var caller_num = document.getElementById('callerNumber').value;
+           //     var reporing_reg = document.getElementById('region').value;
+           //     var loc = document.getElementById('location').value;
+           //     var inci_stat = document.getElementById('status').value;
+           //     var descr = document.getElementById('description').value;
+           //
+           //     if(event_type == "" || event_type==null){
+           //       bootbox.alert({
+           //          size: "small",
+           //          title: "Missed data input  : Warning",
+           //          message: "Please select the event type !!",
+           //          callback: function () { /* your callback code */
+           //          }
+           //      });
+           //
+           //      return false;
+           //
+           //     }
+           //     if(caller_name == "" || caller_name==null || caller_num == "" || caller_num== null){
+           //       bootbox.alert({
+           //          size: "small",
+           //          title: "Missed data input  : Warning",
+           //          message: "Caller Name and number cannot be empty !!",
+           //          callback: function () { /* your callback code */
+           //          }
+           //      });
+           //
+           //      return false;
+           //
+           //     }
+           //     if(reporing_reg == "" || reporing_reg==null || loc == "" || loc == null){
+           //       bootbox.alert({
+           //          size: "small",
+           //          title: "Missed data input  : Warning",
+           //          message: "Reporting region and location cannot be empty !!",
+           //          callback: function () { /* your callback code */
+           //          }
+           //      });
+           //
+           //      return false;
+           //
+           //     }
+           //     if(reporing_reg == "Kenya"){
+           //       //check if county details are selected
+           //       var cnty = document.getElementById('county').value;
+           //       var subcnty = document.getElementById('subcounty').value;
+           //       var wrd = document.getElementById('ward').value;
+           //
+           //       if(cnty == "" || cnty==null){
+           //         bootbox.alert({
+           //            size: "small",
+           //            title: "Missed data input  : Warning",
+           //            message: "Select reported county!!",
+           //            callback: function () { /* your callback code */
+           //            }
+           //        });
+           //
+           //        return false;
+           //       }
+           //       if(subcnty == "" || subcnty==null){
+           //         bootbox.alert({
+           //            size: "small",
+           //            title: "Missed data input  : Warning",
+           //            message: "Select reported  sub county !!",
+           //            callback: function () { /* your callback code */
+           //            }
+           //        });
+           //
+           //        return false;
+           //       }
+           //       if(wrd == "" || wrd==null){
+           //         bootbox.alert({
+           //            size: "small",
+           //            title: "Missed data input  : Warning",
+           //            message: "Select reported ward !!",
+           //            callback: function () { /* your callback code */
+           //            }
+           //        });
+           //
+           //        return false;
+           //       }
+           //
+           //     }//reporting kenya
+           //     if(inci_stat == "" || inci_stat==null){
+           //       bootbox.alert({
+           //          size: "small",
+           //          title: "Missed data input  : Warning",
+           //          message: "Select incident status !!",
+           //          callback: function () { /* your callback code */
+           //          }
+           //      });
+           //
+           //      return false;
+           //
+           //     }
+           //     if(descr == "" || descr==null){
+           //       bootbox.alert({
+           //          size: "small",
+           //          title: "Missed data input  : Warning",
+           //          message: "Description cannot be empty !!",
+           //          callback: function () { /* your callback code */
+           //          }
+           //      });
+           //
+           //      return false;
+           //
+           //     }
+           //
+           //   }else{
+           //     var caller_name = document.getElementById('callerName').value;
+           //     var caller_num = document.getElementById('callerNumber').value;
+           //     var descr = document.getElementById('description').value;
+           //
+           //     if(caller_name == "" || caller_name==null || caller_num == "" || caller_num== null){
+           //       bootbox.alert({
+           //          size: "small",
+           //          title: "Missed data input  : Warning",
+           //          message: "Caller Name and number cannot be empty !!",
+           //          callback: function () { /* your callback code */
+           //          }
+           //      });
+           //
+           //      return false;
+           //
+           //     }
+           //     if(descr == "" || descr==null){
+           //       bootbox.alert({
+           //          size: "small",
+           //          title: "Missed data input  : Warning",
+           //          message: "Description cannot be empty !!",
+           //          callback: function () { /* your callback code */
+           //          }
+           //      });
+           //
+           //      return false;
+           //
+           //     }
+           //   }
+           //
+           // }
+
+     function formfilter(){
+
+       var _disease = document.getElementById('disease_div');
+       var _event = document.getElementById('events_div');
+       var _unrelated = document.getElementById('unrelated_div');
+       var _caller_details = document.getElementById('caller_details_div');
+       var _region = document.getElementById('regions_div');
+       // var _county = document.getElementById('county_div');
+       var _incident = document.getElementById('incident_status_div');
+       var _description = document.getElementById('description_div');
+       var _action = document.getElementById('action_div');
+       var _significant = document.getElementById('significant_div');
+       var _save = document.getElementById('save_div');
+
+       var call_category = document.getElementById('callCategory').value;
+
+       if(call_category == "Disease related call"){
+         console.log("Disease");
+
+         _disease.style.display = 'block';
+         _event.style.display = 'none';
+         _unrelated.style.display = 'none';
+         _caller_details.style.display = 'block';
+         _region.style.display = 'block';
+         // _county.style.display = 'none';
+         _incident.style.display = 'block';
+         _description.style.display = 'block';
+         _action.style.display = 'block';
+         _significant.style.display = 'block';
+         _save.style.display = 'block';
+
+       }else if(call_category == "Public health related call"){
+         console.log("Event");
+
+         _disease.style.display = 'none';
+         _event.style.display = 'block';
+         _unrelated.style.display = 'none';
+         _caller_details.style.display = 'block';
+         _region.style.display = 'block';
+         // _county.style.display = 'block';
+         _incident.style.display = 'block';
+         _description.style.display = 'block';
+         _action.style.display = 'block';
+         _significant.style.display = 'block';
+         _save.style.display = 'block';
+
+       }else{
+         console.log("Unrelated");
+
+         _disease.style.display = 'none';
+         _event.style.display = 'none';
+         _unrelated.style.display = 'block';
+
+         // check unrelated_calls_category to select what can be viewed
+         _caller_details.style.display = 'none';
+         _region.style.display = 'none';
+         // _county.style.display = 'none';
+         _description.style.display = 'none';
+         _action.style.display = 'none';
+         _significant.style.display = 'none';
+         _save.style.display = 'none';
+
+       }
+
+     }
+
+     function unrelatedCallfilter(){
+
+       var _disease = document.getElementById('disease_div');
+       var _event = document.getElementById('events_div');
+       var _unrelated = document.getElementById('unrelated_div');
+       var _caller_details = document.getElementById('caller_details_div');
+       var _region = document.getElementById('regions_div');
+       var _county = document.getElementById('county_div');
+       var _description = document.getElementById('description_div');
+       var _action = document.getElementById('action_div');
+       var _significant = document.getElementById('significant_div');
+       var _save = document.getElementById('save_div');
+
+       var unrelated_call_type = document.getElementById('incidentType').value;
+
+       if(unrelated_call_type==1){
+         console.log("Public enquiry");
+
+         _disease.style.display = 'none';
+         _event.style.display = 'none';
+         _unrelated.style.display = 'block';
+         _caller_details.style.display = 'block';
+         _region.style.display = 'block';
+         _county.style.display = 'none';
+         _description.style.display = 'block';
+         _action.style.display = 'none';
+         _significant.style.display = 'none';
+         _save.style.display = 'block';
+
+       }else if(unrelated_call_type==2){
+         console.log("Public Information");
+
+         _disease.style.display = 'none';
+         _event.style.display = 'none';
+         _unrelated.style.display = 'block';
+         _caller_details.style.display = 'block';
+         _region.style.display = 'block';
+         _county.style.display = 'none';
+         _description.style.display = 'block';
+         _action.style.display = 'none';
+         _significant.style.display = 'none';
+         _save.style.display = 'block';
+
+       }else if(unrelated_call_type==3){
+         console.log("Wrong call");
+
+         _disease.style.display = 'none';
+         _event.style.display = 'none';
+         _unrelated.style.display = 'block';
+         _caller_details.style.display = 'block';
+         _region.style.display = 'none';
+         _county.style.display = 'none';
+         _description.style.display = 'block';
+         _action.style.display = 'none';
+         _significant.style.display = 'none';
+         _save.style.display = 'block';
+
+       }else{
+         console.log("Flash back");
+
+         _disease.style.display = 'none';
+         _event.style.display = 'none';
+         _unrelated.style.display = 'block';
+         _caller_details.style.display = 'block';
+         _region.style.display = 'none';
+         _county.style.display = 'none';
+         _description.style.display = 'block';
+         _action.style.display = 'none';
+         _significant.style.display = 'none';
+         _save.style.display = 'block';
+
+       }
+
+     }
+
+     $("#save_button").click(function(){
+       console.log("button clicked");
+       var _disease = document.getElementById('disease_div').style.display = 'block';
+       var _event = document.getElementById('events_div').style.display = 'block';
+       var _unrelated = document.getElementById('unrelated_div').style.display = 'block';
+       var _region = document.getElementById('regions_div').style.display = 'block';
+       var _county = document.getElementById('county_div').style.display = 'block';
+       var _action = document.getElementById('action_div').style.display = 'block';
+       var _significant = document.getElementById('significant_div').style.display = 'block';
+      });
+
+     function getsubcounty(){
+
+       var county=$('#county').val();
+       console.log(county);
+       $.ajax({
+         url:'/get_subcounty/',
+         type:'POST',
+         datatype:'json',
+         data:{county:county,csrfmiddlewaretoken:$('input[name=csrfmiddlewaretoken]').val()},
+
+         success:function(data){
+           var options = '<option value="" selected disabled>Select Subcounty</option>';
+           console.log("in success");
+           console.log(data);
+           $('#subcounty').html(options);
+           for(var i=0;i<data.length;i++){
+
+             var options = '<option value="' + data[i].fields['name'] + '">' + data[i].fields['name'] + '</option>';
+             $('#subcounty').append(options);
+           }
+         },error:function(){
+           console.log("in error");
+           var options = '<option value="" selected disabled>select county</option>';
+           $('#subcounty').html(options);
+         }
+       });
+     }
+
+     function getward(){
+
+       var subcounty=$('#subcounty').val();
+       console.log(subcounty);
+       $.ajax({
+         url:'/get_ward/',
+         type:'POST',
+         datatype:'json',
+         data:{subcounty:subcounty,csrfmiddlewaretoken:$('input[name=csrfmiddlewaretoken]').val()},
+
+         success:function(data){
+           var options = '<option value="" selected disabled>Select Ward</option>';
+           console.log("in success ward");
+           console.log(data);
+           $('#ward').html(options);
+           for(var i=0;i<data.length;i++){
+
+               var options = '<option value="' + data[i].fields['organisationunitid'] + '">' + data[i].fields['name'] + '</option>';
+             $('#ward').append(options);
+           }
+         },error:function(){
+           console.log("in error");
+           var options = '<option value="" selected disabled>Select Ward</option>';
+           $('#ward').html(options);
+         }
+       });
+     }
+
+
+//      function testing(){
+//
+//          $('#diseaseerror').html('');$('#eventtypeerror').html('');$('#countyerror').html('');$('#locationerror').html('');
+//          $('#callernameerror').html('');$('#callernumbererror').html('');$('#datereportederror').html('');$('#timereportederror').html('');
+//          $('#descriptionerror').html('');$('#actiontakenerror').html('');$('#subcountyerror').html('');
+//
+//          var diseasetype=$('#diseasetype').val();var eventtype=$('#eventtype').val();var county=$('#county').val();
+//          var subcounty=$('#subcounty').val();var location=$('#location').val();var callername=$('#callername').val();
+//          var callernumber=$('#callernumber').val();var datereported=$('#datereported').val();var timereported=$('#timereported').val();
+//          var description=$('#description').val();var actiontaken=$('#actiontaken').val();var significantevent=$('#significant').is(':checked');
+//          var date=datereported.split('-');var year=date[0];var mnth=date[1];var dayT=date[2];var myday=dayT.split('T');var day=myday[0];
+//          var today = new Date();var dd = today.getDate();var mm = today.getMonth()+1;
+//
+//          var dtype=$('#disease_div');var etype=$('#event_div');
+//          if($("#disease_div").css("display")== "none"){
+//              diseasetype="none";
+//
+//          } else if($("#event_div").css("display")=="none"){
+//              eventtype="none";
+//
+//          }
+//
+//          if(!($("#disease_div").css("display")== "none") && diseasetype===''){
+//              $('#diseaseerror').html('diseasetype required');
+//              $('#success').html("");
+//
+//          }else if(!($("#event_div").css("display")=="none") && eventtype===''){
+//              $('#eventtypeerror').html('event type required');
+//              $('#success').html("");
+//
+//          } else if(county===''){
+//              $('#countyerror').html('county required');
+//              $('#success').html("");
+//
+//          } else if(county===''){
+//              $('#subcountyerror').html('subcounty required');
+//              $('#success').html("");
+//
+//          } else if(location===''){
+//              $('#locationerror').html('location required');
+//              $('#success').html("");
+//
+//          } else if(callername===''){
+//              $('#callernameerror').html('caller name required');
+//              $('#success').html("");
+//
+//          } else if(callernumber.length<5 || callernumber.length>10){
+//              $('#callernumbererror').html('Enter a valid mobile number');
+//              $('#success').html("");
+//
+//          } else if(callernumber.length<10 || callernumber.length>10){
+//              $('#callernumbererror').html('Enter a valid mobile number');
+//              $('#success').html("");
+//
+//          } else if(datereported===''){
+//              $('#datereportederror').html('Date required');
+//              $('#success').html("");
+//
+//          } else if(timereported===''){
+//              $('#timereportederror').html('Time stamp required');
+//              $('#success').html("");
+//
+//          } else if(description===''){
+//              $('#descriptionerror').html('Description required');
+//              $('#success').html("");
+//
+//          } else if(actiontaken===''){
+//              $('#actiontakenerror').html('Action taken required');
+//              $('#success').html("");
+//
+//          } else if(year>yyyy){
+//              $('#datereportederror').html('Date should NOT exceed current date');
+//              $('#success').html("");
+//
+//          } else if(year==yyyy && mnth>mm){
+//              $('#datereportederror').html('Date should NOT exceed current date');
+//              $('#success').html("");
+//
+//          } else if(year==yyyy && mnth==mm && day>dd){
+//              $('#datereportederror').html('Date should NOT exceed current date');
+//              $('#success').html("");
+//
+//          } else if(!(diseasetype===''||eventtype===''||county===''||subcounty===''||location===''
+//                  ||callername===''||callernumber===''||datereported===''||timereported===''||description===''||actiontaken==='')){
+//
+//              $.ajax({
+//                  url:"/call_log_create_submit/",
+//                  type:"POST",
+//                  datatype:"json",
+//                  data:{disease_type:diseasetype,event_type:eventtype,county:county,subcounty:subcounty,location:location, caller_name:callername,
+//                      caller_number:callernumber,date_reported:datereported,time_reported:timereported,description:description,
+//                      action_taken:actiontaken, significant:significantevent,csrfmiddlewaretoken:$('input[name=csrfmiddlewaretoken]').val()},
+//
+//                  success:function(){
+//                      $('#success').html("Save successful");
+//                      $('#error').html("");
+//                      $('#diseasetype').val('');
+//                      $('#eventtype').val('');
+//                      $('#county').val('');
+//                      $('#location').val('');
+//                      $('#callername').val('');
+//                      $('#callernumber').val('');
+//                      $('#datereported').val('');
+//                      $('#timereported').val('');
+//                      $('#description').val('');
+//                      $('#actiontaken').val('');
+//                      $('#significant').removeAttr('checked');
+//
+//                      var options = '<option value="" selected disabled>select county</option>';
+//                      $('#subcounty').html(options);
+//
+//                      bootbox.alert({
+//                          size: "small",
+//                          title: "Call Log Action",
+//                          message: "Saved Successfully",
+//                          callback: function(){ /* your callback code */ }
+//                      });
+//                  },
+//                  error:function(e){
+//                      $('#error').html("error in submission, try again");
+//                      $('#success').html("");
+//
+//                      bootbox.alert({
+//                          size: "small",
+//                          title: "Call Log Action : Error",
+//                          message: "Saving NOT successful "+ e,
+//                          callback: function(){ /* your callback code */ }
+//                      });
+//
+// {#                     console.log(e);#}
+//                  }
+//              });
+//
+//          } else{
+//              alert("nothing happened");
+//          }
+//      }
+
+    </script>
+{% endblock %}

@@ -1,0 +1,275 @@
+{% extends "veoc/main_template.html" %}
+
+{% block main %}
+<div id="main-container">
+  <div id="breadcrumb">
+    <ul class="breadcrumb">
+       <li><i class="fa fa-home"></i><a href="{% url 'veoc:access_dashboard' %}"> Dashboard</a></li>
+       <li class="active">National Lab Mappings</li>
+    </ul>
+  </div>
+
+  <div class="padding-md">
+    <div class="row">
+      <div class="col-md-12">
+        <div class="panel panel-default">
+            <div class="panel-heading">LABORATORY MAPPING FILTERS</div>
+            <div class="panel-body" align="center">
+                <form class="form-inline" method="post" action="#">
+                  {% csrf_token %}
+                    <div class="form-group">
+                        <label for="epi_year"><b>Filter by National Lab Refferals : </b></label>
+                        <select class="form-control" id="facility_county" name="facility_county" onchange="get_facilities_county()/*; getsubcounty*/" required>
+                            <option value="" selected>National Labs</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="epi_year"><b>Filter by County Lab Refferals : </b></label>
+                        <select class="form-control" id="facility_subcounty" name="facility_subcounty">
+                          <option value="" disabled selected>Select County</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="epi_year"><b>Filter by Sub-County Lab Refferals : </b></label>
+                        <select class="form-control" id="facility_subcounty" name="facility_subcounty">
+                          <option value="" disabled selected>Select Subcounty</option>
+                        </select>
+                    </div>
+                </form>
+            </div>
+        </div><!-- /div panel-default -->
+
+        <div class="panel panel-default">
+            <div class="panel-heading">LABORATORY REFFERALS</div>
+            <div class="panel-body">
+              <div id="map_div"></div>
+              <!-- div to hold map -->
+
+              <div>
+                  LEGEND
+                  <li>County Labs <img
+                          src="http://icons.iconarchive.com/icons/icons-land/vista-map-markers/24/Map-Marker-Bubble-Chartreuse-icon.png">
+                  </li>
+                  <li>Sub county Labs <img
+                          src="http://icons.iconarchive.com/icons/icons-land/vista-map-markers/24/Map-Marker-Marker-Outside-Azure-icon.png">
+                  </li>
+              </div>
+            </div><!-- panel-body -->
+          </div><!-- /div panel-default -->
+        </div>
+      </div>
+    </div>
+  </div><!-- /main-container -->
+
+{% endblock %}
+
+{% block script %}
+
+{% csrf_token %}
+  <script>
+    $(document).ready(function () {
+        $.ajax({
+            url: '/get_county/',
+            type: 'POST',
+            datatype: 'json',
+            async: false,
+            data: {csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val()},
+            success: function (data) {
+
+                var options = '<option value="" selected disabled>Select County</option>';
+                $('#lab_county').html(options);
+
+                for (var i = 0; i < data.length; i++) {
+
+                    var options = '<option value="' + data[i].fields['description'] + '">' + data[i].fields['description'] + '</option>';
+                    $('#lab_county').append(options);
+
+                }
+            },
+            error: function () {
+                console.log("Error, loading counties");
+                // alert("Error getting Counties. Check internet connection!");
+            }
+
+        });
+
+    });
+
+    function getlab_posts() {
+
+        var county = $('#lab_county').val();
+
+        $.ajax({
+            url: '/get_lab_posts_county/',
+            type: 'POST',
+            data: {county: county, csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val()},
+
+            success: function (data) {
+
+                var mydata = new google.visualization.DataTable();
+                mydata.addColumn('number', 'LATITUDE');
+                mydata.addColumn('number', 'LONGITUDE');
+                mydata.addColumn('string', 'NAME');
+
+                for (var i = 0; i < data.length; i++) {
+
+                    x = data[i].latitude;//get the longitude from models
+                    y = data[i].longitude;//get latitude from models
+                    z = data[i].referal_name;//get the position from models
+                    x = parseFloat(x);//convert the longitude to float from string
+                    y = parseFloat(y);//convert the latitude to float from string
+                    mydata.addRow([x, y, z]);//add the coordinates to the map
+
+                }
+
+                var options = {
+                    icons: {
+                        default: {
+                            normal: 'http://icons.iconarchive.com/icons/icons-land/vista-map-markers/32/Map-Marker-Bubble-Chartreuse-icon.png',
+                            selected: 'http://icons.iconarchive.com/icons/icons-land/vista-map-markers/32/Map-Marker-Bubble-Chartreuse-icon.png'
+                        }
+                    },
+                    showTip: true,
+                    useMapTypeControl: true,
+                    zoomLevel: 6,
+                    enableScrollWheel: true,
+                    mapType: 'styledMap',
+                    center: {lat: -33.8688, lng: 151.2195},
+
+                    maps: {
+                        // Your custom mapTypeId holding custom map styles.
+                        styledMap: {
+                            name: 'Styled Map', // This name will be displayed in the map type control.
+                            styles: [
+                                {
+                                    featureType: 'poi.attraction',
+                                    stylers: [{color: '#fce8b2'}]
+                                },
+                                {
+                                    featureType: 'road.highway',
+                                    stylers: [{hue: '#0277bd'}, {saturation: -50}]
+                                },
+                                {
+                                    featureType: 'road.highway',
+                                    elementType: 'labels.icon',
+                                    stylers: [{hue: '#000'}, {saturation: 100}, {lightness: 50}]
+                                },
+                                {
+                                    featureType: 'landscape',
+                                    stylers: [{hue: '#259b24'}, {saturation: 10}, {lightness: -22}]
+                                }
+                            ]
+                        }
+                    }
+                };
+                var map = new google.visualization.Map(document.getElementById('map_div'));
+                // map.controls[google.maps.ControlPosition.TOP_LEFT].push(input);
+                map.draw(mydata, options);
+
+                var input = document.getElementById('pac-input');
+                var searchBox = new google.maps.places.SearchBox(input);
+                map.controls[google.maps.ControlPosition.TOP_LEFT].push(input);
+
+                map.addListener('bounds_changed', function () {
+                    searchBox.setBounds(map.getBounds());
+                });
+            },
+            error: function () {
+                // console.log("Error : getting county coordinates, try again");
+            }
+        });
+    }
+
+    google.charts.load('current', {'packages': ['map']});
+    google.charts.setOnLoadCallback(drawChart);
+
+    function drawChart() {
+
+          $.ajax({
+              url: '/get_lab_posts/',
+              type: 'POST',
+              datatype: 'json',
+              data: {csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val()},
+              success: function (data) {
+                  var mydata = new google.visualization.DataTable();
+                  mydata.addColumn('number', 'LATITUDE');
+                  mydata.addColumn('number', 'LONGITUDE');
+                  mydata.addColumn('string', 'NAME');
+
+                  for (var i = 0; i < data.length; i++) {
+                      x = data[i].latitude;//get the longitude from models
+                      y = data[i].longitude;//get latitude from models
+
+                      z = data[i].referal_name;//get the position from models
+                      console.log(z);
+                      x = parseFloat(x);//convert the longitude to float from string
+                      y = parseFloat(y);//convert the latitude to float from string
+                      mydata.addRow([x, y, z]);//add the coordinates to the map
+                  }
+
+                  var options = {
+                      icons: {
+                          default: {
+                              normal: 'http://icons.iconarchive.com/icons/icons-land/vista-map-markers/32/Map-Marker-Bubble-Chartreuse-icon.png',
+                              selected: 'http://icons.iconarchive.com/icons/icons-land/vista-map-markers/32/Map-Marker-Bubble-Chartreuse-icon.png'
+                          }
+                      },
+                      showTip: true,
+                      useMapTypeControl: true,
+                      zoomLevel: 6,
+                      enableScrollWheel: true,
+                      mapType: 'styledMap',
+                      center: {lat: -33.8688, lng: 151.2195},
+
+                      maps: {
+                          // Your custom mapTypeId holding custom map styles.
+                          styledMap: {
+                              name: 'Styled Map', // This name will be displayed in the map type control.
+                              styles: [
+                                  {
+                                      featureType: 'poi.attraction',
+                                      stylers: [{color: '#fce8b2'}]
+                                  },
+                                  {
+                                      featureType: 'road.highway',
+                                      stylers: [{hue: '#0277bd'}, {saturation: -50}]
+                                  },
+                                  {
+                                      featureType: 'road.highway',
+                                      elementType: 'labels.icon',
+                                      stylers: [{hue: '#000'}, {saturation: 100}, {lightness: 50}]
+                                  },
+                                  {
+                                      featureType: 'landscape',
+                                      stylers: [{hue: '#259b24'}, {saturation: 10}, {lightness: -22}]
+                                  }
+                              ]
+                          }
+                      }
+
+                  };
+
+                  // var input = document.getElementById('pac-input');
+                  // var searchBox = new google.maps.places.SearchBox(input);
+
+                  var map = new google.visualization.Map(document.getElementById('map_div'));
+                  // map.controls[google.maps.ControlPosition.TOP_LEFT].push(input);
+                  map.draw(mydata, options);
+
+                  var input = document.getElementById('pac-input');
+                  var searchBox = new google.maps.places.SearchBox(input);
+                  map.controls[google.maps.ControlPosition.TOP_LEFT].push(input);
+
+                  map.addListener('bounds_changed', function () {
+                      searchBox.setBounds(map.getBounds());
+                  });
+              },
+              error: function () {
+                  // alert("Error : getting all coordinates, try again");
+              }
+          });
+      }
+
+  </script>
+
+{% endblock %}

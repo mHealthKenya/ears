@@ -1,0 +1,827 @@
+{% extends "veoc/main_template.html" %}
+
+{% block main %}
+    <script type="text/javascript"
+            src="https://cdn.datatables.net/v/dt/jqc-1.12.3/jszip-2.5.0/pdfmake-0.1.18/dt-1.10.12/b-1.2.2/b-flash-1.2.2/b-html5-1.2.2/b-print-1.2.2/datatables.min.js"></script>
+    <link rel="stylesheet" href="/static/css/styles.css" type="text/css"/>
+
+    <div class="panel panel-default">
+    <div class="panel-heading" style="background-color:#3c8dbc">
+        <h2 class="panel-title" align="center" style="color: #ffffff">EOC WEEKLY REPORT</h2>
+    </div>
+
+    <div class="row">
+    <div class="col-lg-12">
+    <div class="well">
+    {#                    <div class="panel panel-default">#}
+    {#                        <div class="panel-heading">SELECT DATES TO FILTER REPORT</div>#}
+    {#                        <div class="panel-body" align="center">#}
+    {#                            <form class="form-inline" method="post" action="{% url 'weekly_report_submit' %}">{% csrf_token %}#}
+    {#                              <div class="form-group">#}
+    {#                                <label for="email">From :</label>#}
+    {#                                <input class="form-control" type="date" id="date_from" name="date_from" value="{{ day }}" required>#}
+    {#                              </div>#}
+    {#                                &nbsp; &nbsp;#}
+    {#                              <div class="form-group">#}
+    {#                                <label for="pwd">To :</label>#}
+    {#                                <input class="form-control" type="date" id="date_to" name="date_to" value="{{ day }}" required>#}
+    {#                              </div>#}
+    {#                              <button type="submit" class="btn btn-primary" >Update</button>#}
+    {#                            </form>#}
+    {#                        </div>#}
+    {#                    </div>#}
+
+    <div class="panel panel-default">
+        <div class="panel-heading">SELECT YEAR AND EPI WEEK TO FILTER REPORT</div>
+        <div class="panel-body" align="center">
+            <form class="form-inline" method="post" action="">{% csrf_token %}
+                <div class="form-group">
+                    <label for="epi_year"><b>Select Year : </b></label>
+                    <select class="form-control" id="epi_year" name="epi_year" onchange="get_epiweeks()" required>
+                        <option value="" disabled selected>Year</option>
+                        {% for item in epi_years %}
+                            <option value="{{ item.year }}">{{ item.year }}</option>
+                        {% endfor %}
+                    </select>
+                    <label for="epi_week"><b>Select EPI Week : </b></label>
+                    <select class="form-control" id="epi_week" name="epi_week" required>
+                        <option value="" disabled selected>EPI Weeks [ Start date - End date ]</option>
+                        {#                                        {% for item in epi_weeks %}#}
+                        {#                                            <option value="{{item.start_date}}#{{item.end_date}}">{{item.week}} - [ {{ item.start_date }} - {{ item.end_date }} ]</option>#}
+                        {#                                        {% endfor %}#}
+                    </select>
+                </div>
+                {#                              <div class="form-group">#}
+                {#                                <label for="email">From :</label>#}
+                {#                                <input class="form-control" type="date" id="date_from" name="date_from" value="{{ day }}" required>#}
+                {#                              </div>#}
+                {#                                &nbsp; &nbsp;#}
+                {#                              <div class="form-group">#}
+                {#                                <label for="pwd">To :</label>#}
+                {#                                <input class="form-control" type="date" id="date_to" name="date_to" value="{{ day }}" required>#}
+                {#                              </div>#}
+                <button type="submit" class="btn btn-primary">Update</button>
+            </form>
+        </div>
+    </div>
+
+    <div class="panel panel-default">
+        <div class="panel-heading">SELECTED DATES REPORT</div>
+        <div class="panel-body">
+
+            <br>
+
+            <h4 align="left"> From Date: {{ date_from }} &nbsp; &nbsp; To Date : {{ date_to }}</h4>
+            &nbsp;
+            <h4 align="left">A. SIGNIFICANT EVENTS</h4>
+
+            <P>
+                {% if significant_events_none == "None" %}
+                    {{ '-None' }}
+                {% else %}
+                    {% for significant_event in significant_events %}
+                        <b>{{ significant_event.date_created }}<br></b>-{{ significant_event.region.description }}:
+                        {{ significant_event.cases }} {{ significant_event.event_type.description }} cases and
+                        {{ significant_event.deaths }} deaths,
+                        {{ significant_event.remarks }}
+                        <a href="/event_reports_edit/{{ significant_event.id }}"> EDIT</a><br>
+
+                    {% endfor %}
+                    {% for significant_disease in significant_diseases %}
+                        <b>{{ significant_disease.date_created }}<br></b>-{{ significant_disease.region.description }}:
+                        {{ significant_disease.cases }} {{ significant_disease.disease_type.description }} cases and
+                        {{ significant_disease.deaths }} deaths,
+                        {{ significant_disease.remarks }}
+                        <a href="/disease_reports_edit/{{ significant_disease.id }}"> EDIT</a><br>
+
+                    {% endfor %}
+                {% endif %}
+
+            <p>
+            <h4 align="left">B. EOC STATUS</h4>
+
+            <P>
+                -Activated for Monitoring
+
+            <P>
+            <h4 align="left">C. EOC FIELD DEPLOYMENTS</h4>
+
+            <p>
+                -None
+
+            <p>
+            <h4 align="left">D. OUTBREAK UPDATES</h4>
+
+            <p>
+
+            <div class="table-responsive">
+                <table class="table table-bordered table-hover">
+                    <tr>
+                        <td colspan="3" align="center"><h4><b>SITUATION REPORT OF ACUTE PUBLIC HEALTH EVENTS</b></h4>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="width:10%"></td>
+                        <td style="width:45%"><h5><b>Disease Outbreaks</b></h5></td>
+                        <td style="width:45%"><h5><b>Events</b></h5></td>
+                    </tr>
+                    <tr>
+                        <td><b>Global</b></td>
+                        <td>
+                            {% for key, value in diseases.items %}
+                                {% if key == "Global" %}
+                                    {% if not value %}
+                                        {{ 'None' }}
+                                    {% else %}
+                                        {% for v in value %}
+                                            <b>{{ v.date_created }}<br></b> -{{ v.incident_status.description }}:
+                                            {{ v.cases }} {{ v.disease_type.description }} cases and {{ v.deaths }}
+                                            deaths,
+                                            {{ v.remarks }} <a href="/disease_reports_edit/{{ v.id }}"> EDIT</a><br>
+                                        {% endfor %}
+                                    {% endif %}
+                                {% endif %}
+                            {% endfor %}
+                        </td>
+                        <td>
+                            {% for key, value in events.items %}
+                                {% if key == "Global" %}
+                                    {% if not value %}
+                                        {{ 'None' }}
+                                    {% else %}
+                                        {% for v in value %}
+                                            <b>{{ v.date_created }}<br></b>-{{ v.incident_status.description }}:
+                                            {{ v.cases }} {{ v.event_type.description }} cases and {{ v.deaths }}deaths,
+                                            {{ v.remarks }}<a href="/event_reports_edit/{{ v.id }}"> EDIT</a><br>
+                                        {% endfor %}
+                                    {% endif %}
+                                {% endif %}
+                            {% endfor %}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><b>Africa</b></td>
+                        <td>
+                            {% for key, value in diseases.items %}
+                                {% if key == "Africa" %}
+                                    {% if not value %}
+                                        {{ 'None' }}
+                                    {% else %}
+                                        {% for v in value %}
+                                            <b>{{ v.date_created }}<br></b>-{{ v.incident_status.description }}:
+                                            {{ v.cases }} {{ v.disease_type.description }} cases and {{ v.deaths }}
+                                            deaths,
+                                            {{ v.remarks }}<a href="/disease_reports_edit/{{ v.id }}"> EDIT</a><br>
+                                        {% endfor %}
+                                    {% endif %}
+                                {% endif %}
+                            {% endfor %}
+                        </td>
+                        <td>
+                            {% for key, value in events.items %}
+                                {% if key == "Africa" %}
+                                    {% if not value %}
+                                        {{ 'None' }}
+                                    {% else %}
+                                        {% for v in value %}
+                                            <b>{{ v.date_created }}<br></b>-{{ v.incident_status.description }}:
+                                            {{ v.cases }} {{ v.event_type.description }} cases and {{ v.deaths }}deaths,
+                                            {{ v.remarks }}<a href="/event_reports_edit/{{ v.id }}"> EDIT</a><br>
+                                        {% endfor %}
+                                    {% endif %}
+                                {% endif %}
+                            {% endfor %}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><b>East Africa</b></td>
+                        <td>
+                            {% for key, value in diseases.items %}
+                                {% if key == "East Africa" %}
+                                    {% if not value %}
+                                        {{ 'None' }}
+                                    {% else %}
+                                        {% for v in value %}
+                                            <b>{{ v.date_created }}<br></b>-{{ v.incident_status.description }}:
+                                            {{ v.cases }} {{ v.disease_type.description }} cases and {{ v.deaths }}
+                                            deaths,
+                                            {{ v.remarks }}<a href="/disease_reports_edit/{{ v.id }}"> EDIT</a><br>
+                                        {% endfor %}
+                                    {% endif %}
+                                {% endif %}
+                            {% endfor %}
+                        </td>
+                        <td>
+                            {% for key, value in events.items %}
+                                {% if key == "East Africa" %}
+                                    {% if not value %}
+                                        {{ 'None' }}
+                                    {% else %}
+                                        {% for v in value %}
+                                            <b>{{ v.date_created }}<br></b>-{{ v.incident_status.description }}:
+                                            {{ v.cases }} {{ v.event_type.description }} cases and {{ v.deaths }}deaths,
+                                            {{ v.remarks }}<a href="/event_reports_edit/{{ v.id }}"> EDIT</a><br>
+                                        {% endfor %}
+                                    {% endif %}
+                                {% endif %}
+                            {% endfor %}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><b>Kenya</b></td>
+                        <td>
+                            {% for key, value in diseases.items %}
+                                {% if key == "Kenya" %}
+                                    {% if not value %}
+                                        {{ 'None' }}
+                                    {% else %}
+                                        {% for v in value %}
+                                            <b>{{ v.date_created }}<br></b>- {{ v.incident_status.description }}:
+                                            {{ v.cases }} {{ v.disease_type.description }} cases and {{ v.deaths }}
+                                            deaths,
+                                            {{ v.remarks }}<a href="/disease_reports_edit/{{ v.id }}"> EDIT</a><br>
+                                        {% endfor %}
+                                    {% endif %}
+                                {% endif %}
+                            {% endfor %}
+                        </td>
+                        <td>
+                            {% for key, value in events.items %}
+                                {% if key == "Kenya" %}
+                                    {% if not value %}
+                                        {{ 'None' }}
+                                    {% else %}
+                                        {% for v in value %}
+                                            <b>{{ v.date_created }}<br></b> -{{ v.incident_status.description }}:
+                                            {{ v.cases }} {{ v.event_type.description }} cases and {{ v.deaths }}deaths,
+                                            {{ v.remarks }}<a href="/event_reports_edit/{{ v.id }}"> EDIT</a><br>
+                                        {% endfor %}
+                                    {% endif %}
+                                {% endif %}
+                            {% endfor %}
+                        </td>
+                    </tr>
+                </table>
+            </div>
+            <h4 align="left">E. RESOURCE STATUS</h4>
+
+            <p>
+                -None
+
+            <p>
+                {#                         <h4 align="left">F. MEDIA SUMMARY</h4><p>#}
+                {#                         {% if media_reports_none == "None"  %}#}
+                {#                              {{'-None'}}#}
+                {#                             {% else %}#}
+                {#                             {% for media_report  in media_reports  %}#}
+                {#                                 -{{ media_report }}<br>#}
+                {#                            {% endfor %}#}
+                {#                        {% endif %}#}
+                {#                        <p>#}
+            <h4 align="left">G. EOC 24 HOUR CALL DATA</h4>
+
+            <p>
+            <h5 align="center"><u><b>(i). Call inquiries made via EOC Safaricom and Airtel lines</b></u></h5>
+
+            <p>
+
+            <div class="table-responsive">
+                <table class="table table-bordered table-hover">
+                    <tr>
+                        <th>Call made via Safaricom and Airtel lines</th>
+                        <th>Total Count</th>
+                    </tr>
+                    {% for key, value in call_log_count_stat.items %}
+                        {% if value == 0 %}
+                        {% else %}
+                            <tr>
+                                <td>{{ key }}</td>
+                                <td>{{ value }}</td>
+                            </tr>
+                        {% endif %}
+                    {% endfor %}
+                    <tr>
+                        <td><b>Total calls received</b></td>
+                        <td><b>{{ call_log_sum }}</b></td>
+                    </tr>
+                </table>
+                <h5 align="center"><u><b>(ii). Call received status breakdown</b></u></h5>
+
+                <p>
+                <table class="table table-bordered table-hover">
+                    <tr>
+                        <th>Call made via Safaricom and Airtel lines</th>
+                        <th>Total Count</th>
+                    </tr>
+
+                    <tr>
+                        <td>Total confirmed cases</td>
+                        <td>{{ wkly_conf_call_log_count }}</td>
+                    </tr>
+                    <tr>
+                        <td>Total rumor cases</td>
+                        <td>{{ wkly_rum_call_log_count }}</td>
+                    </tr>
+                    <tr>
+                        <td>Total enquiry/unrelated calls</td>
+                        <td>{{ wkly_enquiry }}</td>
+                    </tr>
+                    <tr>
+                        <td><b>Total calls received</b></td>
+                        <td><b>{{ wkly_total_calls }}</b></td>
+                    </tr>
+                </table>
+                <h4 align="left">G. REPORT PREPARED BY:</h4>
+
+                <P>
+                    {% for watcher in watchers %}
+
+                        -{{ watcher.fname }}<br>
+
+                    {% endfor %}
+                </P>
+            </div>
+            <div class="col-sm-6">
+                <a href="javascript:generate_weekly_report_pdf()" class="btn btn-primary btn-lg btn-block">Download</a>
+            </div>
+            <div class="col-sm-6">
+                <a href="javascript:pdf()" class="btn btn-primary btn-lg btn-block">Send Report</a>
+            </div>
+            {#                        </div>#}
+            {#                 </div>#}
+            {#                </div>#}
+            {#            </div>#}
+        </div>
+    </div>
+
+{% endblock %}
+
+
+{% block script %}
+    <script>
+        function generate_weekly_report_pdf() {
+//Global disease array
+            var global_diseases = []
+
+            {%for key, value in diseases.items %}
+                {% if key == "Global"  %}
+                    {% if not value %}
+                        global_diseases.push(['None'])
+                    {% else %}
+                        {%for v in value %}
+
+                            var mys = '-{{v.remarks|slugify}}';
+                            var converted = mys.replace(/[-]/g, " ");
+
+                            global_diseases.push(['-{{ v.date_created }}: {{v.incident_status.description}}; {{v.cases}} {{v.disease_type.description}}' + ' cases and' + ' {{v.deaths}}' + ' deaths,' + converted])
+
+                        {% endfor %}
+                    {% endif %}
+                {% endif %}
+
+            {% endfor %}
+//Global events array
+            var global_events = []
+
+            {%for key, value in events.items %}
+                {% if key == "Global"  %}
+                    {% if not value %}
+                        global_events.push(['None'])
+                    {% else %}
+                        {%for v in value %}
+
+                            var mys = '-{{v.remarks|slugify}}';
+                            var converted = mys.replace(/[-]/g, " ");
+
+                            global_events.push(['-{{ v.date_created }}:{{v.incident_status.description}}; {{v.event_type.description}}' + ',' + '{{v.cases}} ' + ' cases and' + ' {{v.deaths}}' + ' deaths,' + converted])
+
+                        {% endfor %}
+                    {% endif %}
+                {% endif %}
+
+            {% endfor %}
+
+//Africa disease array
+            var africa_diseases = []
+
+            {%for key, value in diseases.items %}
+                {% if key == "Africa"  %}
+                    {% if not value %}
+                        africa_diseases.push(['None'])
+                    {% else %}
+                        {%for v in value %}
+
+                            var mys = '-{{v.remarks|slugify}}';
+                            var converted = mys.replace(/[-]/g, " ");
+
+                            africa_diseases.push(['-{{ v.date_created }}: {{v.incident_status.description}}; {{v.cases}} {{v.disease_type.description}}' + ' cases and' + ' {{v.deaths}}' + ' deaths,' + converted])
+
+                        {% endfor %}
+                    {% endif %}
+                {% endif %}
+
+            {% endfor %}
+//Africa events array
+            var africa_events = []
+
+            {%for key, value in events.items %}
+                {% if key == "Africa"  %}
+                    {% if not value %}
+                        africa_events.push(['None'])
+                    {% else %}
+                        {%for v in value %}
+
+                            var mys = '-{{v.remarks|slugify}}';
+                            var converted = mys.replace(/[-]/g, " ");
+
+                            africa_events.push(['-{{ v.date_created }}: {{v.incident_status.description}}; {{v.event_type.description}}' + ',' + '{{v.cases}} ' + ' cases and' + ' {{v.deaths}}' + ' deaths,' + converted])
+
+                        {% endfor %}
+                    {% endif %}
+                {% endif %}
+
+            {% endfor %}
+//East africa disease array
+            var east_africa_diseases = []
+
+            {%for key, value in diseases.items %}
+                {% if key == "East Africa"  %}
+                    {% if not value %}
+                        east_africa_diseases.push(['None'])
+                    {% else %}
+                        {%for v in value %}
+
+                            var mys = '-{{v.remarks|slugify}}';
+                            var converted = mys.replace(/[-]/g, " ");
+
+                            east_africa_diseases.push(['-{{ v.date_created }}: {{v.incident_status.description}}; {{v.cases}} {{v.disease_type.description}}' + ' cases and' + ' {{v.deaths}}' + ' deaths,' + converted])
+
+                        {% endfor %}
+                    {% endif %}
+                {% endif %}
+
+            {% endfor %}
+//East africa events array
+            var east_africa_events = []
+
+            {%for key, value in events.items %}
+                {% if key == "East Africa"  %}
+                    {% if not value %}
+                        east_africa_events.push(['None'])
+                    {% else %}
+                        {%for v in value %}
+
+                            var mys = '-{{v.remarks|slugify}}';
+                            var converted = mys.replace(/[-]/g, " ");
+
+                            east_africa_events.push(['-{{ v.date_created }}: {{v.incident_status.description}}; {{v.event_type.description}}' + ',' + '{{v.cases}} ' + ' cases and' + ' {{v.deaths}}' + ' deaths,' + converted])
+
+                        {% endfor %}
+                    {% endif %}
+                {% endif %}
+
+            {% endfor %}
+
+//Kenya disease array
+            var kenya_diseases = []
+
+            {%for key, value in diseases.items %}
+                {% if key == "Kenya"  %}
+                    {% if not value %}
+                        kenya_diseases.push(['None'])
+                    {% else %}
+                        {%for v in value %}
+
+                            var mys = '-{{v.remarks|slugify}}';
+                            var converted = mys.replace(/[-]/g, " ");
+
+                            kenya_diseases.push(['-{{ v.date_created }}: {{v.incident_status.description}}; {{v.cases}} {{v.disease_type.description}}' + ' cases and' + ' {{v.deaths}}' + ' deaths,' + converted])
+
+                        {% endfor %}
+                    {% endif %}
+                {% endif %}
+
+            {% endfor %}
+//kenya events array
+            var kenya_events = []
+
+            {%for key, value in events.items %}
+                {% if key == "Kenya"  %}
+                    {% if not value %}
+                        kenya_events.push(['None'])
+                    {% else %}
+                        {%for v in value %}
+
+                            var mys = '-{{v.remarks|slugify}}';
+                            var converted = mys.replace(/[-]/g, " ");
+
+                            kenya_events.push(['-{{ v.date_created }}: {{v.incident_status.description}}; {{v.event_type.description}}' + ',' + '{{v.cases}} ' + ' cases and' + ' {{v.deaths}}' + ' deaths,' + converted])
+
+                        {% endfor %}
+                    {% endif %}
+                {% endif %}
+
+            {% endfor %}
+
+            var call_data = []
+            call_data.push(['Call made via Safaricom and Airtel lines', 'Total Count'])
+            {% for key, value in call_log_count_stat.items %}
+                {% if value == 0 %}
+                {% else %}
+                    call_data.push(['{{ key }}', '{{ value }}'])
+                {%endif %}
+
+            {% endfor %}
+
+            //call log sum
+            call_data.push(['Total  calls received', '{{call_log_sum}}'])
+
+            //call breakdown details
+            var call_breakdown = []
+            call_breakdown.push(['Call made via Safaricom and Airtel lines', 'Total Count'])
+            call_breakdown.push(['Total confirmed cases', '{{wkly_conf_call_log_count}}'])
+            call_breakdown.push(['Total rumor cases', '{{wkly_conf_call_log_count}}'])
+            call_breakdown.push(['Total enquiry/unrelated calls', '{{wkly_enquiry}}'])
+            call_breakdown.push(['Total calls received', '{{wkly_total_calls}}'])
+
+            var significant_events = []
+            {% if significant_events_none == "None"  %}
+                significant_events.push(['-None'])
+            {% else %}
+                {% for significant_event in significant_events %}
+                    var mys = '{{significant_event.remarks|slugify}}';
+                    var converted = mys.replace(/[-]/g, " ");
+
+                    significant_events.push(['-{{ significant_event.date_created }}: {{significant_event.region.description}}' + ':' + '{{significant_event.event_type.description}}' + ',' + '{{significant_event.cases}}' + ' cases and' + ' {{significant_event.deaths}}' + ' deaths,' + converted])
+
+
+                {% endfor %}
+                {% for significant_disease in significant_diseases %}
+
+                    var mys = '{{significant_disease.remarks}}';
+                    var converted = mys.replace(/[-]/g, " ");
+
+                    significant_events.push(['-{{ significant_disease.date_created }}: {{significant_disease.region.description}}' + ':' + ' {{significant_disease.disease_type.description}}' + ',' + '' + '{{significant_disease.cases}}' + ' cases and' + ' {{significant_disease.deaths}}' + ' deaths,' + converted])
+
+
+                {% endfor %}
+
+            {% endif %}
+
+            var watchers = []
+
+            {% if not watchers %}
+                watchers.push(['-None'])
+
+            {% else %}
+                {% for watcher  in watchers   %}
+
+                    watchers.push(['-{{ watcher }}'])
+
+                {% endfor %}
+            {% endif %}
+
+            {#     var media_reports = []#}
+            {#     {% if media_reports_none == "None"  %}#}
+            {#          media_reports.push(['-None'])#}
+            {#         {% else %}#}
+            {#         {% for media_report  in media_reports  %}#}
+            {#             media_reports.push(['-{{ media_report }}'])#}
+            {##}
+            {#        {% endfor %}#}
+            {##}
+            {#    {% endif %}#}
+            //additional details on the report
+            //Specifies the dates of the reporting weeks
+            var date_from = '{{ date_from }}';
+            var date_to = '{{ date_to }}';
+
+            var docDefinition = {
+
+                content: [
+                    {
+                        image: 'data:image/jpeg;base64,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',
+                        width: 150,
+                        height: 150,
+                        alignment: 'center'
+                    },
+                    {text: 'EOC WEEKLY REPORT', style: 'header', alignment: 'center'},
+
+                    {
+                        table: {
+                            body: [
+                                [{text: 'From', style: 'subheader', alignment: 'center'}, {
+                                    text: date_from,
+                                    style: 'subheader',
+                                    alignment: 'center'
+                                }, {text: 'To', style: 'subheader', alignment: 'center'}, {
+                                    text: date_to,
+                                    style: 'subheader',
+                                    alignment: 'center'
+                                }],
+                            ]
+                        }, layout: 'noBorders'
+                    },
+
+                    {text: 'A.	SIGNIFICANT EVENTS', style: 'subheader'},
+                    {
+                        table: {
+                            body: significant_events
+                        }, layout: 'noBorders'
+                    },
+                    {text: 'B.	EOC STATUS', style: 'subheader'},
+                    {text: '-Activated for Monitoring'},
+                    {text: 'C.	EOC FIELD DEPLOYMENTS', style: 'subheader'},
+                    {text: '-None'},
+                    {text: 'D.	OUTBREAK UPDATES', style: 'subheader'},
+                    {
+                        table: {
+                            widths: [90, 200, 200],
+                            // keepWithHeaderRows: 1,
+                            body: [
+
+                                [{
+                                    text: '',
+                                    style: 'tableHeader',
+                                    alignment: 'center'
+                                }, {
+                                    text: 'SITUATION REPORT OF ACUTE PUBLIC HEALTH EVENTS',
+                                    style: 'tableHeader',
+                                    colSpan: 2,
+                                    alignment: 'left'
+                                }, {}],
+                                [{text: '', style: 'tableHeader', alignment: 'center'}, {
+                                    text: 'Disease Outbreak',
+                                    style: 'tableHeader',
+                                    alignment: 'center'
+                                }, {text: 'Events', style: 'tableHeader', alignment: 'center'}],
+                                [{text: 'Global', style: 'tableHeader', alignment: 'center'}, [
+
+                                    {
+                                        table: {
+                                            body: global_diseases
+                                        }, layout: 'noBorders'
+                                    }
+                                ], {
+                                    table: {
+                                        body: global_events
+                                    }, layout: 'noBorders'
+                                }],
+                                [{text: 'Africa', style: 'tableHeader', alignment: 'center'}, [
+
+                                    {
+                                        table: {
+                                            body: africa_diseases
+                                        }, layout: 'noBorders'
+                                    }
+                                ], {
+                                    table: {
+                                        body: africa_events
+                                    }, layout: 'noBorders'
+                                }],
+                                [{text: 'East Africa', style: 'tableHeader', alignment: 'center'}, [
+
+                                    {
+                                        table: {
+                                            body: east_africa_diseases
+                                        }, layout: 'noBorders'
+                                    }
+                                ], {
+                                    table: {
+                                        body: east_africa_events
+                                    }, layout: 'noBorders'
+                                }],
+                                [{text: 'Kenya', style: 'tableHeader', alignment: 'center'}, [
+
+                                    {
+                                        table: {
+                                            body: kenya_diseases
+                                        }, layout: 'noBorders'
+                                    }
+                                ], {
+                                    table: {
+                                        body: kenya_events
+                                    }, layout: 'noBorders'
+                                }],
+
+
+                            ]
+                        }
+
+
+                    },
+                    {text: 'E.	RESOURCE STATUS', style: 'subheader'},
+                    {text: '-None'},
+                    {#      { text: 'F.	MEDIA SUMMARY', style: 'subheader' },#}
+                    {#         {#}
+                    {#              table: {#}
+                    {#                  body: [#}
+                    {#                      media_reports#}
+                    {#                  ]#}
+                    {#              }, layout: 'noBorders'#}
+                    {#          },#}
+                    {text: 'G.	EOC 24 HOUR CALL DATA', style: 'subheader'},
+                    {
+                        text: '(i). Call inquiries made via EOC Safaricom and Airtel lines',
+                        style: 'tableHeader',
+                        alignment: 'center'
+                    },
+                    {
+
+                        table: {
+                            // headers are automatically repeated if the table spans over multiple pages
+                            widths: [400, 100],
+
+                            body: call_data
+                        }
+                    },
+                    {text: '(ii). Call received status breakdown', style: 'tableHeader', alignment: 'center'},
+                    {
+
+                        table: {
+                            // headers are automatically repeated if the table spans over multiple pages
+                            widths: [400, 100],
+
+                            body: call_breakdown
+                        }
+
+                    },
+                    {text: 'G.	REPORT PREPARED BY:', style: 'subheader'},
+                    {
+                        table: {
+                            body: watchers
+
+                        }, layout: 'noBorders'
+                    },
+                    {
+                        text: 'NB : This is an automated report generated by the EOC System based on the information entered by the EOC staff',
+                        style: 'subheader',
+                        color: 'red',
+                        italic: true
+                    }
+
+
+                ],
+
+                styles: {
+                    header: {
+                        fontSize: 16,
+                        bold: true,
+                        margin: [0, 0, 0, 10]
+                    },
+                    subheader: {
+                        fontSize: 12,
+                        bold: true,
+                        margin: [0, 10, 0, 5]
+                    },
+                    tableExample: {
+                        margin: [0, 5, 0, 15]
+                    },
+                    tableHeader: {
+                        bold: true,
+                        fontSize: 12,
+                        color: 'black'
+                    }
+                },
+                defaultStyle: {
+                    // alignment: 'justify'
+                }
+            };
+            // open the PDF in a new window
+            pdfMake.createPdf(docDefinition).download('Weekly_Report - from ' + date_from);
+
+        }
+    </script>
+    <script>
+        function get_epiweeks() {
+
+            var epi_year = $('#epi_year').val();
+            $.ajax({
+                url: '/get_epiweek/',
+                type: 'POST',
+                data: {epi_year: epi_year, csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val()},
+
+                success: function (data) {
+                    {#                    console.log("inside success")#}
+                    {#                    console.log(data)#}
+
+                    var options = '<option value="" selected disabled>EPI Weeks - [Start Date - End Date]</option>';
+                    $('#epi_week').html(options);
+
+                    for (var i = 0; i < data.length; i++) {
+                        var options = '<option value="' + data[i].start_date + "#" + data[i].end_date + '">' + data[i].week + " - [ " + data[i].start_date + " - " + data[i].end_date + " ]" + '</option>';
+                        $('#epi_week').append(options);
+
+                    }
+                },
+                error: function (er) {
+                    // alert("error getting data from server");
+                    var options = '<option value="" selected disabled>EPI Weeks [Start Date - End Date]</option>';
+                    $('#epi_week').html(options);
+
+                }
+            });
+        }
+    </script>
+
+{% endblock %}

@@ -1,0 +1,37 @@
+{% block content %}
+
+    <script type="text/javascript">
+        window.onload = function () {
+            var chart = new CanvasJS.Chart("barContainer",
+                    {
+                        animationEnabled: true,
+                        title: {
+                            text: "Number of calls this week"
+                        },
+                        data: [
+                            {
+                                type: "column", //change type to bar, line, area, pie, etc
+                                dataPoints: [
+                                    {label: "Mombasa", y: 18},
+                                    {label: "Nairobi", y: 29},
+                                    {label: "Kisumu", y: 40},
+                                    {label: "Machakos", y: 34},
+                                    {label: "Kiambu", y: 29},
+                                    {label: "Eldoret", y: 40},
+                                    {label: "Kisii", y: 34},
+                                    {label: "Nakuru", y: 24}
+                                ]
+                            }
+                        ]
+                    });
+
+            chart.render();
+        }
+    </script>
+    <script type="text/javascript" src="/static/js/canvasjs.min.js"></script>
+
+    <div id="barContainer" style="height: 300px; width: 100%;">
+
+    </div>
+
+{% endblock %}

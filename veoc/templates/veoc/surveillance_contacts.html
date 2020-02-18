@@ -1,0 +1,343 @@
+{% extends "veoc/main_template.html" %}
+{% block main %}
+
+<script type="text/javascript"
+    src="https://cdn.datatables.net/v/dt/jqc-1.12.3/jszip-2.5.0/pdfmake-0.1.18/dt-1.10.12/b-1.2.2/b-flash-1.2.2/b-html5-1.2.2/b-print-1.2.2/datatables.min.js"></script>
+
+        <div id="main-container">
+          <div id="breadcrumb">
+            <ul class="breadcrumb">
+               <li><i class="fa fa-home"></i><a href="{% url 'veoc:access_dashboard' %}"> Dashboard</a></li>
+               <li class="active">EOC Surveillance Personnel Contacts</li>
+            </ul>
+          </div><!-- /breadcrumb-->
+
+          <div class="padding-md">
+            <div class="row">
+              <div class="col-sm-12 col-md-12">
+                <div class="col-md-12" style="padding-bottom:10px">
+                  <button type="button" id="openBtn" class="btn btn-info btn-sm pull-left" data-toggle="modal" data-target="#add_contact"> <i class="fa fa-plus" aria-hidden="true"></i> Add New Contact</button>
+                </div>
+
+              </div><!-- /.col -->
+            </div>
+            <div class="row">
+              <div class="col-md-12">
+                <div class="panel panel-default table-responsive">
+                  <div class="panel-heading">
+                    Surveillance Team Contacts Database
+                    <span class="label label-info pull-right" id="totalspan">{{contacts_count}} No of staff </span>
+                  </div>
+                  <div class="padding-md clearfix" >
+                  <table class="table table-hover" id="eoc_table">
+                    <thead class="thead-dark">
+                    <tr>
+                        <th>First name</th>
+                        <th>Last name</th>
+                        <th>Designation</th>
+                        <th>Mobile number</th>
+                        <th>Email address</th>
+                        <th>Team Leader</th>
+                        <th>Action</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for eoc in eocContacts %}
+                        <tr>
+                            <td>{{ eoc.first_name }}</td>
+                            <td>{{ eoc.last_name }}</td>
+                            <td>{{ eoc.designation.designation_description }}</td>
+                            <td>{{ eoc.phone_number }}</td>
+                            <td>{{ eoc.email_address }}</td>
+                            <td>{{ eoc.team_lead }}</td>
+                            <td><button type="button" class="btn btn-primary btn-xs view_button"
+                              data-toggle="modal" data-target="#view_contact_modal"
+                              data-id="{{ eoc.pk }}"
+                              data-firstname="{{ eoc.first_name }}"
+                              data-secondname="{{ eoc.last_name }}"
+                              data-designation="{{ eoc.designation.designation_description }}"
+                              data-mobile="{{ eoc.phone_number }}"
+                              data-email="{{ eoc.email_address }}"
+                              data-team-lead="{{ eoc.team_lead }}"
+                              data-reporter="{{ eoc.created_by.username }}"
+                              title="View">
+                              <i class="fa fa-eye">
+                              </i>
+                          </button>
+                          <button type="button" class="btn btn-primary btn-xs edit_button"
+                            data-toggle="modal" data-target="#edit_contact_modal"
+                            data-id="{{ eoc.pk }}"
+                            data-firstname="{{ eoc.first_name }}"
+                            data-secondname="{{ eoc.last_name }}"
+                            data-designation="{{ eoc.designation.designation_description }}"
+                            data-mobile="{{ eoc.phone_number }}"
+                            data-email="{{ eoc.email_address }}"
+                            data-team-lead="{{ eoc.team_lead }}"
+                            data-reporter="{{ eoc.created_by.username }}"
+                            title="Edit">
+                            <i class="fa fa-edit">
+                            </i>
+                          </button>
+                        </td>
+                      </tr>
+                      {% endfor %}
+                    </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div><!-- /row-->
+      </div><!-- /.padding-md -->
+    </div><!-- /main-container -->
+
+    <!-- add contact modal -->
+    <div class="modal fade" id="add_contact" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+      aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">Add Staff Contact</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <form method="post" action="{% url 'veoc:eoc_contacts_create' %}">
+              {% csrf_token %}
+              <div class="modal-body">
+                <div class="form-group">
+                    <label for="first_name"><b>first_name : </b></label>
+                    <input class="form-control" type="text" id="first_name" name="first_name" size="45"
+                           placeholder="first_name" required/>
+                </div>
+                <div class="form-group">
+                    <label for="last_name"><b>last_name : </b></label>
+                    <input class="form-control" type="text" id="last_name" name="last_name" size="45"
+                           placeholder="last_name" required/>
+                </div>
+                <div class="form-group">
+                    <label for="designation"><b>designation : </b></label>
+                    <select class="form-control" id="designation" name="designation" required>
+                        <option value="" disabled selected>Select designation</option>
+                        {% for sts in designation %}
+                            <option value="{{ sts.designation_description }}">{{ sts.designation_description }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="phone_number"><b>phone_number : </b></label>
+                    <input class="form-control" type="number" id="phone_number" name="phone_number" size="45"
+                           placeholder="phone_number" required/>
+                </div>
+                <div class="form-group">
+                    <label for="email_address"><b>email_address : </b></label>
+                    <input class="form-control" type="email" id="email_address" name="email_address" size="45"
+                           placeholder="email_address" required/>
+                </div>
+                <div class="form-group">
+                    <b>Team lead ? &nbsp </b><input class="accordion-group" type="checkbox" id="lead"
+                                                    name="lead">
+                </div>
+                <div class="form-group">
+                    <input type="submit" value="Save Event" class=" btn btn-primary">
+                </div>
+              </div>
+          </form>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- View contact modal -->
+    <div class="modal fade" id="view_contact_modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+      aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">Disease Report Incident View</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <form method="post" action="#">
+              <div class="modal-body">
+                  <div class="form-group" style="display: none;">
+                      <input class="form-control id" name="id" style="display: none;">
+                  </div>
+                  <div class="form-group">
+                      <label for="first_name"><b>first_name : </b></label>
+                      <input class="form-control view_first_name" name="view_first_name" readonly/>
+                  </div>
+                  <div class="form-group">
+                      <label for="last_name"><b>last_name : </b></label>
+                      <input class="form-control view_last_name" name="view_last_name" readonly/>
+                  </div>
+                  <div class="form-group">
+                      <label for="designation"><b>designation : </b></label>
+                      <input class="form-control view_designation" name="view_designation" readonly />
+                  </div>
+                  <div class="form-group">
+                      <label for="phone_number"><b>phone_number : </b></label>
+                      <input class="form-control view_phone_number" name="view_phone_number" readonly/>
+                  </div>
+                  <div class="form-group">
+                      <label for="email_address"><b>email_address : </b></label>
+                      <input class="form-control view_email_address" name="view_email_address" readonly/>
+                  </div>
+                  <div class="form-group">
+                      <label for="heading">Added By :</label>
+                      <input class="form-control view_reporter_name" name="view_reporter_name" readonly>
+                  </div>
+              </div>
+          </form>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Edit contact modal -->
+    <div class="modal fade" id="edit_contact_modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+      aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">Sureveillance Personnel Contacts Edit</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <form method="post" action="{% url 'veoc:eoc_contact_edit' %}">
+              {% csrf_token %}
+                <div class="modal-body">
+                  <div class="form-group" style="display: none;">
+                      <input class="form-control id" name="id" style="display: none;">
+                  </div>
+                  <div class="form-group">
+                      <label for="first_name"><b>first_name : </b></label>
+                      <input class="form-control first_name" name="first_name" readonly/>
+                  </div>
+                  <div class="form-group">
+                      <label for="last_name"><b>last_name : </b></label>
+                      <input class="form-control last_name" name="last_name" readonly/>
+                  </div>
+                  <div class="form-group">
+                      <label for="designation"><b>designation : </b></label>
+                      <select class="form-control designation" name="designation" required>
+                          <option value="" disabled selected>Select designation</option>
+                          {% for sts in designation %}
+                              <option value="{{ sts.id }}">{{ sts.designation_description }}</option>
+                          {% endfor %}
+                      </select>
+                  </div>
+                  <div class="form-group">
+                      <label for="phone_number"><b>phone_number : </b></label>
+                      <input class="form-control phone_number" name="phone_number"/>
+                  </div>
+                  <div class="form-group">
+                      <label for="email_address"><b>email_address : </b></label>
+                      <input class="form-control email_address" name="email_address"/>
+                  <div class="form-group">
+                      <label for="heading">Added By :</label>
+                      <input class="form-control reporter_name" name="reporter_name" readonly>
+                  </div>
+                  </div><div class="form-group">
+                      <b>Team lead ? &nbsp </b><input class="accordion-group lead" type="checkbox" id="lead" name="lead">
+                  </div>
+                  <div class="form-group">
+                      <input type="submit" value="Update" class=" btn btn-primary">
+                  </div>
+                </div>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+{% endblock %}
+
+{% block script %}
+    <script>
+        $(document).ready(function () {
+            $('#eoc_table').DataTable({
+                dom: 'Bfrtip',
+                buttons: [
+                    'copy', 'csv', 'excel', 'pdf', 'print'
+                ]
+            });
+
+            // Setup - add a text input to each footer cell
+            $('#eoc_table tfoot th').each(function () {
+                var title = $(this).text();
+                $(this).html('<input type="text" placeholder="Search ' + title + '" />');
+            });
+
+            // DataTable
+            var table = $('#eoc_table').DataTable();
+
+            // Apply the search
+            table.columns().every(function () {
+                var that = this;
+
+                $('input', this.footer()).on('keyup change', function () {
+                    if (that.search() !== this.value) {
+                        that
+                                .search(this.value)
+                                .draw();
+                    }
+                });
+            });
+        });
+
+        $(document).on( "click", '.view_button',function(e) {
+            var id = $(this).data('id');
+            var first_name = $(this).data('firstname');
+            var second_name = $(this).data('secondname');
+            var designation = $(this).data('designation');
+            var mobile = $(this).data('mobile');
+            var email = $(this).data('email');
+            var reporter = $(this).data('reporter');
+
+            console.log(first_name);
+
+            $(".id").val(id);
+            $(".view_first_name").val(first_name);
+            $(".view_last_name").val(second_name);
+            $(".view_designation").val(designation);
+            $(".view_phone_number").val(mobile);
+            $(".view_email_address").val(email);
+            $(".view_reporter_name").val(reporter);
+        });
+
+        $(document).on( "click", '.edit_button',function(e) {
+          var id = $(this).data('id');
+          var first_name = $(this).data('firstname');
+          var second_name = $(this).data('secondname');
+          var designation = $(this).data('designation');
+          var mobile = $(this).data('mobile');
+          var email = $(this).data('email');
+          var reporter = $(this).data('reporter');
+
+          console.log(id);
+
+          $(".id").val(id);
+          $(".first_name").val(first_name);
+          $(".last_name").val(second_name);
+          $(".designation").val(designation);
+          $(".phone_number").val(mobile);
+          $(".email_address").val(email);
+          $(".reporter_name").val(reporter);
+      });
+
+    </script>
+{% endblock %}

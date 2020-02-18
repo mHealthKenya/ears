@@ -1,0 +1,234 @@
+{% extends "veoc/main_template.html" %}
+
+{% block main %}
+
+    <script type="text/javascript"
+        src="https://cdn.datatables.net/v/dt/jqc-1.12.3/jszip-2.5.0/pdfmake-0.1.18/dt-1.10.12/b-1.2.2/b-flash-1.2.2/b-html5-1.2.2/b-print-1.2.2/datatables.min.js"></script>
+
+            <div id="main-container">
+        			<div id="breadcrumb">
+        				<ul class="breadcrumb">
+        					 <li><i class="fa fa-home"></i><a href="{% url 'veoc:access_dashboard' %}"> Dashboard</a></li>
+        					 <li class="active">Data Source</li>
+        				</ul>
+        			</div><!-- /breadcrumb-->
+
+        			<div class="padding-md">
+                <div class="row">
+        					<div class="col-sm-12 col-md-12">
+        						<div class="col-md-12" style="padding-bottom:10px">
+        							<button type="button" id="modalbtn" class="btn btn-info btn-sm pull-left" data-toggle="modal" data-target="#addDesignationModal"> <i class="fa fa-plus" aria-hidden="true"></i> Add Data Source</button>
+        						</div>
+
+        					</div><!-- /.col -->
+        				</div>
+        				<div class="row">
+        					<div class="col-md-12">
+        						<div class="panel panel-default table-responsive">
+        							<div class="panel-heading">
+        								Data Source
+        								<span class="label label-info pull-right" id="totalspan">{{data_source_count}} Data Sources</span>
+        							</div>
+        							<div class="padding-md clearfix">
+        							<table class="table table-hover" id="designation_table">
+        								<thead class="thead-dark">
+                          <tr>
+                              <th>Data Source</th>
+                              <th>Date Added</th>
+                              <th>Added By</th>
+                              <th>Action</th>
+                          </tr>
+                          </thead>
+                          <tbody>
+                          {% for data_source in data_sources %}
+                          <tr>
+                            <td>{{ data_source.source_description }}</td>
+                            <td>{{ data_source.created_at }}</td>
+                            <td>{{ data_source.created_by.username }}</td>
+                            <td>
+                              <button type="button" class="btn btn-primary btn-xs view_button"
+                                data-toggle="modal" data-target="#view_designation_modal"
+                                data-id="{{ data_source.pk }}"
+                                data-description="{{ data_source.source_description }}"
+                                data-date="{{ data_source.created_at }}"
+                                data-user="{{ data_source.created_by.username }}"
+                                title="View">
+                                <i class="fa fa-eye">
+                                </i>
+                              </button>
+                              <button type="button" class="btn btn-primary btn-xs edit_button"
+                                data-toggle="modal" data-target="#edit_designation_modal"
+                                data-id="{{ data_source.pk }}"
+                                data-description="{{ data_source.source_description }}"
+                                data-date="{{ data_source.created_at }}"
+                                data-user="{{ data_source.created_by.username }}"
+                                title="Edit">
+                                <i class="fa fa-edit">
+                                </i>
+                              </button>
+                            </td>
+                          </tr>
+                        {% endfor %}
+                      </tbody>
+    							</table>
+                </div>
+              </div>
+    				</div>
+    			</div><!-- /row-->
+        </div><!-- /.padding-md -->
+      </div><!-- /main-container -->
+
+      <!-- Add Designation modal -->
+		   <div class="modal fade" id="addDesignationModal" tabindex="-1" role="dialog" aria-hidden="true">
+					<div class="modal-dialog" role="document">
+						<div class="modal-content">
+						<div class="modal-header">
+							<h5 class="modal-title" id="exampleModalLongTitle">Add Data Source</h5>
+							<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+							</button>
+						</div>
+						<div class="modal-body">
+							<form onsubmit="return validateform()" enctype="multipart/form-data" method="POST" action="{% url 'veoc:data_list' %}" >
+								{% csrf_token %}
+                <div class="form-group">
+									<label>Data Source Description</label>
+								  <input type="text" class="form-control input-sm"  name="data_source" id="data_source">
+								</div>
+
+								<button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+								<button type="submit" id="adddescriptionbtn" class="btn btn-success btn-sm pull-right"> <i class="fa fa-plus" aria-hidden="true"></i> Add Data Source</button>
+							</form>
+						</div>
+						</div>
+					</div>
+        </div>
+
+      <!-- View Disease modal -->
+      <div class="modal fade" id="view_designation_modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="exampleModalLabel">Designation</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+              <form method="post" action="#">
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="heading">Data Source Description :</label>
+                        <input class="form-control data_source" name="data_source" readonly>
+                    </div>
+                    <div class="form-group">
+                        <label for="heading">Date Created :</label>
+                        <input class="form-control date" name="date" readonly>
+                    </div>
+                    <div class="form-group">
+                        <label for="heading">Added By :</label>
+                        <input class="form-control user" name="user" readonly>
+                    </div>
+                </div>
+            </form>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Edit Designation modal -->
+      <div class="modal fade" id="edit_designation_modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="exampleModalLabel">Data Source</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+              <form method="post" action="{% url 'veoc:edit_data_list' %}">
+                {% csrf_token %}
+                  <div class="modal-body">
+                    <div class="form-group" style="display: none;">
+                        <input class="form-control id" name="id" style="display: none;">
+                    </div>
+                    <div class="form-group">
+                        <label for="heading">Data Source Description :</label>
+                        <input class="form-control data_source" name="data_source">
+                    </div>
+                  </div>
+                  <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                  <button type="submit" id="adddescriptionbtn" class="btn btn-success btn-sm pull-right">Save Changes</button>
+              </form>
+          </div>
+        </div>
+      </div>
+
+{% endblock %}
+
+{% block script %}
+
+    <script>
+      $(document).ready(function () {
+          $('#designation_table').DataTable({
+              "order": [],
+              dom: 'Bfrtip',
+              buttons: [
+                  'copy', 'csv', 'excel', 'pdf', 'print'
+              ]
+          });
+
+          // Setup - add a text input to each footer cell
+          $('#designation_table thead td').each(function () {
+              var title = $(this).text();
+              $(this).html('<input type="text" placeholder="Search ' + title + '" />');
+          });
+
+          // DataTable
+          var table = $('#designation_table').DataTable();
+
+          // Apply the search
+          table.columns().every(function () {
+              var that = this;
+
+              $('input', this.header()).on('keyup change', function () {
+                  if (that.search() !== this.value) {
+                      that
+                              .search(this.value)
+                              .draw();
+                  }
+              });
+          });
+      });
+
+      $(document).on( "click", '.view_button',function(e) {
+        var id = $(this).data('id');
+        var description = $(this).data('description');
+        var date = $(this).data('date');
+        var user = $(this).data('user');
+
+        console.log(description);
+
+        $(".data_source").val(description);
+        $(".date").val(date);
+        $(".user").val(user);
+    });
+
+    $(document).on( "click", '.edit_button',function(e) {
+      var id = $(this).data('id');
+      var description = $(this).data('description');
+
+      console.log(description);
+
+      $(".id").val(id);
+      $(".data_source").val(description);
+  });
+
+    </script>
+{% endblock %}
