@@ -27,7 +27,7 @@ STATIC_DIR = os.path.join(BASE_DIR,"static")
 SECRET_KEY = '-lzpgy!&kbv)#k*cyg2is#6wlnsehrb+&h%dz&_peh+v5xl5gs'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ADMINS = [('Jeffa', 'jeffadavid@gmail.com'), ('David', 'djeffa@mhealthkenya.org')]
 

@@ -115,11 +115,11 @@
 					{% csrf_token %}
 					<div class="form-group">
 						<label>First Name</label>
-						<input type="text" class="form-control input-sm" name="first_name" id="first_name" placeholder="First Name">
+						<input type="text" class="form-control input-sm" name="first_name" id="first_name" placeholder="First Name" required>
 					</div><!-- /form-group -->
 					<div class="form-group">
 						<label>Last Name</label>
-						<input type="text" class="form-control input-sm" name="last_name" id="last_name" placeholder="Last Name">
+						<input type="text" class="form-control input-sm" name="last_name" id="last_name" placeholder="Last Name" required>
 					</div><!-- /form-group -->
           <div class="form-group">
               <label for="heading">Designation :</label>
@@ -132,7 +132,7 @@
           </div>
 					<div class="form-group">
 						<label>Phone Number :</label>
-						<input type="text" class="form-control input-sm" name="phone_no" id="phone_no" placeholder="0700000000">
+						<input type="text" class="form-control input-sm" name="phone_no" id="phone_no" placeholder="0700000000" required>
 					</div><!-- /form-group -->
 					<div class="form-group">
 						<label>Email Address :</label>
@@ -149,7 +149,7 @@
 					</div><!-- /form-group -->
 					<div class="form-group" id="org_unit_div">
 						<label>County</label>
-            <select class="form-control" name="county" id="county" onchange="getsubcounty()" >
+            <select class="form-control" name="county" id="county" onchange="getsubcounty()" required>
                  <option value="" disabled selected>Select County</option>
                  {% for cty in county %}
                      <option value="{{cty.organisationunitid}}">{{cty.name}}</option>
@@ -158,7 +158,7 @@
 					</div><!-- /form-group -->
 					<div class="form-group">
             <label for="subcounty">Subcounty</label>
-            <select class="form-control" name="subcounty" id="subcounty">
+            <select class="form-control" name="subcounty" id="subcounty" required>
                  <option value="" disabled selected>Select sub-county</option>
              </select>
 					</div><!-- /form-group -->
