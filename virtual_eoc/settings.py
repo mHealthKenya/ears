@@ -27,11 +27,9 @@ STATIC_DIR = os.path.join(BASE_DIR,"static")
 SECRET_KEY = '-lzpgy!&kbv)#k*cyg2is#6wlnsehrb+&h%dz&_peh+v5xl5gs'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
-ADMINS = [('Jeffa', 'jeffadavid@gmail.com'), ('David', 'djeffa@mhealthkenya.org')]
-
-ALLOWED_HOSTS = ['41.215.24.110','localhost','127.0.0.1','ears.health.go.ke','192.168.10.8','192.168.10.9']
+ALLOWED_HOSTS = ['localhost','127.0.0.1']
 
 
 # CELERY STUFF
@@ -52,8 +50,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'veoc.apps.VeocConfig',
-    'rest_framework'#,
-    # 'django_mobile'
+    'rest_framework'
 ]
 
 LOGIN_URL = '/login/'
@@ -106,8 +103,8 @@ WSGI_APPLICATION = 'virtual_eoc.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': os.environ.get('DB_NAME','virtual_eoc'),
-        'USER': os.environ.get('DB_USER','postgres'),
+        'NAME': os.environ.get('DB_NAME',''),
+        'USER': os.environ.get('DB_USER',''),
         'PASSWORD': os.environ.get('DB_PASS',''),
         'HOST': 'localhost',
         'PORT': '5432',
