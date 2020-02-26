@@ -189,6 +189,7 @@
                   <li><a href="/call_report">EOC Call report</a></li>
                   <li><a href="/unrelated_call_report">Unrelated Calls report</a></li>
                   <li><a href="/disease_report">Disease report</a></li>
+                  <li><a href="/infectious_disease_report">Infectious Disease report</a></li>
                   <li><a href="/events_report">Events report</a></li>
                   <li><a href="/ongoing_tasks">Ongoing Incidents</a></li>
                   <li><a href="/case_definition">Disease Case Definition</a></li>
@@ -216,7 +217,7 @@
                   <li><a href="/heat_maps">Disease heat maps</a></li>
               </ul>
           </li>
-          {% if request.user|has_group:"County Managers" %}
+          {% if request.user|has_group:"County Managers" or request.user|has_group:"National Managers" %}
           <li>
               <a href="#"><span class="fa-stack fa-lg pull-left"><i
                       class="fa fa-calendar fa-stack-1x "></i></span>EOC STAFF</a>

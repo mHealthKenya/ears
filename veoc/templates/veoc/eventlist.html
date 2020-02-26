@@ -46,7 +46,7 @@
                             <td>
                                 <button type="button" class="btn btn-primary btn-xs view_button"
                                   data-toggle="modal" data-target="#view_disease_modal"
-                                  data-id="{{ event.pk }}>"
+                                  data-id="{{ event.pk }}"
                                   data-name="{{ event.name }}"
                                   data-uid="{{ event.uid }}"
                                   title="View">
@@ -55,7 +55,7 @@
                               </button>
                               <button type="button" class="btn btn-primary btn-xs edit_button"
                                 data-toggle="modal" data-target="#edit_disease_modal"
-                                data-id="{{ event.pk }}>"
+                                data-id="{{ event.pk }}"
                                 data-name="{{ event.name }}"
                                 data-uid="{{ event.uid }}"
                                 title="Edit">
@@ -148,18 +148,20 @@
               </button>
             </div>
             <div class="modal-body">
-              <form method="post" action="#">
+              <form method="post" action="{% url 'veoc:edit_events_list' %}">
+                {% csrf_token %}
                   <div class="modal-body">
+                    <div class="form-group" style="display: none;">
+                        <input class="form-control id" name="id" style="display: none;">
+                    </div>
                       <div class="form-group">
                           <label for="heading">Event Description :</label>
                           <input class="form-control event_name" name="event_name">
                       </div>
-                  </div>
-              </form>
-            </div>
-            <div class="modal-footer">
-              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-              <button type="button" class="btn btn-primary">Save changes</button>
+                    </div>
+                    <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                    <button type="submit" id="adddescriptionbtn" class="btn btn-success btn-sm pull-right">Save Changes</button>
+                </form>
             </div>
           </div>
         </div>
@@ -219,6 +221,7 @@
 
       console.log(name);
 
+      $(".id").val(id);
       $(".event_name").val(name);
       $(".uid").val(uid);
   });

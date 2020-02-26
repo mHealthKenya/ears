@@ -1167,6 +1167,21 @@ def disease_register(request):
         else:
             print('global incident case - not saved in dhis2 data elements')
 
+        #check if disease is infectious disease to save to GEPP tables
+        infect_disease = diseaseObject.infectious_disease
+        print(infect_disease)
+
+        if infect_disease :
+            #save data to the infectious disease tables
+            print("Reported disease is an infectous disease")
+
+            infectious_disease.objects.create(disease_type=diseaseObject, incident_status=incidentObject,
+            data_source=datasourceObject, reporting_region=regionObject, date_reported=datereported, remarks=descriptn,
+            updated_at=current_date, created_by=userObject, updated_by=userObject, created_at=current_date)
+
+        else :
+            print("Reported disease not infectous disease")
+
     regions = reporting_region.objects.all()
     status = incident_status.objects.all()
     county = organizational_units.objects.all().filter(hierarchylevel = 2).order_by('name')
@@ -1419,6 +1434,15 @@ def disease_report(request):
 
     return render(request, 'veoc/disease_report.html', diseas)
 
+def infectious_disease_report(request):
+    reported_infect_diseases_count = infectious_disease.objects.all().count()
+    infect_disease = infectious_disease.objects.all()
+
+    diseas = {'reported_infect_diseases_count':reported_infect_diseases_count,
+            'infect_disease':infect_disease}
+
+    return render(request, 'veoc/infectious_diseases.html', diseas)
+
 def filter_disease_report(request):
     if request.method == 'POST':
         date_from = request.POST.get('date_from','')
@@ -1634,17 +1658,20 @@ def case_definition(request):
         current_user = request.user
         print(current_user)
         userObject = User.objects.get(pk = current_user.id)
+        diseaseObject = dhis_disease_type.objects.get(name = condition)
 
         #saving values to databse
-        standard_case_definitions.objects.create(code=code, condition=condition, incubation_period=incubation,
+        standard_case_definitions.objects.create(code=code, condition=diseaseObject, incubation_period=incubation,
         suspected_standard_case_def=suspected, confirmed_standard_case_def=confirmed, signs_and_symptoms=signs,
         updated_at=current_date, created_by=userObject, updated_by=userObject, created_at=current_date)
 
     case_definition_count = standard_case_definitions.objects.all().count()
     _standard_case_definitions = standard_case_definitions.objects.all()
+    diseases = dhis_disease_type.objects.all().order_by('name')
 
     data_values = {'case_definition_count': case_definition_count,
-                    'standard_case_definitions': _standard_case_definitions}
+                    'standard_case_definitions': _standard_case_definitions,
+                    'diseases': diseases}
 
     return render(request, "veoc/case_defination.html", data_values)
 
@@ -2121,11 +2148,17 @@ def diseases_list(request):
         uid = request.POST.get('uid','')
         disease_name = request.POST.get('disease_name','')
         priority = request.POST.get('priority','')
+        infectious = request.POST.get('infectious','')
 
         if not priority:
             priority=False
         else:
             priority=True
+
+        if not infectious:
+            infectious=False
+        else:
+            infectious=True
 
         #get todays date
         current_date = date.today().strftime('%Y-%m-%d')
@@ -2135,7 +2168,40 @@ def diseases_list(request):
         userObject = User.objects.get(pk = current_user.id)
 
         #saving values to databse
-        dhis_disease_type.objects.create(uid=uid, name=disease_name, priority_disease=priority)
+        dhis_disease_type.objects.create(uid=uid, name=disease_name, priority_disease=priority, infectious_disease=infectous)
+
+    disease_count = dhis_disease_type.objects.all().count
+    disease_vals = dhis_disease_type.objects.all()
+    values = {'disease_count':disease_count, 'disease_vals': disease_vals}
+
+    return render(request, 'veoc/diseaselist.html', values)
+
+def edit_diseases_list(request):
+    if request.method == "POST":
+        myid = request.POST.get('id','')
+        disease_name = request.POST.get('disease_name','')
+        priority = request.POST.get('priority','')
+        infectious = request.POST.get('infectious','')
+
+        if not priority:
+            priority=False
+        else:
+            priority=True
+
+        if not infectious:
+            infectious=False
+        else:
+            infectious=True
+
+        #get todays date
+        current_date = date.today().strftime('%Y-%m-%d')
+
+        #get current user
+        current_user = request.user
+        userObject = User.objects.get(pk = current_user.id)
+
+        #updating values to database
+        dhis_disease_type.objects.filter(pk=myid).update(name=disease_name, priority_disease=priority, infectious_disease=infectious)
 
     disease_count = dhis_disease_type.objects.all().count
     disease_vals = dhis_disease_type.objects.all()
@@ -2157,6 +2223,20 @@ def events_list(request):
 
         #saving values to databse
         dhis_event_type.objects.create(uid=uid, name=event_name)
+
+    event_count = dhis_event_type.objects.all().count
+    event_vals = dhis_event_type.objects.all()
+    values = {'event_count':event_count, 'event_vals': event_vals}
+
+    return render(request, 'veoc/eventlist.html', values)
+
+def edit_events_list(request):
+    if request.method == "POST":
+        myid = request.POST.get('id','')
+        event_name = request.POST.get('event_name','')
+
+        #updating values to database
+        dhis_event_type.objects.filter(pk=myid).update(name=event_name)
 
     event_count = dhis_event_type.objects.all().count
     event_vals = dhis_event_type.objects.all()

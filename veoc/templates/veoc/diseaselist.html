@@ -36,6 +36,7 @@
                               <th>Disease Type</th>
                               <th>UID</th>
                               <th>Priority Disease</th>
+                              <th>Infectious Disease</th>
                               <th>Action</th>
                           </tr>
                           </thead>
@@ -45,23 +46,26 @@
                           <td>{{ disease.name }}</td>
                           <td>{{ disease.uid }}</td>
                           <td>{{ disease.priority_disease }}</td>
+                          <td>{{ disease.infectious_disease }}</td>
                           <td>
                               <button type="button" class="btn btn-primary btn-xs view_button"
                                 data-toggle="modal" data-target="#view_disease_modal"
-                                data-id="{{ disease.pk }}>"
+                                data-id="{{ disease.pk }}"
                                 data-name="{{ disease.name }}"
                                 data-uid="{{ disease.uid }}"
                                 data-priority="{{ disease.priority_disease }}"
+                                data-infectious="{{ disease.infectious_disease }}"
                                 title="View">
                                 <i class="fa fa-eye">
                                 </i>
                             </button>
                             <button type="button" class="btn btn-primary btn-xs edit_button"
                               data-toggle="modal" data-target="#edit_disease_modal"
-                              data-id="{{ disease.pk }}>"
+                              data-id="{{ disease.pk }}"
                               data-name="{{ disease.name }}"
                               data-uid="{{ disease.uid }}"
                               data-priority="{{ disease.priority_disease }}"
+                              data-infectious="{{ disease.infectious_disease }}"
                               title="Edit">
                               <i class="fa fa-edit">
                               </i>
@@ -105,6 +109,12 @@
                   </label>
                   <input class="form-check-input" type="checkbox" id="priority" name="priority">
                 </div>
+                <div class="form-check">
+                  <label class="form-check-label" for="diseasesinfectious">
+                    Infectious Disease?
+                  </label>
+                  <input class="form-check-input" type="checkbox" id="infectious" name="infectious">
+                </div>
 
 								<button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
 								<button type="submit" id="adddescriptionbtn" class="btn btn-success btn-sm pull-right"> <i class="fa fa-plus" aria-hidden="true"></i> Add Disease</button>
@@ -137,10 +147,16 @@
                         <input class="form-control uid" name="uid" readonly>
                     </div>
                     <div class="form-check">
-                      <label class="form-check-label" for="diseasesignificant">
+                      <label class="form-check-label " for="diseasesignificant">
                         Priority Disease?
                       </label>
-                      <input class="form-check-input" type="checkbox" id="priority" name="priority">
+                      <input class="form-control view_priority" name="view_priority" readonly>
+                    </div>
+                    <div class="form-check">
+                      <label class="form-check-label" for="diseasesinfectious">
+                        Infectious Disease?
+                      </label>
+                      <input class="form-control view_infectious" name="view_infectious" readonly>
                     </div>
                 </div>
             </form>
@@ -164,22 +180,28 @@
               </button>
             </div>
             <div class="modal-body">
-              <form method="post" action="#">
+              <form method="post" action="{% url 'veoc:edit_diseases_list' %}">
+                {% csrf_token %}
                 <div class="modal-body">
+                  <div class="form-group" style="display: none;">
+                      <input class="form-control id" name="id" style="display: none;">
+                  </div>
                   <div class="form-group">
                       <label for="heading">Disease Description :</label>
                       <input class="form-control disease_name" name="disease_name">
                   </div>
                   <div class="form-group">
                       <label for="heading">Priority Disease :</label>
-                      <input class="form-control priority" name="priority">
+                      <input class="form-check-input" type="checkbox" id="priority" name="priority">
+                  </div>
+                  <div class="form-group">
+                      <label for="heading">Infectious Disease :</label>
+                      <input class="form-check-input" type="checkbox" id="infectious" name="infectious">
                   </div>
                 </div>
-              </form>
-            </div>
-            <div class="modal-footer">
-              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-              <button type="button" class="btn btn-primary">Save changes</button>
+                <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                <button type="submit" id="adddescriptionbtn" class="btn btn-success btn-sm pull-right">Save Changes</button>
+            </form>
             </div>
           </div>
         </div>
@@ -226,23 +248,32 @@
         var id = $(this).data('id');
         var name = $(this).data('name');
         var uid = $(this).data('uid');
+        var priority = $(this).data('priority');
+        var infectious = $(this).data('infectious');
 
-        console.log(name);
+        console.log(infectious);
 
         $(".disease_name").val(name);
         $(".uid").val(uid);
+        $(".view_priority").val(priority);
+        $(".view_infectious").val(infectious);
     });
 
     $(document).on( "click", '.edit_button',function(e) {
       var id = $(this).data('id');
       var name = $(this).data('name');
       var uid = $(this).data('uid');
+      var priority = $(this).data('priority');
+      var infectious = $(this).data('infectious');
 
       console.log(name);
 
+      $(".id").val(id);
       $(".disease_name").val(name);
       $(".uid").val(uid);
+      $(".priority").val(priority);
+      $(".infectious").val(infectious);
   });
 
-    </script>
+  </script>
 {% endblock %}

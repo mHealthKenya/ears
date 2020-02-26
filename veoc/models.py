@@ -125,6 +125,7 @@ class dhis_disease_type(models.Model):
     uid = models.CharField(max_length=50)
     name = models.CharField(max_length=100)
     priority_disease = models.BooleanField(default=False)
+    infectious_disease = models.BooleanField(default=False)
 
     def __str__(self):
         return self.uid + ' - ' + self.name
@@ -281,6 +282,24 @@ class disease(models.Model):
     def __str__(self):
         return self.disease_type.name
 
+class infectious_disease(models.Model):
+
+    disease_type = models.ForeignKey(dhis_disease_type, on_delete=models.CASCADE, related_name='infectious_disease_types')
+    data_source = models.ForeignKey(data_source, on_delete=models.CASCADE)
+    incident_status = models.ForeignKey(incident_status, on_delete=models.CASCADE, default=0)
+    reporting_region = models.ForeignKey(reporting_region, on_delete=models.CASCADE)
+    date_reported = models.DateTimeField(default=datetime.now)
+    remarks = models.TextField(max_length=500)
+    created_at = models.DateField(default=date.today)
+    updated_at = models.DateField(default=date.today)
+    created_by = models.ForeignKey(User, on_delete=models.CASCADE, related_name='infectious_disease_updated_by')
+    updated_by = models.ForeignKey(User, on_delete=models.CASCADE, related_name='infectious_disease_created_by')
+
+    class Meta:
+       ordering = ['-created_at']
+    def __str__(self):
+        return self.disease_type.name
+
 class facilities(models.Model):
     facility_name=models.CharField(max_length=100)
     facility_level=models.CharField(max_length=10)
@@ -407,15 +426,15 @@ class v_dhis_national_report_data_view(models.Model):
 
 class standard_case_definitions(models.Model):
     code = models.CharField(max_length=20)
-    condition = models.CharField(max_length=50)
+    condition = models.ForeignKey(dhis_disease_type, null=True, on_delete=models.SET_NULL, related_name='std_case_disease_types', default='1')
     incubation_period = models.CharField(max_length=50)
     suspected_standard_case_def = models.CharField(max_length=1000)
     confirmed_standard_case_def = models.CharField(max_length=1000)
     signs_and_symptoms = models.CharField(max_length=1000)
     created_at = models.DateField(default=date.today)
     updated_at = models.DateField(default=date.today)
-    created_by = models.ForeignKey(User, on_delete=models.CASCADE, related_name='std_case_updated_by')
-    updated_by = models.ForeignKey(User, on_delete=models.CASCADE, related_name='std_case_created_by')
+    created_by = models.ForeignKey(User, null=True, on_delete=models.SET_NULL, related_name='std_case_updated_by')
+    updated_by = models.ForeignKey(User, null=True, on_delete=models.SET_NULL, related_name='std_case_created_by')
 
     class Meta:
        ordering = ['-code']

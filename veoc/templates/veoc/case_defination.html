@@ -46,7 +46,7 @@
                             <tr>
                           {% for standard_case_definition in standard_case_definitions %}
                               <td>{{ standard_case_definition.code }}</td>
-                              <td>{{ standard_case_definition.condition }}</td>
+                              <td>{{ standard_case_definition.condition.name }}</td>
                               <td>{{ standard_case_definition.incubation_period }}</td>
                               <td>{{ standard_case_definition.suspected_standard_case_def }}</td>
                               <td>{{ standard_case_definition.confirmed_standard_case_def }}</td>
@@ -56,7 +56,7 @@
                                 data-toggle="modal" data-target="#view_definition_modal"
                                 data-id="{{ standard_case_definition.pk }}>"
                                 data-code="{{ standard_case_definition.code }}"
-                                data-condition="{{ standard_case_definition.condition }}"
+                                data-condition="{{ standard_case_definition.condition.name }}"
                                 data-incubation_period="{{ standard_case_definition.incubation_period }}"
                                 data-suspected_standard_case_def="{{ standard_case_definition.suspected_standard_case_def }}"
                                 data-confirmed_standard_case_def="{{ standard_case_definition.confirmed_standard_case_def }}"
@@ -69,7 +69,7 @@
                                 data-toggle="modal" data-target="#edit_definition_modal"
                                 data-id="{{ standard_case_definition.pk }}>"
                                 data-code="{{ standard_case_definition.code }}"
-                                data-condition="{{ standard_case_definition.condition }}"
+                                data-condition="{{ standard_case_definition.condition.name }}"
                                 data-incubation_period="{{ standard_case_definition.incubation_period }}"
                                 data-suspected_standard_case_def="{{ standard_case_definition.suspected_standard_case_def }}"
                                 data-confirmed_standard_case_def="{{ standard_case_definition.confirmed_standard_case_def }}"
@@ -109,7 +109,13 @@
 							</div><!-- /form-group -->
 							<div class="form-group">
 								<label>Disease, condition or event</label>
-                <textarea class="form-control" id="condition" rows="2" name="condition" required placeholder="Enter Disease or condition"></textarea>
+                <!-- <textarea class="form-control" id="condition" rows="2" name="condition" required placeholder="Enter Disease or condition"></textarea> -->
+                <select class="form-control" id="condition" name="condition" required>
+                       <option value="" disabled selected>Select Disease/condition</option>
+                       {% for dt in diseases %}
+                           <option value="{{ dt.name }}">{{ dt.name }}</option>
+                       {% endfor %}
+                   </select>
 							</div><!-- /form-group -->
 							<div class="form-group">
 								<label>Incubation Period</label>
