@@ -208,7 +208,8 @@
               </ul>
           </li>
           <li>
-              <a href="#"> <span class="fa-stack fa-lg pull-left"><i class="fa fa-bar-chart fa-stack-1x "></i></span>GIS & MAPS</a>
+              <a href="#"> <span class="fa-stack fa-lg pull-left"><i class="fa fa-bar-chart fa-stack-1x ">
+              </i></span>GIS & MAPS</a>
               <ul class="nav-pills nav-stacked" style="list-style-type:none;">
                   <li><a href="/disease_mappings">Disease mappings</a></li>
                   <li><a href="/facilities_mappings">Health facility mappings</a></li>
@@ -217,7 +218,7 @@
                   <li><a href="/heat_maps">Disease heat maps</a></li>
               </ul>
           </li>
-          {% if request.user|has_group:"County Managers" or request.user|has_group:"National Managers" %}
+          {% if request.user|has_group:"National Managers" %}
           <li>
               <a href="#"><span class="fa-stack fa-lg pull-left"><i
                       class="fa fa-calendar fa-stack-1x "></i></span>EOC STAFF</a>

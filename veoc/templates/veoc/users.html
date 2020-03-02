@@ -324,9 +324,10 @@
           });
           registerForm[0].reset();
         },
-        error:function(er){
+        error:function(er, exp){
           console.log("Registration saving error");
-          // console.log(er.responseText);
+          console.log(er.responseText);
+          console.log(exp);
           Swal.fire({
             title: 'Error!',
             text: 'Registration Details Cannot be Saved',

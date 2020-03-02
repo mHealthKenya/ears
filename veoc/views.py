@@ -175,14 +175,13 @@ def user_register(request):
         user.save()
         user_id = user.pk
         userObject = User.objects.get(pk = user_id)
-        # userGroupObject = Group.objects.get(pk = group_name.id)
+        userGroupObject = Group.objects.get(name = user_group)
         orgunitObject = organizational_units.objects.get(organisationunitid = org_unit)
         subcntyObject = organizational_units.objects.get(organisationunitid = sub_cnty)
         # print(user_id)
 
-        #save user groups tables
-        # create_usergroup(userObject, userGroupObject)
-        # user_grps = User_groups.objects.create()
+        #save user into user_groups table
+        user.groups.add(userGroupObject)
 
         #save the user in persons tables
         user_person = persons.objects.create(user=userObject, org_unit=orgunitObject, phone_number=phone_no,
