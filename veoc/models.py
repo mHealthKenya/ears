@@ -616,7 +616,6 @@ class repository_categories(models.Model):
     created_by = models.ForeignKey(User, on_delete=models.CASCADE, related_name='category_updated_by')
     updated_by = models.ForeignKey(User, on_delete=models.CASCADE, related_name='category_created_by')
 
-
     def __str__(self):
         return self.description
 
@@ -666,6 +665,9 @@ class watcher_schedule(models.Model):
 
     def __str__(self):
         return self.watcher_details.first_name
+
+    class meta:
+        unique_together=(('watcher_details'),)
 
 class system_modules(models.Model):
     module_name = models.CharField(max_length=30)

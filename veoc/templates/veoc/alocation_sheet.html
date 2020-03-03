@@ -110,9 +110,12 @@
               data: {csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val()},
 
               success: function (data) {
+                // console.log(data);
                   for (var i = 0; i < data.length; i++) {
+                    console.log(data[i].pk);
                       $('#contacts').multiSelect('addOption', {
-                          value: data[i].fields['first_name'],
+                          // value: data[i].fields['first_name'],
+                          value: data[i].pk,
                           text: data[i].fields['first_name'] + " " + data[i].fields['last_name'],
                           index: i
                       });
@@ -129,10 +132,10 @@
 
       $('#contacts').multiSelect({
           afterSelect: function (values) {
-              // console.log(values[0]);
+              console.log(values[0]);
               myarray.push(values[0]);
               // alert(values);
-              // console.log(myarray);
+              console.log(myarray);
           },
           afterDeselect: function (values) {
               myarray.splice(myarray.indexOf(values[0]), 1);

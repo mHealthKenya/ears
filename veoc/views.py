@@ -117,6 +117,7 @@ def logout(request):
 
     return HttpResponseRedirect(settings.LOGIN_URL)
 
+@login_required
 def access_dashboard(request):
     #get the person org unit to redirect to the correct Dashboard
     current_user = request.user
@@ -380,6 +381,7 @@ def dashboard(request):
 
     return HttpResponse(template.render(context.flatten()))
 
+@login_required
 def county_dashboard(request):
 
     #get the person org unit to dislay county on the Dashboard
@@ -576,6 +578,7 @@ def county_dashboard(request):
 
     return HttpResponse(template.render(context.flatten()))
 
+@login_required
 def subcounty_dashboard(request):
 
     #get the person org unit to dislay subcounty on the Dashboard
@@ -1310,6 +1313,7 @@ def event_register(request):
 
     return render(request, 'veoc/events_form.html', data)
 
+@login_required
 def feedback_create(request):
 
     if request.method == 'POST':
@@ -1335,6 +1339,7 @@ def feedback_create(request):
 
         return render(request,"veoc/feedback_form.html",{"success":success,'day':day})
 
+@login_required
 def feedback_report(request):
     return render(request, 'veoc/feedback_report.html')
 
@@ -1378,6 +1383,7 @@ def unrelated_call_report(request):
 
     return render(request, 'veoc/unrelated_report.html', values)
 
+@login_required
 def filter_unrelated_call_report(request):
     if request.method == 'POST':
         date_from = request.POST.get('date_from','')
@@ -1408,6 +1414,7 @@ def filter_unrelated_call_report(request):
 
         return render(request, 'veoc/unrelated_report.html', values)
 
+@login_required
 def disease_report(request):
     if request.method == 'POST':
         id = request.POST.get('id','')
@@ -1433,6 +1440,7 @@ def disease_report(request):
 
     return render(request, 'veoc/disease_report.html', diseas)
 
+@login_required
 def infectious_disease_report(request):
     reported_infect_diseases_count = infectious_disease.objects.all().count()
     infect_disease = infectious_disease.objects.all()
@@ -1442,6 +1450,7 @@ def infectious_disease_report(request):
 
     return render(request, 'veoc/infectious_diseases.html', diseas)
 
+@login_required
 def filter_disease_report(request):
     if request.method == 'POST':
         date_from = request.POST.get('date_from','')
@@ -1458,6 +1467,7 @@ def filter_disease_report(request):
 
         return render(request, 'veoc/disease_report.html', diseas)
 
+@login_required
 def events_report(request):
 
     if request.method == 'POST':
@@ -1502,7 +1512,7 @@ def filter_events_report(request):
 
         return render(request, 'veoc/events_report.html', events)
 
-# @login_required
+@login_required
 def daily_reports(request):
 
     if request.method == 'POST':
@@ -1697,6 +1707,7 @@ def all_contact_edit(request,editid):
 
     return render(request, 'veoc/all_contacts_edit.html', all_contacts)
 
+@login_required
 def contacts_edited_submit(request):
      if request.method=='POST':
 
@@ -1722,7 +1733,6 @@ def contacts_edited_submit(request):
 def idsr_data(request):
 
     if request.method == "POST":
-
         _weekly_report_count = idsr_weekly_facility_report.objects.all().count()
         _organizations = organizational_units.objects.all()
         _diseases = idsr_diseases.objects.all()
@@ -1901,7 +1911,7 @@ def upload_csv(request):
 
 	return HttpResponseRedirect(reverse("veoc:upload_csv"))
 
-# @login_required
+@login_required
 def daily_report_submit(request):
     datefilter =request.POST.get('date_reported','')
     disease_types = disease_type.objects.all().exclude(description = 'none')
@@ -1975,6 +1985,7 @@ def daily_report_submit(request):
               'daily_enquiry': daily_enquiry, 'daily_total_calls': daily_total_calls}
     return render(request, 'veoc/daily_report.html', events)
 
+@login_required
 def weekly_report(request):
 
     ##get five years from current year
@@ -1992,6 +2003,7 @@ def weekly_report(request):
 
     return render(request, 'veoc/weekly_report.html', epi_wks)
 
+@login_required
 def weekly_report_submit(request):
 
     ###################################################################################
@@ -2115,6 +2127,7 @@ def Periodic_Report(request):
 def analytics(request):
     return render(request, 'veoc/analytics.html')
 
+@login_required
 def users_list(request):
     users_count = User.objects.all().count()
     users = User.objects.all()
@@ -2142,6 +2155,7 @@ def get_org_unit(request):
 
         return HttpResponse(json.dumps(obj_list),content_type="application/json")
 
+@login_required
 def diseases_list(request):
     if request.method == "POST":
         uid = request.POST.get('uid','')
@@ -2175,6 +2189,7 @@ def diseases_list(request):
 
     return render(request, 'veoc/diseaselist.html', values)
 
+@login_required
 def edit_diseases_list(request):
     if request.method == "POST":
         myid = request.POST.get('id','')
@@ -2208,6 +2223,7 @@ def edit_diseases_list(request):
 
     return render(request, 'veoc/diseaselist.html', values)
 
+@login_required
 def events_list(request):
     if request.method == "POST":
         uid = request.POST.get('uid','')
@@ -2229,6 +2245,7 @@ def events_list(request):
 
     return render(request, 'veoc/eventlist.html', values)
 
+@login_required
 def edit_events_list(request):
     if request.method == "POST":
         myid = request.POST.get('id','')
@@ -2307,6 +2324,7 @@ def data_list(request):
 
     return render(request, 'veoc/datasourcelist.html', values)
 
+@login_required
 def edit_data_list(request):
     if request.method == "POST":
         myid = request.POST.get('id','')
@@ -2522,7 +2540,7 @@ def get_pie_disease(request):
 def get_pie_event(request):
     if request.method=="POST":
         etype=request.POST.get('etype','')
-        myetype = dhis_event_type.objects.get(name=etype)
+        myetype = dhis_event_type.objects.all().get(name=etype)
         allvals2 = list(event.objects.filter(event_type=myetype).filter(date_reported__gte = date.today()- timedelta(days=30)).values('county__name','subcounty__name').annotate(mytotal=Count('county__name')))
         data=json.dumps(allvals2)
 
@@ -2558,7 +2576,9 @@ def get_piedrilldown_disease(request):
 
         cty=request.POST.get('ctype','')
         dty=request.POST.get('dtype','')
-        myctype=organizational_units.objects.all().filter(hierarchylevel = 2).get(name=cty)
+
+        # myctype=organizational_units.objects.all().filter(hierarchylevel = 2).get(name=cty)
+        myctype=organizational_units.objects.all().get(name=cty)
         mydtype=dhis_disease_type.objects.get(name=dty)
         allvals2=list(disease.objects.filter(county=myctype,disease_type=mydtype).filter(date_reported__gte = date.today()- timedelta(days=30)).values('subcounty__name').annotate(mytotal=Count('subcounty__name')))
 
@@ -2572,6 +2592,7 @@ def get_piedrilldown_event(request):
 
         cty=request.POST.get('ctype','')
         ety=request.POST.get('etype','')
+        print(cty)
         myctype=organizational_units.objects.all().filter(hierarchylevel = 2).get(name=cty)
         myetype=dhis_event_type.objects.get(name=ety)
         allvals2=list(event.objects.filter(county=myctype,event_type=myetype).filter(date_reported__gte = date.today()- timedelta(days=30)).values('subcounty__name').annotate(mytotal=Count('subcounty__name')))
@@ -2827,10 +2848,11 @@ def allocation_sheet(request):
 
 def contact_json(request):
     all_ = staff_contact.objects.all()
-    print('inside contact_json')
-    print(all_)
+    # print('inside contact_json')
+    # print(all_)
     serialized = serialize('json', all_,use_natural_foreign_keys=True,use_natural_primary_keys=True)
     obj_list=json.loads(serialized)
+    # print(obj_list)
 
     return HttpResponse(json.dumps(obj_list),content_type='application/json')
 
@@ -2851,10 +2873,14 @@ def get_timetables(request):
         #looks for the week number of the date
         d=fdate.split('-')
         wkno = date(int(d[0]),int(d[1]),int(d[2])).isocalendar()[1]
-        print(wkno)
+        # print(wkno)
 
         for x in contactarray:
-            insertingcont=watcher_schedule(watcher_details=x,week_no=wkno,from_date=fdate,to_date=tdate)
+            print(x)
+            cur_user=request.user.username
+            created_by=User.objects.get(username=cur_user)
+            watchr_details = staff_contact.objects.get(pk=x)
+            insertingcont = watcher_schedule(watcher_details=watchr_details,week_no=wkno,from_date=fdate,to_date=tdate, created_by=created_by ,updated_by=created_by)
             insertingcont.save()
 
             #send email to the contacts saved to be watchers
@@ -2880,24 +2906,33 @@ def search_watchers(request):
 
     if request.method=='POST':
         search_date=request.POST.get('searchdate','')
-        time_table = watcher_schedule.objects.values('from_date', 'to_date').distinct()
+        print(search_date)
+        time_table = watcher_schedule.objects.values('from_date', 'to_date', 'week_no').distinct()
 
         for x in time_table:
             from_d = x['from_date']
             to_d = x['to_date']
+            wkno = x['week_no']
+
+            print(wkno)
+            print(from_d)
+            print(search_date)
+            print(to_d)
 
             q_data = from_d < search_date < to_d
+            print(q_data)
             if q_data:
-                myresponse = mytimetable.objects.all().filter(from_date = from_d, to_date = to_d)
-                print('watchers : ' + str(myresponse))
+                myresponse = watcher_schedule.objects.all().filter(from_date = from_d, to_date = to_d)
+                # print('watchers : ' + str(myresponse))
 
                 serialized = serialize('json', myresponse,use_natural_foreign_keys=True,use_natural_primary_keys=True)
                 obj_list=json.loads(serialized)
                 data=json.dumps(obj_list)
+                print(data)
 
                 break
             else:
-                myresponse = "No watchers set for the week selected"
+                myresponse = "No watchers set for the week "+ str(wkno) + " selected"
                 data=json.dumps(myresponse)
 
     return HttpResponse(data,content_type="application/json")

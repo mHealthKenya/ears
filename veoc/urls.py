@@ -113,7 +113,7 @@ urlpatterns = [
     url(r'^get_existing_timetable/$', views.get_existing_timetable, name='get_existing_timetable'),
     url(r'^get_timetables/$', views.get_timetables, name='get_timetables'),
     url(r'^search_watchers/$', views.search_watchers, name='search_watchers'),
-    url(r'^get_existing_timetable/$', views.get_existing_timetable, name='get_existing_timetable'),
+    # url(r'^get_existing_timetable/$', views.get_existing_timetable, name='get_existing_timetable'),
     url(r'^watchers_schedule/$', views.watchers_schedule, name='watchers_schedule'),
 
     #Contacts
