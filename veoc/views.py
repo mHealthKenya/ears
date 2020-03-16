@@ -8,9 +8,10 @@ from django.template.loader import render_to_string
 from django.views.generic.base import TemplateView
 from django.contrib.auth.decorators import login_required, user_passes_test, permission_required
 import csv, io
+import requests
+from requests.packages.urllib3.exceptions import InsecureRequestWarning
 from django.conf import settings
 from django.core.serializers import serialize
-from django.http import HttpResponse
 from django.db import transaction
 from django.db.models import *
 from veoc.models import *
@@ -80,6 +81,7 @@ def login(request):
 
         if user is not None:
             if user.is_active:
+                # request.session.set_expiry(60)
                 login_auth(request, user)
                 #get the person org unit to redirect to the correct Dashboard
                 u = User.objects.get(username=user_name)
@@ -1195,6 +1197,74 @@ def disease_register(request):
 
     return render(request, 'veoc/disease_form.html', data)
 
+def quarantine_register(request):
+
+    if request.method == 'POST':
+        first_name = request.POST.get('first_name','')
+        last_name = request.POST.get('last_name','')
+        sex = request.POST.get('sex','')
+        dob = request.POST.get('dob','')
+        passport_number = request.POST.get('passport_number','')
+        phone_number = request.POST.get('phone_number','')
+        email_address = request.POST.get('email_address','')
+        origin_country = request.POST.get('country','')
+        cnty = request.POST.get('county','')
+        sub_cnty = request.POST.get('subcounty','')
+        ward = request.POST.get('ward','')
+        place_of_diagnosis = request.POST.get('place_of_diagnosis','')
+        date_of_contact = request.POST.get('date_of_contact','')
+
+        if origin_country.lower() == "kenya" :
+            countyObject = organizational_units.objects.get(name = cnty)
+            subcountyObject = organizational_units.objects.get(name = sub_cnty)
+            wardObject = organizational_units.objects.get(organisationunitid = ward)
+        else :
+            countyObject = organizational_units.objects.get(organisationunitid = 18)
+            subcountyObject = organizational_units.objects.get(organisationunitid = 18)
+            wardObject = organizational_units.objects.get(organisationunitid = 18)
+
+        #get todays date
+        current_date = date.today().strftime('%Y-%m-%d')
+
+        #get current user
+        current_user = request.user
+        print(current_user)
+        userObject = User.objects.get(pk = current_user.id)
+
+        #saving values to databse
+        quarantine_contacts.objects.create(first_name=first_name, last_name=last_name,
+        county=countyObject, subcounty=subcountyObject, ward=wardObject,sex=sex, dob=dob, passport_number=passport_number,
+        phone_number=phone_number, email_address=email_address, date_of_contact=date_of_contact,
+        origin_country=origin_country, place_of_diagnosis=place_of_diagnosis,
+        updated_at=current_date, created_by=userObject, updated_by=userObject, created_at=current_date)
+
+        # send sms to the patient for successful registration_form
+        url = "https://mlab.mhealthkenya.co.ke/api/sms/gateway"
+        msg = "Thank you " + first_name + " for registering. You will be required to send your temperature details during this quarantine period of 14 days. Please download the self reporting app on this link: https://bit.ly/2vmNAMm"
+
+        pp = {"phone_no": phone_number, "message": msg}
+        payload = json.dumps(pp)
+        # payload = "{\r\n   \"phone_no\": \"+254705255873\",\r\n   \"message\": \"TEST CORONA FROM EARS SYSTEM\"\r\n}"
+
+        headers = {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImp0aSI6IjE3MGExZGI0ZjFiYWE1ZWNkOGI4YTBiODNlNDc0MTA2NTJiNDg4Mzc4ZTQwNjExNDA0MGQwZmQ2NTEzNTM1NTg5MjFhYjBmNzI1ZDM3NzYwIn0.eyJhdWQiOiI0IiwianRpIjoiMTcwYTFkYjRmMWJhYTVlY2Q4YjhhMGI4M2U0NzQxMDY1MmI0ODgzNzhlNDA2MTE0MDQwZDBmZDY1MTM1MzU1ODkyMWFiMGY3MjVkMzc3NjAiLCJpYXQiOjE1ODQxODk0NTMsIm5iZiI6MTU4NDE4OTQ1MywiZXhwIjoxNjE1NzI1NDUzLCJzdWIiOiI2Iiwic2NvcGVzIjpbXX0.e2Pt76bE6IT7J0hSBpnc7tHShg9BKSXOMuwnQwqC3_xpJXUo2ez7sQPUa4uPp77XQ05xsumNbWapXkqxvVxp-3Gjn-o9UJ39AWHBFRJYqOXM_foZcxRBoXajUfJTTRS5BTMFEfMn2nMeLie9BH7mbgfKBpZXU_3_tClWGUcNbsibbhXgjSxskJoDls8XGVUdgc5pqMZBBBlR9cCrtK3H8PJf6XywMn9CYbw4KF8V1ADC9dYz-Iyhmwe2_LmU3ByTQMaVHCd3GVKWIvlGwNhm2_gRcEHjjZ8_PXR38itUT0M3NTmT6LBeeeb8IWV-3YFkhilbbjA03q9_6f2gjlOpChF4Ut2rC5pqTg7sW5A4PV8gepPnIBpJy5xKQzgf75zDUmuhKlYlirk8MKoRkiIUgWqOZSf49DUxbIaKIijjX3TYrwmBwZ0RTm2keSvk3bt4QutpLRxel6cajbI32rZLuDjs1_MCZNPKAK1ZgPvwt1OaHLM3om0TmSKyugPvhgNJ5fW_on_HLkTbQV6EPqN3Us7S5whFv1MQcwlgsxU9a4CJZa89elr1TaKvqbkaKqGjetwlCDf6AKQmThy5IqQ5zlIRNwlZDgz_DsGyeZUStQhc-HW65NsB_J_fe_jI5tMeRNCz4PE8T0Rghbs8xHLTFKuMGrJL0Rheq6kfEk4c0UM'
+        }
+
+        requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
+
+        response = requests.request("POST", url, headers=headers, data = payload, verify=False)
+
+        print(response.text.encode('utf8'))
+
+    cntry = country.objects.all()
+    county = organizational_units.objects.all().filter(hierarchylevel = 2).order_by('name')
+    day = time.strftime("%Y-%m-%d")
+
+    data = {'country':cntry,'county':county, 'day':day}
+
+    return render(request, 'veoc/quarantine_registration_form.html', data)
+
 @login_required
 def disease_view(request, id = None):
     instance = get_object_or_404(disease, id = id)
@@ -1570,6 +1640,24 @@ def daily_reports(request):
     else:
         day = time.strftime("%Y-%m-%d")
         return render(request, 'veoc/generate_pdf.html',{'day': day})
+
+def follow_up(request):
+    follow_data = quarantine_follow_up.objects.all()
+    follow_data_count = quarantine_follow_up.objects.all().count()
+
+    data = {'follow_data': follow_data, 'follow_data_count': follow_data_count}
+
+    return render(request, 'veoc/quarantine_follow_up.html', data)
+
+def complete_quarantine(request):
+    follow_data = quarantine_follow_up.objects.all().filter(created_at__lte = date.today()- timedelta(days=14))
+    print(follow_data)
+    follow_data_count = quarantine_follow_up.objects.all().count()
+
+    data = {'follow_data': follow_data, 'follow_data_count': follow_data_count}
+
+    return render(request, 'veoc/quarantine_follow_up.html', data)
+
 
 def ongoing_tasks(request):
     if request.method == 'POST':
@@ -2906,7 +2994,6 @@ def search_watchers(request):
 
     if request.method=='POST':
         search_date=request.POST.get('searchdate','')
-        print(search_date)
         time_table = watcher_schedule.objects.values('from_date', 'to_date', 'week_no').distinct()
 
         for x in time_table:
@@ -2914,21 +3001,13 @@ def search_watchers(request):
             to_d = x['to_date']
             wkno = x['week_no']
 
-            print(wkno)
-            print(from_d)
-            print(search_date)
-            print(to_d)
-
             q_data = from_d < search_date < to_d
-            print(q_data)
             if q_data:
                 myresponse = watcher_schedule.objects.all().filter(from_date = from_d, to_date = to_d)
-                # print('watchers : ' + str(myresponse))
 
                 serialized = serialize('json', myresponse,use_natural_foreign_keys=True,use_natural_primary_keys=True)
                 obj_list=json.loads(serialized)
                 data=json.dumps(obj_list)
-                print(data)
 
                 break
             else:

@@ -32,6 +32,7 @@ urlpatterns = [
     url(r'^call_register/$', views.call_register, name='call_register'),
     url(r'^disease_register/$', views.disease_register, name='disease_register'),
     url(r'^event_register/$', views.event_register, name='event_register'),
+    url(r'^quarantine_register/$', views.quarantine_register, name='quarantine_register'),
     url(r'^feedback_create/$', views.feedback_create, name='feedback_create'),
     url(r'^feedback_report/$', views.feedback_report, name='feedback_report'),
     url(r'^upload_csv/$', views.upload_csv, name='upload_csv'),
@@ -46,6 +47,8 @@ urlpatterns = [
     url(r'^events_report/$', views.events_report, name='events_report'),
     url(r'^filter_events_report/$', views.filter_events_report, name='filter_events_report'),
     url(r'^ongoing_tasks/$', views.ongoing_tasks, name='ongoing_tasks'),
+    url(r'^follow_up/$', views.follow_up, name='follow_up'),
+    url(r'^complete_quarantine/$', views.complete_quarantine, name='complete_quarantine'),
     url(r'^filter_ongoing_tasks/$', views.filter_ongoing_tasks, name='filter_ongoing_tasks'),
     url(r'^case_definition/$', views.case_definition, name='case_definition'),
 

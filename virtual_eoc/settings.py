@@ -27,12 +27,14 @@ STATIC_DIR = os.path.join(BASE_DIR,"static")
 SECRET_KEY = '-lzpgy!&kbv)#k*cyg2is#6wlnsehrb+&h%dz&_peh+v5xl5gs'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ADMINS = [('Jeffa', 'jeffadavid@gmail.com'), ('David', 'djeffa@mhealthkenya.org')]
 
-ALLOWED_HOSTS = ['41.215.24.110','localhost','127.0.0.1','ears.health.go.ke','192.168.10.8','192.168.10.9']
+ALLOWED_HOSTS = ['41.215.24.110', '41.220.229.138','localhost','127.0.0.1','ears.health.go.ke','192.168.10.8','192.168.10.9']
 
+# SESSION_EXPIRE_AT_BROWSER_CLOSE = True
+# SESSION_COOKIE_AGE = 5 * 60 #
 
 # CELERY STUFF
 BROKER_URL = 'redis://localhost:6379'
@@ -108,7 +110,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
         'NAME': os.environ.get('DB_NAME','virtual_eoc'),
         'USER': os.environ.get('DB_USER','postgres'),
-        'PASSWORD': os.environ.get('DB_PASS','NC`{}?!lmn45'),
+        'PASSWORD': os.environ.get('DB_PASS',''),
         'HOST': 'localhost',
         'PORT': '5432',
     }
@@ -151,7 +153,10 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.0/howto/static-files/
 
+#Enable STATIC_ROOT in hosting server to access the static files
+#STATIC_ROOT =os.path.join(BASE_DIR,'static')
 STATIC_URL = '/static/'
+
 MEDIA_ROOT =os.path.join(BASE_DIR,'media')
 MEDIA_URL = '/media/'
 # -- List to all static files in the system

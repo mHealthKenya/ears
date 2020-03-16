@@ -1,0 +1,178 @@
+{% extends "veoc/main_template.html" %}
+
+{% block main %}
+
+    <script type="text/javascript"
+        src="https://cdn.datatables.net/v/dt/jqc-1.12.3/jszip-2.5.0/pdfmake-0.1.18/dt-1.10.12/b-1.2.2/b-flash-1.2.2/b-html5-1.2.2/b-print-1.2.2/datatables.min.js"></script>
+
+            <div id="main-container">
+        			<div id="breadcrumb">
+        				<ul class="breadcrumb">
+        					 <li><i class="fa fa-home"></i><a href="{% url 'veoc:access_dashboard' %}"> Dashboard</a></li>
+        					 <li class="active">Quarantine Follow Up</li>
+        				</ul>
+        			</div><!-- /breadcrumb-->
+
+              <div class="panel-heading"><b>COVID19 Contact Tracing and Follow Up Report</b></div>
+
+        			<div class="padding-md">
+        				<div class="row">
+        					<div class="col-md-12">
+        						<div class="panel panel-default table-responsive">
+        							<div class="panel-heading">
+        								Quarantine Follow Up Report
+        								<span class="label label-info pull-right" id="totalspan">{{follow_data_count}} Reported cases </span>
+        							</div>
+        							<div class="padding-md clearfix">
+        							<table class="table table-hover" id="events_report">
+        								<thead class="thead-dark">
+                          <tr>
+                            <th>Last Name</th>
+                            <th>First Name</th>
+                            <th>Age</th>
+                            <th>Gender</th>
+                            <th>Contact</th>
+                            <th>Origin Country</th>
+                            <th>Date of last contact</th>
+                            <th>Follow up Day</th>
+                            <th>Has High Temperature?</th>
+                            <th>Has Fever?</th>
+                            <th>Has Cough?</th>
+                            <th>Difficulty in breathing?</th>
+                            <th>Reported Date</th>
+                          </tr>
+                          </thead>
+                          <tbody>
+                          {% for follow in follow_data %}
+                          <tr>
+                            <td>{{ follow.patient_contacts.last_name }}</td>
+                            <td>{{ follow.patient_contacts.first_name }}</td>
+                            <td>{{ follow.patient_contacts.age }}</td>
+                            <td>{{ follow.patient_contacts.sex }}</td>
+                            <td>{{ follow.patient_contacts.phone_number }}</td>
+                            <td>{{ follow.patient_contacts.origin_country }}</td>
+                            <td>{{ follow.patient_contacts.date_of_contact|date:'d-m-Y' }}</td>
+                            <td>{{ follow.follow_up_day }}</td>
+                            <td>{{ follow.body_temperature }}</td>
+                            <td>{{ follow.fever }}</td>
+                            <td>{{ follow.cough }}</td>
+                            <td>{{ follow.difficulty_breathing }}</td>
+                            <td>{{ follow.created_at|date:'d-m-Y' }}</td>
+                          </tr>
+                        {% endfor %}
+                      </tbody>
+    							</table>
+                </div>
+              </div>
+    				</div>
+    			</div><!-- /row-->
+        </div><!-- /.padding-md -->
+      </div><!-- /main-container -->
+
+{% endblock %}
+
+{% block script %}
+
+  <script>
+    $(document).ready(function () {
+          $('#events_report').DataTable({
+              "order": [],
+              dom: 'Bfrtip',
+              buttons: [
+                  'copy', 'csv', 'excel', 'pdf', 'print'
+              ]
+          });
+
+          // Setup - add a text input to each footer cell
+          $('#events_report thead td').each(function () {
+              var title = $(this).text();
+              $(this).html('<input type="text" placeholder="Search ' + title + '" />');
+          });
+
+          // DataTable
+          var table = $('#events_report').DataTable();
+
+          // Apply the search
+          table.columns().every(function () {
+              var that = this;
+
+              $('input', this.header()).on('keyup change', function () {
+                  if (that.search() !== this.value) {
+                      that
+                              .search(this.value)
+                              .draw();
+                  }
+              });
+          });
+      });
+
+    $(document).on( "click", '.view_button',function(e) {
+        var id = $(this).data('id');
+        var date = $(this).data('date');
+        var evnt = $(this).data('event');
+        var status = $(this).data('status');
+        var cases = $(this).data('cases');
+        var deaths = $(this).data('deaths');
+        var source = $(this).data('source');
+        var region = $(this).data('region');
+        var county = $(this).data('county');
+        var subcounty = $(this).data('subcounty');
+        var ward = $(this).data('ward');
+        var remarks = $(this).data('remarks');
+        var action = $(this).data('action');
+        var reporter = $(this).data('reporter');
+
+        // console.log(id);
+
+        $(".id").val(id);
+        $(".date_reported").val(date);
+        $(".reported_event").val(evnt);
+        $(".status_name").val(status);
+        $(".data_cases").val(cases);
+        $(".data_deaths").val(deaths);
+        $(".data_source").val(source);
+        $(".region").val(region);
+        $(".county_name").val(county);
+        $(".subcounty_name").val(subcounty);
+        $(".ward_name").val(ward);
+        $(".remarks").val(remarks);
+        $(".action").val(action);
+        $(".reporter_name").val(reporter);
+    });
+
+    $(document).on( "click", '.edit_button',function(e) {
+      var id = $(this).data('id');
+      var date = $(this).data('date');
+      var evnt = $(this).data('event');
+      var status = $(this).data('status');
+      var cases = $(this).data('cases');
+      var deaths = $(this).data('deaths');
+      var source = $(this).data('source');
+      var region = $(this).data('region');
+      var county = $(this).data('county');
+      var subcounty = $(this).data('subcounty');
+      var ward = $(this).data('ward');
+      var remarks = $(this).data('remarks');
+      var action = $(this).data('action');
+      var reporter = $(this).data('reporter');
+
+      // console.log(id);
+
+      $(".id").val(id);
+      $(".date_reported").val(date);
+      $(".reported_event").val(evnt);
+      $(".status_name").val(status);
+      $(".data_cases").val(cases);
+      $(".data_deaths").val(deaths);
+      $(".data_source").val(source);
+      $(".region").val(region);
+      $(".county_name").val(county);
+      $(".subcounty_name").val(subcounty);
+      $(".ward_name").val(ward);
+      $(".remarks").val(remarks);
+      $(".action").val(action);
+      $(".reporter_name").val(reporter);
+  });
+
+  </script>
+{% endblock %}

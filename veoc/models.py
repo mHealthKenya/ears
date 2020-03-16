@@ -530,6 +530,12 @@ class contact_type(models.Model):
     class meta:
         unique_together=(('contact_description'),)
 
+class country(models.Model):
+    phone_code = models.IntegerField(blank=False)
+    name = models.CharField(max_length=50)
+    iso = models.CharField(max_length=50)
+    iso3 = models.CharField(max_length=50)
+
 class contact(models.Model):
     person_phone_regex = RegexValidator(regex=r'^\+?1?\d{10,12}$', message="Phone number must be entered in the format: '+999999999'. Up to 15 digits allowed.")
 
@@ -548,6 +554,45 @@ class contact(models.Model):
 
     def __str__(self):
         return self.county.description + ' - ' + self.contact_type.description
+
+class quarantine_contacts(models.Model):
+    person_phone_regex = RegexValidator(regex=r'^\+?1?\d{10,12}$', message="Phone number must be entered in the format: '+999999999'. Up to 15 digits allowed.")
+
+    first_name = models.CharField(max_length=50)
+    last_name = models.CharField(max_length=50)
+    sex = models.CharField(max_length=50)
+    dob = models.DateField(default=date.today)
+    passport_number = models.CharField(max_length=50, blank=True)
+    phone_number = models.CharField(validators=[person_phone_regex], max_length=12, blank=False)
+    email_address = models.EmailField(max_length=20, blank=True)
+    origin_country = models.CharField(max_length=50)
+    county = models.ForeignKey(organizational_units, on_delete=models.CASCADE, related_name='quarantine_county', blank=True)
+    subcounty = models.ForeignKey(organizational_units, on_delete=models.CASCADE, related_name='quarantine_subcounty', blank=True)
+    ward = models.ForeignKey(organizational_units, on_delete=models.CASCADE, blank=True, related_name='quarantine_ward', default='2620')
+    place_of_diagnosis = models.CharField(max_length=50, blank=True)
+    date_of_contact = models.DateField(default=date.today)
+    created_at = models.DateField(default=date.today)
+    updated_at = models.DateField(default=date.today)
+    created_by = models.ForeignKey(User, on_delete=models.CASCADE, related_name='quarantine_updated_by')
+    updated_by = models.ForeignKey(User, on_delete=models.CASCADE, related_name='quarantine_created_by')
+
+    def __str__(self):
+        return self.origin_country + ' - ' + self.place_of_diagnosis
+
+    @property
+    def age(self):
+        return int((datetime.now().date() - self.dob).days / 365.25)
+
+class quarantine_follow_up(models.Model):
+    patient_contacts = models.ForeignKey(quarantine_contacts, on_delete=models.DO_NOTHING, related_name='followup_contact')
+    self_quarantine = models.BooleanField(default=False)
+    thermal_gun = models.CharField(max_length=20)
+    body_temperature = models.IntegerField(blank=False)
+    fever = models.CharField(max_length=20)
+    cough = models.CharField(max_length=20)
+    difficulty_breathing = models.CharField(max_length=20)
+    follow_up_day = models.IntegerField(blank=False)
+    created_at = models.DateField(default=date.today)
 
 class watcher_team_leads(models.Model):
     team_lead=models.ForeignKey(contact, on_delete=models.CASCADE, blank=False)
