@@ -9,22 +9,22 @@
         			<div id="breadcrumb">
         				<ul class="breadcrumb">
         					 <li><i class="fa fa-home"></i><a href="{% url 'veoc:access_dashboard' %}"> Dashboard</a></li>
-        					 <li class="active">Quarantine Follow Up</li>
+        					 <li class="active">Quarantine Patients</li>
         				</ul>
         			</div><!-- /breadcrumb-->
 
-              <div class="panel-heading"><b>COVID19 Contact Tracing and Follow Up Report</b></div>
+              <div class="panel-heading"><b>COVID19 Quarantine Patients Report</b></div>
 
         			<div class="padding-md">
         				<div class="row">
         					<div class="col-md-12">
         						<div class="panel panel-default table-responsive">
         							<div class="panel-heading">
-        								Quarantine Follow Up Report
-        								<span class="label label-info pull-right" id="totalspan">{{follow_data_count}} Reported cases </span>
+        								Quarantine Patients
+        								<span class="label label-info pull-right" id="totalspan">{{quarantine_data_count}} Reported cases </span>
         							</div>
         							<div class="padding-md clearfix">
-        							<table class="table table-hover" id="events_report">
+        							<table class="table table-hover" id="quarantine_report">
         								<thead class="thead-dark">
                           <tr>
                             <th>Last Name</th>
@@ -32,32 +32,28 @@
                             <th>Age</th>
                             <th>Gender</th>
                             <th>Contact</th>
+                            <th>Passport No</th>
                             <th>Origin Country</th>
-                            <th>Date of last contact</th>
-                            <th>Follow up Day</th>
-                            <th>Has High Temperature?</th>
-                            <th>Has Fever?</th>
-                            <th>Has Cough?</th>
-                            <th>Difficulty in breathing?</th>
-                            <th>Reported Date</th>
+                            <th>place of diagnosis</th>
+                            <th>date of contact</th>
+                            <!-- <th>Follow up status</th> -->
+                            <th>created by</th>
                           </tr>
                           </thead>
                           <tbody>
-                          {% for follow in follow_data %}
+                          {% for follow in quarantine_data %}
                           <tr>
-                            <td>{{ follow.patient_contacts.last_name }}</td>
-                            <td>{{ follow.patient_contacts.first_name }}</td>
-                            <td>{{ follow.patient_contacts.age }}</td>
-                            <td>{{ follow.patient_contacts.sex }}</td>
-                            <td>{{ follow.patient_contacts.phone_number }}</td>
-                            <td>{{ follow.patient_contacts.origin_country }}</td>
-                            <td>{{ follow.patient_contacts.date_of_contact|date:'d-m-Y' }}</td>
-                            <td>{{ follow.follow_up_day }}</td>
-                            <td>{{ follow.body_temperature }}</td>
-                            <td>{{ follow.fever }}</td>
-                            <td>{{ follow.cough }}</td>
-                            <td>{{ follow.difficulty_breathing }}</td>
-                            <td>{{ follow.created_at|date:'d-m-Y' }}</td>
+                            <td>{{ follow.last_name }}</td>
+                            <td>{{ follow.first_name }}</td>
+                            <td>{{ follow.age }}</td>
+                            <td>{{ follow.sex }}</td>
+                            <td>{{ follow.phone_number }}</td>
+                            <td>{{ follow.passport_number }}</td>
+                            <td>{{ follow.origin_country }}</td>
+                            <td>{{ follow.place_of_diagnosis }}</td>
+                            <td>{{ follow.date_of_contact }}</td>
+                            <!-- <td>{{ follow.date_of_contact }}</td> -->
+                            <td>{{ follow.created_by.username }}</td>
                           </tr>
                         {% endfor %}
                       </tbody>
@@ -72,10 +68,9 @@
 {% endblock %}
 
 {% block script %}
-
   <script>
     $(document).ready(function () {
-          $('#events_report').DataTable({
+          $('#quarantine_report').DataTable({
               "order": [],
               dom: 'Bfrtip',
               buttons: [
@@ -84,13 +79,13 @@
           });
 
           // Setup - add a text input to each footer cell
-          $('#events_report thead td').each(function () {
+          $('#quarantine_report thead td').each(function () {
               var title = $(this).text();
               $(this).html('<input type="text" placeholder="Search ' + title + '" />');
           });
 
           // DataTable
-          var table = $('#events_report').DataTable();
+          var table = $('#quarantine_report').DataTable();
 
           // Apply the search
           table.columns().every(function () {

@@ -47,6 +47,7 @@ urlpatterns = [
     url(r'^events_report/$', views.events_report, name='events_report'),
     url(r'^filter_events_report/$', views.filter_events_report, name='filter_events_report'),
     url(r'^ongoing_tasks/$', views.ongoing_tasks, name='ongoing_tasks'),
+    url(r'^quarantine_list/$', views.quarantine_list, name='quarantine_list'),
     url(r'^follow_up/$', views.follow_up, name='follow_up'),
     url(r'^complete_quarantine/$', views.complete_quarantine, name='complete_quarantine'),
     url(r'^filter_ongoing_tasks/$', views.filter_ongoing_tasks, name='filter_ongoing_tasks'),
