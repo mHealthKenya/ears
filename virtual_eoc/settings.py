@@ -31,7 +31,7 @@ DEBUG = True
 
 ADMINS = [('Jeffa', 'jeffadavid@gmail.com'), ('David', 'djeffa@mhealthkenya.org')]
 
-ALLOWED_HOSTS = ['41.215.24.110', '41.220.229.138','localhost','127.0.0.1','ears.health.go.ke','192.168.10.8','192.168.10.9']
+ALLOWED_HOSTS = ['ears-test.mhealthkenya.co.ke', '41.215.24.110', '41.220.229.138','localhost','127.0.0.1','192.168.50.2','ears.health.go.ke','192.168.10.8','192.168.10.9']
 
 # SESSION_EXPIRE_AT_BROWSER_CLOSE = True
 # SESSION_COOKIE_AGE = 5 * 60 #
@@ -110,7 +110,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
         'NAME': os.environ.get('DB_NAME','virtual_eoc'),
         'USER': os.environ.get('DB_USER','postgres'),
-        'PASSWORD': os.environ.get('DB_PASS',''),
+        'PASSWORD': os.environ.get('DB_PASS','*oA1)=QQM/2yKC*(MT3W8^[Zq6?C'),
         'HOST': 'localhost',
         'PORT': '5432',
     }
