@@ -1682,8 +1682,8 @@ def follow_up(request):
 
                 print(user_phone)
                 #send sms notification to the phone number, append +254
-                url = "https://mlab.mhealthkenya.co.ke/api/sms/gateway"
-                # url = "http://mlab.localhost/api/sms/gateway"
+                # url = "https://mlab.mhealthkenya.co.ke/api/sms/gateway"
+                url = "http://mlab.localhost/api/sms/gateway"
                 msg = "Hello " + str(cap_name) + ", your registered quarantined patient from "+str(cntry)+", diagnozed at "+str(plc_diagnosis)+", requires contact, patient reported with high temperature of " + str(temp) +" degrees. Login to EARS system for more details."
 
                 pp = {"phone_no": user_phone, "message": msg}
