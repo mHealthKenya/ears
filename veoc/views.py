@@ -1244,7 +1244,7 @@ def quarantine_register(request):
         # send sms to the patient for successful registration_form
         # url = "https://mlab.mhealthkenya.co.ke/api/sms/gateway"
         url = "http://mlab.localhost/api/sms/gateway"
-        msg = "Thank you " + first_name + " for registering. You will be required to send your temperature details during this quarantine period of 14 days. Please download the self reporting app on this link: http://tiny.cc/bebflz"
+        msg = "Thank you " + first_name + " for registering. You will be required to send your temperature details during this quarantine period of 14 days. Please download the self reporting app on this link: https://cutt.ly/atlKZAQ"
 
         pp = {"phone_no": phone_number, "message": msg}
         payload = json.dumps(pp)
