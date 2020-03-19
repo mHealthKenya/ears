@@ -571,7 +571,7 @@ class quarantine_contacts(models.Model):
     ward = models.ForeignKey(organizational_units, on_delete=models.CASCADE, blank=True, related_name='quarantine_ward', default='2620')
     place_of_diagnosis = models.CharField(max_length=50, blank=True)
     date_of_contact = models.DateField(default=date.today)
-    data_source = models.CharField(max_length=50, blank=False)
+    source = models.CharField(max_length=50, blank=False)
     created_at = models.DateField(default=date.today)
     updated_at = models.DateField(default=date.today)
     created_by = models.ForeignKey(User, on_delete=models.CASCADE, related_name='quarantine_updated_by')
