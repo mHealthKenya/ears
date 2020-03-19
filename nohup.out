@@ -1,0 +1,2148 @@
+[16/Mar/2020 07:23:18] "GET / HTTP/1.1" 200 5586
+[16/Mar/2020 07:23:18] "GET /static/vendor/mdi-font/css/material-design-iconic-font.min.css HTTP/1.1" 304 0
+[16/Mar/2020 07:23:18] "GET /static/vendor/font-awesome-4.7/css/font-awesome.min.css HTTP/1.1" 304 0
+[16/Mar/2020 07:23:18] "GET /static/vendor/datepicker/daterangepicker.css HTTP/1.1" 304 0
+[16/Mar/2020 07:23:18] "GET /static/vendor/jquery/jquery.min.js HTTP/1.1" 304 0
+[16/Mar/2020 07:23:18] "GET /static/vendor/css/main.css HTTP/1.1" 304 0
+[16/Mar/2020 07:23:18] "GET /static/vendor/select2/select2.min.css HTTP/1.1" 304 0
+[16/Mar/2020 07:23:18] "GET /static/vendor/select2/select2.min.js HTTP/1.1" 304 0
+[16/Mar/2020 07:23:18] "GET /static/vendor/datepicker/moment.min.js HTTP/1.1" 304 0
+[16/Mar/2020 07:23:18] "GET /static/vendor/datepicker/daterangepicker.js HTTP/1.1" 304 0
+[16/Mar/2020 07:23:18] "GET /static/js/global.js HTTP/1.1" 304 0
+[16/Mar/2020 07:23:18] "GET /static/vendor/images/bg-head-02.jpg HTTP/1.1" 304 0
+[16/Mar/2020 07:23:31] "GET / HTTP/1.1" 200 5586
+[16/Mar/2020 07:23:32] "GET /static/vendor/mdi-font/css/material-design-iconic-font.min.css HTTP/1.1" 304 0
+[16/Mar/2020 07:23:32] "GET /static/vendor/font-awesome-4.7/css/font-awesome.min.css HTTP/1.1" 304 0
+[16/Mar/2020 07:23:32] "GET /static/vendor/select2/select2.min.css HTTP/1.1" 304 0
+[16/Mar/2020 07:23:32] "GET /static/vendor/css/main.css HTTP/1.1" 304 0
+[16/Mar/2020 07:23:32] "GET /static/vendor/datepicker/daterangepicker.css HTTP/1.1" 304 0
+[16/Mar/2020 07:23:32] "GET /static/vendor/jquery/jquery.min.js HTTP/1.1" 304 0
+[16/Mar/2020 07:23:32] "GET /static/vendor/select2/select2.min.js HTTP/1.1" 304 0
+[16/Mar/2020 07:23:32] "GET /static/vendor/datepicker/moment.min.js HTTP/1.1" 304 0
+[16/Mar/2020 07:23:32] "GET /static/vendor/datepicker/daterangepicker.js HTTP/1.1" 304 0
+[16/Mar/2020 07:23:32] "GET /static/js/global.js HTTP/1.1" 304 0
+[16/Mar/2020 07:23:33] "GET /static/vendor/images/bg-head-02.jpg HTTP/1.1" 304 0
+[16/Mar/2020 07:23:43] "POST /?next= HTTP/1.1" 302 0
+[16/Mar/2020 07:23:43] "GET /login/ HTTP/1.1" 200 5586
+Internal Server Error: /login/
+Traceback (most recent call last):
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/core/handlers/exception.py", line 35, in inner
+    response = get_response(request)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/core/handlers/base.py", line 128, in _get_response
+    response = self.process_exception_by_middleware(e, request)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/core/handlers/base.py", line 126, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/var/www/ears_system/veoc/views.py", line 88, in login
+    user_access_level = u.persons.access_level
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/models/fields/related_descriptors.py", line 389, in __get__
+    self.related.get_accessor_name()
+django.db.models.fields.related_descriptors.RelatedObjectDoesNotExist: User has no persons.
+[16/Mar/2020 07:23:59] "POST /login/?next= HTTP/1.1" 500 71958
+[16/Mar/2020 07:24:23] "GET /login/ HTTP/1.1" 200 5586
+[16/Mar/2020 07:24:43] "POST /login/?next= HTTP/1.1" 302 0
+/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/models/fields/__init__.py:1365: RuntimeWarning: DateTimeField disease.date_reported received a naive datetime (2020-02-15 00:00:00) while time zone support is active.
+  RuntimeWarning)
+/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/models/fields/__init__.py:1365: RuntimeWarning: DateTimeField event.date_reported received a naive datetime (2020-03-09 00:00:00) while time zone support is active.
+  RuntimeWarning)
+/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/models/fields/__init__.py:1365: RuntimeWarning: DateTimeField disease.date_reported received a naive datetime (2020-03-09 00:00:00) while time zone support is active.
+  RuntimeWarning)
+/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/models/fields/__init__.py:1365: RuntimeWarning: DateTimeField call_log.date_reported received a naive datetime (2020-03-15 00:00:00) while time zone support is active.
+  RuntimeWarning)
+/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/models/fields/__init__.py:1365: RuntimeWarning: DateTimeField event.date_reported received a naive datetime (2020-02-15 00:00:00) while time zone support is active.
+  RuntimeWarning)
+/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/models/fields/__init__.py:1365: RuntimeWarning: DateTimeField call_log.date_reported received a naive datetime (2020-02-15 00:00:00) while time zone support is active.
+  RuntimeWarning)
+/var/www/ears_system/venv/lib/python3.5/site-packages/django/template/defaulttags.py:63: UserWarning: A {% csrf_token %} was used in a template, but the context did not provide the value.  This is usually caused by not using RequestContext.
+  "A {% csrf_token %} was used in a template, but the context "
+[16/Mar/2020 07:24:44] "GET /dashboard/ HTTP/1.1" 200 67932
+[16/Mar/2020 07:24:47] "GET /static/css/bootstrap.min.css HTTP/1.1" 200 121260
+[16/Mar/2020 07:24:47] "GET /static/css/simple-sidebar.css HTTP/1.1" 200 2959
+[16/Mar/2020 07:24:47] "GET /static/css/heatmap.css HTTP/1.1" 200 572
+[16/Mar/2020 07:24:47] "GET /static/css/dataTables.bootstrap.min.css HTTP/1.1" 200 4216
+[16/Mar/2020 07:24:48] "GET /static/css/multi-select.css HTTP/1.1" 200 2248
+[16/Mar/2020 07:24:48] "GET /static/js/jquery.multi-select.js HTTP/1.1" 200 19558
+[16/Mar/2020 07:24:48] "GET /static/images/header.jpg HTTP/1.1" 200 48208
+[16/Mar/2020 07:24:49] "GET /static/js/plotly-latest.min.js HTTP/1.1" 200 1814210
+[16/Mar/2020 07:24:50] "GET /static/js/sidebar_menu.js HTTP/1.1" 200 930
+[16/Mar/2020 07:24:51] "GET /static/js/canvasjs.min.js HTTP/1.1" 200 278797
+[16/Mar/2020 07:24:52] "GET /static/fonts/glyphicons-halflings-regular.woff2 HTTP/1.1" 200 18028
+Forbidden (CSRF token missing or incorrect.): /get_chart_vals/
+[16/Mar/2020 07:24:54] "POST /get_chart_vals/ HTTP/1.1" 403 2513
+[16/Mar/2020 07:24:54] "POST /get_pie_event/ HTTP/1.1" 200 91
+[16/Mar/2020 07:24:54] "POST /get_pie_disease/ HTTP/1.1" 200 69
+[16/Mar/2020 07:24:54] "POST /get_dhis_disease/ HTTP/1.1" 200 2549
+[16/Mar/2020 07:24:54] "POST /get_diseases/ HTTP/1.1" 200 8202
+[16/Mar/2020 07:24:56] "POST /get_piedrilldown_disease/ HTTP/1.1" 200 44
+[16/Mar/2020 07:24:56] "POST /get_piedrilldown_disease/ HTTP/1.1" 200 44
+[16/Mar/2020 07:24:57] "POST /get_piedrilldown_event/ HTTP/1.1" 200 57
+[16/Mar/2020 07:24:57] "POST /get_piedrilldown_event/ HTTP/1.1" 200 57
+[16/Mar/2020 07:25:21] "GET /follow_up HTTP/1.1" 301 0
+[16/Mar/2020 07:25:21] "GET /follow_up/ HTTP/1.1" 200 29957
+[16/Mar/2020 07:26:33] "GET /follow_up/ HTTP/1.1" 200 29957
+[16/Mar/2020 07:33:20] "GET /quarantine_register HTTP/1.1" 301 0
+[16/Mar/2020 07:33:20] "GET /quarantine_register/ HTTP/1.1" 200 35961
+[16/Mar/2020 07:33:21] "GET /static/css/simple-sidebar.css HTTP/1.1" 304 0
+[16/Mar/2020 07:33:21] "GET /static/css/heatmap.css HTTP/1.1" 304 0
+[16/Mar/2020 07:33:21] "GET /static/css/bootstrap.min.css HTTP/1.1" 304 0
+[16/Mar/2020 07:33:21] "GET /static/css/dataTables.bootstrap.min.css HTTP/1.1" 304 0
+[16/Mar/2020 07:33:21] "GET /static/js/plotly-latest.min.js HTTP/1.1" 304 0
+[16/Mar/2020 07:33:21] "GET /static/css/multi-select.css HTTP/1.1" 304 0
+[16/Mar/2020 07:33:21] "GET /static/js/jquery.multi-select.js HTTP/1.1" 304 0
+[16/Mar/2020 07:33:21] "GET /static/images/header.jpg HTTP/1.1" 304 0
+[16/Mar/2020 07:33:21] "GET /static/js/sidebar_menu.js HTTP/1.1" 304 0
+[16/Mar/2020 07:37:30] "GET /quarantine_register/ HTTP/1.1" 200 63265
+[16/Mar/2020 07:37:31] "GET /static/css/bootstrap.min.css HTTP/1.1" 304 0
+[16/Mar/2020 07:37:31] "GET /static/css/simple-sidebar.css HTTP/1.1" 304 0
+[16/Mar/2020 07:37:31] "GET /static/css/heatmap.css HTTP/1.1" 304 0
+[16/Mar/2020 07:37:31] "GET /static/css/dataTables.bootstrap.min.css HTTP/1.1" 304 0
+[16/Mar/2020 07:37:31] "GET /static/js/plotly-latest.min.js HTTP/1.1" 304 0
+[16/Mar/2020 07:37:31] "GET /static/css/multi-select.css HTTP/1.1" 304 0
+[16/Mar/2020 07:37:31] "GET /static/js/jquery.multi-select.js HTTP/1.1" 304 0
+[16/Mar/2020 07:37:31] "GET /static/images/header.jpg HTTP/1.1" 304 0
+[16/Mar/2020 07:37:31] "GET /static/js/sidebar_menu.js HTTP/1.1" 304 0
+[16/Mar/2020 07:38:38] "GET / HTTP/1.1" 200 5586
+[16/Mar/2020 07:38:38] "GET /static/vendor/mdi-font/css/material-design-iconic-font.min.css HTTP/1.1" 304 0
+[16/Mar/2020 07:38:38] "GET /static/vendor/font-awesome-4.7/css/font-awesome.min.css HTTP/1.1" 304 0
+[16/Mar/2020 07:38:38] "GET /static/vendor/select2/select2.min.css HTTP/1.1" 304 0
+[16/Mar/2020 07:38:38] "GET /static/vendor/datepicker/daterangepicker.css HTTP/1.1" 304 0
+[16/Mar/2020 07:38:38] "GET /static/vendor/css/main.css HTTP/1.1" 304 0
+[16/Mar/2020 07:38:38] "GET /static/vendor/jquery/jquery.min.js HTTP/1.1" 304 0
+[16/Mar/2020 07:38:38] "GET /static/vendor/select2/select2.min.js HTTP/1.1" 304 0
+[16/Mar/2020 07:38:38] "GET /static/vendor/datepicker/moment.min.js HTTP/1.1" 304 0
+[16/Mar/2020 07:38:38] "GET /static/vendor/datepicker/daterangepicker.js HTTP/1.1" 304 0
+[16/Mar/2020 07:38:38] "GET /static/js/global.js HTTP/1.1" 304 0
+[16/Mar/2020 07:38:38] "GET /static/vendor/images/bg-head-02.jpg HTTP/1.1" 304 0
+Performing system checks...
+
+System check identified no issues (0 silenced).
+March 16, 2020 - 07:23:10
+Django version 2.0, using settings 'virtual_eoc.settings'
+Starting development server at http://0.0.0.0:8000/
+Quit the server with CONTROL-C.
+National
+inside National dashboard
+/dashboard/
+inside get_dhis_diseases
+[{'period': '2019W11', 'cases': 26, 'deaths': 0}, {'period': '2019W12', 'cases': 84, 'deaths': 1}, {'period': '2019W13', 'cases': 23, 'deaths': 0}, {'period': '2019W14', 'cases': 38, 'deaths': 0}, {'period': '2019W15', 'cases': 32, 'deaths': 9}, {'period': '2019W16', 'cases': 36, 'deaths': 1}, {'period': '2019W17', 'cases': 27, 'deaths': 0}, {'period': '2019W18', 'cases': 21, 'deaths': 0}, {'period': '2019W19', 'cases': 54, 'deaths': 0}, {'period': '2019W20', 'cases': 22, 'deaths': 0}, {'period': '2019W21', 'cases': 56, 'deaths': 1}, {'period': '2019W22', 'cases': 43, 'deaths': 0}, {'period': '2019W23', 'cases': 25, 'deaths': 0}, {'period': '2019W24', 'cases': 29, 'deaths': 1}, {'period': '2019W25', 'cases': 37, 'deaths': 18}, {'period': '2019W26', 'cases': 24, 'deaths': 0}, {'period': '2019W27', 'cases': 14, 'deaths': 0}, {'period': '2019W28', 'cases': 8, 'deaths': 0}, {'period': '2019W29', 'cases': 21, 'deaths': 0}, {'period': '2019W30', 'cases': 11, 'deaths': 0}, {'period': '2019W31', 'cases': 12, 'deaths': 0}, {'period': '2019W32', 'cases': 15, 'deaths': 5}, {'period': '2019W33', 'cases': 22, 'deaths': 0}, {'period': '2019W34', 'cases': 47, 'deaths': 0}, {'period': '2019W35', 'cases': 45, 'deaths': 8}, {'period': '2019W36', 'cases': 13, 'deaths': 0}, {'period': '2019W37', 'cases': 27, 'deaths': 0}, {'period': '2019W38', 'cases': 48, 'deaths': 0}, {'period': '2019W39', 'cases': 21, 'deaths': 1}, {'period': '2019W40', 'cases': 27, 'deaths': 0}, {'period': '2019W41', 'cases': 24, 'deaths': 0}, {'period': '2019W42', 'cases': 44, 'deaths': 3}, {'period': '2019W43', 'cases': 33, 'deaths': 0}, {'period': '2019W44', 'cases': 32, 'deaths': 0}, {'period': '2019W45', 'cases': 62, 'deaths': 0}, {'period': '2019W46', 'cases': 59, 'deaths': 1}, {'period': '2019W47', 'cases': 48, 'deaths': 34}, {'period': '2019W48', 'cases': 42, 'deaths': 0}, {'period': '2019W49', 'cases': 43, 'deaths': 0}, {'period': '2019W50', 'cases': 27, 'deaths': 0}, {'period': '2019W51', 'cases': 18, 'deaths': 0}, {'period': '2019W52', 'cases': 22, 'deaths': 0}, {'period': '2020W01', 'cases': 32, 'deaths': 0}, {'period': '2020W02', 'cases': 29, 'deaths': 0}, {'period': '2020W03', 'cases': 31, 'deaths': 0}, {'period': '2020W04', 'cases': 26, 'deaths': 0}, {'period': '2020W05', 'cases': 23, 'deaths': 0}, {'period': '2020W06', 'cases': 29, 'deaths': 0}, {'period': '2020W07', 'cases': 32, 'deaths': 0}, {'period': '2020W08', 'cases': 14, 'deaths': 0}, {'period': '2020W09', 'cases': 18, 'deaths': 0}, {'period': '2020W10', 'cases': 26, 'deaths': 1}]
+Garissa County
+Garissa County
+[16/Mar/2020 07:42:33] "POST /get_subcounty/ HTTP/1.1" 200 3595
+[16/Mar/2020 07:42:35] "POST /get_ward/ HTTP/1.1" 200 1229
+[16/Mar/2020 07:42:35] "POST /get_ward/ HTTP/1.1" 200 1259
+[16/Mar/2020 07:42:35] "POST /get_ward/ HTTP/1.1" 200 1243
+[16/Mar/2020 07:42:35] "POST /get_ward/ HTTP/1.1" 200 1270
+[16/Mar/2020 07:42:44] "GET /static/images/ajax-loader.gif HTTP/1.1" 200 8238
+Internal Server Error: /quarantine_register/
+Traceback (most recent call last):
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/backends/utils.py", line 85, in _execute
+    return self.cursor.execute(sql, params)
+psycopg2.IntegrityError: duplicate key value violates unique constraint "veoc_quarantine_contacts_pkey"
+DETAIL:  Key (id)=(1) already exists.
+
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/core/handlers/exception.py", line 35, in inner
+    response = get_response(request)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/core/handlers/base.py", line 128, in _get_response
+    response = self.process_exception_by_middleware(e, request)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/core/handlers/base.py", line 126, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/var/www/ears_system/veoc/views.py", line 1239, in quarantine_register
+    updated_at=current_date, created_by=userObject, updated_by=userObject, created_at=current_date)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/models/manager.py", line 82, in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/models/query.py", line 417, in create
+    obj.save(force_insert=True, using=self.db)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/models/base.py", line 729, in save
+    force_update=force_update, update_fields=update_fields)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/models/base.py", line 759, in save_base
+    updated = self._save_table(raw, cls, force_insert, force_update, using, update_fields)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/models/base.py", line 842, in _save_table
+    result = self._do_insert(cls._base_manager, using, fields, update_pk, raw)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/models/base.py", line 880, in _do_insert
+    using=using, raw=raw)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/models/manager.py", line 82, in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/models/query.py", line 1125, in _insert
+    return query.get_compiler(using=using).execute_sql(return_id)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/models/sql/compiler.py", line 1280, in execute_sql
+    cursor.execute(sql, params)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/backends/utils.py", line 100, in execute
+    return super().execute(sql, params)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/backends/utils.py", line 68, in execute
+    return self._execute_with_wrappers(sql, params, many=False, executor=self._execute)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/backends/utils.py", line 77, in _execute_with_wrappers
+    return executor(sql, params, many, context)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/backends/utils.py", line 85, in _execute
+    return self.cursor.execute(sql, params)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/utils.py", line 89, in __exit__
+    raise dj_exc_value.with_traceback(traceback) from exc_value
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/backends/utils.py", line 85, in _execute
+    return self.cursor.execute(sql, params)
+django.db.utils.IntegrityError: duplicate key value violates unique constraint "veoc_quarantine_contacts_pkey"
+DETAIL:  Key (id)=(1) already exists.
+
+[16/Mar/2020 07:42:44] "POST /quarantine_register/ HTTP/1.1" 500 18749
+Invalid HTTP_HOST header: 'ears-test.mhealthkenya.co.ke'. You may need to add 'ears-test.mhealthkenya.co.ke' to ALLOWED_HOSTS.
+Invalid HTTP_HOST header: 'ears-test.mhealthkenya.co.ke'. You may need to add 'ears-test.mhealthkenya.co.ke' to ALLOWED_HOSTS.
+[16/Mar/2020 07:56:03] "GET /robots.txt HTTP/1.1" 400 63019
+[16/Mar/2020 07:56:03] "GET / HTTP/1.1" 400 63169
+Invalid HTTP_HOST header: 'ears-test.mhealthkenya.co.ke'. You may need to add 'ears-test.mhealthkenya.co.ke' to ALLOWED_HOSTS.
+[16/Mar/2020 07:56:04] "GET /favicon.ico HTTP/1.1" 400 63222
+Performing system checks...
+
+System check identified no issues (0 silenced).
+March 16, 2020 - 07:55:38
+Django version 2.0, using settings 'virtual_eoc.settings'
+Starting development server at http://0.0.0.0:8000/
+Quit the server with CONTROL-C.
+[16/Mar/2020 07:57:00] "GET / HTTP/1.1" 200 5586
+[16/Mar/2020 07:57:00] "GET /static/vendor/mdi-font/css/material-design-iconic-font.min.css HTTP/1.1" 200 70815
+[16/Mar/2020 07:57:00] "GET /static/vendor/font-awesome-4.7/css/font-awesome.min.css HTTP/1.1" 200 31000
+[16/Mar/2020 07:57:00] "GET /static/vendor/datepicker/daterangepicker.css HTTP/1.1" 200 8163
+[16/Mar/2020 07:57:00] "GET /static/vendor/select2/select2.min.css HTTP/1.1" 200 15180
+[16/Mar/2020 07:57:00] "GET /static/vendor/css/main.css HTTP/1.1" 200 9814
+[16/Mar/2020 07:57:00] "GET /static/vendor/jquery/jquery.min.js HTTP/1.1" 200 86659
+[16/Mar/2020 07:57:00] "GET /static/vendor/select2/select2.min.js HTTP/1.1" 200 66606
+[16/Mar/2020 07:57:00] "GET /static/vendor/datepicker/moment.min.js HTTP/1.1" 200 46645
+[16/Mar/2020 07:57:00] "GET /static/vendor/datepicker/daterangepicker.js HTTP/1.1" 200 69776
+[16/Mar/2020 07:57:00] "GET /static/js/global.js HTTP/1.1" 200 1822
+[16/Mar/2020 07:57:00] "GET /static/vendor/images/bg-head-02.jpg HTTP/1.1" 200 115903
+Not Found: /favicon.ico
+[16/Mar/2020 07:57:00] "GET /favicon.ico HTTP/1.1" 404 24912
+[16/Mar/2020 07:57:09] "POST /?next= HTTP/1.1" 302 0
+[16/Mar/2020 07:57:10] "GET / HTTP/1.1" 200 5586
+[16/Mar/2020 07:57:11] "GET /static/js/global.js HTTP/1.1" 200 1822
+[16/Mar/2020 07:57:11] "GET /static/vendor/css/main.css HTTP/1.1" 200 9814
+[16/Mar/2020 07:57:11] "GET /static/vendor/select2/select2.min.js HTTP/1.1" 200 66606
+[16/Mar/2020 07:57:11] "GET /static/vendor/datepicker/daterangepicker.css HTTP/1.1" 200 8163
+[16/Mar/2020 07:57:11] "GET /static/vendor/datepicker/daterangepicker.js HTTP/1.1" 200 69776
+[16/Mar/2020 07:57:11] "GET /static/vendor/datepicker/moment.min.js HTTP/1.1" 200 46645
+[16/Mar/2020 07:57:11] "GET /static/vendor/select2/select2.min.css HTTP/1.1" 200 15180
+[16/Mar/2020 07:57:11] "GET /static/vendor/font-awesome-4.7/css/font-awesome.min.css HTTP/1.1" 200 31000
+[16/Mar/2020 07:57:11] "GET /static/vendor/jquery/jquery.min.js HTTP/1.1" 200 86659
+[16/Mar/2020 07:57:11] "GET /static/vendor/mdi-font/css/material-design-iconic-font.min.css HTTP/1.1" 200 70815
+[16/Mar/2020 07:57:13] "GET /static/vendor/images/bg-head-02.jpg HTTP/1.1" 200 115903
+[16/Mar/2020 07:58:51] "GET / HTTP/1.1" 200 5586
+[16/Mar/2020 07:58:51] "GET /static/vendor/mdi-font/css/material-design-iconic-font.min.css HTTP/1.1" 304 0
+[16/Mar/2020 07:58:51] "GET /static/vendor/font-awesome-4.7/css/font-awesome.min.css HTTP/1.1" 304 0
+[16/Mar/2020 07:58:51] "GET /static/vendor/select2/select2.min.css HTTP/1.1" 304 0
+[16/Mar/2020 07:58:51] "GET /static/vendor/datepicker/daterangepicker.css HTTP/1.1" 304 0
+[16/Mar/2020 07:58:51] "GET /static/vendor/css/main.css HTTP/1.1" 304 0
+[16/Mar/2020 07:58:51] "GET /static/vendor/jquery/jquery.min.js HTTP/1.1" 304 0
+[16/Mar/2020 07:58:51] "GET /static/vendor/select2/select2.min.js HTTP/1.1" 304 0
+[16/Mar/2020 07:58:51] "GET /static/vendor/datepicker/moment.min.js HTTP/1.1" 304 0
+[16/Mar/2020 07:58:51] "GET /static/vendor/datepicker/daterangepicker.js HTTP/1.1" 304 0
+[16/Mar/2020 07:58:51] "GET /static/js/global.js HTTP/1.1" 304 0
+[16/Mar/2020 07:58:51] "GET /static/vendor/images/bg-head-02.jpg HTTP/1.1" 304 0
+[16/Mar/2020 07:58:57] "POST /?next= HTTP/1.1" 302 0
+/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/models/fields/__init__.py:1365: RuntimeWarning: DateTimeField disease.date_reported received a naive datetime (2020-02-15 00:00:00) while time zone support is active.
+  RuntimeWarning)
+/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/models/fields/__init__.py:1365: RuntimeWarning: DateTimeField event.date_reported received a naive datetime (2020-03-09 00:00:00) while time zone support is active.
+  RuntimeWarning)
+/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/models/fields/__init__.py:1365: RuntimeWarning: DateTimeField disease.date_reported received a naive datetime (2020-03-09 00:00:00) while time zone support is active.
+  RuntimeWarning)
+/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/models/fields/__init__.py:1365: RuntimeWarning: DateTimeField call_log.date_reported received a naive datetime (2020-03-15 00:00:00) while time zone support is active.
+  RuntimeWarning)
+/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/models/fields/__init__.py:1365: RuntimeWarning: DateTimeField event.date_reported received a naive datetime (2020-02-15 00:00:00) while time zone support is active.
+  RuntimeWarning)
+/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/models/fields/__init__.py:1365: RuntimeWarning: DateTimeField call_log.date_reported received a naive datetime (2020-02-15 00:00:00) while time zone support is active.
+  RuntimeWarning)
+/var/www/ears_system/venv/lib/python3.5/site-packages/django/template/defaulttags.py:63: UserWarning: A {% csrf_token %} was used in a template, but the context did not provide the value.  This is usually caused by not using RequestContext.
+  "A {% csrf_token %} was used in a template, but the context "
+[16/Mar/2020 07:58:59] "GET /dashboard/ HTTP/1.1" 200 67932
+[16/Mar/2020 07:58:59] "GET /static/css/bootstrap.min.css HTTP/1.1" 304 0
+[16/Mar/2020 07:58:59] "GET /static/css/simple-sidebar.css HTTP/1.1" 304 0
+[16/Mar/2020 07:58:59] "GET /static/css/heatmap.css HTTP/1.1" 304 0
+[16/Mar/2020 07:58:59] "GET /static/js/jquery.multi-select.js HTTP/1.1" 304 0
+[16/Mar/2020 07:58:59] "GET /static/css/dataTables.bootstrap.min.css HTTP/1.1" 304 0
+[16/Mar/2020 07:58:59] "GET /static/js/plotly-latest.min.js HTTP/1.1" 304 0
+[16/Mar/2020 07:58:59] "GET /static/css/multi-select.css HTTP/1.1" 304 0
+[16/Mar/2020 07:58:59] "GET /static/images/header.jpg HTTP/1.1" 304 0
+[16/Mar/2020 07:58:59] "GET /static/js/sidebar_menu.js HTTP/1.1" 304 0
+[16/Mar/2020 07:58:59] "GET /static/js/canvasjs.min.js HTTP/1.1" 304 0
+[16/Mar/2020 07:58:59] "GET /static/fonts/glyphicons-halflings-regular.woff2 HTTP/1.1" 304 0
+Forbidden (CSRF token missing or incorrect.): /get_chart_vals/
+[16/Mar/2020 07:58:59] "POST /get_chart_vals/ HTTP/1.1" 403 2513
+[16/Mar/2020 07:58:59] "POST /get_pie_event/ HTTP/1.1" 200 91
+[16/Mar/2020 07:58:59] "POST /get_pie_disease/ HTTP/1.1" 200 69
+[16/Mar/2020 07:58:59] "POST /get_dhis_disease/ HTTP/1.1" 200 2549
+[16/Mar/2020 07:58:59] "POST /get_diseases/ HTTP/1.1" 200 8202
+[16/Mar/2020 07:58:59] "POST /get_piedrilldown_disease/ HTTP/1.1" 200 44
+[16/Mar/2020 07:58:59] "POST /get_piedrilldown_disease/ HTTP/1.1" 200 44
+[16/Mar/2020 07:58:59] "POST /get_piedrilldown_event/ HTTP/1.1" 200 57
+[16/Mar/2020 07:58:59] "POST /get_piedrilldown_event/ HTTP/1.1" 200 57
+[16/Mar/2020 07:59:07] "GET / HTTP/1.1" 200 5586
+[16/Mar/2020 07:59:13] "POST /?next= HTTP/1.1" 302 0
+[16/Mar/2020 07:59:14] "GET /dashboard/ HTTP/1.1" 200 67932
+[16/Mar/2020 07:59:15] "GET /static/css/bootstrap.min.css HTTP/1.1" 200 121260
+[16/Mar/2020 07:59:15] "GET /static/css/simple-sidebar.css HTTP/1.1" 200 2959
+[16/Mar/2020 07:59:15] "GET /static/css/heatmap.css HTTP/1.1" 200 572
+[16/Mar/2020 07:59:15] "GET /static/css/multi-select.css HTTP/1.1" 200 2248
+[16/Mar/2020 07:59:15] "GET /static/css/dataTables.bootstrap.min.css HTTP/1.1" 200 4216
+[16/Mar/2020 07:59:15] "GET /static/js/plotly-latest.min.js HTTP/1.1" 200 1814210
+[16/Mar/2020 07:59:15] "GET /static/js/jquery.multi-select.js HTTP/1.1" 200 19558
+[16/Mar/2020 07:59:15] "GET /static/images/header.jpg HTTP/1.1" 200 48208
+[16/Mar/2020 07:59:15] "GET /static/js/sidebar_menu.js HTTP/1.1" 200 930
+[16/Mar/2020 07:59:15] "GET /static/js/canvasjs.min.js HTTP/1.1" 200 278797
+[16/Mar/2020 07:59:15] "GET /static/fonts/glyphicons-halflings-regular.woff2 HTTP/1.1" 200 18028
+Forbidden (CSRF token missing or incorrect.): /get_chart_vals/
+[16/Mar/2020 07:59:15] "POST /get_chart_vals/ HTTP/1.1" 403 2513
+[16/Mar/2020 07:59:15] "POST /get_pie_disease/ HTTP/1.1" 200 69
+[16/Mar/2020 07:59:15] "POST /get_pie_event/ HTTP/1.1" 200 91
+[16/Mar/2020 07:59:15] "POST /get_dhis_disease/ HTTP/1.1" 200 2549
+[16/Mar/2020 07:59:15] "POST /get_diseases/ HTTP/1.1" 200 8202
+[16/Mar/2020 07:59:15] "POST /get_piedrilldown_disease/ HTTP/1.1" 200 44
+[16/Mar/2020 07:59:15] "POST /get_piedrilldown_disease/ HTTP/1.1" 200 44
+[16/Mar/2020 07:59:15] "POST /get_piedrilldown_event/ HTTP/1.1" 200 57
+[16/Mar/2020 07:59:15] "POST /get_piedrilldown_event/ HTTP/1.1" 200 57
+[16/Mar/2020 07:59:25] "GET /quarantine_register HTTP/1.1" 301 0
+[16/Mar/2020 07:59:25] "GET /quarantine_register/ HTTP/1.1" 200 63265
+[16/Mar/2020 08:00:02] "GET /static/images/ajax-loader.gif HTTP/1.1" 200 8238
+Internal Server Error: /quarantine_register/
+Traceback (most recent call last):
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/backends/utils.py", line 85, in _execute
+    return self.cursor.execute(sql, params)
+psycopg2.IntegrityError: duplicate key value violates unique constraint "veoc_quarantine_contacts_pkey"
+DETAIL:  Key (id)=(4) already exists.
+
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/core/handlers/exception.py", line 35, in inner
+    response = get_response(request)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/core/handlers/base.py", line 128, in _get_response
+    response = self.process_exception_by_middleware(e, request)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/core/handlers/base.py", line 126, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/var/www/ears_system/veoc/views.py", line 1239, in quarantine_register
+    updated_at=current_date, created_by=userObject, updated_by=userObject, created_at=current_date)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/models/manager.py", line 82, in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/models/query.py", line 417, in create
+    obj.save(force_insert=True, using=self.db)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/models/base.py", line 729, in save
+    force_update=force_update, update_fields=update_fields)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/models/base.py", line 759, in save_base
+    updated = self._save_table(raw, cls, force_insert, force_update, using, update_fields)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/models/base.py", line 842, in _save_table
+    result = self._do_insert(cls._base_manager, using, fields, update_pk, raw)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/models/base.py", line 880, in _do_insert
+    using=using, raw=raw)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/models/manager.py", line 82, in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/models/query.py", line 1125, in _insert
+    return query.get_compiler(using=using).execute_sql(return_id)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/models/sql/compiler.py", line 1280, in execute_sql
+    cursor.execute(sql, params)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/backends/utils.py", line 100, in execute
+    return super().execute(sql, params)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/backends/utils.py", line 68, in execute
+    return self._execute_with_wrappers(sql, params, many=False, executor=self._execute)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/backends/utils.py", line 77, in _execute_with_wrappers
+    return executor(sql, params, many, context)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/backends/utils.py", line 85, in _execute
+    return self.cursor.execute(sql, params)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/utils.py", line 89, in __exit__
+    raise dj_exc_value.with_traceback(traceback) from exc_value
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/backends/utils.py", line 85, in _execute
+    return self.cursor.execute(sql, params)
+django.db.utils.IntegrityError: duplicate key value violates unique constraint "veoc_quarantine_contacts_pkey"
+DETAIL:  Key (id)=(4) already exists.
+
+[16/Mar/2020 08:00:02] "POST /quarantine_register/ HTTP/1.1" 500 18903
+[16/Mar/2020 08:00:07] "POST /quarantine_register/ HTTP/1.1" 200 63265
+[16/Mar/2020 08:00:28] "GET / HTTP/1.1" 200 5586
+[16/Mar/2020 08:07:15] "GET /follow_up HTTP/1.1" 301 0
+[16/Mar/2020 08:07:15] "GET /follow_up/ HTTP/1.1" 200 31258
+[16/Mar/2020 08:07:15] "GET /static/css/bootstrap.min.css HTTP/1.1" 304 0
+[16/Mar/2020 08:07:15] "GET /static/css/simple-sidebar.css HTTP/1.1" 304 0
+[16/Mar/2020 08:07:15] "GET /static/css/heatmap.css HTTP/1.1" 304 0
+[16/Mar/2020 08:07:15] "GET /static/css/dataTables.bootstrap.min.css HTTP/1.1" 304 0
+[16/Mar/2020 08:07:15] "GET /static/css/multi-select.css HTTP/1.1" 304 0
+[16/Mar/2020 08:07:15] "GET /static/js/plotly-latest.min.js HTTP/1.1" 304 0
+[16/Mar/2020 08:07:15] "GET /static/images/header.jpg HTTP/1.1" 304 0
+[16/Mar/2020 08:07:15] "GET /static/js/sidebar_menu.js HTTP/1.1" 304 0
+[16/Mar/2020 08:07:17] "GET /static/js/jquery.multi-select.js HTTP/1.1" 304 0
+[16/Mar/2020 08:07:17] "GET /static/fonts/glyphicons-halflings-regular.woff2 HTTP/1.1" 304 0
+[16/Mar/2020 08:16:02] "GET /logout/ HTTP/1.1" 302 0
+[16/Mar/2020 08:16:02] "GET /login/ HTTP/1.1" 200 5586
+[16/Mar/2020 08:16:02] "GET /static/vendor/mdi-font/css/material-design-iconic-font.min.css HTTP/1.1" 304 0
+[16/Mar/2020 08:16:02] "GET /static/vendor/font-awesome-4.7/css/font-awesome.min.css HTTP/1.1" 304 0
+[16/Mar/2020 08:16:02] "GET /static/vendor/select2/select2.min.css HTTP/1.1" 304 0
+[16/Mar/2020 08:16:02] "GET /static/vendor/datepicker/daterangepicker.css HTTP/1.1" 304 0
+[16/Mar/2020 08:16:02] "GET /static/vendor/css/main.css HTTP/1.1" 304 0
+[16/Mar/2020 08:16:02] "GET /static/vendor/jquery/jquery.min.js HTTP/1.1" 304 0
+[16/Mar/2020 08:16:02] "GET /static/vendor/select2/select2.min.js HTTP/1.1" 304 0
+[16/Mar/2020 08:16:02] "GET /static/vendor/datepicker/moment.min.js HTTP/1.1" 304 0
+[16/Mar/2020 08:16:02] "GET /static/vendor/datepicker/daterangepicker.js HTTP/1.1" 304 0
+[16/Mar/2020 08:16:02] "GET /static/js/global.js HTTP/1.1" 304 0
+[16/Mar/2020 08:16:02] "GET /static/vendor/images/bg-head-02.jpg HTTP/1.1" 304 0
+[16/Mar/2020 08:18:44] "POST /login/?next= HTTP/1.1" 302 0
+/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/models/fields/__init__.py:1365: RuntimeWarning: DateTimeField disease.date_reported received a naive datetime (2020-02-15 00:00:00) while time zone support is active.
+  RuntimeWarning)
+/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/models/fields/__init__.py:1365: RuntimeWarning: DateTimeField event.date_reported received a naive datetime (2020-03-09 00:00:00) while time zone support is active.
+  RuntimeWarning)
+/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/models/fields/__init__.py:1365: RuntimeWarning: DateTimeField disease.date_reported received a naive datetime (2020-03-09 00:00:00) while time zone support is active.
+  RuntimeWarning)
+/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/models/fields/__init__.py:1365: RuntimeWarning: DateTimeField call_log.date_reported received a naive datetime (2020-03-15 00:00:00) while time zone support is active.
+  RuntimeWarning)
+/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/models/fields/__init__.py:1365: RuntimeWarning: DateTimeField event.date_reported received a naive datetime (2020-02-15 00:00:00) while time zone support is active.
+  RuntimeWarning)
+/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/models/fields/__init__.py:1365: RuntimeWarning: DateTimeField call_log.date_reported received a naive datetime (2020-02-15 00:00:00) while time zone support is active.
+  RuntimeWarning)
+/var/www/ears_system/venv/lib/python3.5/site-packages/django/template/defaulttags.py:63: UserWarning: A {% csrf_token %} was used in a template, but the context did not provide the value.  This is usually caused by not using RequestContext.
+  "A {% csrf_token %} was used in a template, but the context "
+[16/Mar/2020 08:18:45] "GET /dashboard/ HTTP/1.1" 200 67932
+[16/Mar/2020 08:18:46] "GET /static/css/bootstrap.min.css HTTP/1.1" 304 0
+[16/Mar/2020 08:18:46] "GET /static/css/simple-sidebar.css HTTP/1.1" 304 0
+[16/Mar/2020 08:18:46] "GET /static/css/heatmap.css HTTP/1.1" 304 0
+[16/Mar/2020 08:18:46] "GET /static/js/plotly-latest.min.js HTTP/1.1" 304 0
+[16/Mar/2020 08:18:46] "GET /static/js/jquery.multi-select.js HTTP/1.1" 304 0
+[16/Mar/2020 08:18:46] "GET /static/css/multi-select.css HTTP/1.1" 304 0
+[16/Mar/2020 08:18:46] "GET /static/css/dataTables.bootstrap.min.css HTTP/1.1" 304 0
+[16/Mar/2020 08:18:46] "GET /static/images/header.jpg HTTP/1.1" 304 0
+[16/Mar/2020 08:18:46] "GET /static/js/sidebar_menu.js HTTP/1.1" 304 0
+[16/Mar/2020 08:18:46] "GET /static/js/canvasjs.min.js HTTP/1.1" 304 0
+[16/Mar/2020 08:18:47] "GET /static/fonts/glyphicons-halflings-regular.woff2 HTTP/1.1" 304 0
+Forbidden (CSRF token missing or incorrect.): /get_chart_vals/
+[16/Mar/2020 08:18:47] "POST /get_chart_vals/ HTTP/1.1" 403 2513
+[16/Mar/2020 08:18:47] "POST /get_pie_event/ HTTP/1.1" 200 91
+[16/Mar/2020 08:18:47] "POST /get_pie_disease/ HTTP/1.1" 200 69
+Performing system checks...
+
+System check identified no issues (0 silenced).
+March 16, 2020 - 07:56:57
+Django version 2.0, using settings 'virtual_eoc.settings'
+Starting development server at http://0.0.0.0:8000/
+Quit the server with CONTROL-C.
+National
+inside National dashboard
+/dashboard/
+National
+inside National dashboard
+/dashboard/
+inside get_dhis_diseases
+[{'cases': 26, 'period': '2019W11', 'deaths': 0}, {'cases': 84, 'period': '2019W12', 'deaths': 1}, {'cases': 23, 'period': '2019W13', 'deaths': 0}, {'cases': 38, 'period': '2019W14', 'deaths': 0}, {'cases': 32, 'period': '2019W15', 'deaths': 9}, {'cases': 36, 'period': '2019W16', 'deaths': 1}, {'cases': 27, 'period': '2019W17', 'deaths': 0}, {'cases': 21, 'period': '2019W18', 'deaths': 0}, {'cases': 54, 'period': '2019W19', 'deaths': 0}, {'cases': 22, 'period': '2019W20', 'deaths': 0}, {'cases': 56, 'period': '2019W21', 'deaths': 1}, {'cases': 43, 'period': '2019W22', 'deaths': 0}, {'cases': 25, 'period': '2019W23', 'deaths': 0}, {'cases': 29, 'period': '2019W24', 'deaths': 1}, {'cases': 37, 'period': '2019W25', 'deaths': 18}, {'cases': 24, 'period': '2019W26', 'deaths': 0}, {'cases': 14, 'period': '2019W27', 'deaths': 0}, {'cases': 8, 'period': '2019W28', 'deaths': 0}, {'cases': 21, 'period': '2019W29', 'deaths': 0}, {'cases': 11, 'period': '2019W30', 'deaths': 0}, {'cases': 12, 'period': '2019W31', 'deaths': 0}, {'cases': 15, 'period': '2019W32', 'deaths': 5}, {'cases': 22, 'period': '2019W33', 'deaths': 0}, {'cases': 47, 'period': '2019W34', 'deaths': 0}, {'cases': 45, 'period': '2019W35', 'deaths': 8}, {'cases': 13, 'period': '2019W36', 'deaths': 0}, {'cases': 27, 'period': '2019W37', 'deaths': 0}, {'cases': 48, 'period': '2019W38', 'deaths': 0}, {'cases': 21, 'period': '2019W39', 'deaths': 1}, {'cases': 27, 'period': '2019W40', 'deaths': 0}, {'cases': 24, 'period': '2019W41', 'deaths': 0}, {'cases': 44, 'period': '2019W42', 'deaths': 3}, {'cases': 33, 'period': '2019W43', 'deaths': 0}, {'cases': 32, 'period': '2019W44', 'deaths': 0}, {'cases': 62, 'period': '2019W45', 'deaths': 0}, {'cases': 59, 'period': '2019W46', 'deaths': 1}, {'cases': 48, 'period': '2019W47', 'deaths': 34}, {'cases': 42, 'period': '2019W48', 'deaths': 0}, {'cases': 43, 'period': '2019W49', 'deaths': 0}, {'cases': 27, 'period': '2019W50', 'deaths': 0}, {'cases': 18, 'period': '2019W51', 'deaths': 0}, {'cases': 22, 'period': '2019W52', 'deaths': 0}, {'cases': 32, 'period': '2020W01', 'deaths': 0}, {'cases': 29, 'period': '2020W02', 'deaths': 0}, {'cases': 31, 'period': '2020W03', 'deaths': 0}, {'cases': 26, 'period': '2020W04', 'deaths': 0}, {'cases': 23, 'period': '2020W05', 'deaths': 0}, {'cases': 29, 'period': '2020W06', 'deaths': 0}, {'cases': 32, 'period': '2020W07', 'deaths': 0}, {'cases': 14, 'period': '2020W08', 'deaths': 0}, {'cases': 18, 'period': '2020W09', 'deaths': 0}, {'cases': 26, 'period': '2020W10', 'deaths': 1}]
+Garissa County
+Garissa County
+National
+inside National dashboard
+/dashboard/
+inside get_dhis_diseases
+[{'cases': 26, 'period': '2019W11', 'deaths': 0}, {'cases': 84, 'period': '2019W12', 'deaths': 1}, {'cases': 23, 'period': '2019W13', 'deaths': 0}, {'cases': 38, 'period': '2019W14', 'deaths': 0}, {'cases': 32, 'period': '2019W15', 'deaths': 9}, {'cases': 36, 'period': '2019W16', 'deaths': 1}, {'cases': 27, 'period': '2019W17', 'deaths': 0}, {'cases': 21, 'period': '2019W18', 'deaths': 0}, {'cases': 54, 'period': '2019W19', 'deaths': 0}, {'cases': 22, 'period': '2019W20', 'deaths': 0}, {'cases': 56, 'period': '2019W21', 'deaths': 1}, {'cases': 43, 'period': '2019W22', 'deaths': 0}, {'cases': 25, 'period': '2019W23', 'deaths': 0}, {'cases': 29, 'period': '2019W24', 'deaths': 1}, {'cases': 37, 'period': '2019W25', 'deaths': 18}, {'cases': 24, 'period': '2019W26', 'deaths': 0}, {'cases': 14, 'period': '2019W27', 'deaths': 0}, {'cases': 8, 'period': '2019W28', 'deaths': 0}, {'cases': 21, 'period': '2019W29', 'deaths': 0}, {'cases': 11, 'period': '2019W30', 'deaths': 0}, {'cases': 12, 'period': '2019W31', 'deaths': 0}, {'cases': 15, 'period': '2019W32', 'deaths': 5}, {'cases': 22, 'period': '2019W33', 'deaths': 0}, {'cases': 47, 'period': '2019W34', 'deaths': 0}, {'cases': 45, 'period': '2019W35', 'deaths': 8}, {'cases': 13, 'period': '2019W36', 'deaths': 0}, {'cases': 27, 'period': '2019W37', 'deaths': 0}, {'cases': 48, 'period': '2019W38', 'deaths': 0}, {'cases': 21, 'period': '2019W39', 'deaths': 1}, {'cases': 27, 'period': '2019W40', 'deaths': 0}, {'cases': 24, 'period': '2019W41', 'deaths': 0}, {'cases': 44, 'period': '2019W42', 'deaths': 3}, {'cases': 33, 'period': '2019W43', 'deaths': 0}, {'cases': 32, 'period': '2019W44', 'deaths': 0}, {'cases': 62, 'period': '2019W45', 'deaths': 0}, {'cases': 59, 'period': '2019W46', 'deaths': 1}, {'cases': 48, 'period': '2019W47', 'deaths': 34}, {'cases': 42, 'period': '2019W48', 'deaths': 0}, {'cases': 43, 'period': '2019W49', 'deaths': 0}, {'cases': 27, 'period': '2019W50', 'deaths': 0}, {'cases': 18, 'period': '2019W51', 'deaths': 0}, {'cases': 22, 'period': '2019W52', 'deaths': 0}, {'cases': 32, 'period': '2020W01', 'deaths': 0}, {'cases': 29, 'period': '2020W02', 'deaths': 0}, {'cases': 31, 'period': '2020W03', 'deaths': 0}, {'cases': 26, 'period': '2020W04', 'deaths': 0}, {'cases': 23, 'period': '2020W05', 'deaths': 0}, {'cases': 29, 'period': '2020W06', 'deaths': 0}, {'cases': 32, 'period': '2020W07', 'deaths': 0}, {'cases': 14, 'period': '2020W08', 'deaths': 0}, {'cases': 18, 'period': '2020W09', 'deaths': 0}, {'cases': 26, 'period': '2020W10', 'deaths': 1}]
+Garissa County
+Garissa County
+admin
+admin
+b'{"message_status":"Success","Cost":"KES 1.2000"}'
+National
+inside National dashboard
+/dashboard/
+inside get_dhis_diseases
+[{'cases': 26, 'period': '2019W11', 'deaths': 0}, {'cases': 84, 'period': '2019W12', 'deaths': 1}, {'cases': 23, 'period': '2019W13', 'deaths': 0}, {'cases': 38, 'period': '2019W14', 'deaths': 0}, {'cases': 32, 'period': '2019W15', 'deaths': 9}, {'cases': 36, 'period': '2019W16', 'deaths': 1}, {'cases': 27, 'period': '2019W17', 'deaths': 0}, {'cases': 21, 'period': '2019W18', 'deaths': 0}, {'cases': 54, 'period': '2019W19', 'deaths': 0}, {'cases': 22, 'period': '2019W20', 'deaths': 0}, {'cases': 56, 'period': '2019W21', 'deaths': 1}, {'cases': 43, 'period': '2019W22', 'deaths': 0}, {'cases': 25, 'period': '2019W23', 'deaths': 0}, {'cases': 29, 'period': '2019W24', 'deaths': 1}, {'cases': 37, 'period': '2019W25', 'deaths': 18}, {'cases': 24, 'period': '2019W26', 'deaths': 0}, {'cases': 14, 'period': '2019W27', 'deaths': 0}, {'cases': 8, 'period': '2019W28', 'deaths': 0}, {'cases': 21, 'period': '2019W29', 'deaths': 0}, {'cases': 11, 'period': '2019W30', 'deaths': 0}, {'cases': 12, 'period': '2019W31', 'deaths': 0}, {'cases': 15, 'period': '2019W32', 'deaths': 5}, {'cases': 22, 'period': '2019W33', 'deaths': 0}, {'cases': 47, 'period': '2019W34', 'deaths': 0}, {'cases': 45, 'period': '2019W35', 'deaths': 8}, {'cases': 13, 'period': '2019W36', 'deaths': 0}, {'cases': 27, 'period': '2019W37', 'deaths': 0}, {'cases': 48, 'period': '2019W38', 'deaths': 0}, {'cases': 21, 'period': '2019W39', 'deaths': 1}, {'cases': 27, 'period': '2019W40', 'deaths': 0}, {'cases': 24, 'period': '2019W41', 'deaths': 0}, {'cases': 44, 'period': '2019W42', 'deaths': 3}, {'cases': 33, 'period': '2019W43', 'deaths': 0}, {'cases': 32, 'period': '2019W44', 'deaths': 0}, {'cases': 62, 'period': '2019W45', 'deaths': 0}, {'cases': 59, 'period': '2019W46', 'deaths': 1}, {'cases': 48, 'period': '2019W47', 'deaths': 34}, {'cases': 42, 'period': '2019W48', 'deaths': 0}, {'cases': 43, 'period': '2019W49', 'deaths': 0}, {'cases': 27, 'period': '2019W50', 'deaths': 0}, {'cases': 18, 'period': '2019W51', 'deaths': 0}, {'cases': 22, 'period': '2019W52', 'deaths': 0}, {'cases': 32, 'period': '2020W01', 'deaths': 0}, {'cases': 29, 'period': '2020W02', 'deaths': 0}, {'cases': 31, 'period': '2020W03', 'deaths': 0}, {'cases': 26, 'period': '2020W04', 'deaths': 0}, {'cases': 23, 'period': '2020W05', 'deaths': 0}, {'cases': 29, 'period': '2020W06', 'deaths': 0}, {'cases': 32, 'period': '2020W07', 'deaths': 0}, {'cases': 14, 'period': '2020W08', 'deaths': 0}, {'cases': 18, 'period': '2020W09', 'deaths': 0}, {'cases': 26, 'period': '2020W10', 'deaths': 1}][16/Mar/2020 08:18:47] "POST /get_dhis_disease/ HTTP/1.1" 200 2549
+[16/Mar/2020 08:18:47] "POST /get_diseases/ HTTP/1.1" 200 8202
+[16/Mar/2020 08:18:48] "POST /get_piedrilldown_disease/ HTTP/1.1" 200 44
+[16/Mar/2020 08:18:48] "POST /get_piedrilldown_disease/ HTTP/1.1" 200 44
+[16/Mar/2020 08:18:48] "POST /get_piedrilldown_event/ HTTP/1.1" 200 57
+[16/Mar/2020 08:18:48] "POST /get_piedrilldown_event/ HTTP/1.1" 200 57
+[16/Mar/2020 08:20:35] "POST /get_dhis_disease/ HTTP/1.1" 200 2826
+[16/Mar/2020 08:20:50] "GET /quarantine_register/ HTTP/1.1" 200 63265
+[16/Mar/2020 08:20:58] "GET /access_dashboard HTTP/1.1" 301 0
+[16/Mar/2020 08:20:58] "GET /access_dashboard/ HTTP/1.1" 302 0
+[16/Mar/2020 08:21:00] "GET /dashboard/ HTTP/1.1" 200 67932
+Forbidden (CSRF token missing or incorrect.): /get_chart_vals/
+[16/Mar/2020 08:21:01] "POST /get_chart_vals/ HTTP/1.1" 403 2513
+[16/Mar/2020 08:21:01] "POST /get_pie_disease/ HTTP/1.1" 200 69
+[16/Mar/2020 08:21:01] "POST /get_pie_event/ HTTP/1.1" 200 91
+[16/Mar/2020 08:21:01] "POST /get_diseases/ HTTP/1.1" 200 8202
+[16/Mar/2020 08:21:01] "POST /get_dhis_disease/ HTTP/1.1" 200 2549
+[16/Mar/2020 08:21:01] "POST /get_piedrilldown_disease/ HTTP/1.1" 200 44
+[16/Mar/2020 08:21:01] "POST /get_piedrilldown_disease/ HTTP/1.1" 200 44
+[16/Mar/2020 08:21:01] "POST /get_piedrilldown_event/ HTTP/1.1" 200 57
+[16/Mar/2020 08:21:01] "POST /get_piedrilldown_event/ HTTP/1.1" 200 57
+[16/Mar/2020 08:31:23] "GET /quarantine_register/ HTTP/1.1" 200 63340
+[16/Mar/2020 08:31:23] "GET /static/css/bootstrap.min.css HTTP/1.1" 304 0
+[16/Mar/2020 08:31:23] "GET /static/css/heatmap.css HTTP/1.1" 304 0
+[16/Mar/2020 08:31:23] "GET /static/css/simple-sidebar.css HTTP/1.1" 304 0
+[16/Mar/2020 08:31:23] "GET /static/css/dataTables.bootstrap.min.css HTTP/1.1" 304 0
+[16/Mar/2020 08:31:23] "GET /static/js/plotly-latest.min.js HTTP/1.1" 304 0
+[16/Mar/2020 08:31:23] "GET /static/css/multi-select.css HTTP/1.1" 304 0
+[16/Mar/2020 08:31:23] "GET /static/js/jquery.multi-select.js HTTP/1.1" 304 0
+[16/Mar/2020 08:31:23] "GET /static/js/sidebar_menu.js HTTP/1.1" 304 0
+[16/Mar/2020 08:31:24] "GET /static/images/header.jpg HTTP/1.1" 304 0
+[16/Mar/2020 08:31:24] "GET /static/fonts/glyphicons-halflings-regular.woff2 HTTP/1.1" 304 0
+[16/Mar/2020 08:33:15] "POST /get_subcounty/ HTTP/1.1" 200 3595
+[16/Mar/2020 08:33:19] "POST /get_ward/ HTTP/1.1" 200 1252
+[16/Mar/2020 08:33:33] "GET /static/images/ajax-loader.gif HTTP/1.1" 304 0
+[16/Mar/2020 08:33:34] "POST /quarantine_register/ HTTP/1.1" 200 63265
+[16/Mar/2020 08:35:02] "POST /get_subcounty/ HTTP/1.1" 200 3595
+[16/Mar/2020 08:35:08] "POST /get_ward/ HTTP/1.1" 200 1243
+Internal Server Error: /quarantine_register/
+Traceback (most recent call last):
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/backends/utils.py", line 85, in _execute
+    return self.cursor.execute(sql, params)
+psycopg2.DataError: value too long for type character varying(20)
+
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/core/handlers/exception.py", line 35, in inner
+    response = get_response(request)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/core/handlers/base.py", line 128, in _get_response
+    response = self.process_exception_by_middleware(e, request)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/core/handlers/base.py", line 126, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/var/www/ears_system/veoc/views.py", line 1239, in quarantine_register
+    updated_at=current_date, created_by=userObject, updated_by=userObject, created_at=current_date)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/models/manager.py", line 82, in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/models/query.py", line 417, in create
+    obj.save(force_insert=True, using=self.db)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/models/base.py", line 729, in save
+    force_update=force_update, update_fields=update_fields)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/models/base.py", line 759, in save_base
+    updated = self._save_table(raw, cls, force_insert, force_update, using, update_fields)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/models/base.py", line 842, in _save_table
+    result = self._do_insert(cls._base_manager, using, fields, update_pk, raw)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/models/base.py", line 880, in _do_insert
+    using=using, raw=raw)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/models/manager.py", line 82, in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/models/query.py", line 1125, in _insert
+    return query.get_compiler(using=using).execute_sql(return_id)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/models/sql/compiler.py", line 1280, in execute_sql
+    cursor.execute(sql, params)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/backends/utils.py", line 100, in execute
+    return super().execute(sql, params)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/backends/utils.py", line 68, in execute
+    return self._execute_with_wrappers(sql, params, many=False, executor=self._execute)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/backends/utils.py", line 77, in _execute_with_wrappers
+    return executor(sql, params, many, context)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/backends/utils.py", line 85, in _execute
+    return self.cursor.execute(sql, params)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/utils.py", line 89, in __exit__
+    raise dj_exc_value.with_traceback(traceback) from exc_value
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/backends/utils.py", line 85, in _execute
+    return self.cursor.execute(sql, params)
+django.db.utils.DataError: value too long for type character varying(20)
+
+[16/Mar/2020 08:35:18] "POST /quarantine_register/ HTTP/1.1" 500 18770
+Internal Server Error: /quarantine_register/
+Traceback (most recent call last):
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/backends/utils.py", line 85, in _execute
+    return self.cursor.execute(sql, params)
+psycopg2.DataError: value too long for type character varying(20)
+
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/core/handlers/exception.py", line 35, in inner
+    response = get_response(request)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/core/handlers/base.py", line 128, in _get_response
+    response = self.process_exception_by_middleware(e, request)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/core/handlers/base.py", line 126, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/var/www/ears_system/veoc/views.py", line 1239, in quarantine_register
+    updated_at=current_date, created_by=userObject, updated_by=userObject, created_at=current_date)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/models/manager.py", line 82, in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/models/query.py", line 417, in create
+    obj.save(force_insert=True, using=self.db)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/models/base.py", line 729, in save
+    force_update=force_update, update_fields=update_fields)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/models/base.py", line 759, in save_base
+    updated = self._save_table(raw, cls, force_insert, force_update, using, update_fields)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/models/base.py", line 842, in _save_table
+    result = self._do_insert(cls._base_manager, using, fields, update_pk, raw)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/models/base.py", line 880, in _do_insert
+    using=using, raw=raw)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/models/manager.py", line 82, in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/models/query.py", line 1125, in _insert
+    return query.get_compiler(using=using).execute_sql(return_id)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/models/sql/compiler.py", line 1280, in execute_sql
+    cursor.execute(sql, params)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/backends/utils.py", line 100, in execute
+    return super().execute(sql, params)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/backends/utils.py", line 68, in execute
+    return self._execute_with_wrappers(sql, params, many=False, executor=self._execute)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/backends/utils.py", line 77, in _execute_with_wrappers
+    return executor(sql, params, many, context)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/backends/utils.py", line 85, in _execute
+    return self.cursor.execute(sql, params)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/utils.py", line 89, in __exit__
+    raise dj_exc_value.with_traceback(traceback) from exc_value
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/backends/utils.py", line 85, in _execute
+    return self.cursor.execute(sql, params)
+django.db.utils.DataError: value too long for type character varying(20)
+
+[16/Mar/2020 08:35:23] "POST /quarantine_register/ HTTP/1.1" 500 18770
+Internal Server Error: /quarantine_register/
+Traceback (most recent call last):
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/backends/utils.py", line 85, in _execute
+    return self.cursor.execute(sql, params)
+psycopg2.DataError: value too long for type character varying(20)
+
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/core/handlers/exception.py", line 35, in inner
+    response = get_response(request)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/core/handlers/base.py", line 128, in _get_response
+    response = self.process_exception_by_middleware(e, request)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/core/handlers/base.py", line 126, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/var/www/ears_system/veoc/views.py", line 1239, in quarantine_register
+    updated_at=current_date, created_by=userObject, updated_by=userObject, created_at=current_date)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/models/manager.py", line 82, in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/models/query.py", line 417, in create
+    obj.save(force_insert=True, using=self.db)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/models/base.py", line 729, in save
+    force_update=force_update, update_fields=update_fields)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/models/base.py", line 759, in save_base
+    updated = self._save_table(raw, cls, force_insert, force_update, using, update_fields)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/models/base.py", line 842, in _save_table
+    result = self._do_insert(cls._base_manager, using, fields, update_pk, raw)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/models/base.py", line 880, in _do_insert
+    using=using, raw=raw)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/models/manager.py", line 82, in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/models/query.py", line 1125, in _insert
+    return query.get_compiler(using=using).execute_sql(return_id)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/models/sql/compiler.py", line 1280, in execute_sql
+    cursor.execute(sql, params)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/backends/utils.py", line 100, in execute
+    return super().execute(sql, params)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/backends/utils.py", line 68, in execute
+    return self._execute_with_wrappers(sql, params, many=False, executor=self._execute)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/backends/utils.py", line 77, in _execute_with_wrappers
+    return executor(sql, params, many, context)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/backends/utils.py", line 85, in _execute
+    return self.cursor.execute(sql, params)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/utils.py", line 89, in __exit__
+    raise dj_exc_value.with_traceback(traceback) from exc_value
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/backends/utils.py", line 85, in _execute
+    return self.cursor.execute(sql, params)
+django.db.utils.DataError: value too long for type character varying(20)
+
+[16/Mar/2020 08:35:34] "POST /quarantine_register/ HTTP/1.1" 500 18770
+[16/Mar/2020 08:35:38] "GET /quarantine_register/ HTTP/1.1" 200 63265
+[16/Mar/2020 08:37:11] "POST /get_subcounty/ HTTP/1.1" 200 3595
+[16/Mar/2020 08:37:12] "POST /get_ward/ HTTP/1.1" 200 1229
+[16/Mar/2020 08:37:14] "POST /get_ward/ HTTP/1.1" 200 1259
+[16/Mar/2020 08:37:14] "POST /get_ward/ HTTP/1.1" 200 1243
+[16/Mar/2020 08:37:14] "POST /get_ward/ HTTP/1.1" 200 1270
+Internal Server Error: /quarantine_register/
+Traceback (most recent call last):
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/backends/utils.py", line 85, in _execute
+    return self.cursor.execute(sql, params)
+psycopg2.DataError: value too long for type character varying(20)
+
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/core/handlers/exception.py", line 35, in inner
+    response = get_response(request)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/core/handlers/base.py", line 128, in _get_response
+    response = self.process_exception_by_middleware(e, request)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/core/handlers/base.py", line 126, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/var/www/ears_system/veoc/views.py", line 1239, in quarantine_register
+    updated_at=current_date, created_by=userObject, updated_by=userObject, created_at=current_date)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/models/manager.py", line 82, in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/models/query.py", line 417, in create
+    obj.save(force_insert=True, using=self.db)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/models/base.py", line 729, in save
+    force_update=force_update, update_fields=update_fields)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/models/base.py", line 759, in save_base
+    updated = self._save_table(raw, cls, force_insert, force_update, using, update_fields)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/models/base.py", line 842, in _save_table
+    result = self._do_insert(cls._base_manager, using, fields, update_pk, raw)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/models/base.py", line 880, in _do_insert
+    using=using, raw=raw)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/models/manager.py", line 82, in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/models/query.py", line 1125, in _insert
+    return query.get_compiler(using=using).execute_sql(return_id)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/models/sql/compiler.py", line 1280, in execute_sql
+    cursor.execute(sql, params)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/backends/utils.py", line 100, in execute
+    return super().execute(sql, params)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/backends/utils.py", line 68, in execute
+    return self._execute_with_wrappers(sql, params, many=False, executor=self._execute)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/backends/utils.py", line 77, in _execute_with_wrappers
+    return executor(sql, params, many, context)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/backends/utils.py", line 85, in _execute
+    return self.cursor.execute(sql, params)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/utils.py", line 89, in __exit__
+    raise dj_exc_value.with_traceback(traceback) from exc_value
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/backends/utils.py", line 85, in _execute
+    return self.cursor.execute(sql, params)
+django.db.utils.DataError: value too long for type character varying(20)
+
+[16/Mar/2020 08:37:24] "POST /quarantine_register/ HTTP/1.1" 500 18771
+Internal Server Error: /quarantine_register/
+Traceback (most recent call last):
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/backends/utils.py", line 85, in _execute
+    return self.cursor.execute(sql, params)
+psycopg2.DataError: value too long for type character varying(20)
+
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/core/handlers/exception.py", line 35, in inner
+    response = get_response(request)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/core/handlers/base.py", line 128, in _get_response
+    response = self.process_exception_by_middleware(e, request)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/core/handlers/base.py", line 126, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/var/www/ears_system/veoc/views.py", line 1239, in quarantine_register
+    updated_at=current_date, created_by=userObject, updated_by=userObject, created_at=current_date)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/models/manager.py", line 82, in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/models/query.py", line 417, in create
+    obj.save(force_insert=True, using=self.db)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/models/base.py", line 729, in save
+    force_update=force_update, update_fields=update_fields)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/models/base.py", line 759, in save_base
+    updated = self._save_table(raw, cls, force_insert, force_update, using, update_fields)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/models/base.py", line 842, in _save_table
+    result = self._do_insert(cls._base_manager, using, fields, update_pk, raw)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/models/base.py", line 880, in _do_insert
+    using=using, raw=raw)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/models/manager.py", line 82, in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/models/query.py", line 1125, in _insert
+    return query.get_compiler(using=using).execute_sql(return_id)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/models/sql/compiler.py", line 1280, in execute_sql
+    cursor.execute(sql, params)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/backends/utils.py", line 100, in execute
+    return super().execute(sql, params)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/backends/utils.py", line 68, in execute
+    return self._execute_with_wrappers(sql, params, many=False, executor=self._execute)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/backends/utils.py", line 77, in _execute_with_wrappers
+    return executor(sql, params, many, context)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/backends/utils.py", line 85, in _execute
+    return self.cursor.execute(sql, params)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/utils.py", line 89, in __exit__
+    raise dj_exc_value.with_traceback(traceback) from exc_value
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/backends/utils.py", line 85, in _execute
+    return self.cursor.execute(sql, params)
+django.db.utils.DataError: value too long for type character varying(20)
+
+[16/Mar/2020 08:37:34] "POST /quarantine_register/ HTTP/1.1" 500 18771
+Internal Server Error: /quarantine_register/
+Traceback (most recent call last):
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/backends/utils.py", line 85, in _execute
+    return self.cursor.execute(sql, params)
+psycopg2.DataError: value too long for type character varying(20)
+
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/core/handlers/exception.py", line 35, in inner
+    response = get_response(request)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/core/handlers/base.py", line 128, in _get_response
+    response = self.process_exception_by_middleware(e, request)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/core/handlers/base.py", line 126, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/var/www/ears_system/veoc/views.py", line 1239, in quarantine_register
+    updated_at=current_date, created_by=userObject, updated_by=userObject, created_at=current_date)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/models/manager.py", line 82, in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/models/query.py", line 417, in create
+    obj.save(force_insert=True, using=self.db)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/models/base.py", line 729, in save
+    force_update=force_update, update_fields=update_fields)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/models/base.py", line 759, in save_base
+    updated = self._save_table(raw, cls, force_insert, force_update, using, update_fields)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/models/base.py", line 842, in _save_table
+    result = self._do_insert(cls._base_manager, using, fields, update_pk, raw)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/models/base.py", line 880, in _do_insert
+    using=using, raw=raw)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/models/manager.py", line 82, in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/models/query.py", line 1125, in _insert
+    return query.get_compiler(using=using).execute_sql(return_id)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/models/sql/compiler.py", line 1280, in execute_sql
+    cursor.execute(sql, params)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/backends/utils.py", line 100, in execute
+    return super().execute(sql, params)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/backends/utils.py", line 68, in execute
+    return self._execute_with_wrappers(sql, params, many=False, executor=self._execute)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/backends/utils.py", line 77, in _execute_with_wrappers
+    return executor(sql, params, many, context)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/backends/utils.py", line 85, in _execute
+    return self.cursor.execute(sql, params)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/utils.py", line 89, in __exit__
+    raise dj_exc_value.with_traceback(traceback) from exc_value
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/backends/utils.py", line 85, in _execute
+    return self.cursor.execute(sql, params)
+django.db.utils.DataError: value too long for type character varying(20)
+
+[16/Mar/2020 08:37:40] "POST /quarantine_register/ HTTP/1.1" 500 18769
+Internal Server Error: /quarantine_register/
+Traceback (most recent call last):
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/backends/utils.py", line 85, in _execute
+    return self.cursor.execute(sql, params)
+psycopg2.DataError: value too long for type character varying(20)
+
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/core/handlers/exception.py", line 35, in inner
+    response = get_response(request)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/core/handlers/base.py", line 128, in _get_response
+    response = self.process_exception_by_middleware(e, request)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/core/handlers/base.py", line 126, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/var/www/ears_system/veoc/views.py", line 1239, in quarantine_register
+    updated_at=current_date, created_by=userObject, updated_by=userObject, created_at=current_date)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/models/manager.py", line 82, in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/models/query.py", line 417, in create
+    obj.save(force_insert=True, using=self.db)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/models/base.py", line 729, in save
+    force_update=force_update, update_fields=update_fields)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/models/base.py", line 759, in save_base
+    updated = self._save_table(raw, cls, force_insert, force_update, using, update_fields)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/models/base.py", line 842, in _save_table
+    result = self._do_insert(cls._base_manager, using, fields, update_pk, raw)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/models/base.py", line 880, in _do_insert
+    using=using, raw=raw)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/models/manager.py", line 82, in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/models/query.py", line 1125, in _insert
+    return query.get_compiler(using=using).execute_sql(return_id)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/models/sql/compiler.py", line 1280, in execute_sql
+    cursor.execute(sql, params)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/backends/utils.py", line 100, in execute
+    return super().execute(sql, params)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/backends/utils.py", line 68, in execute
+    return self._execute_with_wrappers(sql, params, many=False, executor=self._execute)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/backends/utils.py", line 77, in _execute_with_wrappers
+    return executor(sql, params, many, context)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/backends/utils.py", line 85, in _execute
+    return self.cursor.execute(sql, params)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/utils.py", line 89, in __exit__
+    raise dj_exc_value.with_traceback(traceback) from exc_value
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/backends/utils.py", line 85, in _execute
+    return self.cursor.execute(sql, params)
+django.db.utils.DataError: value too long for type character varying(20)
+
+[16/Mar/2020 08:38:38] "POST /quarantine_register/ HTTP/1.1" 500 18769
+Internal Server Error: /quarantine_register/
+Traceback (most recent call last):
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/backends/utils.py", line 85, in _execute
+    return self.cursor.execute(sql, params)
+psycopg2.DataError: value too long for type character varying(20)
+
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/core/handlers/exception.py", line 35, in inner
+    response = get_response(request)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/core/handlers/base.py", line 128, in _get_response
+    response = self.process_exception_by_middleware(e, request)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/core/handlers/base.py", line 126, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/var/www/ears_system/veoc/views.py", line 1239, in quarantine_register
+    updated_at=current_date, created_by=userObject, updated_by=userObject, created_at=current_date)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/models/manager.py", line 82, in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/models/query.py", line 417, in create
+    obj.save(force_insert=True, using=self.db)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/models/base.py", line 729, in save
+    force_update=force_update, update_fields=update_fields)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/models/base.py", line 759, in save_base
+    updated = self._save_table(raw, cls, force_insert, force_update, using, update_fields)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/models/base.py", line 842, in _save_table
+    result = self._do_insert(cls._base_manager, using, fields, update_pk, raw)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/models/base.py", line 880, in _do_insert
+    using=using, raw=raw)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/models/manager.py", line 82, in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/models/query.py", line 1125, in _insert
+    return query.get_compiler(using=using).execute_sql(return_id)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/models/sql/compiler.py", line 1280, in execute_sql
+    cursor.execute(sql, params)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/backends/utils.py", line 100, in execute
+    return super().execute(sql, params)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/backends/utils.py", line 68, in execute
+    return self._execute_with_wrappers(sql, params, many=False, executor=self._execute)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/backends/utils.py", line 77, in _execute_with_wrappers
+    return executor(sql, params, many, context)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/backends/utils.py", line 85, in _execute
+    return self.cursor.execute(sql, params)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/utils.py", line 89, in __exit__
+    raise dj_exc_value.with_traceback(traceback) from exc_value
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/backends/utils.py", line 85, in _execute
+    return self.cursor.execute(sql, params)
+django.db.utils.DataError: value too long for type character varying(20)
+
+[16/Mar/2020 08:38:41] "POST /quarantine_register/ HTTP/1.1" 500 18769
+Internal Server Error: /quarantine_register/
+Traceback (most recent call last):
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/backends/utils.py", line 85, in _execute
+    return self.cursor.execute(sql, params)
+psycopg2.DataError: value too long for type character varying(20)
+
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/core/handlers/exception.py", line 35, in inner
+    response = get_response(request)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/core/handlers/base.py", line 128, in _get_response
+    response = self.process_exception_by_middleware(e, request)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/core/handlers/base.py", line 126, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/var/www/ears_system/veoc/views.py", line 1239, in quarantine_register
+    updated_at=current_date, created_by=userObject, updated_by=userObject, created_at=current_date)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/models/manager.py", line 82, in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/models/query.py", line 417, in create
+    obj.save(force_insert=True, using=self.db)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/models/base.py", line 729, in save
+    force_update=force_update, update_fields=update_fields)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/models/base.py", line 759, in save_base
+    updated = self._save_table(raw, cls, force_insert, force_update, using, update_fields)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/models/base.py", line 842, in _save_table
+    result = self._do_insert(cls._base_manager, using, fields, update_pk, raw)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/models/base.py", line 880, in _do_insert
+    using=using, raw=raw)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/models/manager.py", line 82, in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/models/query.py", line 1125, in _insert
+    return query.get_compiler(using=using).execute_sql(return_id)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/models/sql/compiler.py", line 1280, in execute_sql
+    cursor.execute(sql, params)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/backends/utils.py", line 100, in execute
+    return super().execute(sql, params)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/backends/utils.py", line 68, in execute
+    return self._execute_with_wrappers(sql, params, many=False, executor=self._execute)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/backends/utils.py", line 77, in _execute_with_wrappers
+    return executor(sql, params, many, context)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/backends/utils.py", line 85, in _execute
+    return self.cursor.execute(sql, params)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/utils.py", line 89, in __exit__
+    raise dj_exc_value.with_traceback(traceback) from exc_value
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/backends/utils.py", line 85, in _execute
+    return self.cursor.execute(sql, params)
+django.db.utils.DataError: value too long for type character varying(20)
+
+[16/Mar/2020 08:38:44] "POST /quarantine_register/ HTTP/1.1" 500 18769
+Internal Server Error: /quarantine_register/
+Traceback (most recent call last):
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/backends/utils.py", line 85, in _execute
+    return self.cursor.execute(sql, params)
+psycopg2.DataError: value too long for type character varying(20)
+
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/core/handlers/exception.py", line 35, in inner
+    response = get_response(request)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/core/handlers/base.py", line 128, in _get_response
+    response = self.process_exception_by_middleware(e, request)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/core/handlers/base.py", line 126, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/var/www/ears_system/veoc/views.py", line 1239, in quarantine_register
+    updated_at=current_date, created_by=userObject, updated_by=userObject, created_at=current_date)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/models/manager.py", line 82, in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/models/query.py", line 417, in create
+    obj.save(force_insert=True, using=self.db)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/models/base.py", line 729, in save
+    force_update=force_update, update_fields=update_fields)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/models/base.py", line 759, in save_base
+    updated = self._save_table(raw, cls, force_insert, force_update, using, update_fields)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/models/base.py", line 842, in _save_table
+    result = self._do_insert(cls._base_manager, using, fields, update_pk, raw)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/models/base.py", line 880, in _do_insert
+    using=using, raw=raw)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/models/manager.py", line 82, in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/models/query.py", line 1125, in _insert
+    return query.get_compiler(using=using).execute_sql(return_id)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/models/sql/compiler.py", line 1280, in execute_sql
+    cursor.execute(sql, params)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/backends/utils.py", line 100, in execute
+    return super().execute(sql, params)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/backends/utils.py", line 68, in execute
+    return self._execute_with_wrappers(sql, params, many=False, executor=self._execute)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/backends/utils.py", line 77, in _execute_with_wrappers
+    return executor(sql, params, many, context)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/backends/utils.py", line 85, in _execute
+    return self.cursor.execute(sql, params)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/utils.py", line 89, in __exit__
+    raise dj_exc_value.with_traceback(traceback) from exc_value
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/backends/utils.py", line 85, in _execute
+    return self.cursor.execute(sql, params)
+django.db.utils.DataError: value too long for type character varying(20)
+
+[16/Mar/2020 08:38:50] "POST /quarantine_register/ HTTP/1.1" 500 18766
+Internal Server Error: /quarantine_register/
+Traceback (most recent call last):
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/backends/utils.py", line 85, in _execute
+    return self.cursor.execute(sql, params)
+psycopg2.DataError: value too long for type character varying(20)
+
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/core/handlers/exception.py", line 35, in inner
+    response = get_response(request)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/core/handlers/base.py", line 128, in _get_response
+    response = self.process_exception_by_middleware(e, request)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/core/handlers/base.py", line 126, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/var/www/ears_system/veoc/views.py", line 1239, in quarantine_register
+    updated_at=current_date, created_by=userObject, updated_by=userObject, created_at=current_date)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/models/manager.py", line 82, in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/models/query.py", line 417, in create
+    obj.save(force_insert=True, using=self.db)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/models/base.py", line 729, in save
+    force_update=force_update, update_fields=update_fields)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/models/base.py", line 759, in save_base
+    updated = self._save_table(raw, cls, force_insert, force_update, using, update_fields)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/models/base.py", line 842, in _save_table
+    result = self._do_insert(cls._base_manager, using, fields, update_pk, raw)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/models/base.py", line 880, in _do_insert
+    using=using, raw=raw)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/models/manager.py", line 82, in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/models/query.py", line 1125, in _insert
+    return query.get_compiler(using=using).execute_sql(return_id)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/models/sql/compiler.py", line 1280, in execute_sql
+    cursor.execute(sql, params)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/backends/utils.py", line 100, in execute
+    return super().execute(sql, params)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/backends/utils.py", line 68, in execute
+    return self._execute_with_wrappers(sql, params, many=False, executor=self._execute)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/backends/utils.py", line 77, in _execute_with_wrappers
+    return executor(sql, params, many, context)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/backends/utils.py", line 85, in _execute
+    return self.cursor.execute(sql, params)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/utils.py", line 89, in __exit__
+    raise dj_exc_value.with_traceback(traceback) from exc_value
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/backends/utils.py", line 85, in _execute
+    return self.cursor.execute(sql, params)
+django.db.utils.DataError: value too long for type character varying(20)
+
+[16/Mar/2020 08:38:51] "POST /quarantine_register/ HTTP/1.1" 500 18766
+Internal Server Error: /quarantine_register/
+Traceback (most recent call last):
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/backends/utils.py", line 85, in _execute
+    return self.cursor.execute(sql, params)
+psycopg2.DataError: value too long for type character varying(20)
+
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/core/handlers/exception.py", line 35, in inner
+    response = get_response(request)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/core/handlers/base.py", line 128, in _get_response
+    response = self.process_exception_by_middleware(e, request)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/core/handlers/base.py", line 126, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/var/www/ears_system/veoc/views.py", line 1239, in quarantine_register
+    updated_at=current_date, created_by=userObject, updated_by=userObject, created_at=current_date)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/models/manager.py", line 82, in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/models/query.py", line 417, in create
+    obj.save(force_insert=True, using=self.db)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/models/base.py", line 729, in save
+    force_update=force_update, update_fields=update_fields)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/models/base.py", line 759, in save_base
+    updated = self._save_table(raw, cls, force_insert, force_update, using, update_fields)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/models/base.py", line 842, in _save_table
+    result = self._do_insert(cls._base_manager, using, fields, update_pk, raw)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/models/base.py", line 880, in _do_insert
+    using=using, raw=raw)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/models/manager.py", line 82, in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/models/query.py", line 1125, in _insert
+    return query.get_compiler(using=using).execute_sql(return_id)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/models/sql/compiler.py", line 1280, in execute_sql
+    cursor.execute(sql, params)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/backends/utils.py", line 100, in execute
+    return super().execute(sql, params)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/backends/utils.py", line 68, in execute
+    return self._execute_with_wrappers(sql, params, many=False, executor=self._execute)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/backends/utils.py", line 77, in _execute_with_wrappers
+    return executor(sql, params, many, context)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/backends/utils.py", line 85, in _execute
+    return self.cursor.execute(sql, params)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/utils.py", line 89, in __exit__
+    raise dj_exc_value.with_traceback(traceback) from exc_value
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/backends/utils.py", line 85, in _execute
+    return self.cursor.execute(sql, params)
+django.db.utils.DataError: value too long for type character varying(20)
+
+[16/Mar/2020 08:38:51] "POST /quarantine_register/ HTTP/1.1" 500 18766
+Internal Server Error: /quarantine_register/
+Traceback (most recent call last):
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/backends/utils.py", line 85, in _execute
+    return self.cursor.execute(sql, params)
+psycopg2.DataError: value too long for type character varying(20)
+
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/core/handlers/exception.py", line 35, in inner
+    response = get_response(request)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/core/handlers/base.py", line 128, in _get_response
+    response = self.process_exception_by_middleware(e, request)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/core/handlers/base.py", line 126, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/var/www/ears_system/veoc/views.py", line 1239, in quarantine_register
+    updated_at=current_date, created_by=userObject, updated_by=userObject, created_at=current_date)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/models/manager.py", line 82, in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/models/query.py", line 417, in create
+    obj.save(force_insert=True, using=self.db)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/models/base.py", line 729, in save
+    force_update=force_update, update_fields=update_fields)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/models/base.py", line 759, in save_base
+    updated = self._save_table(raw, cls, force_insert, force_update, using, update_fields)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/models/base.py", line 842, in _save_table
+    result = self._do_insert(cls._base_manager, using, fields, update_pk, raw)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/models/base.py", line 880, in _do_insert
+    using=using, raw=raw)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/models/manager.py", line 82, in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/models/query.py", line 1125, in _insert
+    return query.get_compiler(using=using).execute_sql(return_id)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/models/sql/compiler.py", line 1280, in execute_sql
+    cursor.execute(sql, params)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/backends/utils.py", line 100, in execute
+    return super().execute(sql, params)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/backends/utils.py", line 68, in execute
+    return self._execute_with_wrappers(sql, params, many=False, executor=self._execute)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/backends/utils.py", line 77, in _execute_with_wrappers
+    return executor(sql, params, many, context)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/backends/utils.py", line 85, in _execute
+    return self.cursor.execute(sql, params)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/utils.py", line 89, in __exit__
+    raise dj_exc_value.with_traceback(traceback) from exc_value
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/backends/utils.py", line 85, in _execute
+    return self.cursor.execute(sql, params)
+django.db.utils.DataError: value too long for type character varying(20)
+
+[16/Mar/2020 08:38:53] "POST /quarantine_register/ HTTP/1.1" 500 18766
+Internal Server Error: /quarantine_register/
+Traceback (most recent call last):
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/backends/utils.py", line 85, in _execute
+    return self.cursor.execute(sql, params)
+psycopg2.DataError: value too long for type character varying(20)
+
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/core/handlers/exception.py", line 35, in inner
+    response = get_response(request)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/core/handlers/base.py", line 128, in _get_response
+    response = self.process_exception_by_middleware(e, request)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/core/handlers/base.py", line 126, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/var/www/ears_system/veoc/views.py", line 1239, in quarantine_register
+    updated_at=current_date, created_by=userObject, updated_by=userObject, created_at=current_date)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/models/manager.py", line 82, in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/models/query.py", line 417, in create
+    obj.save(force_insert=True, using=self.db)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/models/base.py", line 729, in save
+    force_update=force_update, update_fields=update_fields)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/models/base.py", line 759, in save_base
+    updated = self._save_table(raw, cls, force_insert, force_update, using, update_fields)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/models/base.py", line 842, in _save_table
+    result = self._do_insert(cls._base_manager, using, fields, update_pk, raw)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/models/base.py", line 880, in _do_insert
+    using=using, raw=raw)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/models/manager.py", line 82, in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/models/query.py", line 1125, in _insert
+    return query.get_compiler(using=using).execute_sql(return_id)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/models/sql/compiler.py", line 1280, in execute_sql
+    cursor.execute(sql, params)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/backends/utils.py", line 100, in execute
+    return super().execute(sql, params)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/backends/utils.py", line 68, in execute
+    return self._execute_with_wrappers(sql, params, many=False, executor=self._execute)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/backends/utils.py", line 77, in _execute_with_wrappers
+    return executor(sql, params, many, context)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/backends/utils.py", line 85, in _execute
+    return self.cursor.execute(sql, params)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/utils.py", line 89, in __exit__
+    raise dj_exc_value.with_traceback(traceback) from exc_value
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/backends/utils.py", line 85, in _execute
+    return self.cursor.execute(sql, params)
+django.db.utils.DataError: value too long for type character varying(20)
+
+[16/Mar/2020 08:38:54] "POST /quarantine_register/ HTTP/1.1" 500 18766
+Internal Server Error: /quarantine_register/
+Traceback (most recent call last):
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/backends/utils.py", line 85, in _execute
+    return self.cursor.execute(sql, params)
+psycopg2.DataError: value too long for type character varying(20)
+
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/core/handlers/exception.py", line 35, in inner
+    response = get_response(request)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/core/handlers/base.py", line 128, in _get_response
+    response = self.process_exception_by_middleware(e, request)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/core/handlers/base.py", line 126, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/var/www/ears_system/veoc/views.py", line 1239, in quarantine_register
+    updated_at=current_date, created_by=userObject, updated_by=userObject, created_at=current_date)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/models/manager.py", line 82, in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/models/query.py", line 417, in create
+    obj.save(force_insert=True, using=self.db)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/models/base.py", line 729, in save
+    force_update=force_update, update_fields=update_fields)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/models/base.py", line 759, in save_base
+    updated = self._save_table(raw, cls, force_insert, force_update, using, update_fields)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/models/base.py", line 842, in _save_table
+    result = self._do_insert(cls._base_manager, using, fields, update_pk, raw)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/models/base.py", line 880, in _do_insert
+    using=using, raw=raw)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/models/manager.py", line 82, in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/models/query.py", line 1125, in _insert
+    return query.get_compiler(using=using).execute_sql(return_id)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/models/sql/compiler.py", line 1280, in execute_sql
+    cursor.execute(sql, params)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/backends/utils.py", line 100, in execute
+    return super().execute(sql, params)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/backends/utils.py", line 68, in execute
+    return self._execute_with_wrappers(sql, params, many=False, executor=self._execute)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/backends/utils.py", line 77, in _execute_with_wrappers
+    return executor(sql, params, many, context)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/backends/utils.py", line 85, in _execute
+    return self.cursor.execute(sql, params)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/utils.py", line 89, in __exit__
+    raise dj_exc_value.with_traceback(traceback) from exc_value
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/backends/utils.py", line 85, in _execute
+    return self.cursor.execute(sql, params)
+django.db.utils.DataError: value too long for type character varying(20)
+
+[16/Mar/2020 08:39:08] "POST /quarantine_register/ HTTP/1.1" 500 18769
+Internal Server Error: /quarantine_register/
+Traceback (most recent call last):
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/backends/utils.py", line 85, in _execute
+    return self.cursor.execute(sql, params)
+psycopg2.DataError: value too long for type character varying(20)
+
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/core/handlers/exception.py", line 35, in inner
+    response = get_response(request)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/core/handlers/base.py", line 128, in _get_response
+    response = self.process_exception_by_middleware(e, request)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/core/handlers/base.py", line 126, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/var/www/ears_system/veoc/views.py", line 1239, in quarantine_register
+    updated_at=current_date, created_by=userObject, updated_by=userObject, created_at=current_date)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/models/manager.py", line 82, in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/models/query.py", line 417, in create
+    obj.save(force_insert=True, using=self.db)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/models/base.py", line 729, in save
+    force_update=force_update, update_fields=update_fields)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/models/base.py", line 759, in save_base
+    updated = self._save_table(raw, cls, force_insert, force_update, using, update_fields)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/models/base.py", line 842, in _save_table
+    result = self._do_insert(cls._base_manager, using, fields, update_pk, raw)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/models/base.py", line 880, in _do_insert
+    using=using, raw=raw)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/models/manager.py", line 82, in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/models/query.py", line 1125, in _insert
+    return query.get_compiler(using=using).execute_sql(return_id)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/models/sql/compiler.py", line 1280, in execute_sql
+    cursor.execute(sql, params)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/backends/utils.py", line 100, in execute
+    return super().execute(sql, params)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/backends/utils.py", line 68, in execute
+    return self._execute_with_wrappers(sql, params, many=False, executor=self._execute)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/backends/utils.py", line 77, in _execute_with_wrappers
+    return executor(sql, params, many, context)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/backends/utils.py", line 85, in _execute
+    return self.cursor.execute(sql, params)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/utils.py", line 89, in __exit__
+    raise dj_exc_value.with_traceback(traceback) from exc_value
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/backends/utils.py", line 85, in _execute
+    return self.cursor.execute(sql, params)
+django.db.utils.DataError: value too long for type character varying(20)
+
+[16/Mar/2020 08:39:09] "POST /quarantine_register/ HTTP/1.1" 500 18769
+Internal Server Error: /quarantine_register/
+Traceback (most recent call last):
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/backends/utils.py", line 85, in _execute
+    return self.cursor.execute(sql, params)
+psycopg2.DataError: value too long for type character varying(20)
+
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/core/handlers/exception.py", line 35, in inner
+    response = get_response(request)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/core/handlers/base.py", line 128, in _get_response
+    response = self.process_exception_by_middleware(e, request)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/core/handlers/base.py", line 126, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/var/www/ears_system/veoc/views.py", line 1239, in quarantine_register
+    updated_at=current_date, created_by=userObject, updated_by=userObject, created_at=current_date)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/models/manager.py", line 82, in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/models/query.py", line 417, in create
+    obj.save(force_insert=True, using=self.db)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/models/base.py", line 729, in save
+    force_update=force_update, update_fields=update_fields)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/models/base.py", line 759, in save_base
+    updated = self._save_table(raw, cls, force_insert, force_update, using, update_fields)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/models/base.py", line 842, in _save_table
+    result = self._do_insert(cls._base_manager, using, fields, update_pk, raw)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/models/base.py", line 880, in _do_insert
+    using=using, raw=raw)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/models/manager.py", line 82, in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/models/query.py", line 1125, in _insert
+    return query.get_compiler(using=using).execute_sql(return_id)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/models/sql/compiler.py", line 1280, in execute_sql
+    cursor.execute(sql, params)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/backends/utils.py", line 100, in execute
+    return super().execute(sql, params)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/backends/utils.py", line 68, in execute
+    return self._execute_with_wrappers(sql, params, many=False, executor=self._execute)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/backends/utils.py", line 77, in _execute_with_wrappers
+    return executor(sql, params, many, context)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/backends/utils.py", line 85, in _execute
+    return self.cursor.execute(sql, params)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/utils.py", line 89, in __exit__
+    raise dj_exc_value.with_traceback(traceback) from exc_value
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/backends/utils.py", line 85, in _execute
+    return self.cursor.execute(sql, params)
+django.db.utils.DataError: value too long for type character varying(20)
+
+[16/Mar/2020 08:39:11] "POST /quarantine_register/ HTTP/1.1" 500 18769
+Internal Server Error: /quarantine_register/
+Traceback (most recent call last):
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/backends/utils.py", line 85, in _execute
+    return self.cursor.execute(sql, params)
+psycopg2.DataError: value too long for type character varying(20)
+
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/core/handlers/exception.py", line 35, in inner
+    response = get_response(request)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/core/handlers/base.py", line 128, in _get_response
+    response = self.process_exception_by_middleware(e, request)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/core/handlers/base.py", line 126, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/var/www/ears_system/veoc/views.py", line 1239, in quarantine_register
+    updated_at=current_date, created_by=userObject, updated_by=userObject, created_at=current_date)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/models/manager.py", line 82, in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/models/query.py", line 417, in create
+    obj.save(force_insert=True, using=self.db)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/models/base.py", line 729, in save
+    force_update=force_update, update_fields=update_fields)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/models/base.py", line 759, in save_base
+    updated = self._save_table(raw, cls, force_insert, force_update, using, update_fields)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/models/base.py", line 842, in _save_table
+    result = self._do_insert(cls._base_manager, using, fields, update_pk, raw)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/models/base.py", line 880, in _do_insert
+    using=using, raw=raw)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/models/manager.py", line 82, in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/models/query.py", line 1125, in _insert
+    return query.get_compiler(using=using).execute_sql(return_id)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/models/sql/compiler.py", line 1280, in execute_sql
+    cursor.execute(sql, params)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/backends/utils.py", line 100, in execute
+    return super().execute(sql, params)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/backends/utils.py", line 68, in execute
+    return self._execute_with_wrappers(sql, params, many=False, executor=self._execute)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/backends/utils.py", line 77, in _execute_with_wrappers
+    return executor(sql, params, many, context)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/backends/utils.py", line 85, in _execute
+    return self.cursor.execute(sql, params)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/utils.py", line 89, in __exit__
+    raise dj_exc_value.with_traceback(traceback) from exc_value
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/backends/utils.py", line 85, in _execute
+    return self.cursor.execute(sql, params)
+django.db.utils.DataError: value too long for type character varying(20)
+
+[16/Mar/2020 08:39:13] "POST /quarantine_register/ HTTP/1.1" 500 18769
+Internal Server Error: /quarantine_register/
+Traceback (most recent call last):
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/backends/utils.py", line 85, in _execute
+    return self.cursor.execute(sql, params)
+psycopg2.DataError: value too long for type character varying(20)
+
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/core/handlers/exception.py", line 35, in inner
+    response = get_response(request)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/core/handlers/base.py", line 128, in _get_response
+    response = self.process_exception_by_middleware(e, request)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/core/handlers/base.py", line 126, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/var/www/ears_system/veoc/views.py", line 1239, in quarantine_register
+    updated_at=current_date, created_by=userObject, updated_by=userObject, created_at=current_date)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/models/manager.py", line 82, in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/models/query.py", line 417, in create
+    obj.save(force_insert=True, using=self.db)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/models/base.py", line 729, in save
+    force_update=force_update, update_fields=update_fields)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/models/base.py", line 759, in save_base
+    updated = self._save_table(raw, cls, force_insert, force_update, using, update_fields)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/models/base.py", line 842, in _save_table
+    result = self._do_insert(cls._base_manager, using, fields, update_pk, raw)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/models/base.py", line 880, in _do_insert
+    using=using, raw=raw)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/models/manager.py", line 82, in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/models/query.py", line 1125, in _insert
+    return query.get_compiler(using=using).execute_sql(return_id)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/models/sql/compiler.py", line 1280, in execute_sql
+    cursor.execute(sql, params)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/backends/utils.py", line 100, in execute
+    return super().execute(sql, params)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/backends/utils.py", line 68, in execute
+    return self._execute_with_wrappers(sql, params, many=False, executor=self._execute)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/backends/utils.py", line 77, in _execute_with_wrappers
+    return executor(sql, params, many, context)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/backends/utils.py", line 85, in _execute
+    return self.cursor.execute(sql, params)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/utils.py", line 89, in __exit__
+    raise dj_exc_value.with_traceback(traceback) from exc_value
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/backends/utils.py", line 85, in _execute
+    return self.cursor.execute(sql, params)
+django.db.utils.DataError: value too long for type character varying(20)
+
+[16/Mar/2020 08:39:22] "POST /quarantine_register/ HTTP/1.1" 500 18771
+Internal Server Error: /quarantine_register/
+Traceback (most recent call last):
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/backends/utils.py", line 85, in _execute
+    return self.cursor.execute(sql, params)
+psycopg2.DataError: value too long for type character varying(20)
+
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/core/handlers/exception.py", line 35, in inner
+    response = get_response(request)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/core/handlers/base.py", line 128, in _get_response
+    response = self.process_exception_by_middleware(e, request)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/core/handlers/base.py", line 126, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/var/www/ears_system/veoc/views.py", line 1239, in quarantine_register
+    updated_at=current_date, created_by=userObject, updated_by=userObject, created_at=current_date)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/models/manager.py", line 82, in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/models/query.py", line 417, in create
+    obj.save(force_insert=True, using=self.db)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/models/base.py", line 729, in save
+    force_update=force_update, update_fields=update_fields)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/models/base.py", line 759, in save_base
+    updated = self._save_table(raw, cls, force_insert, force_update, using, update_fields)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/models/base.py", line 842, in _save_table
+    result = self._do_insert(cls._base_manager, using, fields, update_pk, raw)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/models/base.py", line 880, in _do_insert
+    using=using, raw=raw)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/models/manager.py", line 82, in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/models/query.py", line 1125, in _insert
+    return query.get_compiler(using=using).execute_sql(return_id)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/models/sql/compiler.py", line 1280, in execute_sql
+    cursor.execute(sql, params)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/backends/utils.py", line 100, in execute
+    return super().execute(sql, params)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/backends/utils.py", line 68, in execute
+    return self._execute_with_wrappers(sql, params, many=False, executor=self._execute)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/backends/utils.py", line 77, in _execute_with_wrappers
+    return executor(sql, params, many, context)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/backends/utils.py", line 85, in _execute
+    return self.cursor.execute(sql, params)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/utils.py", line 89, in __exit__
+    raise dj_exc_value.with_traceback(traceback) from exc_value
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/backends/utils.py", line 85, in _execute
+    return self.cursor.execute(sql, params)
+django.db.utils.DataError: value too long for type character varying(20)
+
+[16/Mar/2020 08:39:23] "POST /quarantine_register/ HTTP/1.1" 500 18771
+Internal Server Error: /quarantine_register/
+Traceback (most recent call last):
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/backends/utils.py", line 85, in _execute
+    return self.cursor.execute(sql, params)
+psycopg2.DataError: value too long for type character varying(20)
+
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/core/handlers/exception.py", line 35, in inner
+    response = get_response(request)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/core/handlers/base.py", line 128, in _get_response
+    response = self.process_exception_by_middleware(e, request)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/core/handlers/base.py", line 126, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/var/www/ears_system/veoc/views.py", line 1239, in quarantine_register
+    updated_at=current_date, created_by=userObject, updated_by=userObject, created_at=current_date)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/models/manager.py", line 82, in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/models/query.py", line 417, in create
+    obj.save(force_insert=True, using=self.db)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/models/base.py", line 729, in save
+    force_update=force_update, update_fields=update_fields)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/models/base.py", line 759, in save_base
+    updated = self._save_table(raw, cls, force_insert, force_update, using, update_fields)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/models/base.py", line 842, in _save_table
+    result = self._do_insert(cls._base_manager, using, fields, update_pk, raw)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/models/base.py", line 880, in _do_insert
+    using=using, raw=raw)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/models/manager.py", line 82, in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/models/query.py", line 1125, in _insert
+    return query.get_compiler(using=using).execute_sql(return_id)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/models/sql/compiler.py", line 1280, in execute_sql
+    cursor.execute(sql, params)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/backends/utils.py", line 100, in execute
+    return super().execute(sql, params)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/backends/utils.py", line 68, in execute
+    return self._execute_with_wrappers(sql, params, many=False, executor=self._execute)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/backends/utils.py", line 77, in _execute_with_wrappers
+    return executor(sql, params, many, context)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/backends/utils.py", line 85, in _execute
+    return self.cursor.execute(sql, params)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/utils.py", line 89, in __exit__
+    raise dj_exc_value.with_traceback(traceback) from exc_value
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/backends/utils.py", line 85, in _execute
+    return self.cursor.execute(sql, params)
+django.db.utils.DataError: value too long for type character varying(20)
+
+[16/Mar/2020 08:39:24] "POST /quarantine_register/ HTTP/1.1" 500 18771
+Internal Server Error: /quarantine_register/
+Traceback (most recent call last):
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/backends/utils.py", line 85, in _execute
+    return self.cursor.execute(sql, params)
+psycopg2.DataError: value too long for type character varying(20)
+
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/core/handlers/exception.py", line 35, in inner
+    response = get_response(request)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/core/handlers/base.py", line 128, in _get_response
+    response = self.process_exception_by_middleware(e, request)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/core/handlers/base.py", line 126, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/var/www/ears_system/veoc/views.py", line 1239, in quarantine_register
+    updated_at=current_date, created_by=userObject, updated_by=userObject, created_at=current_date)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/models/manager.py", line 82, in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/models/query.py", line 417, in create
+    obj.save(force_insert=True, using=self.db)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/models/base.py", line 729, in save
+    force_update=force_update, update_fields=update_fields)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/models/base.py", line 759, in save_base
+    updated = self._save_table(raw, cls, force_insert, force_update, using, update_fields)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/models/base.py", line 842, in _save_table
+    result = self._do_insert(cls._base_manager, using, fields, update_pk, raw)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/models/base.py", line 880, in _do_insert
+    using=using, raw=raw)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/models/manager.py", line 82, in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/models/query.py", line 1125, in _insert
+    return query.get_compiler(using=using).execute_sql(return_id)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/models/sql/compiler.py", line 1280, in execute_sql
+    cursor.execute(sql, params)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/backends/utils.py", line 100, in execute
+    return super().execute(sql, params)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/backends/utils.py", line 68, in execute
+    return self._execute_with_wrappers(sql, params, many=False, executor=self._execute)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/backends/utils.py", line 77, in _execute_with_wrappers
+    return executor(sql, params, many, context)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/backends/utils.py", line 85, in _execute
+    return self.cursor.execute(sql, params)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/utils.py", line 89, in __exit__
+    raise dj_exc_value.with_traceback(traceback) from exc_value
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/backends/utils.py", line 85, in _execute
+    return self.cursor.execute(sql, params)
+django.db.utils.DataError: value too long for type character varying(20)
+
+[16/Mar/2020 08:39:25] "POST /quarantine_register/ HTTP/1.1" 500 18771
+[16/Mar/2020 08:39:27] "GET /quarantine_register/ HTTP/1.1" 200 63265
+Internal Server Error: /quarantine_register/
+Traceback (most recent call last):
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/backends/utils.py", line 85, in _execute
+    return self.cursor.execute(sql, params)
+psycopg2.DataError: value too long for type character varying(20)
+
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/core/handlers/exception.py", line 35, in inner
+    response = get_response(request)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/core/handlers/base.py", line 128, in _get_response
+    response = self.process_exception_by_middleware(e, request)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/core/handlers/base.py", line 126, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/var/www/ears_system/veoc/views.py", line 1239, in quarantine_register
+    updated_at=current_date, created_by=userObject, updated_by=userObject, created_at=current_date)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/models/manager.py", line 82, in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/models/query.py", line 417, in create
+    obj.save(force_insert=True, using=self.db)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/models/base.py", line 729, in save
+    force_update=force_update, update_fields=update_fields)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/models/base.py", line 759, in save_base
+    updated = self._save_table(raw, cls, force_insert, force_update, using, update_fields)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/models/base.py", line 842, in _save_table
+    result = self._do_insert(cls._base_manager, using, fields, update_pk, raw)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/models/base.py", line 880, in _do_insert
+    using=using, raw=raw)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/models/manager.py", line 82, in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/models/query.py", line 1125, in _insert
+    return query.get_compiler(using=using).execute_sql(return_id)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/models/sql/compiler.py", line 1280, in execute_sql
+    cursor.execute(sql, params)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/backends/utils.py", line 100, in execute
+    return super().execute(sql, params)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/backends/utils.py", line 68, in execute
+    return self._execute_with_wrappers(sql, params, many=False, executor=self._execute)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/backends/utils.py", line 77, in _execute_with_wrappers
+    return executor(sql, params, many, context)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/backends/utils.py", line 85, in _execute
+    return self.cursor.execute(sql, params)
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/utils.py", line 89, in __exit__
+    raise dj_exc_value.with_traceback(traceback) from exc_value
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/backends/utils.py", line 85, in _execute
+    return self.cursor.execute(sql, params)
+django.db.utils.DataError: value too long for type character varying(20)
+
+[16/Mar/2020 08:40:13] "POST /quarantine_register/ HTTP/1.1" 500 18691
+Not Found: /robots.txt
+[16/Mar/2020 08:40:24] "GET /robots.txt HTTP/1.1" 404 24898
+[16/Mar/2020 08:40:24] "GET / HTTP/1.1" 200 5586
+[16/Mar/2020 08:40:25] "GET /static/vendor/mdi-font/css/material-design-iconic-font.min.css HTTP/1.1" 304 0
+[16/Mar/2020 08:40:25] "GET /static/vendor/font-awesome-4.7/css/font-awesome.min.css HTTP/1.1" 304 0
+[16/Mar/2020 08:40:25] "GET /static/vendor/datepicker/daterangepicker.css HTTP/1.1" 304 0
+[16/Mar/2020 08:40:25] "GET /static/vendor/select2/select2.min.css HTTP/1.1" 304 0
+[16/Mar/2020 08:40:25] "GET /static/vendor/css/main.css HTTP/1.1" 304 0
+[16/Mar/2020 08:40:25] "GET /static/vendor/jquery/jquery.min.js HTTP/1.1" 304 0
+[16/Mar/2020 08:40:25] "GET /static/js/global.js HTTP/1.1" 304 0
+[16/Mar/2020 08:40:25] "GET /static/vendor/select2/select2.min.js HTTP/1.1" 304 0
+[16/Mar/2020 08:40:25] "GET /static/vendor/datepicker/moment.min.js HTTP/1.1" 304 0
+[16/Mar/2020 08:40:25] "GET /static/vendor/datepicker/daterangepicker.js HTTP/1.1" 304 0
+[16/Mar/2020 08:40:26] "GET /static/vendor/images/bg-head-02.jpg HTTP/1.1" 304 0
+Not Found: /favicon.ico
+[16/Mar/2020 08:40:27] "GET /favicon.ico HTTP/1.1" 404 24901
+[16/Mar/2020 08:40:32] "POST /?next= HTTP/1.1" 302 0
+/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/models/fields/__init__.py:1365: RuntimeWarning: DateTimeField disease.date_reported received a naive datetime (2020-02-15 00:00:00) while time zone support is active.
+  RuntimeWarning)
+/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/models/fields/__init__.py:1365: RuntimeWarning: DateTimeField event.date_reported received a naive datetime (2020-03-09 00:00:00) while time zone support is active.
+  RuntimeWarning)
+/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/models/fields/__init__.py:1365: RuntimeWarning: DateTimeField disease.date_reported received a naive datetime (2020-03-09 00:00:00) while time zone support is active.
+  RuntimeWarning)
+/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/models/fields/__init__.py:1365: RuntimeWarning: DateTimeField call_log.date_reported received a naive datetime (2020-03-15 00:00:00) while time zone support is active.
+  RuntimeWarning)
+/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/models/fields/__init__.py:1365: RuntimeWarning: DateTimeField event.date_reported received a naive datetime (2020-02-15 00:00:00) while time zone support is active.
+  RuntimeWarning)
+/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/models/fields/__init__.py:1365: RuntimeWarning: DateTimeField call_log.date_reported received a naive datetime (2020-02-15 00:00:00) while time zone support is active.
+  RuntimeWarning)
+/var/www/ears_system/venv/lib/python3.5/site-packages/django/template/defaulttags.py:63: UserWarning: A {% csrf_token %} was used in a template, but the context did not provide the value.  This is usually caused by not using RequestContext.
+  "A {% csrf_token %} was used in a template, but the context "
+[16/Mar/2020 08:40:34] "GET /dashboard/ HTTP/1.1" 200 67932
+[16/Mar/2020 08:40:35] "GET /static/css/simple-sidebar.css HTTP/1.1" 304 0
+[16/Mar/2020 08:40:35] "GET /static/css/bootstrap.min.css HTTP/1.1" 304 0
+[16/Mar/2020 08:40:35] "GET /static/css/dataTables.bootstrap.min.css HTTP/1.1" 304 0
+[16/Mar/2020 08:40:35] "GET /static/css/multi-select.css HTTP/1.1" 304 0
+[16/Mar/2020 08:40:35] "GET /static/css/heatmap.css HTTP/1.1" 304 0
+[16/Mar/2020 08:40:35] "GET /static/js/plotly-latest.min.js HTTP/1.1" 304 0
+[16/Mar/2020 08:40:35] "GET /static/js/jquery.multi-select.js HTTP/1.1" 304 0
+[16/Mar/2020 08:40:35] "GET /static/images/header.jpg HTTP/1.1" 304 0
+[16/Mar/2020 08:40:36] "GET /static/js/sidebar_menu.js HTTP/1.1" 304 0
+[16/Mar/2020 08:40:36] "GET /static/js/canvasjs.min.js HTTP/1.1" 304 0
+[17/Mar/2020 07:18:46] "GET / HTTP/1.1" 200 5586
+[17/Mar/2020 07:18:46] "GET /static/vendor/font-awesome-4.7/css/font-awesome.min.css HTTP/1.1" 304 0
+[17/Mar/2020 07:18:46] "GET /static/vendor/mdi-font/css/material-design-iconic-font.min.css HTTP/1.1" 304 0
+[17/Mar/2020 07:18:46] "GET /static/vendor/select2/select2.min.css HTTP/1.1" 304 0
+[17/Mar/2020 07:18:46] "GET /static/vendor/datepicker/daterangepicker.css HTTP/1.1" 304 0
+[17/Mar/2020 07:18:46] "GET /static/vendor/css/main.css HTTP/1.1" 304 0
+[17/Mar/2020 07:18:46] "GET /static/vendor/select2/select2.min.js HTTP/1.1" 304 0
+[17/Mar/2020 07:18:46] "GET /static/vendor/jquery/jquery.min.js HTTP/1.1" 304 0
+[17/Mar/2020 07:18:46] "GET /static/vendor/datepicker/moment.min.js HTTP/1.1" 304 0
+[17/Mar/2020 07:18:46] "GET /static/vendor/datepicker/daterangepicker.js HTTP/1.1" 304 0
+[17/Mar/2020 07:18:46] "GET /static/js/global.js HTTP/1.1" 304 0
+[17/Mar/2020 07:18:47] "GET /static/vendor/images/bg-head-02.jpg HTTP/1.1" 304 0
+[17/Mar/2020 07:20:59] "POST /?next= HTTP/1.1" 302 0
+/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/models/fields/__init__.py:1365: RuntimeWarning: DateTimeField disease.date_reported received a naive datetime (2020-02-16 00:00:00) while time zone support is active.
+  RuntimeWarning)
+/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/models/fields/__init__.py:1365: RuntimeWarning: DateTimeField event.date_reported received a naive datetime (2020-03-10 00:00:00) while time zone support is active.
+  RuntimeWarning)
+/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/models/fields/__init__.py:1365: RuntimeWarning: DateTimeField disease.date_reported received a naive datetime (2020-03-10 00:00:00) while time zone support is active.
+  RuntimeWarning)
+/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/models/fields/__init__.py:1365: RuntimeWarning: DateTimeField call_log.date_reported received a naive datetime (2020-03-16 00:00:00) while time zone support is active.
+  RuntimeWarning)
+/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/models/fields/__init__.py:1365: RuntimeWarning: DateTimeField event.date_reported received a naive datetime (2020-02-16 00:00:00) while time zone support is active.
+  RuntimeWarning)
+/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/models/fields/__init__.py:1365: RuntimeWarning: DateTimeField call_log.date_reported received a naive datetime (2020-02-16 00:00:00) while time zone support is active.
+  RuntimeWarning)
+/var/www/ears_system/venv/lib/python3.5/site-packages/django/template/defaulttags.py:63: UserWarning: A {% csrf_token %} was used in a template, but the context did not provide the value.  This is usually caused by not using RequestContext.
+  "A {% csrf_token %} was used in a template, but the context "
+[17/Mar/2020 07:21:01] "GET /dashboard/ HTTP/1.1" 200 67932
+[17/Mar/2020 07:21:02] "GET /static/css/simple-sidebar.css HTTP/1.1" 200 2959
+[17/Mar/2020 07:21:02] "GET /static/css/bootstrap.min.css HTTP/1.1" 200 121260
+[17/Mar/2020 07:21:02] "GET /static/css/heatmap.css HTTP/1.1" 200 572
+[17/Mar/2020 07:21:02] "GET /static/css/multi-select.css HTTP/1.1" 200 2248
+[17/Mar/2020 07:21:02] "GET /static/css/dataTables.bootstrap.min.css HTTP/1.1" 200 4216
+[17/Mar/2020 07:21:02] "GET /static/js/plotly-latest.min.js HTTP/1.1" 200 1814210
+[17/Mar/2020 07:21:02] "GET /static/js/jquery.multi-select.js HTTP/1.1" 200 19558
+[17/Mar/2020 07:21:02] "GET /static/images/header.jpg HTTP/1.1" 200 48208
+[17/Mar/2020 07:21:03] "GET /static/js/sidebar_menu.js HTTP/1.1" 200 930
+[17/Mar/2020 07:21:03] "GET /static/js/canvasjs.min.js HTTP/1.1" 200 278797
+[17/Mar/2020 07:21:04] "GET /static/fonts/glyphicons-halflings-regular.woff2 HTTP/1.1" 200 18028
+Forbidden (CSRF token missing or incorrect.): /get_chart_vals/
+[17/Mar/2020 07:21:05] "POST /get_chart_vals/ HTTP/1.1" 403 2513
+[17/Mar/2020 07:21:05] "POST /get_pie_disease/ HTTP/1.1" 200 69
+[17/Mar/2020 07:21:05] "POST /get_pie_event/ HTTP/1.1" 200 91
+[17/Mar/2020 07:21:05] "POST /get_dhis_disease/ HTTP/1.1" 200 2549
+[17/Mar/2020 07:21:06] "POST /get_diseases/ HTTP/1.1" 200 8202
+[17/Mar/2020 07:21:07] "POST /get_piedrilldown_disease/ HTTP/1.1" 200 44
+[17/Mar/2020 07:21:07] "POST /get_piedrilldown_disease/ HTTP/1.1" 200 44
+[17/Mar/2020 07:21:07] "POST /get_piedrilldown_event/ HTTP/1.1" 200 57
+[17/Mar/2020 07:21:07] "POST /get_piedrilldown_event/ HTTP/1.1" 200 57
+[17/Mar/2020 07:27:30] "GET /quarantine_register HTTP/1.1" 301 0
+[17/Mar/2020 07:27:31] "GET /quarantine_register/ HTTP/1.1" 200 63265
+[17/Mar/2020 07:29:37] "GET /static/images/ajax-loader.gif HTTP/1.1" 200 8238
+[17/Mar/2020 07:29:39] "POST /quarantine_register/ HTTP/1.1" 200 63265
+Performing system checks...
+
+System check identified no issues (0 silenced).
+March 17, 2020 - 07:17:33
+Django version 2.0, using settings 'virtual_eoc.settings'
+Starting development server at http://0.0.0.0:8000/
+Quit the server with CONTROL-C.
+National
+inside National dashboard
+/dashboard/
+inside get_dhis_diseases
+[{'deaths': 0, 'period': '2019W11', 'cases': 26}, {'deaths': 1, 'period': '2019W12', 'cases': 84}, {'deaths': 0, 'period': '2019W13', 'cases': 23}, {'deaths': 0, 'period': '2019W14', 'cases': 38}, {'deaths': 9, 'period': '2019W15', 'cases': 32}, {'deaths': 1, 'period': '2019W16', 'cases': 36}, {'deaths': 0, 'period': '2019W17', 'cases': 27}, {'deaths': 0, 'period': '2019W18', 'cases': 21}, {'deaths': 0, 'period': '2019W19', 'cases': 54}, {'deaths': 0, 'period': '2019W20', 'cases': 22}, {'deaths': 1, 'period': '2019W21', 'cases': 56}, {'deaths': 0, 'period': '2019W22', 'cases': 43}, {'deaths': 0, 'period': '2019W23', 'cases': 25}, {'deaths': 1, 'period': '2019W24', 'cases': 29}, {'deaths': 18, 'period': '2019W25', 'cases': 37}, {'deaths': 0, 'period': '2019W26', 'cases': 24}, {'deaths': 0, 'period': '2019W27', 'cases': 14}, {'deaths': 0, 'period': '2019W28', 'cases': 8}, {'deaths': 0, 'period': '2019W29', 'cases': 21}, {'deaths': 0, 'period': '2019W30', 'cases': 11}, {'deaths': 0, 'period': '2019W31', 'cases': 12}, {'deaths': 5, 'period': '2019W32', 'cases': 15}, {'deaths': 0, 'period': '2019W33', 'cases': 22}, {'deaths': 0, 'period': '2019W34', 'cases': 47}, {'deaths': 8, 'period': '2019W35', 'cases': 45}, {'deaths': 0, 'period': '2019W36', 'cases': 13}, {'deaths': 0, 'period': '2019W37', 'cases': 27}, {'deaths': 0, 'period': '2019W38', 'cases': 48}, {'deaths': 1, 'period': '2019W39', 'cases': 21}, {'deaths': 0, 'period': '2019W40', 'cases': 27}, {'deaths': 0, 'period': '2019W41', 'cases': 24}, {'deaths': 3, 'period': '2019W42', 'cases': 44}, {'deaths': 0, 'period': '2019W43', 'cases': 33}, {'deaths': 0, 'period': '2019W44', 'cases': 32}, {'deaths': 0, 'period': '2019W45', 'cases': 62}, {'deaths': 1, 'period': '2019W46', 'cases': 59}, {'deaths': 34, 'period': '2019W47', 'cases': 48}, {'deaths': 0, 'period': '2019W48', 'cases': 42}, {'deaths': 0, 'period': '2019W49', 'cases': 43}, {'deaths': 0, 'period': '2019W50', 'cases': 27}, {'deaths': 0, 'period': '2019W51', 'cases': 18}, {'deaths': 0, 'period': '2019W52', 'cases': 22}, {'deaths': 0, 'period': '2020W01', 'cases': 32}, {'deaths': 0, 'period': '2020W02', 'cases': 29}, {'deaths': 0, 'period': '2020W03', 'cases': 31}, {'deaths': 0, 'period': '2020W04', 'cases': 26}, {'deaths': 0, 'period': '2020W05', 'cases': 23}, {'deaths': 0, 'period': '2020W06', 'cases': 29}, {'deaths': 0, 'period': '2020W07', 'cases': 32}, {'deaths': 0, 'period': '2020W08', 'cases': 14}, {'deaths': 0, 'period': '2020W09', 'cases': 18}, {'deaths': 1, 'period': '2020W10', 'cases': 26}]
+Garissa County
+Garissa County
+admin
+b'{"message_status":"Success","Cost":"KES 1.2000"}'
+[17/Mar/2020 07:41:50] "GET /quarantine_register/ HTTP/1.1" 200 63265
+[17/Mar/2020 07:43:01] "GET /ongoing_tasks HTTP/1.1" 301 0
+[17/Mar/2020 07:43:02] "GET /ongoing_tasks/ HTTP/1.1" 200 251294
+[17/Mar/2020 07:44:00] "GET /quarantine_register/ HTTP/1.1" 200 63265
+[17/Mar/2020 07:44:48] "POST /quarantine_register/ HTTP/1.1" 200 63265
+[17/Mar/2020 08:26:53] "GET / HTTP/1.1" 200 5586
+[17/Mar/2020 08:26:53] "GET /static/vendor/mdi-font/css/material-design-iconic-font.min.css HTTP/1.1" 304 0
+[17/Mar/2020 08:26:53] "GET /static/vendor/font-awesome-4.7/css/font-awesome.min.css HTTP/1.1" 304 0
+[17/Mar/2020 08:26:53] "GET /static/vendor/datepicker/daterangepicker.css HTTP/1.1" 304 0
+[17/Mar/2020 08:26:53] "GET /static/vendor/select2/select2.min.css HTTP/1.1" 304 0
+[17/Mar/2020 08:26:53] "GET /static/vendor/datepicker/moment.min.js HTTP/1.1" 304 0
+[17/Mar/2020 08:26:53] "GET /static/vendor/select2/select2.min.js HTTP/1.1" 304 0
+[17/Mar/2020 08:26:53] "GET /static/vendor/datepicker/daterangepicker.js HTTP/1.1" 304 0
+[17/Mar/2020 08:26:53] "GET /static/js/global.js HTTP/1.1" 304 0
+[17/Mar/2020 08:26:53] "GET /static/vendor/css/main.css HTTP/1.1" 304 0
+[17/Mar/2020 08:26:53] "GET /static/vendor/jquery/jquery.min.js HTTP/1.1" 304 0
+[17/Mar/2020 08:26:53] "GET /static/vendor/images/bg-head-02.jpg HTTP/1.1" 304 0
+Not Found: /favicon.ico
+[17/Mar/2020 08:26:54] "GET /favicon.ico HTTP/1.1" 404 25102
+[17/Mar/2020 08:26:57] "POST /?next= HTTP/1.1" 302 0
+/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/models/fields/__init__.py:1365: RuntimeWarning: DateTimeField disease.date_reported received a naive datetime (2020-02-16 00:00:00) while time zone support is active.
+  RuntimeWarning)
+/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/models/fields/__init__.py:1365: RuntimeWarning: DateTimeField event.date_reported received a naive datetime (2020-03-10 00:00:00) while time zone support is active.
+  RuntimeWarning)
+/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/models/fields/__init__.py:1365: RuntimeWarning: DateTimeField disease.date_reported received a naive datetime (2020-03-10 00:00:00) while time zone support is active.
+  RuntimeWarning)
+/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/models/fields/__init__.py:1365: RuntimeWarning: DateTimeField call_log.date_reported received a naive datetime (2020-03-16 00:00:00) while time zone support is active.
+  RuntimeWarning)
+/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/models/fields/__init__.py:1365: RuntimeWarning: DateTimeField event.date_reported received a naive datetime (2020-02-16 00:00:00) while time zone support is active.
+  RuntimeWarning)
+/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/models/fields/__init__.py:1365: RuntimeWarning: DateTimeField call_log.date_reported received a naive datetime (2020-02-16 00:00:00) while time zone support is active.
+  RuntimeWarning)
+/var/www/ears_system/venv/lib/python3.5/site-packages/django/template/defaulttags.py:63: UserWarning: A {% csrf_token %} was used in a template, but the context did not provide the value.  This is usually caused by not using RequestContext.
+  "A {% csrf_token %} was used in a template, but the context "
+[17/Mar/2020 08:26:58] "GET /dashboard/ HTTP/1.1" 200 68011
+[17/Mar/2020 08:26:59] "GET /static/css/bootstrap.min.css HTTP/1.1" 304 0
+[17/Mar/2020 08:26:59] "GET /static/css/simple-sidebar.css HTTP/1.1" 304 0
+[17/Mar/2020 08:26:59] "GET /static/css/heatmap.css HTTP/1.1" 304 0
+[17/Mar/2020 08:26:59] "GET /static/css/dataTables.bootstrap.min.css HTTP/1.1" 304 0
+[17/Mar/2020 08:26:59] "GET /static/css/multi-select.css HTTP/1.1" 304 0
+[17/Mar/2020 08:26:59] "GET /static/js/plotly-latest.min.js HTTP/1.1" 304 0
+[17/Mar/2020 08:26:59] "GET /static/js/jquery.multi-select.js HTTP/1.1" 304 0
+[17/Mar/2020 08:26:59] "GET /static/images/header.jpg HTTP/1.1" 304 0
+[17/Mar/2020 08:26:59] "GET /static/js/sidebar_menu.js HTTP/1.1" 304 0
+[17/Mar/2020 08:26:59] "GET /static/js/canvasjs.min.js HTTP/1.1" 304 0
+[17/Mar/2020 08:27:00] "GET /static/fonts/glyphicons-halflings-regular.woff2 HTTP/1.1" 304 0
+Forbidden (CSRF token missing or incorrect.): /get_chart_vals/
+[17/Mar/2020 08:27:00] "POST /get_chart_vals/ HTTP/1.1" 403 2513
+[17/Mar/2020 08:27:00] "POST /get_pie_disease/ HTTP/1.1" 200 69
+[17/Mar/2020 08:27:00] "POST /get_pie_event/ HTTP/1.1" 200 91
+[17/Mar/2020 08:27:00] "POST /get_dhis_disease/ HTTP/1.1" 200 2549
+[17/Mar/2020 08:27:00] "POST /get_diseases/ HTTP/1.1" 200 8202
+[17/Mar/2020 08:27:01] "POST /get_piedrilldown_disease/ HTTP/1.1" 200 44
+[17/Mar/2020 08:27:01] "POST /get_piedrilldown_disease/ HTTP/1.1" 200 44
+[17/Mar/2020 08:27:01] "POST /get_piedrilldown_event/ HTTP/1.1" 200 57
+[17/Mar/2020 08:27:01] "POST /get_piedrilldown_event/ HTTP/1.1" 200 57
+[17/Mar/2020 08:27:04] "GET /complete_quarantine/ HTTP/1.1" 200 23211
+[17/Mar/2020 08:27:10] "GET /follow_up/ HTTP/1.1" 200 34132
+[17/Mar/2020 08:27:17] "GET /quarantine_list HTTP/1.1" 301 0
+[17/Mar/2020 08:27:17] "GET /quarantine_list/ HTTP/1.1" 200 31320
+[17/Mar/2020 09:02:59] "GET /access_dashboard HTTP/1.1" 301 0
+[17/Mar/2020 09:02:59] "GET /access_dashboard/ HTTP/1.1" 302 0
+[17/Mar/2020 09:03:01] "GET /dashboard/ HTTP/1.1" 200 68011
+Forbidden (CSRF token missing or incorrect.): /get_chart_vals/
+[17/Mar/2020 09:03:06] "POST /get_chart_vals/ HTTP/1.1" 403 2513
+[17/Mar/2020 09:03:06] "POST /get_pie_disease/ HTTP/1.1" 200 69
+[17/Mar/2020 09:03:06] "POST /get_pie_event/ HTTP/1.1" 200 91
+[17/Mar/2020 09:03:06] "POST /get_dhis_disease/ HTTP/1.1" 200 2549
+[17/Mar/2020 09:03:06] "POST /get_diseases/ HTTP/1.1" 200 8202
+[17/Mar/2020 09:03:07] "POST /get_piedrilldown_disease/ HTTP/1.1" 200 44
+[17/Mar/2020 09:03:07] "POST /get_piedrilldown_disease/ HTTP/1.1" 200 44
+[17/Mar/2020 09:03:08] "POST /get_piedrilldown_event/ HTTP/1.1" 200 57
+[17/Mar/2020 09:03:08] "POST /get_piedrilldown_event/ HTTP/1.1" 200 57
+Performing system checks...
+
+System check identified no issues (0 silenced).
+March 17, 2020 - 08:26:47
+Django version 2.0, using settings 'virtual_eoc.settings'
+Starting development server at http://0.0.0.0:8000/
+Quit the server with CONTROL-C.
+National
+inside National dashboard
+/dashboard/
+inside get_dhis_diseases
+[{'cases': 26, 'period': '2019W11', 'deaths': 0}, {'cases': 84, 'period': '2019W12', 'deaths': 1}, {'cases': 23, 'period': '2019W13', 'deaths': 0}, {'cases': 38, 'period': '2019W14', 'deaths': 0}, {'cases': 32, 'period': '2019W15', 'deaths': 9}, {'cases': 36, 'period': '2019W16', 'deaths': 1}, {'cases': 27, 'period': '2019W17', 'deaths': 0}, {'cases': 21, 'period': '2019W18', 'deaths': 0}, {'cases': 54, 'period': '2019W19', 'deaths': 0}, {'cases': 22, 'period': '2019W20', 'deaths': 0}, {'cases': 56, 'period': '2019W21', 'deaths': 1}, {'cases': 43, 'period': '2019W22', 'deaths': 0}, {'cases': 25, 'period': '2019W23', 'deaths': 0}, {'cases': 29, 'period': '2019W24', 'deaths': 1}, {'cases': 37, 'period': '2019W25', 'deaths': 18}, {'cases': 24, 'period': '2019W26', 'deaths': 0}, {'cases': 14, 'period': '2019W27', 'deaths': 0}, {'cases': 8, 'period': '2019W28', 'deaths': 0}, {'cases': 21, 'period': '2019W29', 'deaths': 0}, {'cases': 11, 'period': '2019W30', 'deaths': 0}, {'cases': 12, 'period': '2019W31', 'deaths': 0}, {'cases': 15, 'period': '2019W32', 'deaths': 5}, {'cases': 22, 'period': '2019W33', 'deaths': 0}, {'cases': 47, 'period': '2019W34', 'deaths': 0}, {'cases': 45, 'period': '2019W35', 'deaths': 8}, {'cases': 13, 'period': '2019W36', 'deaths': 0}, {'cases': 27, 'period': '2019W37', 'deaths': 0}, {'cases': 48, 'period': '2019W38', 'deaths': 0}, {'cases': 21, 'period': '2019W39', 'deaths': 1}, {'cases': 27, 'period': '2019W40', 'deaths': 0}, {'cases': 24, 'period': '2019W41', 'deaths': 0}, {'cases': 44, 'period': '2019W42', 'deaths': 3}, {'cases': 33, 'period': '2019W43', 'deaths': 0}, {'cases': 32, 'period': '2019W44', 'deaths': 0}, {'cases': 62, 'period': '2019W45', 'deaths': 0}, {'cases': 59, 'period': '2019W46', 'deaths': 1}, {'cases': 48, 'period': '2019W47', 'deaths': 34}, {'cases': 42, 'period': '2019W48', 'deaths': 0}, {'cases': 43, 'period': '2019W49', 'deaths': 0}, {'cases': 27, 'period': '2019W50', 'deaths': 0}, {'cases': 18, 'period': '2019W51', 'deaths': 0}, {'cases': 22, 'period': '2019W52', 'deaths': 0}, {'cases': 32, 'period': '2020W01', 'deaths': 0}, {'cases': 29, 'period': '2020W02', 'deaths': 0}, {'cases': 31, 'period': '2020W03', 'deaths': 0}, {'cases': 26, 'period': '2020W04', 'deaths': 0}, {'cases': 23, 'period': '2020W05', 'deaths': 0}, {'cases': 29, 'period': '2020W06', 'deaths': 0}, {'cases': 32, 'period': '2020W07', 'deaths': 0}, {'cases': 14, 'period': '2020W08', 'deaths': 0}, {'cases': 18, 'period': '2020W09', 'deaths': 0}, {'cases': 26, 'period': '2020W10', 'deaths': 1}]
+Garissa County
+Garissa County
+National
+inside National dashboard
+/dashboard/
+inside get_dhis_diseases
+[{'cases': 26, 'period': '2019W11', 'deaths': 0}, {'cases': 84, 'period': '2019W12', 'deaths': 1}, {'cases': 23, 'period': '2019W13', 'deaths': 0}, {'cases': 38, 'period': '2019W14', 'deaths': 0}, {'cases': 32, 'period': '2019W15', 'deaths': 9}, {'cases': 36, 'period': '2019W16', 'deaths': 1}, {'cases': 27, 'period': '2019W17', 'deaths': 0}, {'cases': 21, 'period': '2019W18', 'deaths': 0}, {'cases': 54, 'period': '2019W19', 'deaths': 0}, {'cases': 22, 'period': '2019W20', 'deaths': 0}, {'cases': 56, 'period': '2019W21', 'deaths': 1}, {'cases': 43, 'period': '2019W22', 'deaths': 0}, {'cases': 25, 'period': '2019W23', 'deaths': 0}, {'cases': 29, 'period': '2019W24', 'deaths': 1}, {'cases': 37, 'period': '2019W25', 'deaths': 18}, {'cases': 24, 'period': '2019W26', 'deaths': 0}, {'cases': 14, 'period': '2019W27', 'deaths': 0}, {'cases': 8, 'period': '2019W28', 'deaths': 0}, {'cases': 21, 'period': '2019W29', 'deaths': 0}, {'cases': 11, 'period': '2019W30', 'deaths': 0}, {'cases': 12, 'period': '2019W31', 'deaths': 0}, {'cases': 15, 'period': '2019W32', 'deaths': 5}, {'cases': 22, 'period': '2019W33', 'deaths': 0}, {'cases': 47, 'period': '2019W34', 'deaths': 0}, {'cases': 45, 'period': '2019W35', 'deaths': 8}, {'cases': 13, 'period': '2019W36', 'deaths': 0}, {'cases': 27, 'period': '2019W37', 'deaths': 0}, {'cases': 48, 'period': '2019W38', 'deaths': 0}, {'cases': 21, 'period': '2019W39', 'deaths': 1}, {'cases': 27, 'period': '2019W40', 'deaths': 0}, {'cases': 24, 'period': '2019W41', 'deaths': 0}, {'cases': 44, 'period': '2019W42', 'deaths': 3}, {'cases': 33, 'period': '2019W43', 'deaths': 0}, {'cases': 32, 'period': '2019W44', 'deaths': 0}, {'cases': 62, 'period': '2019W45', 'deaths': 0}, {'cases': 59, 'period': '2019W46', 'deaths': 1}, {'cases': 48, 'period': '2019W47', 'deaths': 34}, {'cases': 42, 'period': '2019W48', 'deaths': 0}, {'cases': 43, 'period': '2019W49', 'deaths': 0}, {'cases': 27, 'period': '2019W50', 'deaths': 0}, {'cases': 18, 'period': '2019W51', 'deaths': 0}, {'cases': 22, 'period': '2019W52', 'deaths': 0}, {'cases': 32, 'period': '2020W01', 'deaths': 0}, {'cases': 29, 'period': '2020W02', 'deaths': 0}, {'cases': 31, 'period': '2020W03', 'deaths': 0}, {'cases': 26, 'period': '2020W04', 'deaths': 0}, {'cases': 23, 'period': '2020W05', 'deaths': 0}, {'cases': 29, 'period': '2020W06', 'deaths': 0}, {'cases': 32, 'period': '2020W07', 'deaths': 0}, {'cases': 14, 'period': '2020W08', 'deaths': 0}, {'cases': 18, 'period': '2020W09', 'deaths': 0}, {'cases': 26, 'period': '2020W10', 'deaths': 1}]
+Garissa County
+Garissa County
+inside get_dhis_diseases
+[{'cases': 107182, 'period': '2019W11', 'deaths': 217}, {'cases': 101713, 'period': '2019W12', 'deaths': 200}, {'cases': 96154, 'period': '2019W13', 'deaths': 108}, {'cases': 105189, 'period': '2019W14', 'deaths': 192}, {'cases': 104294, 'period': '2019W15', 'deaths': 115}, {'cases': 88155, 'period': '2019W16', 'deaths': 3}, {'cases': 83661, 'period': '2019W17', 'deaths': 55}, {'cases': 94520, 'period': '2019W18', 'deaths': 28}, {'cases': 121351, 'period': '2019W19', 'deaths': 124}, {'cases': 143440, 'period': '2019W20', 'deaths': 16}, {'cases': 140864, 'period': '2019W21', 'deaths': 114}, {'cases': 151737, 'period': '2019W22', 'deaths': 262}, {'cases': 144470, 'period': '2019W23', 'deaths': 536}, {'cases': 148586, 'period': '2019W24', 'deaths': 47}, {'cases': 155998, 'period': '2019W25', 'deaths': 96}, {'cases': 154332, 'period': '2019W26', 'deaths': 72}, {'cases': 164898, 'period': '2019W27', 'deaths': 296}, {'cases': 181998, 'period': '2019W28', 'deaths': 390}, {'cases': 171509, 'period': '2019W29', 'deaths': 160}, {'cases': 164213, 'period': '2019W30', 'deaths': 36}, {'cases': 151574, 'period': '2019W31', 'deaths': 580}, {'cases': 125561, 'period': '2019W32', 'deaths': 219}, {'cases': 104814, 'period': '2019W33', 'deaths': 132}, {'cases': 118151, 'period': '2019W34', 'deaths': 254}, {'cases': 111734, 'period': '2019W35', 'deaths': 257}, {'cases': 116122, 'period': '2019W36', 'deaths': 16}, {'cases': 116889, 'period': '2019W37', 'deaths': 179}, {'cases': 122789, 'period': '2019W38', 'deaths': 85}, {'cases': 118214, 'period': '2019W39', 'deaths': 29}, {'cases': 110069, 'period': '2019W40', 'deaths': 30}, {'cases': 103119, 'period': '2019W41', 'deaths': 158}, {'cases': 100006, 'period': '2019W42', 'deaths': 137}, {'cases': 99380, 'period': '2019W43', 'deaths': 27}, {'cases': 101806, 'period': '2019W44', 'deaths': 74}, {'cases': 93294, 'period': '2019W45', 'deaths': 38}, {'cases': 92315, 'period': '2019W46', 'deaths': 51}, {'cases': 97033, 'period': '2019W47', 'deaths': 128}, {'cases': 89955, 'period': '2019W48', 'deaths': 101}, {'cases': 85846, 'period': '2019W49', 'deaths': 222}, {'cases': 79013, 'period': '2019W50', 'deaths': 46}, {'cases': 90969, 'period': '2019W51', 'deaths': 263}, {'cases': 60832, 'period': '2019W52', 'deaths': 46}, {'cases': 87272, 'period': '2020W01', 'deaths': 151}, {'cases': 117055, 'period': '2020W02', 'deaths': 565}, {'cases': 139503, 'period': '2020W03', 'deaths': 1385}, {'cases': 146745, 'period': '2020W04', 'deaths': 15}, {'cases': 148252, 'period': '2020W05', 'deaths': 16}, {'cases': 154238, 'period': '2020W06', 'deaths': 143}, {'cases': 143893, 'period': '2020W07', 'deaths': 166}, {'cases': 146740, 'period': '2020W08', 'deaths': 206}, {'cases': 134333, 'period': '2020W09', 'deaths': 267}, {'cases': 140021, 'period': '2020W10', 'deaths': 272}][17/Mar/2020 09:04:24] "POST /get_dhis_disease/ HTTP/1.1" 200 2826
+[17/Mar/2020 09:05:08] "GET /call_register HTTP/1.1" 301 0
+[17/Mar/2020 09:05:08] "GET /call_register/ HTTP/1.1" 200 62041
+[17/Mar/2020 09:06:01] "GET /follow_up HTTP/1.1" 301 0
+[17/Mar/2020 09:06:02] "GET /follow_up/ HTTP/1.1" 200 23726
+[17/Mar/2020 09:07:24] "GET /daily_reports HTTP/1.1" 301 0
+[17/Mar/2020 09:07:24] "GET /daily_reports/ HTTP/1.1" 200 33636
+/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/models/fields/__init__.py:1423: RuntimeWarning: DateTimeField call_log.date_reported received a naive datetime (2020-03-17 00:00:00) while time zone support is active.
+  RuntimeWarning)
+/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/models/fields/__init__.py:1423: RuntimeWarning: DateTimeField disease.date_reported received a naive datetime (2020-03-17 00:00:00) while time zone support is active.
+  RuntimeWarning)
+/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/models/fields/__init__.py:1423: RuntimeWarning: DateTimeField event.date_reported received a naive datetime (2020-03-17 00:00:00) while time zone support is active.
+  RuntimeWarning)
+[17/Mar/2020 09:07:33] "POST /daily_reports/ HTTP/1.1" 200 33636
+[17/Mar/2020 09:13:00] "GET /quarantine_register/ HTTP/1.1" 200 63344
+[17/Mar/2020 09:27:27] "POST /get_subcounty/ HTTP/1.1" 200 3595
+[17/Mar/2020 09:27:35] "POST /get_ward/ HTTP/1.1" 200 977
+[17/Mar/2020 09:27:56] "GET /quarantine_register/ HTTP/1.1" 200 63344
+[17/Mar/2020 09:35:07] "POST /get_subcounty/ HTTP/1.1" 200 3595
+[17/Mar/2020 09:35:11] "POST /get_ward/ HTTP/1.1" 200 1212
+[17/Mar/2020 09:35:40] "POST /quarantine_register/ HTTP/1.1" 200 63344
+[17/Mar/2020 09:35:57] "POST /quarantine_register/ HTTP/1.1" 200 63344
+[17/Mar/2020 09:49:54] "POST /quarantine_register/ HTTP/1.1" 200 63344
+[17/Mar/2020 09:53:23] "GET / HTTP/1.1" 200 5586
+[17/Mar/2020 09:53:27] "POST /?next= HTTP/1.1" 302 0
+/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/models/fields/__init__.py:1365: RuntimeWarning: DateTimeField disease.date_reported received a naive datetime (2020-02-16 00:00:00) while time zone support is active.
+  RuntimeWarning)
+/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/models/fields/__init__.py:1365: RuntimeWarning: DateTimeField event.date_reported received a naive datetime (2020-03-10 00:00:00) while time zone support is active.
+  RuntimeWarning)
+/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/models/fields/__init__.py:1365: RuntimeWarning: DateTimeField disease.date_reported received a naive datetime (2020-03-10 00:00:00) while time zone support is active.
+  RuntimeWarning)
+/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/models/fields/__init__.py:1365: RuntimeWarning: DateTimeField call_log.date_reported received a naive datetime (2020-03-16 00:00:00) while time zone support is active.
+  RuntimeWarning)
+/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/models/fields/__init__.py:1365: RuntimeWarning: DateTimeField event.date_reported received a naive datetime (2020-02-16 00:00:00) while time zone support is active.
+  RuntimeWarning)
+/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/models/fields/__init__.py:1365: RuntimeWarning: DateTimeField call_log.date_reported received a naive datetime (2020-02-16 00:00:00) while time zone support is active.
+  RuntimeWarning)
+/var/www/ears_system/venv/lib/python3.5/site-packages/django/template/defaulttags.py:63: UserWarning: A {% csrf_token %} was used in a template, but the context did not provide the value.  This is usually caused by not using RequestContext.
+  "A {% csrf_token %} was used in a template, but the context "
+[17/Mar/2020 09:53:28] "GET /dashboard/ HTTP/1.1" 200 68011
+Forbidden (CSRF token missing or incorrect.): /get_chart_vals/
+[17/Mar/2020 09:53:31] "POST /get_chart_vals/ HTTP/1.1" 403 2513
+[17/Mar/2020 09:53:31] "POST /get_pie_disease/ HTTP/1.1" 200 69
+[17/Mar/2020 09:53:31] "POST /get_pie_event/ HTTP/1.1" 200 91
+[17/Mar/2020 09:53:31] "POST /get_dhis_disease/ HTTP/1.1" 200 2549
+[17/Mar/2020 09:53:31] "POST /get_diseases/ HTTP/1.1" 200 8202
+[17/Mar/2020 09:53:31] "POST /get_piedrilldown_disease/ HTTP/1.1" 200 44
+[17/Mar/2020 09:53:31] "POST /get_piedrilldown_disease/ HTTP/1.1" 200 44
+[17/Mar/2020 09:53:31] "POST /get_piedrilldown_event/ HTTP/1.1" 200 57
+[17/Mar/2020 09:53:31] "POST /get_piedrilldown_event/ HTTP/1.1" 200 57
+[17/Mar/2020 09:53:37] "GET /quarantine_list/ HTTP/1.1" 200 25362
+[17/Mar/2020 09:53:43] "GET /quarantine_register/ HTTP/1.1" 200 63344
+[17/Mar/2020 09:54:25] "GET /static/images/ajax-loader.gif HTTP/1.1" 304 0
+[17/Mar/2020 09:54:32] "POST /quarantine_register/ HTTP/1.1" 200 63344
+[17/Mar/2020 09:55:18] "GET /quarantine_list HTTP/1.1" 301 0
+[17/Mar/2020 09:55:18] "GET /quarantine_list/ HTTP/1.1" 200 25957
+[17/Mar/2020 09:55:19] "GET /static/css/bootstrap.min.css HTTP/1.1" 304 0
+[17/Mar/2020 09:55:19] "GET /static/css/simple-sidebar.css HTTP/1.1" 304 0
+[17/Mar/2020 09:55:19] "GET /static/css/heatmap.css HTTP/1.1" 304 0
+[17/Mar/2020 09:55:19] "GET /static/js/plotly-latest.min.js HTTP/1.1" 304 0
+[17/Mar/2020 09:55:19] "GET /static/css/dataTables.bootstrap.min.css HTTP/1.1" 304 0
+[17/Mar/2020 09:55:19] "GET /static/css/multi-select.css HTTP/1.1" 304 0
+[17/Mar/2020 09:55:19] "GET /static/js/jquery.multi-select.js HTTP/1.1" 304 0
+[17/Mar/2020 09:55:20] "GET /static/images/header.jpg HTTP/1.1" 304 0
+[17/Mar/2020 09:55:22] "GET /static/js/sidebar_menu.js HTTP/1.1" 304 0
+[17/Mar/2020 09:55:22] "GET /static/fonts/glyphicons-halflings-regular.woff2 HTTP/1.1" 304 0
+[17/Mar/2020 09:55:57] "GET /follow_up/ HTTP/1.1" 200 24393
+[17/Mar/2020 10:08:19] "GET /call_register/ HTTP/1.1" 200 61966
+[17/Mar/2020 10:15:15] code 400, message Bad request version ('À\x14À')
+[17/Mar/2020 10:15:15] You're accessing the development server over HTTPS, but it only supports HTTP.
+
+[17/Mar/2020 10:25:15] "POST /get_subcounty/ HTTP/1.1" 200 949
+[17/Mar/2020 10:25:22] "POST /get_ward/ HTTP/1.1" 200 2
+[17/Mar/2020 10:25:30] "POST /get_ward/ HTTP/1.1" 200 718
+Invalid HTTP_HOST header: 'www.qq.com'. You may need to add 'www.qq.com' to ALLOWED_HOSTS.
+[17/Mar/2020 11:44:48] "GET http://www.qq.com/404/search_children.js HTTP/1.1" 400 62382
+Traceback (most recent call last):
+  File "/usr/lib/python3.5/wsgiref/handlers.py", line 138, in run
+    self.finish_response()
+  File "/usr/lib/python3.5/wsgiref/handlers.py", line 180, in finish_response
+    self.write(data)
+  File "/usr/lib/python3.5/wsgiref/handlers.py", line 279, in write
+    self._write(data)
+  File "/usr/lib/python3.5/wsgiref/handlers.py", line 463, in _write
+    result = self.stdout.write(data)
+  File "/usr/lib/python3.5/socket.py", line 593, in write
+    return self._sock.send(b)
+ConnectionResetError: [Errno 104] Connection reset by peer
+[17/Mar/2020 11:44:48] "GET http://www.qq.com/404/search_children.js HTTP/1.1" 500 59
+Traceback (most recent call last):
+  File "/usr/lib/python3.5/wsgiref/handlers.py", line 138, in run
+    self.finish_response()
+  File "/usr/lib/python3.5/wsgiref/handlers.py", line 180, in finish_response
+    self.write(data)
+  File "/usr/lib/python3.5/wsgiref/handlers.py", line 279, in write
+    self._write(data)
+  File "/usr/lib/python3.5/wsgiref/handlers.py", line 463, in _write
+    result = self.stdout.write(data)
+  File "/usr/lib/python3.5/socket.py", line 593, in write
+    return self._sock.send(b)
+ConnectionResetError: [Errno 104] Connection reset by peer
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/usr/lib/python3.5/wsgiref/handlers.py", line 141, in run
+    self.handle_error()
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/core/servers/basehttp.py", line 86, in handle_error
+    super().handle_error()
+  File "/usr/lib/python3.5/wsgiref/handlers.py", line 368, in handle_error
+    self.finish_response()
+  File "/usr/lib/python3.5/wsgiref/handlers.py", line 180, in finish_response
+    self.write(data)
+  File "/usr/lib/python3.5/wsgiref/handlers.py", line 274, in write
+    self.send_headers()
+  File "/usr/lib/python3.5/wsgiref/handlers.py", line 331, in send_headers
+    if not self.origin_server or self.client_is_modern():
+  File "/usr/lib/python3.5/wsgiref/handlers.py", line 344, in client_is_modern
+    return self.environ['SERVER_PROTOCOL'].upper() != 'HTTP/0.9'
+TypeError: 'NoneType' object is not subscriptable
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/usr/lib/python3.5/socketserver.py", line 625, in process_request_thread
+    self.finish_request(request, client_address)
+  File "/usr/lib/python3.5/socketserver.py", line 354, in finish_request
+    self.RequestHandlerClass(request, client_address, self)
+  File "/usr/lib/python3.5/socketserver.py", line 681, in __init__
+    self.handle()
+  File "/var/www/ears_system/venv/lib/python3.5/site-packages/django/core/servers/basehttp.py", line 154, in handle
+    handler.run(self.server.get_app())
+  File "/usr/lib/python3.5/wsgiref/handlers.py", line 144, in run
+    self.close()
+  File "/usr/lib/python3.5/wsgiref/simple_server.py", line 36, in close
+    self.status.split(' ',1)[0], self.bytes_sent
+AttributeError: 'NoneType' object has no attribute 'split'
+[17/Mar/2020 11:44:51] code 400, message Bad request syntax ('\x00\x9c\x00\x01\x1a+<M\x00\x01\x00\x00\x01\x00\x00\x00\x00\x00\x00\x03\x00\x00\x00\x03ÿÿ\x00\x01local\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00cananian\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00')
+[17/Mar/2020 11:44:51] "  +<M            ÿÿ local                                                           cananian                                                        " 400 -
+[17/Mar/2020 11:44:51] code 400, message Bad request syntax ('\x04\x01\x00PpTi4\x00')
+[17/Mar/2020 11:44:51] " PpTi4 " 400 -
+[17/Mar/2020 11:44:52] code 400, message Bad request syntax ('\x05\x01\x00')
+[17/Mar/2020 11:44:52] " " 400 -
+Invalid HTTP_HOST header: 'medassist.mhealthkenya.org'. You may need to add 'medassist.mhealthkenya.org' to ALLOWED_HOSTS.
+[17/Mar/2020 12:42:29] "GET / HTTP/1.1" 400 61922
+Invalid HTTP_HOST header: 'api.mhealthkenya.org'. You may need to add 'api.mhealthkenya.org' to ALLOWED_HOSTS.
+[17/Mar/2020 12:50:38] "GET / HTTP/1.1" 400 61833
+[17/Mar/2020 13:14:06] "GET / HTTP/1.1" 200 5586
+Not Found: /robots.txt
+[17/Mar/2020 13:14:07] "GET /robots.txt HTTP/1.1" 404 25099
+[17/Mar/2020 13:14:07] "GET /static/vendor/font-awesome-4.7/css/font-awesome.min.css HTTP/1.1" 304 0
+[17/Mar/2020 13:14:07] "GET /static/vendor/mdi-font/css/material-design-iconic-font.min.css HTTP/1.1" 304 0
+[17/Mar/2020 13:14:07] "GET /static/vendor/select2/select2.min.js HTTP/1.1" 304 0
+[17/Mar/2020 13:14:07] "GET /static/js/global.js HTTP/1.1" 304 0
+[17/Mar/2020 13:14:07] "GET /static/vendor/datepicker/moment.min.js HTTP/1.1" 304 0
+[17/Mar/2020 13:14:07] "GET /static/vendor/datepicker/daterangepicker.js HTTP/1.1" 304 0
+[17/Mar/2020 13:14:07] "GET /static/vendor/datepicker/daterangepicker.css HTTP/1.1" 304 0
+[17/Mar/2020 13:14:07] "GET /static/vendor/select2/select2.min.css HTTP/1.1" 304 0
+[17/Mar/2020 13:14:07] "GET /static/vendor/css/main.css HTTP/1.1" 304 0
+[17/Mar/2020 13:14:07] "GET /static/vendor/jquery/jquery.min.js HTTP/1.1" 304 0
+[17/Mar/2020 13:14:07] "GET /static/vendor/images/bg-head-02.jpg HTTP/1.1" 304 0
+Not Found: /favicon.ico
+[17/Mar/2020 13:14:08] "GET /favicon.ico HTTP/1.1" 404 25102
+[17/Mar/2020 13:14:12] "POST /?next= HTTP/1.1" 302 0
+/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/models/fields/__init__.py:1365: RuntimeWarning: DateTimeField disease.date_reported received a naive datetime (2020-02-16 00:00:00) while time zone support is active.
+  RuntimeWarning)
+/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/models/fields/__init__.py:1365: RuntimeWarning: DateTimeField event.date_reported received a naive datetime (2020-03-10 00:00:00) while time zone support is active.
+  RuntimeWarning)
+/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/models/fields/__init__.py:1365: RuntimeWarning: DateTimeField disease.date_reported received a naive datetime (2020-03-10 00:00:00) while time zone support is active.
+  RuntimeWarning)
+/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/models/fields/__init__.py:1365: RuntimeWarning: DateTimeField call_log.date_reported received a naive datetime (2020-03-16 00:00:00) while time zone support is active.
+  RuntimeWarning)
+/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/models/fields/__init__.py:1365: RuntimeWarning: DateTimeField event.date_reported received a naive datetime (2020-02-16 00:00:00) while time zone support is active.
+  RuntimeWarning)
+/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/models/fields/__init__.py:1365: RuntimeWarning: DateTimeField call_log.date_reported received a naive datetime (2020-02-16 00:00:00) while time zone support is active.
+  RuntimeWarning)
+/var/www/ears_system/venv/lib/python3.5/site-packages/django/template/defaulttags.py:63: UserWarning: A {% csrf_token %} was used in a template, but the context did not provide the value.  This is usually caused by not using RequestContext.
+  "A {% csrf_token %} was used in a template, but the context "
+[17/Mar/2020 13:14:13] "GET /dashboard/ HTTP/1.1" 200 68011
+[17/Mar/2020 13:14:14] "GET /static/css/bootstrap.min.css HTTP/1.1" 304 0
+[17/Mar/2020 13:14:14] "GET /static/css/simple-sidebar.css HTTP/1.1" 304 0
+[17/Mar/2020 13:14:14] "GET /static/css/heatmap.css HTTP/1.1" 304 0
+[17/Mar/2020 13:14:14] "GET /static/css/dataTables.bootstrap.min.css HTTP/1.1" 304 0
+[17/Mar/2020 13:14:14] "GET /static/css/multi-select.css HTTP/1.1" 304 0
+[17/Mar/2020 13:14:14] "GET /static/js/jquery.multi-select.js HTTP/1.1" 304 0
+[17/Mar/2020 13:14:14] "GET /static/js/plotly-latest.min.js HTTP/1.1" 304 0
+[17/Mar/2020 13:14:14] "GET /static/images/header.jpg HTTP/1.1" 304 0
+[17/Mar/2020 13:14:14] "GET /static/js/sidebar_menu.js HTTP/1.1" 304 0
+[17/Mar/2020 13:14:14] "GET /static/js/canvasjs.min.js HTTP/1.1" 304 0
+[17/Mar/2020 13:14:15] "GET /static/fonts/glyphicons-halflings-regular.woff2 HTTP/1.1" 304 0
+Forbidden (CSRF token missing or incorrect.): /get_chart_vals/
+[17/Mar/2020 13:14:15] "POST /get_chart_vals/ HTTP/1.1" 403 2513
+[17/Mar/2020 13:14:15] "POST /get_dhis_disease/ HTTP/1.1" 200 2549
+[17/Mar/2020 13:14:15] "POST /get_pie_disease/ HTTP/1.1" 200 69
+[17/Mar/2020 13:14:15] "POST /get_pie_event/ HTTP/1.1" 200 91
+[17/Mar/2020 13:14:15] "POST /get_diseases/ HTTP/1.1" 200 8202
+[17/Mar/2020 13:14:16] "POST /get_piedrilldown_disease/ HTTP/1.1" 200 44
+[17/Mar/2020 13:14:16] "POST /get_piedrilldown_disease/ HTTP/1.1" 200 44
+[17/Mar/2020 13:14:16] "POST /get_piedrilldown_event/ HTTP/1.1" 200 57
+[17/Mar/2020 13:14:17] "POST /get_piedrilldown_event/ HTTP/1.1" 200 57
+[17/Mar/2020 13:14:19] "GET /quarantine_register/ HTTP/1.1" 200 63344
+[17/Mar/2020 13:15:19] "POST /get_subcounty/ HTTP/1.1" 200 949
+[17/Mar/2020 13:15:20] "POST /get_ward/ HTTP/1.1" 200 1448
+[17/Mar/2020 13:15:27] "GET /static/images/ajax-loader.gif HTTP/1.1" 304 0
+[17/Mar/2020 13:15:28] "POST /quarantine_register/ HTTP/1.1" 200 63344
+Invalid HTTP_HOST header: 'mlab.mhealthkenya.org'. You may need to add 'mlab.mhealthkenya.org' to ALLOWED_HOSTS.
+[17/Mar/2020 15:03:19] "GET / HTTP/1.1" 400 61848
+Invalid HTTP_HOST header: 'ears-covid.localhost:8000'. You may need to add 'ears-covid.localhost' to ALLOWED_HOSTS.
+[17/Mar/2020 16:54:03] "GET http://110.249.212.46/testget?q=23333&port=8000 HTTP/1.1" 400 62804
+Invalid HTTP_HOST header: 'ears-covid.localhost:8000'. You may need to add 'ears-covid.localhost' to ALLOWED_HOSTS.
+[17/Mar/2020 16:54:03] "GET http://110.249.212.46/testget?q=23333&port=8000 HTTP/1.1" 400 62804
+Invalid HTTP_HOST header: 'ears-covid.localhost:8000'. You may need to add 'ears-covid.localhost' to ALLOWED_HOSTS.
+[17/Mar/2020 16:54:04] "GET http://110.249.212.46/testget?q=23333&port=8000 HTTP/1.1" 400 62804
+Invalid HTTP_HOST header: 'ears-covid.localhost:8000'. You may need to add 'ears-covid.localhost' to ALLOWED_HOSTS.
+[17/Mar/2020 16:54:24] "GET http://110.249.212.46/testget?q=23333&port=8000 HTTP/1.1" 400 62804
+Invalid HTTP_HOST header: 'ip.ws.126.net:443'. You may need to add 'ip.ws.126.net' to ALLOWED_HOSTS.
+[17/Mar/2020 18:21:18] "CONNECT ip.ws.126.net:443 HTTP/1.1" 400 61901
+Invalid HTTP_HOST header: 'ears-covid.localhost:8000'. You may need to add 'ears-covid.localhost' to ALLOWED_HOSTS.
+[17/Mar/2020 18:48:06] "GET / HTTP/1.1" 400 61523
+Invalid HTTP_HOST header: 'ears-covid.localhost:8000'. You may need to add 'ears-covid.localhost' to ALLOWED_HOSTS.
+[17/Mar/2020 19:58:36] "GET / HTTP/1.1" 400 61522
+Invalid HTTP_HOST header: 'ushauritest.mhealthkenya.co.ke'. You may need to add 'ushauritest.mhealthkenya.co.ke' to ALLOWED_HOSTS.
+[17/Mar/2020 20:27:20] "GET / HTTP/1.1" 400 61983
+Invalid HTTP_HOST header: 'c4c.mhealthkenya.co.ke'. You may need to add 'c4c.mhealthkenya.co.ke' to ALLOWED_HOSTS.
+[17/Mar/2020 21:09:30] "GET / HTTP/1.1" 400 61863
+[19/Mar/2020 06:47:48] "GET / HTTP/1.1" 200 5586
+Not Found: /robots.txt
+[19/Mar/2020 06:47:48] "GET /robots.txt HTTP/1.1" 404 25099
+[19/Mar/2020 06:47:48] "GET /static/vendor/mdi-font/css/material-design-iconic-font.min.css HTTP/1.1" 200 70815
+[19/Mar/2020 06:47:48] "GET /static/vendor/font-awesome-4.7/css/font-awesome.min.css HTTP/1.1" 200 31000
+[19/Mar/2020 06:47:49] "GET /static/vendor/select2/select2.min.css HTTP/1.1" 200 15180
+[19/Mar/2020 06:47:49] "GET /static/vendor/datepicker/daterangepicker.css HTTP/1.1" 200 8163
+[19/Mar/2020 06:47:49] "GET /static/vendor/css/main.css HTTP/1.1" 200 9814
+[19/Mar/2020 06:47:49] "GET /static/vendor/jquery/jquery.min.js HTTP/1.1" 200 86659
+[19/Mar/2020 06:47:49] "GET /static/vendor/select2/select2.min.js HTTP/1.1" 200 66606
+[19/Mar/2020 06:47:49] "GET /static/vendor/datepicker/moment.min.js HTTP/1.1" 200 46645
+[19/Mar/2020 06:47:49] "GET /static/vendor/datepicker/daterangepicker.js HTTP/1.1" 200 69776
+[19/Mar/2020 06:47:49] "GET /static/js/global.js HTTP/1.1" 200 1822
+[19/Mar/2020 06:47:49] "GET /static/vendor/images/bg-head-02.jpg HTTP/1.1" 200 115903
+Not Found: /favicon.ico
+[19/Mar/2020 06:47:50] "GET /favicon.ico HTTP/1.1" 404 25102
+[19/Mar/2020 06:47:55] "POST /?next= HTTP/1.1" 302 0
+/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/models/fields/__init__.py:1365: RuntimeWarning: DateTimeField disease.date_reported received a naive datetime (2020-02-18 00:00:00) while time zone support is active.
+  RuntimeWarning)
+/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/models/fields/__init__.py:1365: RuntimeWarning: DateTimeField event.date_reported received a naive datetime (2020-03-12 00:00:00) while time zone support is active.
+  RuntimeWarning)
+/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/models/fields/__init__.py:1365: RuntimeWarning: DateTimeField disease.date_reported received a naive datetime (2020-03-12 00:00:00) while time zone support is active.
+  RuntimeWarning)
+/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/models/fields/__init__.py:1365: RuntimeWarning: DateTimeField call_log.date_reported received a naive datetime (2020-03-18 00:00:00) while time zone support is active.
+  RuntimeWarning)
+/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/models/fields/__init__.py:1365: RuntimeWarning: DateTimeField event.date_reported received a naive datetime (2020-02-18 00:00:00) while time zone support is active.
+  RuntimeWarning)
+/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/models/fields/__init__.py:1365: RuntimeWarning: DateTimeField call_log.date_reported received a naive datetime (2020-02-18 00:00:00) while time zone support is active.
+  RuntimeWarning)
+/var/www/ears_system/venv/lib/python3.5/site-packages/django/template/defaulttags.py:63: UserWarning: A {% csrf_token %} was used in a template, but the context did not provide the value.  This is usually caused by not using RequestContext.
+  "A {% csrf_token %} was used in a template, but the context "
+[19/Mar/2020 06:47:57] "GET /dashboard/ HTTP/1.1" 200 68011
+[19/Mar/2020 06:47:57] "GET /static/css/bootstrap.min.css HTTP/1.1" 304 0
+[19/Mar/2020 06:47:57] "GET /static/css/simple-sidebar.css HTTP/1.1" 304 0
+[19/Mar/2020 06:47:57] "GET /static/css/heatmap.css HTTP/1.1" 304 0
+[19/Mar/2020 06:47:57] "GET /static/css/dataTables.bootstrap.min.css HTTP/1.1" 304 0
+[19/Mar/2020 06:47:57] "GET /static/css/multi-select.css HTTP/1.1" 304 0
+[19/Mar/2020 06:47:57] "GET /static/js/jquery.multi-select.js HTTP/1.1" 200 19558
+[19/Mar/2020 06:47:57] "GET /static/js/plotly-latest.min.js HTTP/1.1" 200 1814210
+[19/Mar/2020 06:47:58] "GET /static/images/header.jpg HTTP/1.1" 200 48208
+[19/Mar/2020 06:47:59] "GET /static/js/sidebar_menu.js HTTP/1.1" 200 930
+[19/Mar/2020 06:48:00] "GET /static/js/canvasjs.min.js HTTP/1.1" 200 278797
+[19/Mar/2020 06:48:00] "GET /static/fonts/glyphicons-halflings-regular.woff2 HTTP/1.1" 304 0
+Forbidden (CSRF token missing or incorrect.): /get_chart_vals/
+[19/Mar/2020 06:48:00] "POST /get_chart_vals/ HTTP/1.1" 403 2513
+[19/Mar/2020 06:48:00] "POST /get_pie_disease/ HTTP/1.1" 200 69
+[19/Mar/2020 06:48:00] "POST /get_pie_event/ HTTP/1.1" 200 91
+[19/Mar/2020 06:48:00] "POST /get_dhis_disease/ HTTP/1.1" 200 2549
+[19/Mar/2020 06:48:00] "POST /get_diseases/ HTTP/1.1" 200 8202
+[19/Mar/2020 06:48:00] "POST /get_piedrilldown_disease/ HTTP/1.1" 200 44
+[19/Mar/2020 06:48:01] "POST /get_piedrilldown_disease/ HTTP/1.1" 200 44
+[19/Mar/2020 06:48:01] "POST /get_piedrilldown_event/ HTTP/1.1" 200 57
+[19/Mar/2020 06:48:01] "POST /get_piedrilldown_event/ HTTP/1.1" 200 57
+[19/Mar/2020 06:48:17] "GET / HTTP/1.1" 200 5586
