@@ -1239,6 +1239,7 @@ def quarantine_register(request):
         updated_at=current_date, created_by=userObject, updated_by=userObject, created_at=current_date)
 
         # send sms to the patient for successful registration_form
+        # url = "https://mlab.mhealthkenya.co.ke/api/sms/gateway"
         url = "http://mlab.localhost/api/sms/gateway"
         msg = "Thank you " + first_name + " for registering. You will be required to send your temperature details during this quarantine period of 14 days. Please download the self reporting app on this link: http://tiny.cc/bebflz"
 
@@ -1641,6 +1642,14 @@ def daily_reports(request):
         day = time.strftime("%Y-%m-%d")
         return render(request, 'veoc/generate_pdf.html',{'day': day})
 
+def quarantine_list(request):
+    q_data = quarantine_contacts.objects.all()
+    q_data_count = quarantine_contacts.objects.all().count()
+
+    data = {'quarantine_data': q_data, 'quarantine_data_count': q_data_count}
+
+    return render(request, 'veoc/quarantine_list.html', data)
+
 def follow_up(request):
     follow_data = quarantine_follow_up.objects.all()
     follow_data_count = quarantine_follow_up.objects.all().count()
@@ -1651,12 +1660,11 @@ def follow_up(request):
 
 def complete_quarantine(request):
     follow_data = quarantine_follow_up.objects.all().filter(created_at__lte = date.today()- timedelta(days=14))
-    print(follow_data)
-    follow_data_count = quarantine_follow_up.objects.all().count()
+    follow_data_count = quarantine_follow_up.objects.all().filter(created_at__lte = date.today()- timedelta(days=14)).count()
 
     data = {'follow_data': follow_data, 'follow_data_count': follow_data_count}
 
-    return render(request, 'veoc/quarantine_follow_up.html', data)
+    return render(request, 'veoc/quarantine_complete.html', data)
 
 
 def ongoing_tasks(request):
@@ -2269,7 +2277,7 @@ def diseases_list(request):
         userObject = User.objects.get(pk = current_user.id)
 
         #saving values to databse
-        dhis_disease_type.objects.create(uid=uid, name=disease_name, priority_disease=priority, infectious_disease=infectous)
+        dhis_disease_type.objects.create(uid=uid, name=disease_name, priority_disease=priority, infectious_disease=infectious)
 
     disease_count = dhis_disease_type.objects.all().count
     disease_vals = dhis_disease_type.objects.all()
