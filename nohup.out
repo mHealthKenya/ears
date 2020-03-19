@@ -2092,3 +2092,57 @@ Invalid HTTP_HOST header: 'ushauritest.mhealthkenya.co.ke'. You may need to add 
 [17/Mar/2020 20:27:20] "GET / HTTP/1.1" 400 61983
 Invalid HTTP_HOST header: 'c4c.mhealthkenya.co.ke'. You may need to add 'c4c.mhealthkenya.co.ke' to ALLOWED_HOSTS.
 [17/Mar/2020 21:09:30] "GET / HTTP/1.1" 400 61863
+[19/Mar/2020 06:47:48] "GET / HTTP/1.1" 200 5586
+Not Found: /robots.txt
+[19/Mar/2020 06:47:48] "GET /robots.txt HTTP/1.1" 404 25099
+[19/Mar/2020 06:47:48] "GET /static/vendor/mdi-font/css/material-design-iconic-font.min.css HTTP/1.1" 200 70815
+[19/Mar/2020 06:47:48] "GET /static/vendor/font-awesome-4.7/css/font-awesome.min.css HTTP/1.1" 200 31000
+[19/Mar/2020 06:47:49] "GET /static/vendor/select2/select2.min.css HTTP/1.1" 200 15180
+[19/Mar/2020 06:47:49] "GET /static/vendor/datepicker/daterangepicker.css HTTP/1.1" 200 8163
+[19/Mar/2020 06:47:49] "GET /static/vendor/css/main.css HTTP/1.1" 200 9814
+[19/Mar/2020 06:47:49] "GET /static/vendor/jquery/jquery.min.js HTTP/1.1" 200 86659
+[19/Mar/2020 06:47:49] "GET /static/vendor/select2/select2.min.js HTTP/1.1" 200 66606
+[19/Mar/2020 06:47:49] "GET /static/vendor/datepicker/moment.min.js HTTP/1.1" 200 46645
+[19/Mar/2020 06:47:49] "GET /static/vendor/datepicker/daterangepicker.js HTTP/1.1" 200 69776
+[19/Mar/2020 06:47:49] "GET /static/js/global.js HTTP/1.1" 200 1822
+[19/Mar/2020 06:47:49] "GET /static/vendor/images/bg-head-02.jpg HTTP/1.1" 200 115903
+Not Found: /favicon.ico
+[19/Mar/2020 06:47:50] "GET /favicon.ico HTTP/1.1" 404 25102
+[19/Mar/2020 06:47:55] "POST /?next= HTTP/1.1" 302 0
+/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/models/fields/__init__.py:1365: RuntimeWarning: DateTimeField disease.date_reported received a naive datetime (2020-02-18 00:00:00) while time zone support is active.
+  RuntimeWarning)
+/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/models/fields/__init__.py:1365: RuntimeWarning: DateTimeField event.date_reported received a naive datetime (2020-03-12 00:00:00) while time zone support is active.
+  RuntimeWarning)
+/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/models/fields/__init__.py:1365: RuntimeWarning: DateTimeField disease.date_reported received a naive datetime (2020-03-12 00:00:00) while time zone support is active.
+  RuntimeWarning)
+/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/models/fields/__init__.py:1365: RuntimeWarning: DateTimeField call_log.date_reported received a naive datetime (2020-03-18 00:00:00) while time zone support is active.
+  RuntimeWarning)
+/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/models/fields/__init__.py:1365: RuntimeWarning: DateTimeField event.date_reported received a naive datetime (2020-02-18 00:00:00) while time zone support is active.
+  RuntimeWarning)
+/var/www/ears_system/venv/lib/python3.5/site-packages/django/db/models/fields/__init__.py:1365: RuntimeWarning: DateTimeField call_log.date_reported received a naive datetime (2020-02-18 00:00:00) while time zone support is active.
+  RuntimeWarning)
+/var/www/ears_system/venv/lib/python3.5/site-packages/django/template/defaulttags.py:63: UserWarning: A {% csrf_token %} was used in a template, but the context did not provide the value.  This is usually caused by not using RequestContext.
+  "A {% csrf_token %} was used in a template, but the context "
+[19/Mar/2020 06:47:57] "GET /dashboard/ HTTP/1.1" 200 68011
+[19/Mar/2020 06:47:57] "GET /static/css/bootstrap.min.css HTTP/1.1" 304 0
+[19/Mar/2020 06:47:57] "GET /static/css/simple-sidebar.css HTTP/1.1" 304 0
+[19/Mar/2020 06:47:57] "GET /static/css/heatmap.css HTTP/1.1" 304 0
+[19/Mar/2020 06:47:57] "GET /static/css/dataTables.bootstrap.min.css HTTP/1.1" 304 0
+[19/Mar/2020 06:47:57] "GET /static/css/multi-select.css HTTP/1.1" 304 0
+[19/Mar/2020 06:47:57] "GET /static/js/jquery.multi-select.js HTTP/1.1" 200 19558
+[19/Mar/2020 06:47:57] "GET /static/js/plotly-latest.min.js HTTP/1.1" 200 1814210
+[19/Mar/2020 06:47:58] "GET /static/images/header.jpg HTTP/1.1" 200 48208
+[19/Mar/2020 06:47:59] "GET /static/js/sidebar_menu.js HTTP/1.1" 200 930
+[19/Mar/2020 06:48:00] "GET /static/js/canvasjs.min.js HTTP/1.1" 200 278797
+[19/Mar/2020 06:48:00] "GET /static/fonts/glyphicons-halflings-regular.woff2 HTTP/1.1" 304 0
+Forbidden (CSRF token missing or incorrect.): /get_chart_vals/
+[19/Mar/2020 06:48:00] "POST /get_chart_vals/ HTTP/1.1" 403 2513
+[19/Mar/2020 06:48:00] "POST /get_pie_disease/ HTTP/1.1" 200 69
+[19/Mar/2020 06:48:00] "POST /get_pie_event/ HTTP/1.1" 200 91
+[19/Mar/2020 06:48:00] "POST /get_dhis_disease/ HTTP/1.1" 200 2549
+[19/Mar/2020 06:48:00] "POST /get_diseases/ HTTP/1.1" 200 8202
+[19/Mar/2020 06:48:00] "POST /get_piedrilldown_disease/ HTTP/1.1" 200 44
+[19/Mar/2020 06:48:01] "POST /get_piedrilldown_disease/ HTTP/1.1" 200 44
+[19/Mar/2020 06:48:01] "POST /get_piedrilldown_event/ HTTP/1.1" 200 57
+[19/Mar/2020 06:48:01] "POST /get_piedrilldown_event/ HTTP/1.1" 200 57
+[19/Mar/2020 06:48:17] "GET / HTTP/1.1" 200 5586

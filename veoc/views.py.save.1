@@ -1,0 +1,627 @@
+from django.shortcuts import render, get_object_or_404, redirect
+from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
+from django.contrib.auth import authenticate, login as login_auth, logout
+from django.contrib.auth.models import User, Group
+from django.contrib import messages
+from django.template import RequestContext, loader
+from django.template.loader import render_to_string
+from django.views.generic.base import TemplateView
+from django.contrib.auth.decorators import login_required, user_passes_test, permission_required
+import csv, io
+import requests
+from requests.packages.urllib3.exceptions import InsecureRequestWarning
+from django.conf import settings
+from django.core.serializers import serialize
+from django.db import transaction
+from django.db.models import *
+from veoc.models import *
+from veoc.forms import *
+from django.views.decorators.csrf import *
+from . import forms
+from rest_framework import viewsets
+from veoc.serializer import *
+from veoc.tasks import pull_dhis_idsr_data
+from datetime import date, timedelta, datetime
+from collections import Counter
+from django import template
+import time
+import json
+from itertools import chain
+from operator import attrgetter
+
+register = template.Library()
+
+# Create your views here.
+contacts = contact_type.objects.all()
+
+class DiseaseView(viewsets.ModelViewSet):
+    queryset = disease.objects.all()
+    serializer_class = DiseaseSerializer
+
+class EventView(viewsets.ModelViewSet):
+    queryset = event.objects.all()
+    serializer_class = EventSerializer
+
+class disease_type_view(viewsets.ModelViewSet):
+    queryset = dhis_disease_type.objects.all()
+    serializer_class = DiseaseTypesSerializer
+
+class event_type_view(viewsets.ModelViewSet):
+    queryset = dhis_event_type.objects.all()
+    serializer_class = DiseaseTypesSerializer
+
+class data_source_view(viewsets.ModelViewSet):
+    queryset = data_source.objects.all()
+    serializer_class = DataSourceSerializer
+
+class reporting_region_view(viewsets.ModelViewSet):
+    queryset = reporting_region.objects.all()
+    serializer_class = ReportingRegionSerializer
+
+class incident_status_view(viewsets.ModelViewSet):
+    queryset = incident_status.objects.all()
+    serializer_class = IncidentStatusSerializer
+
+class organizational_unit_view(viewsets.ModelViewSet):
+    queryset = organizational_units.objects.all()
+    serializer_class = OrganizationalUnitsSerializer
+
+def not_in_manager_group(user):
+    if user:
+        return user.groups.filter(name='National Managers').count() == 0
+    return False
+
+def login(request):
+    global next
+
+    if request.method == "POST":
+        user_name = request.POST['username']
+        password = request.POST['password']
+        user = authenticate(username=user_name, password=password)
+
+        if user is not None:
+            if user.is_active:
+                # request.session.set_expiry(60)
+                login_auth(request, user)
+                #get the person org unit to redirect to the correct Dashboard
+                u = User.objects.get(username=user_name)
+                user_access_level = u.persons.access_level
+
+                print(user_access_level)
+
+                #Get access level to determine what dashboard to loads
+                if user_access_level == 'National' :
+                    print('inside National dashboard')
+                    next = '/dashboard/'
+                    print(next)
+
+                elif user_access_level == 'County':
+                    print('inside county dashboard')
+                    next = '/county_dashboard/'
+                    print(next)
+                else:
+                    print('inside subcounty dashboard')
+                    next = '/subcounty_dashboard/'
+                    print(next)
+
+                # messages.info(request, 'Login successfully!')
+                return HttpResponseRedirect(next)
+            else:
+                # messages.info(request, 'Username or Password NOT matching!')
+                return HttpResponse("Inactive user.")
+        else:
+            # messages.error(request, 'User Not Registered!')
+            return HttpResponseRedirect(settings.LOGIN_URL)
+    else:
+        return render(request, 'veoc/login.html')
+
+def logout(request):
+
+    return HttpResponseRedirect(settings.LOGIN_URL)
+
+@login_required
+def access_dashboard(request):
+    #get the person org unit to redirect to the correct Dashboard
+    current_user = request.user
+    u = User.objects.get(username=current_user.username)
+    user_access_level = u.persons.access_level
+
+    print(user_access_level)
+
+    #Get access level to determine what dashboard to loads
+    if user_access_level == 'National' :
+        print('inside National dashboard')
+        next = '/dashboard/'
+        print(next)
+
+    elif user_access_level == 'County':
+        print('inside county dashboard')
+        next = '/county_dashboard/'
+        print(next)
+
+    else:
+        print('inside subcounty dashboard')
+        next = '/subcounty_dashboard/'
+        print(next)
+
+    messages.info(request, 'Your password was updated successfully!')
+    return HttpResponseRedirect(next)
+
+def user_register(request):
+
+    if request.method == 'POST':
+        first_name = request.POST.get('first_name','')
+        last_name = request.POST.get('last_name','')
+        user_name = request.POST.get('user_name','')
+        email = request.POST.get('email','')
+        phone_no = request.POST.get('phone_no','')
+        access_level = request.POST.get('access_level','')
+        org_unit = request.POST.get('org_unit','')
+        sub_cnty = request.POST.get('subcounty','')
+        user_group = request.POST.get('usergroup','')
+        super_user = request.POST.get('user_status','')
+
+        # Getting users group id
+        # group_name = Group.objects.get(name=user_group)
+        # print(group_name.id)
+
+        # if user is National user, default county and subcounty id to the
+        # national id (Kenya id)
+        if org_unit == '':
+            org_unit = 18
+        if sub_cnty == '':
+            sub_cnty = 18
+
+        user = User.objects.create_user(username= user_name, email=email, password=email, first_name=first_name,
+                last_name=last_name, is_superuser=super_user, is_staff="t", is_active="t")
+
+        user.save()
+        user_id = user.pk
+        userObject = User.objects.get(pk = user_id)
+        userGroupObject = Group.objects.get(name = user_group)
+        orgunitObject = organizational_units.objects.get(organisationunitid = org_unit)
+        subcntyObject = organizational_units.objects.get(organisationunitid = sub_cnty)
+        # print(user_id)
+
+        #save user into user_groups table
+        user.groups.add(userGroupObject)
+
+        #save the user in persons tables
+        user_person = persons.objects.create(user=userObject, org_unit=orgunitObject, phone_number=phone_no,
+            access_level=access_level, county=orgunitObject, sub_county=subcntyObject)
+
+    users_count = User.objects.all().count()
+    users = User.objects.all()
+    org_units = organizational_units.objects.all().filter(hierarchylevel=2).order_by('name')
+    user_groups = Group.objects.all()
+
+    values = {'users_count': users_count, 'users':users, 'org_units': org_units, 'user_groups':user_groups}
+
+    return render(request, 'veoc/users.html', values)
+
+@csrf_exempt
+def dashboard(request):
+
+    _dcall_logs = disease.objects.all().filter(data_source = 1).filter(incident_status = 2).filter(date_reported__gte = date.today()- timedelta(days=30)).order_by("-date_reported")
+    _ecall_logs = event.objects.all().filter(data_source = 1).filter(incident_status = 2).filter(date_reported__gte = date.today()- timedelta(days=7)).order_by("-date_reported")
+    _events = event.objects.all().filter(incident_status = 2).filter(date_reported__gte = date.today()- timedelta(days=7)).order_by("-date_reported")
+    _disease = disease.objects.all().filter(incident_status = 2).filter(date_reported__gte = date.today()- timedelta(days=7)).order_by("-date_reported")
+    _total_cor_quarantine = quarantine_contacts.objects.all()
+    _total_ongoing_quarantine = quarantine_contacts.objects.all()
+    _total_completed_quarantine = quarantine_contacts.objects.all()
+    marquee_call_log = []#an array that collects all confirmed diseases and maps them to the marquee
+    marquee_disease = []#an array that collects all confirmed diseases and maps them to the marquee
+    marquee_events = []#an array that collects all confirmed diseases and maps them to the marquee
+
+    #checks if dictionary has values for the past 7 days
+    if len(_dcall_logs) == 0:
+        marquee_call_log.append("None reported")
+    else:
+        for _dlogs in _dcall_logs:
+            marquee_call_log.append(_dlogs)
+
+    if len(_ecall_logs) == 0:
+        marquee_call_log.append("")
+    else:
+        for _elogs in _ecall_logs:
+            marquee_call_log.append(_elogs)
+
+    if len(_events) == 0:
+        marquee_events.append("None reported")
+    else:
+        for _eve in _events:
+            marquee_events.append(_eve)
+
+    if len(_disease) == 0:
+        marquee_disease.append("None reported")
+    else:
+        for _dis in _disease:
+            marquee_disease.append(_dis)
+
+    #Diseases reported - confirmed diseases cases
+    conf_disease_count = disease.objects.all().filter(incident_status = 2).filter(date_reported__gte = date.today()- timedelta(days=30)).order_by("-date_reported").count()
+    rum_disease_count = disease.objects.all().filter(incident_status = 1).filter(date_reported__gte = date.today()- timedelta(days=30)).order_by("-date_reported").count()
+    conf_disease_call_log_count = call_log.objects.all().filter(call_category=1).filter(incident_status=2).filter(date_reported__gte = date.today()- timedelta(days=1)).order_by("-date_reported").count()
+    rum_disease_call_log_count = call_log.objects.all().filter(call_category=1).filter(incident_status=1).order_by("-date_reported").count()
+    # print(rum_disease_call_log_count)
+
+    #Events reported - confirmed cases
+    conf_event_count = event.objects.all().filter(incident_status = 2).filter(date_reported__gte = date.today()- timedelta(days=30)).order_by("-date_reported").count()
+    rum_event_count = event.objects.all().filter(incident_status = 1).filter(date_reported__gte = date.today()- timedelta(days=30)).order_by("-date_reported").count()
+    susp_event_count = event.objects.all().filter(incident_status = 3).filter(date_reported__gte = date.today()- timedelta(days=30)).order_by("-date_reported").count()
+    conf_event_call_log_count = call_log.objects.all().filter(call_category=2).filter(incident_status=2).filter(date_reported__gte = date.today()- timedelta(days=30)).order_by("-date_reported").count()
+    rum_event_call_log_count = call_log.objects.all().filter(call_category=2).filter(incident_status=1).filter(date_reported__gte = date.today()- timedelta(days=30)).order_by("-date_reported").count()
+    # print(rum_event_call_log_count)
+
+    e_conf_count=conf_event_count+conf_event_call_log_count
+    conf_call_count = conf_disease_call_log_count
+    rum_call_count = rum_disease_call_log_count
+    total_call_count = call_log.objects.filter(date_reported__gte = date.today()- timedelta(days=30)).order_by("-date_reported").count()
+
+    #changed call logs button
+    disease_related_calls = call_log.objects.filter(call_category=1).filter(date_reported__gte = date.today()- timedelta(days=30)).order_by("-date_reported").count()
+    event_related_calls = call_log.objects.filter(call_category=2).filter(date_reported__gte = date.today()- timedelta(days=30)).order_by("-date_reported").count()
+    tot_urelated = call_log.objects.filter(date_reported__gte = date.today()- timedelta(days=30)).filter(call_category=3).order_by("-date_reported").count()
+    tot_flashes = call_log.objects.filter(date_reported__gte = date.today()- timedelta(days=30)).filter(call_category=3).order_by("-date_reported").count()
+    total_unrelated_calls = tot_urelated + tot_flashes
+
+    #Populating the pie_chart
+    counties = organizational_units.objects.all().filter(hierarchylevel = 2).order_by('name')
+    disease_types = dhis_disease_type.objects.all().filter(priority_disease = True)
+    disease_report_stat= {}
+    thirty_days_stat= {}
+    for d_type in disease_types:
+       diseases_count = disease.objects.all().filter(disease_type_id=d_type.id).count()
+       thirty_days_disease_count = disease.objects.all().filter(disease_type_id=d_type.id).filter(date_reported__gte = date.today()- timedelta(days=30)).count()
+       if thirty_days_disease_count > 0:
+        disease_report_stat[d_type.name] = diseases_count
+        thirty_days_stat[d_type.name] = thirty_days_disease_count
+
+    #picking the highest disease numbers for dashboard diseases
+    disease_reported_dash_vals = dict(Counter(thirty_days_stat).most_common(3))
+
+    #ph events bar graph
+    event_types = dhis_event_type.objects.all()
+    events_report_stat= {}
+    events_thirty_days_stat= {}
+    for e_type in event_types:
+       events_count = event.objects.all().filter(event_type_id=e_type.id).count()
+       events_thirty_days_disease_count = event.objects.all().filter(event_type_id=e_type.id).filter(date_reported__gte = date.today()- timedelta(days=30)).count()
+       if events_thirty_days_disease_count > 0:
+        events_report_stat[e_type.name] = events_count
+        events_thirty_days_stat[e_type.name] = events_thirty_days_disease_count
+
+    #picking the highest disease numbers for dashboard diseases
+    events_reported_dash_vals = dict(Counter(events_thirty_days_stat).most_common(3))
+
+    #Populating the bargraph
+    # counties = organizational_units.objects.all().filter(hierarchylevel = 2).order_by('name')
+    # sub_counties = sub_county.objects.all()
+    call_stats = {}#variable that collects county descriptions from their id's (to be used as an index)
+    sub_call_stat = {}
+
+    series_data = {}
+    series = []
+    data_val = []
+    data_record = []
+
+    for cnty in counties:
+        call_count = call_log.objects.all().filter(county_id = cnty.id).filter(date_reported__gte = date.today()- timedelta(days=1)).count()
+        sub_counties = organizational_units.objects.all().filter(parentid = cnty.organisationunitid).order_by('name')
+        if call_count > 0:
+            # print(call_count)
+            call_stats[cnty.name] = call_count
+        for subcnty in sub_counties:
+            call_subcny = call_log.objects.all().filter(subcounty_id = subcnty.id).filter(county_id = cnty.id).count()
+            if call_subcny > 0:
+                sub_call_stat[subcnty.name, cnty.name] = call_subcny
+
+                val = {'name':cnty.name, 'id':cnty.name}
+                data_record = [subcnty.name, call_subcny]
+                # print(data_record)
+        data_val.append(data_record)
+    series.append(series_data)
+
+    #pie_chart disease data
+    chart_d_type = dhis_disease_type.objects.all().order_by('name')
+    cases = []
+    disease_status = []
+    for crt_tpye in chart_d_type:
+        disease_descriptions = disease.objects.filter(disease_type_id = crt_tpye.id).filter(date_reported__gte = date.today()- timedelta(days=30)).values('disease_type__name', 'county__name', 'subcounty__name', 'cases', 'deaths').distinct()
+        cases.append(disease_descriptions)
+
+    #pie_chart events data
+    chart_e_type = dhis_event_type.objects.all().order_by('name')
+    event_cases = []
+    event_status = []
+    for crt_tpye in chart_e_type:
+        event_descriptions = event.objects.filter(event_type_id = crt_tpye.id).filter(date_reported__gte = date.today()- timedelta(days=30)).values('event_type__name', 'county__name', 'subcounty__name', 'cases', 'deaths').distinct()
+        event_cases.append(event_descriptions)
+
+    #line graph dhis2 diseases data
+    chart_dhis_type = idsr_diseases.objects.all().order_by('name')
+    dhis_cases = []
+    dhis_status = []
+    for crt_tpye in chart_dhis_type:
+        # dhis_descriptions = idsr_weekly_national_report.objects.filter(idsr_disease_id_id = crt_tpye.id).values('idsr_disease_id__name', 'org_unit_id_id__name', 'idsr_incident_id_id__name', 'period', 'data_value').distinct()
+        dhis_descriptions = idsr_weekly_national_report.objects.filter(idsr_disease_id_id = crt_tpye.id).values('idsr_disease_id__name', 'org_unit_id_id__name', 'period', 'data_value').distinct()
+        dhis_cases.append(dhis_descriptions)
+
+    #pulling all eoc status for the drop down for change
+    eoc_Status = eoc_status.objects.all()
+
+    #pulling eoc status as set by only the eoc manager
+    set_eoc_status = eoc_status.objects.all().exclude(active = False)
+
+    template = loader.get_template('veoc/dashboard.html')
+    context = RequestContext(request,{
+        'marquee_call_log': marquee_call_log,
+        'marquee_disease': marquee_disease,
+        'marquee_events': marquee_events,
+        'd_count': disease.objects.filter(date_reported__gte = date.today()- timedelta(days=30)).order_by("-date_reported").count(),
+        'conf_disease_count': conf_disease_count,
+        'rum_disease_count': rum_disease_count,
+        'e_count': event.objects.all().filter(date_reported__gte = date.today()- timedelta(days=30)).order_by("-date_reported").count(),
+        'conf_event_count': conf_event_count,
+        'rum_event_count': rum_event_count,
+        'susp_event_count': susp_event_count,
+        'conf_call_count': conf_call_count,
+        'rum_call_count': rum_call_count,
+        'total_call_count': total_call_count,
+        'disease_related_calls' : disease_related_calls,
+        'event_related_calls': event_related_calls,
+        'total_unrelated_calls': total_unrelated_calls,
+        'vals': call_log.objects.all().filter(date_reported__gte = date.today()- timedelta(days=30)).order_by("-date_reported"),
+        'disease_vals':disease.objects.all().filter(date_reported__gte = date.today()- timedelta(days=30)).order_by("-date_reported")[:5],
+        'event_vals': event.objects.all().filter(date_reported__gte = date.today()- timedelta(days=30)).order_by("-date_reported")[:5],
+        'contact_type_vals': contacts,
+        'thirty_days_stat': thirty_days_stat,
+        'events_thirty_days_stat': events_thirty_days_stat,
+        'elements': call_stats,
+        'sub_elements': sub_call_stat,
+        'disease_reported_dash_vals':disease_reported_dash_vals,
+        'pie_diseases': cases, 'pie_events': event_cases, 'dhis_graph_data': dhis_cases,
+        'eoc_status': eoc_Status, 'set_eoc_status': set_eoc_status
+    })
+
+    return HttpResponse(template.render(context.flatten()))
+
+@login_required
+def county_dashboard(request):
+
+    #get the person org unit to dislay county on the Dashboard
+    current_user = request.user
+    u = User.objects.get(username=current_user.username)
+    user_county_id = u.persons.county_id
+
+    #get county names
+    county_object = organizational_units.objects.get(pk = user_county_id)
+    county_name = county_object.name
+
+    # print(county_name)
+    # print(user_county_id)
+
+    _dcall_logs = disease.objects.all().filter(county = user_county_id).filter(data_source = 1).filter(incident_status = 2).filter(date_reported__gte = date.today()- timedelta(days=30)).order_by("-date_reported")
+    _ecall_logs = event.objects.all().filter(county = user_county_id).filter(data_source = 1).filter(incident_status = 2).filter(date_reported__gte = date.today()- timedelta(days=7)).order_by("-date_reported")
+    _events = event.objects.all().filter(county = user_county_id).filter(incident_status = 2).filter(date_reported__gte = date.today()- timedelta(days=7)).order_by("-date_reported")
+    _disease = disease.objects.all().filter(county = user_county_id).filter(incident_status = 2).filter(date_reported__gte = date.today()- timedelta(days=7)).order_by("-date_reported")
+    marquee_call_log = []#an array that collects all confirmed diseases and maps them to the marquee
+    marquee_disease = []#an array that collects all confirmed diseases and maps them to the marquee
+    marquee_events = []#an array that collects all confirmed diseases and maps them to the marquee
+
+    #checks if dictionary has values for the past 7 days
+    if len(_dcall_logs) == 0:
+        marquee_call_log.append("None reported")
+    else:
+        for _dlogs in _dcall_logs:
+            marquee_call_log.append(_dlogs)
+
+    if len(_ecall_logs) == 0:
+        marquee_call_log.append("")
+    else:
+        for _elogs in _ecall_logs:
+            marquee_call_log.append(_elogs)
+
+    if len(_events) == 0:
+        marquee_events.append("None reported")
+    else:
+        for _eve in _events:
+            marquee_events.append(_eve)
+
+    if len(_disease) == 0:
+        marquee_disease.append("None reported")
+    else:
+        for _dis in _disease:
+            marquee_disease.append(_dis)
+
+
+    #Diseases reported - confirmed diseases cases
+    conf_disease_count = disease.objects.all().filter(county = user_county_id).filter(incident_status = 2).filter(date_reported__gte = date.today()- timedelta(days=30)).order_by("-date_reported").count()
+    rum_disease_count = disease.objects.all().filter(county = user_county_id).filter(incident_status = 1).filter(date_reported__gte = date.today()- timedelta(days=30)).order_by("-date_reported").count()
+    conf_disease_call_log_count = call_log.objects.all().filter(county = user_county_id).filter(call_category=1).filter(incident_status=2).filter(date_reported__gte = date.today()- timedelta(days=1)).order_by("-date_reported").count()
+    rum_disease_call_log_count = call_log.objects.all().filter(county = user_county_id).filter(call_category=1).filter(incident_status=1).order_by("-date_reported").count()
+    # print(rum_disease_call_log_count)
+
+    #Events reported - confirmed cases
+    conf_event_count = event.objects.all().filter(county = user_county_id).filter(incident_status = 2).filter(date_reported__gte = date.today()- timedelta(days=30)).order_by("-date_reported").count()
+    rum_event_count = event.objects.all().filter(county = user_county_id).filter(incident_status = 1).filter(date_reported__gte = date.today()- timedelta(days=30)).order_by("-date_reported").count()
+    susp_event_count = event.objects.all().filter(county = user_county_id).filter(incident_status = 3).filter(date_reported__gte = date.today()- timedelta(days=30)).order_by("-date_reported").count()
+    conf_event_call_log_count = call_log.objects.all().filter(county = user_county_id).filter(call_category=2).filter(incident_status=2).filter(date_reported__gte = date.today()- timedelta(days=30)).order_by("-date_reported").count()
+    rum_event_call_log_count = call_log.objects.all().filter(county = user_county_id).filter(call_category=2).filter(incident_status=1).filter(date_reported__gte = date.today()- timedelta(days=30)).order_by("-date_reported").count()
+    # print(rum_event_call_log_count)
+
+    e_conf_count=conf_event_count+conf_event_call_log_count
+    conf_call_count = conf_disease_call_log_count
+    rum_call_count = rum_disease_call_log_count
+    total_call_count = call_log.objects.filter(county = user_county_id).filter(date_reported__gte = date.today()- timedelta(days=30)).order_by("-date_reported").count()
+
+    #changed call logs button
+    disease_related_calls = call_log.objects.filter(county = user_county_id).filter(call_category=1).filter(date_reported__gte = date.today()- timedelta(days=30)).order_by("-date_reported").count()
+    event_related_calls = call_log.objects.filter(county = user_county_id).filter(call_category=2).filter(date_reported__gte = date.today()- timedelta(days=30)).order_by("-date_reported").count()
+    tot_urelated = call_log.objects.filter(county = user_county_id).filter(date_reported__gte = date.today()- timedelta(days=30)).filter(call_category=3).order_by("-date_reported").count()
+    tot_flashes = call_log.objects.filter(county = user_county_id).filter(date_reported__gte = date.today()- timedelta(days=30)).filter(call_category=3).order_by("-date_reported").count()
+    total_unrelated_calls = tot_urelated + tot_flashes
+
+    #Populating the pie_chart
+    counties = organizational_units.objects.all().filter(hierarchylevel = 2).order_by('name')
+    disease_types = dhis_disease_type.objects.all().filter(priority_disease = True)
+    disease_report_stat= {}
+    thirty_days_stat= {}
+    for d_type in disease_types:
+       diseases_count = disease.objects.all().filter(county = user_county_id).filter(disease_type_id=d_type.id).count()
+       thirty_days_disease_count = disease.objects.all().filter(county = user_county_id).filter(disease_type_id=d_type.id).filter(date_reported__gte = date.today()- timedelta(days=30)).count()
+       if thirty_days_disease_count > 0:
+        disease_report_stat[d_type.name] = diseases_count
+        thirty_days_stat[d_type.name] = thirty_days_disease_count
+
+    #picking the highest disease numbers for dashboard diseases
+    disease_reported_dash_vals = dict(Counter(thirty_days_stat).most_common(3))
+
+    #ph events bar graph
+    event_types = dhis_event_type.objects.all()
+    events_report_stat= {}
+    events_thirty_days_stat= {}
+    for e_type in event_types:
+       events_count = event.objects.all().filter(county = user_county_id).filter(event_type_id=e_type.id).count()
+       events_thirty_days_disease_count = event.objects.all().filter(county = user_county_id).filter(event_type_id=e_type.id).filter(date_reported__gte = date.today()- timedelta(days=30)).count()
+       if events_thirty_days_disease_count > 0:
+        events_report_stat[e_type.name] = events_count
+        events_thirty_days_stat[e_type.name] = events_thirty_days_disease_count
+
+    #picking the highest disease numbers for dashboard diseases
+    events_reported_dash_vals = dict(Counter(events_thirty_days_stat).most_common(3))
+
+    #Populating the bargraph
+    # counties = organizational_units.objects.all().filter(hierarchylevel = 2).order_by('name')
+    # sub_counties = sub_county.objects.all()
+    call_stats = {}#variable that collects county descriptions from their id's (to be used as an index)
+    sub_call_stat = {}
+
+    series_data = {}
+    series = []
+    data_val = []
+    data_record = []
+
+    for cnty in counties:
+        call_count = call_log.objects.all().filter(county = user_county_id).filter(county_id = cnty.id).filter(date_reported__gte = date.today()- timedelta(days=1)).count()
+        sub_counties = organizational_units.objects.all().filter(parentid = cnty.organisationunitid).order_by('name')
+        if call_count > 0:
+            # print(call_count)
+            call_stats[cnty.name] = call_count
+        for subcnty in sub_counties:
+            call_subcny = call_log.objects.all().filter(county = user_county_id).filter(subcounty_id = subcnty.id).filter(county_id = cnty.id).count()
+            if call_subcny > 0:
+                sub_call_stat[subcnty.name, cnty.name] = call_subcny
+
+                val = {'name':cnty.name, 'id':cnty.name}
+                data_record = [subcnty.name, call_subcny]
+                # print(data_record)
+        data_val.append(data_record)
+    series.append(series_data)
+
+    #pie_chart disease data
+    chart_d_type = dhis_disease_type.objects.all().order_by('name')
+    cases = []
+    disease_status = []
+    for crt_tpye in chart_d_type:
+        disease_descriptions = disease.objects.filter(county = user_county_id).filter(disease_type_id = crt_tpye.id).filter(date_reported__gte = date.today()- timedelta(days=30)).values('disease_type__name', 'county__name', 'subcounty__name', 'cases', 'deaths').distinct()
+        cases.append(disease_descriptions)
+
+    #pie_chart events data
+    chart_e_type = dhis_event_type.objects.all().order_by('name')
+    event_cases = []
+    event_status = []
+    for crt_tpye in chart_e_type:
+        event_descriptions = event.objects.filter(county = user_county_id).filter(event_type_id = crt_tpye.id).filter(date_reported__gte = date.today()- timedelta(days=30)).values('event_type__name', 'county__name', 'subcounty__name', 'cases', 'deaths').distinct()
+        event_cases.append(event_descriptions)
+
+    #line graph dhis2 diseases data
+    chart_dhis_type = idsr_diseases.objects.all().order_by('name')
+    dhis_cases = []
+    dhis_status = []
+    for crt_tpye in chart_dhis_type:
+        dhis_descriptions = idsr_weekly_national_report.objects.filter(idsr_disease_id_id = crt_tpye.id).values('idsr_disease_id__name', 'org_unit_id_id__name', 'idsr_incident_id_id__name', 'period', 'data_value').distinct()
+        dhis_cases.append(dhis_descriptions)
+
+    #pulling all eoc status for the drop down for change
+    eoc_Status = eoc_status.objects.all()
+
+    #pulling eoc status as set by only the eoc manager
+    set_eoc_status = eoc_status.objects.all().exclude(active = False)
+
+    template = loader.get_template('veoc/county_dashboard.html')
+    context = RequestContext(request,{
+        'marquee_call_log': marquee_call_log,
+        'marquee_disease': marquee_disease,
+        'marquee_events': marquee_events,
+        'd_count': disease.objects.filter(date_reported__gte = date.today()- timedelta(days=30)).order_by("-date_reported").count(),
+        'conf_disease_count': conf_disease_count,
+        'rum_disease_count': rum_disease_count,
+        'e_count': event.objects.all().filter(date_reported__gte = date.today()- timedelta(days=30)).order_by("-date_reported").count(),
+        'conf_event_count': conf_event_count,
+        'rum_event_count': rum_event_count,
+        'susp_event_count': susp_event_count,
+        'conf_call_count': conf_call_count,
+        'rum_call_count': rum_call_count,
+        'total_call_count': total_call_count,
+        'disease_related_calls' : disease_related_calls,
+        'event_related_calls': event_related_calls,
+        'total_unrelated_calls': total_unrelated_calls,
+        'vals': call_log.objects.all().filter(date_reported__gte = date.today()- timedelta(days=30)).order_by("-date_reported"),
+        'disease_vals':disease.objects.all().filter(date_reported__gte = date.today()- timedelta(days=30)).order_by("-date_reported")[:5],
+        'event_vals': event.objects.all().filter(date_reported__gte = date.today()- timedelta(days=30)).order_by("-date_reported")[:5],
+        'contact_type_vals': contacts,
+        'thirty_days_stat': thirty_days_stat,
+        'events_thirty_days_stat': events_thirty_days_stat,
+        'elements': call_stats,
+        'sub_elements': sub_call_stat,
+        'disease_reported_dash_vals':disease_reported_dash_vals,
+        'county_name':county_name,
+        'pie_diseases': cases, 'pie_events': event_cases, 'dhis_graph_data': dhis_cases,
+        'eoc_status': eoc_Status, 'set_eoc_status': set_eoc_status
+    })
+
+    return HttpResponse(template.render(context.flatten()))
+
+@login_required
+def subcounty_dashboard(request):
+
+    #get the person org unit to dislay subcounty on the Dashboard
+    current_user = request.user
+    u = User.objects.get(username=current_user.username)
+    user_county_id = u.persons.sub_county_id
+
+    #get county names
+    county_object = organizational_units.objects.get(pk = user_county_id)
+    sub_county_name = county_object.name
+
+    # print(user_county_id)
+    # print(sub_county_name)
+
+    _dcall_logs = disease.objects.all().filter(subcounty = user_county_id).filter(data_source = 1).filter(incident_status = 2).filter(date_reported__gte = date.today()- timedelta(days=30)).order_by("-date_reported")
+    _ecall_logs = event.objects.all().filter(subcounty = user_county_id).filter(data_source = 1).filter(incident_status = 2).filter(date_reported__gte = date.today()- timedelta(days=7)).order_by("-date_reported")
+    _events = event.objects.all().filter(subcounty = user_county_id).filter(incident_status = 2).filter(date_reported__gte = date.today()- timedelta(days=7)).order_by("-date_reported")
+    _disease = disease.objects.all().filter(subcounty = user_county_id).filter(incident_status = 2).filter(date_reported__gte = date.today()- timedelta(days=7)).order_by("-date_reported")
+    marquee_call_log = []#an array that collects all confirmed diseases and maps them to the marquee
+    marquee_disease = []#an array that collects all confirmed diseases and maps them to the marquee
+    marquee_events = []#an array that collects all confirmed diseases and maps them to the marquee
+
+    #checks if dictionary has values for the past 7 days
+    if len(_dcall_logs) == 0:
+        marquee_call_log.append("None reported")
+    else:
+        for _dlogs in _dcall_logs:
+            marquee_call_log.append(_dlogs)
+
+    if len(_ecall_logs) == 0:
+        marquee_call_log.append("")
+    else:
+        for _elogs in _ecall_logs:
+            marquee_call_log.append(_elogs)
+
+    if len(_events) == 0:
+        marquee_events.append("None reported")
+    else:
+        for _eve in _events:
+            marquee_events.append(_eve)
+

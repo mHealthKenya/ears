@@ -206,6 +206,9 @@ def dashboard(request):
     _ecall_logs = event.objects.all().filter(data_source = 1).filter(incident_status = 2).filter(date_reported__gte = date.today()- timedelta(days=7)).order_by("-date_reported")
     _events = event.objects.all().filter(incident_status = 2).filter(date_reported__gte = date.today()- timedelta(days=7)).order_by("-date_reported")
     _disease = disease.objects.all().filter(incident_status = 2).filter(date_reported__gte = date.today()- timedelta(days=7)).order_by("-date_reported")
+    _total_cor_quarantine = quarantine_contacts.objects.all()
+    _total_ongoing_quarantine = quarantine_contacts.objects.all()
+    _total_completed_quarantine = quarantine_contacts.objects.all()
     marquee_call_log = []#an array that collects all confirmed diseases and maps them to the marquee
     marquee_disease = []#an array that collects all confirmed diseases and maps them to the marquee
     marquee_events = []#an array that collects all confirmed diseases and maps them to the marquee
@@ -1241,7 +1244,7 @@ def quarantine_register(request):
         # send sms to the patient for successful registration_form
         # url = "https://mlab.mhealthkenya.co.ke/api/sms/gateway"
         url = "http://mlab.localhost/api/sms/gateway"
-        msg = "Thank you " + first_name + " for registering. You will be required to send your temperature details during this quarantine period of 14 days. Please download the self reporting app on this link: http://tiny.cc/bebflz"
+        msg = "Thank you " + first_name + " for registering. You will be required to send your temperature details during this quarantine period of 14 days. Please download the self reporting app on this link: https://cutt.ly/atlKZAQ"
 
         pp = {"phone_no": phone_number, "message": msg}
         payload = json.dumps(pp)
@@ -1654,6 +1657,53 @@ def follow_up(request):
     follow_data = quarantine_follow_up.objects.all()
     follow_data_count = quarantine_follow_up.objects.all().count()
 
+    #check if temperature is higher than 37.0 to send sms
+    #if temperature is higher and sms_status = No send an sms
+    for f_data in follow_data:
+        temp = f_data.body_temperature
+        cntry = f_data.patient_contacts.origin_country
+        plc_diagnosis = f_data.patient_contacts.place_of_diagnosis
+        sms_stat = f_data.sms_status
+        cap_user = f_data.patient_contacts.created_by.id
+        cap_name = f_data.patient_contacts.created_by.first_name
+
+        if temp > 37.0 and sms_stat == "No":
+            person_phone = persons.objects.filter(user_id = cap_user)
+            for pers_ph in person_phone:
+                phone = pers_ph.phone_number
+                user_phone = "+254"
+                #check if the leading character is 0
+                if str(phone[0]) == "0":
+                    user_phone = user_phone + str(phone[1:])
+                    print("number leading with 0")
+                else:
+                    user_phone = user_phone + str(phone)
+                    print("number not leading with 0")
+
+                print(user_phone)
+                #send sms notification to the phone number, append +254
+                # url = "https://mlab.mhealthkenya.co.ke/api/sms/gateway"
+                url = "http://mlab.localhost/api/sms/gateway"
+                msg = "Hello " + str(cap_name) + ", your registered quarantined patient from "+str(cntry)+", diagnozed at "+str(plc_diagnosis)+", requires contact, patient reported with high temperature of " + str(temp) +" degrees. Login to EARS system for more details."
+
+                pp = {"phone_no": user_phone, "message": msg}
+                payload = json.dumps(pp)
+
+                headers = {
+                  'Content-Type': 'application/json',
+                  'Authorization': 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImp0aSI6IjE3MGExZGI0ZjFiYWE1ZWNkOGI4YTBiODNlNDc0MTA2NTJiNDg4Mzc4ZTQwNjExNDA0MGQwZmQ2NTEzNTM1NTg5MjFhYjBmNzI1ZDM3NzYwIn0.eyJhdWQiOiI0IiwianRpIjoiMTcwYTFkYjRmMWJhYTVlY2Q4YjhhMGI4M2U0NzQxMDY1MmI0ODgzNzhlNDA2MTE0MDQwZDBmZDY1MTM1MzU1ODkyMWFiMGY3MjVkMzc3NjAiLCJpYXQiOjE1ODQxODk0NTMsIm5iZiI6MTU4NDE4OTQ1MywiZXhwIjoxNjE1NzI1NDUzLCJzdWIiOiI2Iiwic2NvcGVzIjpbXX0.e2Pt76bE6IT7J0hSBpnc7tHShg9BKSXOMuwnQwqC3_xpJXUo2ez7sQPUa4uPp77XQ05xsumNbWapXkqxvVxp-3Gjn-o9UJ39AWHBFRJYqOXM_foZcxRBoXajUfJTTRS5BTMFEfMn2nMeLie9BH7mbgfKBpZXU_3_tClWGUcNbsibbhXgjSxskJoDls8XGVUdgc5pqMZBBBlR9cCrtK3H8PJf6XywMn9CYbw4KF8V1ADC9dYz-Iyhmwe2_LmU3ByTQMaVHCd3GVKWIvlGwNhm2_gRcEHjjZ8_PXR38itUT0M3NTmT6LBeeeb8IWV-3YFkhilbbjA03q9_6f2gjlOpChF4Ut2rC5pqTg7sW5A4PV8gepPnIBpJy5xKQzgf75zDUmuhKlYlirk8MKoRkiIUgWqOZSf49DUxbIaKIijjX3TYrwmBwZ0RTm2keSvk3bt4QutpLRxel6cajbI32rZLuDjs1_MCZNPKAK1ZgPvwt1OaHLM3om0TmSKyugPvhgNJ5fW_on_HLkTbQV6EPqN3Us7S5whFv1MQcwlgsxU9a4CJZa89elr1TaKvqbkaKqGjetwlCDf6AKQmThy5IqQ5zlIRNwlZDgz_DsGyeZUStQhc-HW65NsB_J_fe_jI5tMeRNCz4PE8T0Rghbs8xHLTFKuMGrJL0Rheq6kfEk4c0UM'
+                }
+
+                requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
+
+                response = requests.request("POST", url, headers=headers, data = payload, verify=False)
+
+                print(response.text.encode('utf8'))
+
+                #check if message response is success then update the sms_status column
+                quarantine_follow_up.objects.filter(pk=f_data.id).update(sms_status="Yes")
+
+
     data = {'follow_data': follow_data, 'follow_data_count': follow_data_count}
 
     return render(request, 'veoc/quarantine_follow_up.html', data)
@@ -1665,7 +1715,6 @@ def complete_quarantine(request):
     data = {'follow_data': follow_data, 'follow_data_count': follow_data_count}
 
     return render(request, 'veoc/quarantine_complete.html', data)
-
 
 def ongoing_tasks(request):
     if request.method == 'POST':

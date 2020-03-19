@@ -571,6 +571,7 @@ class quarantine_contacts(models.Model):
     ward = models.ForeignKey(organizational_units, on_delete=models.CASCADE, blank=True, related_name='quarantine_ward', default='2620')
     place_of_diagnosis = models.CharField(max_length=50, blank=True)
     date_of_contact = models.DateField(default=date.today)
+    data_source = models.CharField(max_length=50, blank=False)
     created_at = models.DateField(default=date.today)
     updated_at = models.DateField(default=date.today)
     created_by = models.ForeignKey(User, on_delete=models.CASCADE, related_name='quarantine_updated_by')
@@ -587,11 +588,13 @@ class quarantine_follow_up(models.Model):
     patient_contacts = models.ForeignKey(quarantine_contacts, on_delete=models.DO_NOTHING, related_name='followup_contact')
     self_quarantine = models.BooleanField(default=False)
     thermal_gun = models.CharField(max_length=20)
-    body_temperature = models.IntegerField(blank=False)
+    body_temperature = models.FloatField(blank=False)
     fever = models.CharField(max_length=20)
     cough = models.CharField(max_length=20)
     difficulty_breathing = models.CharField(max_length=20)
     follow_up_day = models.IntegerField(blank=False)
+    comment = models.CharField(max_length=160, blank=True)
+    sms_status = models.CharField(max_length=10, default="No")
     created_at = models.DateField(default=date.today)
 
 class watcher_team_leads(models.Model):
