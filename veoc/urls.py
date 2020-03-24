@@ -50,6 +50,7 @@ urlpatterns = [
     url(r'^quarantine_list/$', views.quarantine_list, name='quarantine_list'),
     url(r'^follow_up/$', views.follow_up, name='follow_up'),
     url(r'^complete_quarantine/$', views.complete_quarantine, name='complete_quarantine'),
+    url(r'^get_quarantine_coordinates/$', views.get_quarantine_coordinates, name='get_quarantine_coordinates'),
     url(r'^filter_ongoing_tasks/$', views.filter_ongoing_tasks, name='filter_ongoing_tasks'),
     url(r'^case_definition/$', views.case_definition, name='case_definition'),
 

@@ -556,14 +556,14 @@ class contact(models.Model):
         return self.county.description + ' - ' + self.contact_type.description
 
 class quarantine_contacts(models.Model):
-    person_phone_regex = RegexValidator(regex=r'^\+?1?\d{10,12}$', message="Phone number must be entered in the format: '+999999999'. Up to 15 digits allowed.")
+    person_phone_regex = RegexValidator(regex=r'^\+?1?\d{10,15}$', message="Phone number must be entered in the format: '+999999999'. Up to 15 digits allowed.")
 
     first_name = models.CharField(max_length=50)
     last_name = models.CharField(max_length=50)
     sex = models.CharField(max_length=50)
     dob = models.DateField(default=date.today)
     passport_number = models.CharField(max_length=50, blank=True)
-    phone_number = models.CharField(validators=[person_phone_regex], max_length=12, blank=False)
+    phone_number = models.CharField(validators=[person_phone_regex], max_length=15, blank=False)
     email_address = models.EmailField(max_length=20, blank=True)
     origin_country = models.CharField(max_length=50)
     county = models.ForeignKey(organizational_units, on_delete=models.CASCADE, related_name='quarantine_county', blank=True)
@@ -595,6 +595,8 @@ class quarantine_follow_up(models.Model):
     follow_up_day = models.IntegerField(blank=False)
     comment = models.CharField(max_length=160, blank=True)
     sms_status = models.CharField(max_length=10, default="No")
+    lat = models.FloatField(default=0.0000)
+    lng = models.FloatField(default=0.0000)
     created_at = models.DateField(default=date.today)
 
 class watcher_team_leads(models.Model):

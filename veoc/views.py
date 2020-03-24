@@ -1244,7 +1244,8 @@ def quarantine_register(request):
         # send sms to the patient for successful registration_form
         # url = "https://mlab.mhealthkenya.co.ke/api/sms/gateway"
         url = "http://mlab.localhost/api/sms/gateway"
-        msg = "Thank you " + first_name + " for registering. You will be required to send your temperature details during this quarantine period of 14 days. Please download the self reporting app on this link: https://cutt.ly/atlKZAQ"
+        print(phone_number)
+        msg = "Thank you " + first_name + " for registering. You will be required to send your temperature details during this quarantine period of 14 days. Please download the self reporting app on this link: https://cutt.ly/AtbvdxD"
 
         pp = {"phone_no": phone_number, "message": msg}
         payload = json.dumps(pp)
@@ -2837,6 +2838,18 @@ def get_facilities_county(request):
         data=json.dumps(allvals)
 
     return HttpResponse(data,content_type="application/json")
+
+def get_quarantine_coordinates(request):
+    if request.method=="POST":
+        _id = request.POST.get('item_id','')
+
+        # print(_id)
+        all_coords = list(quarantine_follow_up.objects.filter(patient_contacts_id = _id).values('follow_up_day', 'lat', 'lng'))
+        my_coords = json.dumps(all_coords)
+
+        # print(my_coords)
+
+    return HttpResponse(my_coords,content_type="application/json")
 
 def get_police_posts_county(request):
 

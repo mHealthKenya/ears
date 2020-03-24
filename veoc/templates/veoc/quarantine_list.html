@@ -37,7 +37,8 @@
                             <th>place of diagnosis</th>
                             <th>date of contact</th>
                             <!-- <th>Follow up status</th> -->
-                            <th>created by</th>
+                            <th>Registered by</th>
+                            <th>Map View</th>
                           </tr>
                           </thead>
                           <tbody>
@@ -54,6 +55,18 @@
                             <td>{{ follow.date_of_contact }}</td>
                             <!-- <td>{{ follow.date_of_contact }}</td> -->
                             <td>{{ follow.created_by.username }}</td>
+                            <td>
+                             <button type="button" id="map_view" class="btn btn-info btn-sm pull-left map_view"
+                               data-toggle="modal" data-target="#mapViewModal"
+                               data-id="{{ follow.pk }}"
+                               data-names="{{ follow.first_name }} {{ follow.last_name }}"
+                               data-last_contact="{{ follow.date_of_contact|date:'d-m-Y' }}"
+                               data-phone_number="{{ follow.phone_number }}"
+                               title="Open Map View">
+                               <i class="fa fa-map-marker">
+                               </i>
+                             </button>
+                           </td>
                           </tr>
                         {% endfor %}
                       </tbody>
@@ -65,9 +78,62 @@
         </div><!-- /.padding-md -->
       </div><!-- /main-container -->
 
+      <!-- Map View modal -->
+      <div class="modal fade" id="mapViewModal" tabindex="-1" role="dialog" aria-hidden="true">
+      		<div class="modal-dialog" role="document">
+      			<div class="modal-content">
+      			<div class="modal-header">
+      				<h5 class="modal-title" id="exampleModalLongTitle"><b>QUARANTINED PATIENT FOLLOW UP DETAILS</b></h5>
+      				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+      				<span aria-hidden="true">&times;</span>
+      				</button>
+      			</div>
+      			<div class="modal-body">
+              <div class="padding-md">
+                <div class="row">
+                  <div class="col-md-12">
+                    <div class="panel panel-default">
+                        <div class="panel-heading"><b>Quarantined Patient Details</b></div>
+                        <div class="panel-body" align="center">
+                          <form method="post" action="#">
+                            <div class="form-group" style="display: none;">
+                                <input class="form-control id" name="id" style="display: none;">
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group col-md-4">
+                                  <label for="county">Names :</label>
+                                  <input class="form-control first_name" name="first_name" readonly>
+                                </div>
+                                <div class="form-group col-md-4">
+                                  <label for="county">Mobile No :</label>
+                                  <input class="form-control phone_number" name="phone_number" readonly>
+                                </div>
+                                <div class="form-group col-md-4">
+                                  <label for="county">Date last contacted :</label>
+                                  <input class="form-control date_of_contact" name="date_of_contact" readonly>
+                                </div>
+                            </div>
+                          </form>
+                          <button type="submit" onClick="drawCountyChart()" class="btn btn-success btn-sm pull-right">View Map</button>
+                      </div>
+                  </div><!-- /div panel-default -->
+                  <div class="panel panel-default">
+                    <div class="panel-heading"><b>Patient Self Reporting Locations</b></div>
+                    <div class="panel-body">
+                      <div id="map_div">
+                      </div><!-- div to hold map -->
+                    </div><!-- panel-body -->
+                  </div><!-- /div panel-default -->
+                </div>
+              </div>
+            </div>
+          </div>
+
 {% endblock %}
 
 {% block script %}
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.0.0-alpha/js/bootstrap.min.js"></script>
   <script>
     $(document).ready(function () {
           $('#quarantine_report').DataTable({
@@ -99,7 +165,104 @@
                   }
               });
           });
+
       });
+
+    $(document).on( "click", '.map_view',function(e) {
+      var id = $(this).data('id');
+      var names = $(this).data('names');
+      var contact = $(this).data('last_contact');
+      var phone = $(this).data('phone_number');
+
+      console.log(names);
+
+      $(".id").val(id);
+      $(".first_name").val(names);
+      $(".date_of_contact").val(contact);
+      $(".phone_number").val(phone);
+    });
+
+    google.charts.load('current', {'packages': ['map']});
+    google.charts.setOnLoadCallback(drawCountyChart);
+
+
+    function drawCountyChart() {
+      // console.log("inside drawCountyChart");
+
+      item_id = $(".id").val();
+      console.log(item_id)
+      $.ajax({
+          url: '/get_quarantine_coordinates/',
+          type: 'POST',
+          datatype: 'json',
+          data: {item_id:item_id,csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val()},
+          success: function (data) {
+              console.log(JSON.stringify(data));
+              var mydata = new google.visualization.DataTable();
+              mydata.addColumn('number', 'LATITUDE');
+              mydata.addColumn('number', 'LONGITUDE');
+              mydata.addColumn('string', 'NAME');
+
+              for (var i = 0; i < data.length; i++) {
+                  x = data[i].lat;//get the longitude from models
+                  y = data[i].lng;//get latitude from models
+                  z = "Day "+ data[i].follow_up_day.toString();//get the position from models
+                  x = parseFloat(x);//convert the longitude to float from string
+                  y = parseFloat(y);//convert the latitude to float from string
+                  mydata.addRow([x, y, z]);//add the coordinates to the map
+
+              }
+
+              var options = {
+                  icons: {
+                      default: {
+                          normal: 'https://img.icons8.com/color/48/000000/google-maps-new.png',
+                          selected: 'https://img.icons8.com/color/48/000000/google-maps-new.png'
+                      }
+                  },
+                  showTip: true,
+                  useMapTypeControl: true,
+                  zoomLevel: 9,
+                  enableScrollWheel: true,
+                  mapType: 'styledMap',
+                  center: {lat: -33.8688, lng: 151.2195},
+                  maps: {
+                      // Your custom mapTypeId holding custom map styles.
+                      styledMap: {
+                          name: 'Styled Map', // This name will be displayed in the map type control.
+                          styles: [
+                              {
+                                  featureType: 'poi.attraction',
+                                  stylers: [{color: '#fce8b2'}]
+                              },
+                              {
+                                  featureType: 'road.highway',
+                                  stylers: [{hue: '#0277bd'}, {saturation: -50}]
+                              },
+                              {
+                                  featureType: 'road.highway',
+                                  elementType: 'labels.icon',
+                                  stylers: [{hue: '#000'}, {saturation: 100}, {lightness: 50}]
+                              },
+                              {
+                                  featureType: 'landscape',
+                                  stylers: [{hue: '#259b24'}, {saturation: 10}, {lightness: -22}]
+                              }
+                          ]
+                      }
+                  }
+              };
+
+              var map = new google.visualization.Map(document.getElementById('map_div'));
+              // map.controls[google.maps.ControlPosition.TOP_LEFT].push(input);
+              map.draw(mydata, options);
+          },
+          error: function () {
+              // alert("error in getting coordinates, try again");
+          }
+      });
+
+    }
 
   </script>
 {% endblock %}
