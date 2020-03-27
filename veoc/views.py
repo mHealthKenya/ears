@@ -206,9 +206,9 @@ def dashboard(request):
     _ecall_logs = event.objects.all().filter(data_source = 1).filter(incident_status = 2).filter(date_reported__gte = date.today()- timedelta(days=7)).order_by("-date_reported")
     _events = event.objects.all().filter(incident_status = 2).filter(date_reported__gte = date.today()- timedelta(days=7)).order_by("-date_reported")
     _disease = disease.objects.all().filter(incident_status = 2).filter(date_reported__gte = date.today()- timedelta(days=7)).order_by("-date_reported")
-    _total_cor_quarantine = quarantine_contacts.objects.all()
-    _total_ongoing_quarantine = quarantine_contacts.objects.all()
-    _total_completed_quarantine = quarantine_contacts.objects.all()
+    _total_cor_quarantine = quarantine_contacts.objects.all().count()
+    _total_ongoing_quarantine = quarantine_contacts.objects.all().filter(created_at__gte = date.today()- timedelta(days=14)).order_by("-created_at").count()
+    _total_completed_quarantine = quarantine_contacts.objects.all().filter(created_at__lte = date.today()- timedelta(days=14)).order_by("-created_at").count()
     marquee_call_log = []#an array that collects all confirmed diseases and maps them to the marquee
     marquee_disease = []#an array that collects all confirmed diseases and maps them to the marquee
     marquee_events = []#an array that collects all confirmed diseases and maps them to the marquee
@@ -358,6 +358,9 @@ def dashboard(request):
         'marquee_call_log': marquee_call_log,
         'marquee_disease': marquee_disease,
         'marquee_events': marquee_events,
+        'total_cor_quarantine': _total_cor_quarantine,
+        'total_ongoing_quarantine': _total_ongoing_quarantine,
+        'total_completed_quarantine': _total_completed_quarantine,
         'd_count': disease.objects.filter(date_reported__gte = date.today()- timedelta(days=30)).order_by("-date_reported").count(),
         'conf_disease_count': conf_disease_count,
         'rum_disease_count': rum_disease_count,

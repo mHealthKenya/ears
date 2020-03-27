@@ -36,7 +36,6 @@
                             <th>Origin Country</th>
                             <th>place of diagnosis</th>
                             <th>date of contact</th>
-                            <!-- <th>Follow up status</th> -->
                             <th>Registered by</th>
                             <th>Map View</th>
                           </tr>
@@ -53,7 +52,6 @@
                             <td>{{ follow.origin_country }}</td>
                             <td>{{ follow.place_of_diagnosis }}</td>
                             <td>{{ follow.date_of_contact }}</td>
-                            <!-- <td>{{ follow.date_of_contact }}</td> -->
                             <td>{{ follow.created_by.username }}</td>
                             <td>
                              <button type="button" id="map_view" class="btn btn-info btn-sm pull-left map_view"
@@ -174,7 +172,7 @@
       var contact = $(this).data('last_contact');
       var phone = $(this).data('phone_number');
 
-      console.log(names);
+      // console.log(names);
 
       $(".id").val(id);
       $(".first_name").val(names);
@@ -190,14 +188,14 @@
       // console.log("inside drawCountyChart");
 
       item_id = $(".id").val();
-      console.log(item_id)
+      // console.log(item_id)
       $.ajax({
           url: '/get_quarantine_coordinates/',
           type: 'POST',
           datatype: 'json',
           data: {item_id:item_id,csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val()},
           success: function (data) {
-              console.log(JSON.stringify(data));
+              // console.log(JSON.stringify(data));
               var mydata = new google.visualization.DataTable();
               mydata.addColumn('number', 'LATITUDE');
               mydata.addColumn('number', 'LONGITUDE');
