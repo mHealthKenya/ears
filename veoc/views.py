@@ -1229,6 +1229,18 @@ def quarantine_register(request):
             subcountyObject = organizational_units.objects.get(organisationunitid = 18)
             wardObject = organizational_units.objects.get(organisationunitid = 18)
 
+
+        user_phone = "+254"
+        #check if the leading character is 0
+        if str(phone_number[0]) == "0":
+            user_phone = user_phone + str(phone_number[1:])
+            print("number leading with 0")
+        else:
+            user_phone = user_phone + str(phone)
+            print("number not leading with 0")
+
+        print(user_phone)
+
         #get todays date
         current_date = date.today().strftime('%Y-%m-%d')
 
@@ -1240,7 +1252,7 @@ def quarantine_register(request):
         #saving values to databse
         quarantine_contacts.objects.create(first_name=first_name, last_name=last_name,
         county=countyObject, subcounty=subcountyObject, ward=wardObject,sex=sex, dob=dob, passport_number=passport_number,
-        phone_number=phone_number, email_address=email_address, date_of_contact=date_of_contact,
+        phone_number=user_phone, email_address=email_address, date_of_contact=date_of_contact,
         origin_country=origin_country, place_of_diagnosis=place_of_diagnosis,
         updated_at=current_date, created_by=userObject, updated_by=userObject, created_at=current_date)
 
