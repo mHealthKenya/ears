@@ -1242,7 +1242,8 @@ def quarantine_register(request):
         print(user_phone)
 
         #get todays date
-        current_date = date.today().strftime('%Y-%m-%d')
+        # current_date = date.today().strftime('%Y-%m-%d')
+        current_date = date.today()
 
         #get current user
         current_user = request.user
