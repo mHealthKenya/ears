@@ -41,6 +41,25 @@
                        </div>
                     </div>
                     <div class="form-row" id="country_details_div">
+                       <div class="form-group col-md-4">
+                         <label for="nationality">Nationality : *</label>
+                         <select class="form-control" name="nationality" id="nationality">
+                              <option value="" disabled selected>Select Nationality</option>
+                              {% for cntry in country %}
+                                  <option value="{{cntry.name}}">{{cntry.name}}</option>
+                              {% endfor %}
+                          </select>
+                       </div>
+                       <div class="form-group col-md-4">
+                         <label for="comorbidity">Comorbidity : </label>
+                         <input class="form-control" type="text" id="comorbidity" name="comorbidity" placeholder="comorbidity"/>
+                       </div>
+                       <div class="form-group col-md-4">
+                         <label for="drugs">Any drugs on? : </label>
+                         <input class="form-control" type="text" id="drugs" name="drugs" placeholder="Drugs"/>
+                       </div>
+                    </div>
+                    <div class="form-row" id="country_details_div">
                        <div class="form-group col-md-6">
                          <label for="country">Country of Origin : *</label>
                          <select class="form-control" name="country" id="country" onchange="region_filter()">
@@ -97,6 +116,16 @@
                          <label for="datereport">Date of Contact : *</label>
                          <input class="form-control" type="date" value="{{ day }}" id="date_of_contact" max='2000-13-13' name="date_of_contact">
                        </div>
+                     </div>
+                     <div class="form-row" id="gender_details_div">
+                        <div class="form-group col-md-6">
+                          <label for="callername">Next of Kin : </label>
+                          <input class="form-control" type="text" id="nok" name="nok" placeholder="next of kin"/>
+                        </div>
+                        <div class="form-group col-md-6">
+                          <label for="callername">Next of Kin Phone No : </label>
+                          <input class="form-control" type="number" id="nok_phone_num" name="nok_phone_num" minlength="10" placeholder="Next of kin phone number"/>
+                        </div>
                      </div>
                      <div class="form-row" id="save_div">
                        <div class="form-group col-md-12">

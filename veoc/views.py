@@ -1219,6 +1219,11 @@ def quarantine_register(request):
         ward = request.POST.get('ward','')
         place_of_diagnosis = request.POST.get('place_of_diagnosis','')
         date_of_contact = request.POST.get('date_of_contact','')
+        nationality = request.POST.get('nationality','')
+        comorbidity = request.POST.get('comorbidity','')
+        drugs = request.POST.get('drugs','')
+        nextofkin = request.POST.get('nok','')
+        nok_phone_number = request.POST.get('nok_phone_num','')
 
         if origin_country.lower() == "kenya" :
             countyObject = organizational_units.objects.get(name = cnty)
@@ -1228,7 +1233,6 @@ def quarantine_register(request):
             countyObject = organizational_units.objects.get(organisationunitid = 18)
             subcountyObject = organizational_units.objects.get(organisationunitid = 18)
             wardObject = organizational_units.objects.get(organisationunitid = 18)
-
 
         user_phone = "+254"
         #check if the leading character is 0
@@ -1254,6 +1258,7 @@ def quarantine_register(request):
         quarantine_contacts.objects.create(first_name=first_name, last_name=last_name,
         county=countyObject, subcounty=subcountyObject, ward=wardObject,sex=sex, dob=dob, passport_number=passport_number,
         phone_number=user_phone, email_address=email_address, date_of_contact=date_of_contact,
+        nationality=nationality, drugs=drugs, nok=nextofkin, nok_phone_num=nok_phone_number,cormobidity=comorbidity,
         origin_country=origin_country, place_of_diagnosis=place_of_diagnosis,
         updated_at=current_date, created_by=userObject, updated_by=userObject, created_at=current_date)
 
