@@ -1267,7 +1267,7 @@ def quarantine_register(request):
         url = "http://mlab.localhost/api/sms/gateway"
         print(phone_number)
         # msg = "Thank you " + first_name + " for registering. You will be required to send your temperature details during this quarantine period of 14 days. Please download the self reporting app on this link: https://cutt.ly/AtbvdxD"
-        msg = "Thank you " + first_name + " for registering. You will be required to send your temperature details during this quarantine period of 14 days. Please download the self reporting app on this link: http://tiny.cc/6fz1lz"
+        msg = "Thank you " + first_name + " for registering. You will be required to send your temperature details during this quarantine period of 14 days. Please download the self reporting app on this link: https://bit.ly/3ap95vj"
 
         pp = {"phone_no": phone_number, "message": msg}
         payload = json.dumps(pp)
@@ -2390,6 +2390,11 @@ def edit_diseases_list(request):
     values = {'disease_count':disease_count, 'disease_vals': disease_vals}
 
     return render(request, 'veoc/diseaselist.html', values)
+
+@login_required
+def edit_quarantine_list(request):
+
+    return render(request, 'veoc/quarantinelist.html', values)
 
 @login_required
 def events_list(request):

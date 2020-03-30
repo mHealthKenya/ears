@@ -33,11 +33,13 @@
                             <th>Gender</th>
                             <th>Contact</th>
                             <th>Passport No</th>
+                            <th>Nationality</th>
                             <th>Origin Country</th>
                             <th>place of diagnosis</th>
                             <th>date of contact</th>
                             <th>Registered by</th>
                             <th>Map View</th>
+                            <!-- <th>Edit</th> -->
                           </tr>
                           </thead>
                           <tbody>
@@ -49,6 +51,7 @@
                             <td>{{ follow.sex }}</td>
                             <td>{{ follow.phone_number }}</td>
                             <td>{{ follow.passport_number }}</td>
+                            <td>{{ follow.nationality }}</td>
                             <td>{{ follow.origin_country }}</td>
                             <td>{{ follow.place_of_diagnosis }}</td>
                             <td>{{ follow.date_of_contact }}</td>
@@ -65,6 +68,25 @@
                                </i>
                              </button>
                            </td>
+                           <!-- <td>
+                             <button type="button" class="btn btn-primary btn-xs edit_button"
+                               data-toggle="modal" data-target="#edit_quarantine_modal"
+                               data-id="{{ follow.pk }}"
+                               data-last_name="{{ follow.last_name }}"
+                               data-first_name="{{ follow.first_name }}"
+                               data-phone_number="{{ follow.phone_number }}"
+                               data-nationality="{{ follow.nationality }}"
+                               data-origin_country="{{ follow.origin_country }}"
+                               data-place_of_diagnosis="{{ follow.place_of_diagnosis }}"
+                               data-nok="{{ follow.nok }}"
+                               data-nok_phone_num="{{ follow.nok_phone_num }}"
+                               data-cormobidity="{{ follow.cormobidity }}"
+                               data-drugs="{{ follow.drugs }}"
+                               title="Edit">
+                               <i class="fa fa-edit">
+                               </i>
+                             </button>
+                           </td> -->
                           </tr>
                         {% endfor %}
                       </tbody>
@@ -80,40 +102,40 @@
       <div class="modal fade" id="mapViewModal" tabindex="-1" role="dialog" aria-hidden="true">
       		<div class="modal-dialog" role="document">
       			<div class="modal-content">
-      			<div class="modal-header">
-      				<h5 class="modal-title" id="exampleModalLongTitle"><b>QUARANTINED PATIENT FOLLOW UP DETAILS</b></h5>
-      				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-      				<span aria-hidden="true">&times;</span>
-      				</button>
-      			</div>
-      			<div class="modal-body">
+        			<div class="modal-header">
+        				<h5 class="modal-title" id="exampleModalLongTitle"><b>QUARANTINED PATIENT FOLLOW UP DETAILS</b></h5>
+        				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        				<span aria-hidden="true">&times;</span>
+        				</button>
+        			</div>
+        			<div class="modal-body">
               <div class="padding-md">
                 <div class="row">
                   <div class="col-md-12">
                     <div class="panel panel-default">
-                        <div class="panel-heading"><b>Quarantined Patient Details</b></div>
-                        <div class="panel-body" align="center">
-                          <form method="post" action="#">
-                            <div class="form-group" style="display: none;">
-                                <input class="form-control id" name="id" style="display: none;">
-                            </div>
-                            <div class="form-row">
-                                <div class="form-group col-md-4">
-                                  <label for="county">Names :</label>
-                                  <input class="form-control first_name" name="first_name" readonly>
-                                </div>
-                                <div class="form-group col-md-4">
-                                  <label for="county">Mobile No :</label>
-                                  <input class="form-control phone_number" name="phone_number" readonly>
-                                </div>
-                                <div class="form-group col-md-4">
-                                  <label for="county">Date last contacted :</label>
-                                  <input class="form-control date_of_contact" name="date_of_contact" readonly>
-                                </div>
-                            </div>
-                          </form>
-                          <button type="submit" onClick="drawCountyChart()" class="btn btn-success btn-sm pull-right">View Map</button>
-                      </div>
+                      <div class="panel-heading"><b>Quarantined Patient Details</b></div>
+                      <div class="panel-body" align="center">
+                        <form method="post" action="#">
+                          <div class="form-group" style="display: none;">
+                              <input class="form-control id" name="id" style="display: none;">
+                          </div>
+                          <div class="form-row">
+                              <div class="form-group col-md-4">
+                                <label for="county">Names :</label>
+                                <input class="form-control first_name" name="first_name" readonly>
+                              </div>
+                              <div class="form-group col-md-4">
+                                <label for="county">Mobile No :</label>
+                                <input class="form-control phone_number" name="phone_number" readonly>
+                              </div>
+                              <div class="form-group col-md-4">
+                                <label for="county">Date last contacted :</label>
+                                <input class="form-control date_of_contact" name="date_of_contact" readonly>
+                              </div>
+                          </div>
+                        </form>
+                        <button type="submit" onClick="drawCountyChart()" class="btn btn-success btn-sm pull-right">View Map</button>
+                    </div>
                   </div><!-- /div panel-default -->
                   <div class="panel panel-default">
                     <div class="panel-heading"><b>Patient Self Reporting Locations</b></div>
@@ -125,7 +147,79 @@
                 </div>
               </div>
             </div>
+            </div>
           </div>
+        </div>
+      </div>
+
+      <!-- Edit Disease modal -->
+      <div class="modal fade" id="edit_quarantine_modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="exampleModalLabel">Quarantine Patient Edit</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+              <form method="post" action="{% url 'veoc:edit_quarantine_list' %}">
+                {% csrf_token %}
+                <div class="modal-body">
+                  <div class="form-group" style="display: none;">
+                      <input class="form-control id" name="id" style="display: none;">
+                  </div>
+                  <div class="form-group">
+                    <label for="callername">First Name : *</label>
+                    <input class="form-control f_name" type="text" id="f_name" name="first_name" size="45" placeholder="first name" required/>
+                  </div>
+                  <div class="form-group">
+                    <label for="callernumber">Last Name : *</label>
+                    <input class="form-control l_name" type="text" id="l_name" name="last_name" maxlength="10" size="45" placeholder="last name" required/>
+                  </div>
+                  <div class="form-group">
+                    <label for="callernumber">ID / Passport Number : *</label>
+                    <input class="form-control passport_num" type="text" id="passport_num" name="passport_number" maxlength="10" size="45" placeholder="passport number" required/>
+                  </div>
+                  <div>
+                    <label for="callername">Phone Number : *</label>
+                    <input class="form-control phone_num" type="number" id="phone_num" name="phone_number" minlength="10" placeholder="phone number" required/>
+                  </div>
+                  <div class="form-group">
+                    <label for="country">Country of Origin : *</label>
+                    <select class="form-control cntry" name="country" id="cntry">
+                         <option value="" disabled selected>Select Country</option>
+                         {% for cntry in country %}
+                             <option value="{{cntry.name}}">{{cntry.name}}</option>
+                         {% endfor %}
+                     </select>
+                  </div>
+                  <div class="form-group">
+                    <label for="nationality">Nationality : *</label>
+                    <select class="form-control natnality" name="natnality" id="nationality">
+                         <option value="" disabled selected>Select Nationality</option>
+                         {% for cntry in country %}
+                             <option value="{{cntry.name}}">{{cntry.name}}</option>
+                         {% endfor %}
+                     </select>
+                  </div>
+                  <div class="form-group">
+                    <label for="comorbidity">Comorbidity : </label>
+                    <input class="form-control comorbidity" type="text" id="comorbidity" name="comorbidity" placeholder="comorbidity"/>
+                  </div>
+                  <div class="form-group">
+                    <label for="drugs">Any drugs on? : </label>
+                    <input class="form-control drugs" type="text" id="drugs" name="drugs" placeholder="Drugs"/>
+                  </div>
+                </div>
+                <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                <button type="submit" id="adddescriptionbtn" class="btn btn-success btn-sm pull-right">Save Changes</button>
+            </form>
+            </div>
+          </div>
+        </div>
+      </div>
 
 {% endblock %}
 
@@ -179,6 +273,30 @@
       $(".date_of_contact").val(contact);
       $(".phone_number").val(phone);
     });
+
+    $(document).on( "click", '.edit_button',function(e) {
+      var id = $(this).data('id');
+      var first_name = $(this).data('first_name');
+      var last_name = $(this).data('last_name');
+      var country = $(this).data('country');
+      var nationality = $(this).data('nationality');
+      var phone_number = $(this).data('phone_number');
+      var country = $(this).data('country');
+      var comorbidity = $(this).data('cormobidity');
+      var drugs = $(this).data('drugs');
+
+      console.log(id);
+      console.log(first_name);
+
+      $(".id").val(id);
+      $(".f_name").val(first_name);
+      $(".l_name").val(last_name);
+      $(".cntry").val(country);
+      $(".natnality").val(nationality);
+      $(".phone_num").val(phone_number);
+      $(".comorbidity").val(comorbidity);
+      $(".drugs").val(drugs);
+  });
 
     google.charts.load('current', {'packages': ['map']});
     google.charts.setOnLoadCallback(drawCountyChart);

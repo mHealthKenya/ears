@@ -80,6 +80,7 @@ urlpatterns = [
     url(r'^usersubcounty/$', views.usersubcounty, name='usersubcounty'),
     url(r'^get_group/$', views.get_group, name='get_group'),
     url(r'^diseases_list/$', views.diseases_list, name='diseases_list'),
+    url(r'^edit_quarantine_list/$', views.edit_quarantine_list, name='edit_quarantine_list'),
     url(r'^edit_diseases_list/$', views.edit_diseases_list, name='edit_diseases_list'),
     url(r'^events_list/$', views.events_list, name='events_list'),
     url(r'^edit_events_list/$', views.edit_events_list, name='edit_events_list'),
