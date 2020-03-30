@@ -1267,7 +1267,7 @@ def quarantine_register(request):
         url = "http://mlab.localhost/api/sms/gateway"
         print(phone_number)
         # msg = "Thank you " + first_name + " for registering. You will be required to send your temperature details during this quarantine period of 14 days. Please download the self reporting app on this link: https://cutt.ly/AtbvdxD"
-        msg = "Thank you " + first_name + " for registering. You will be required to send your temperature details during this quarantine period of 14 days. Please download the self reporting app on this link: https://bit.ly/3ap95vj"
+        msg = "Thank you " + first_name + " for registering. You will be required to send your temperature details during this quarantine period of 14 days. Please download the self reporting app on this link: http://bit.ly/jitenge_moh"
 
         pp = {"phone_no": phone_number, "message": msg}
         payload = json.dumps(pp)
