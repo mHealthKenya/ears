@@ -9,18 +9,37 @@
         			<div id="breadcrumb">
         				<ul class="breadcrumb">
         					 <li><i class="fa fa-home"></i><a href="{% url 'veoc:access_dashboard' %}"> Dashboard</a></li>
-        					 <li class="active">Quarantine Patients</li>
+        					 <li class="active">Quarantine Cases</li>
         				</ul>
         			</div><!-- /breadcrumb-->
 
-              <div class="panel-heading"><b>COVID19 Quarantine Patients Report</b></div>
+              <div class="panel-heading">QUARANTINE CASES DATA FILTERS</div>
+              <div class="panel-body" align="left">
+                  <form class="form-inline" method="post" action="{% url 'veoc:quarantine_list' %}">
+                    {% csrf_token %}
+                      <div class="form-group">
+                          <label for="site"><b>Filter by Quarantine Site :&nbsp; &nbsp; </b></label>
+                          <select class="form-control" id="quarantine_site" name="quarantine_site">
+                             <option value="" disabled selected>Select Quarantine Site</option>
+                             {% for quar_site in quar_sites %}
+                                 <option value="{{ quar_site.id }}">{{ quar_site.site_name}}</option>
+                             {% endfor %}
+                         </select>
+                      </div>
+
+                      <button type="submit" class="btn btn-primary" align="right">Update</button>
+                  </form>
+                  <!-- <button type="submit" class="btn btn-primary" align="right">Update</button> -->
+              </div>
+
+              <div class="panel-heading"><b>COVID19 Quarantine Cases Report</b></div>
 
         			<div class="padding-md">
         				<div class="row">
         					<div class="col-md-12">
         						<div class="panel panel-default table-responsive">
         							<div class="panel-heading">
-        								Quarantine Patients
+        								Quarantine Cases
         								<span class="label label-info pull-right" id="totalspan">{{quarantine_data_count}} Reported cases </span>
         							</div>
         							<div class="padding-md clearfix">
@@ -35,7 +54,7 @@
                             <th>Passport No</th>
                             <th>Nationality</th>
                             <th>Origin Country</th>
-                            <th>place of diagnosis</th>
+                            <th>Quarantine Site</th>
                             <th>date of contact</th>
                             <th>Registered by</th>
                             <th>Map View</th>
@@ -53,6 +72,7 @@
                             <td>{{ follow.passport_number }}</td>
                             <td>{{ follow.nationality }}</td>
                             <td>{{ follow.origin_country }}</td>
+                            <!-- <td>{{ follow.quarantine_site.site_name }}</td> -->
                             <td>{{ follow.place_of_diagnosis }}</td>
                             <td>{{ follow.date_of_contact }}</td>
                             <td>{{ follow.created_by.username }}</td>

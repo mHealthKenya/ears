@@ -321,6 +321,7 @@ def dashboard(request):
                 # print(data_record)
         data_val.append(data_record)
     series.append(series_data)
+    print(series)
 
     #pie_chart disease data
     chart_d_type = dhis_disease_type.objects.all().order_by('name')
@@ -1218,6 +1219,7 @@ def quarantine_register(request):
         sub_cnty = request.POST.get('subcounty','')
         ward = request.POST.get('ward','')
         place_of_diagnosis = request.POST.get('place_of_diagnosis','')
+        site_name = request.POST.get('q_site_name','')
         date_of_contact = request.POST.get('date_of_contact','')
         nationality = request.POST.get('nationality','')
         comorbidity = request.POST.get('comorbidity','')
@@ -1247,19 +1249,20 @@ def quarantine_register(request):
 
         #get todays date
         # current_date = date.today().strftime('%Y-%m-%d')
-        current_date = date.today()
+        current_date = datetime.now()
 
         #get current user
         current_user = request.user
         print(current_user)
         userObject = User.objects.get(pk = current_user.id)
+        qua_site = quarantine_sites.objects.get(site_name = site_name)
 
         #saving values to databse
         quarantine_contacts.objects.create(first_name=first_name, last_name=last_name,
         county=countyObject, subcounty=subcountyObject, ward=wardObject,sex=sex, dob=dob, passport_number=passport_number,
         phone_number=user_phone, email_address=email_address, date_of_contact=date_of_contact,
         nationality=nationality, drugs=drugs, nok=nextofkin, nok_phone_num=nok_phone_number,cormobidity=comorbidity,
-        origin_country=origin_country, place_of_diagnosis=place_of_diagnosis,
+        origin_country=origin_country, place_of_diagnosis=place_of_diagnosis, quarantine_site= qua_site,
         updated_at=current_date, created_by=userObject, updated_by=userObject, created_at=current_date)
 
         # send sms to the patient for successful registration_form
@@ -1284,11 +1287,14 @@ def quarantine_register(request):
 
         print(response.text.encode('utf8'))
 
+        messages.success(request, 'Your quarantined case was updated successfully!')
+
     cntry = country.objects.all()
     county = organizational_units.objects.all().filter(hierarchylevel = 2).order_by('name')
+    qua_site = quarantine_sites.objects.all()
     day = time.strftime("%Y-%m-%d")
 
-    data = {'country':cntry,'county':county, 'day':day}
+    data = {'country':cntry,'county':county, 'day':day, 'qua_site':qua_site}
 
     return render(request, 'veoc/quarantine_registration_form.html', data)
 
@@ -1669,12 +1675,64 @@ def daily_reports(request):
         return render(request, 'veoc/generate_pdf.html',{'day': day})
 
 def quarantine_list(request):
-    q_data = quarantine_contacts.objects.all()
-    q_data_count = quarantine_contacts.objects.all().count()
+    global data
+    if request.method == 'POST':
+        q_site = request.POST.get('quarantine_site','')
 
-    data = {'quarantine_data': q_data, 'quarantine_data_count': q_data_count}
+        #pull data whose quarantine site id is equal to q_site_name
+        q_data = quarantine_contacts.objects.filter(quarantine_site=q_site)
+        q_data_count = quarantine_contacts.objects.filter(quarantine_site=q_site).count()
+        quar_sites = quarantine_sites.objects.all()
+
+        data = {'quarantine_data': q_data, 'quarantine_data_count': q_data_count, 'quar_sites':quar_sites}
+    else:
+        q_data = quarantine_contacts.objects.all()
+        q_data_count = quarantine_contacts.objects.all().count()
+        quar_sites = quarantine_sites.objects.all()
+
+        data = {'quarantine_data': q_data, 'quarantine_data_count': q_data_count, 'quar_sites':quar_sites}
 
     return render(request, 'veoc/quarantine_list.html', data)
+
+def f_up(request):
+    qrnt_contacts = quarantine_contacts.objects.all()
+
+    final_array = []
+    client_array = {}
+    follow_up_array = {}
+    for qrt_cnt in qrnt_contacts:
+        follow = quarantine_follow_up.objects.filter(patient_contacts = qrt_cnt)
+        # print(qrt_cnt.first_name)
+        client_array = {'first_name': qrt_cnt.first_name}
+
+        client_array.update(
+                    last_name = str(qrt_cnt.last_name),
+                    age = str(qrt_cnt.age),
+                    gender = str(qrt_cnt.sex),
+                    origin_country = str(qrt_cnt.origin_country),
+                    date_begin_quarantine = str(qrt_cnt.date_of_contact),
+                    place_of_quarantine = str(qrt_cnt.place_of_diagnosis),
+                )
+
+        for fllw in follow:
+            # print(qrt_cnt.first_name)
+            # print(fllw.follow_up_day)
+            # print(fllw.body_temperature)
+
+            # follow_array = {'day '+str(fllw.follow_up_day) : fllw.body_temperature
+            # follow_up_array.update(follow_up = follow_array)
+            follow_up_array.update({'day '+str(fllw.follow_up_day) : fllw.body_temperature})
+
+        if follow.__len__() >= 1:
+            print(qrt_cnt.first_name)
+            client_array['follow_up'] = follow_up_array
+            # print(client_array)
+            final_array.append(client_array)
+
+            # print(final_array)
+
+    print(final_array)
+    return render(request, 'veoc/f_up.html', {"data":qrnt_contacts})
 
 def follow_up(request):
     follow_data = quarantine_follow_up.objects.all()
@@ -2419,6 +2477,31 @@ def events_list(request):
     return render(request, 'veoc/eventlist.html', values)
 
 @login_required
+def site_list(request):
+    if request.method == "POST":
+        s_name = request.POST.get('site_name','')
+        lead_name = request.POST.get('lead_names','')
+        lead_phone = request.POST.get('lead_number','')
+
+        #get todays date
+        current_date = date.today().strftime('%Y-%m-%d')
+
+        #get current user
+        current_user = request.user
+        userObject = User.objects.get(pk = current_user.id)
+
+        #saving values to databse
+        quarantine_sites.objects.create(site_name=s_name, team_lead_names=lead_name,
+            team_lead_phone=lead_phone, created_at=current_date, updated_at=current_date,
+            created_by=userObject, updated_by=userObject)
+
+    sites_count = quarantine_sites.objects.all().count
+    site_vals = quarantine_sites.objects.all()
+    values = {'sites_count':sites_count, 'site_vals': site_vals}
+
+    return render(request, 'veoc/quarantine_sites.html', values)
+
+@login_required
 def edit_events_list(request):
     if request.method == "POST":
         myid = request.POST.get('id','')
@@ -2432,6 +2515,24 @@ def edit_events_list(request):
     values = {'event_count':event_count, 'event_vals': event_vals}
 
     return render(request, 'veoc/eventlist.html', values)
+
+@login_required
+def edit_site_list(request):
+    if request.method == "POST":
+        myid = request.POST.get('id','')
+        s_name = request.POST.get('site_name','')
+        lead_name = request.POST.get('lead_names','')
+        lead_phone = request.POST.get('lead_number','')
+
+        #updating values to database
+        quarantine_sites.objects.filter(pk=myid).update(site_name=s_name, team_lead_names=lead_name, team_lead_phone=lead_phone)
+
+    sites_count = quarantine_sites.objects.all().count
+    site_vals = quarantine_sites.objects.all()
+    values = {'sites_count':sites_count, 'site_vals': site_vals}
+
+    return render(request, 'veoc/quarantine_sites.html', values)
+
 
 def disgnation_list(request):
     if request.method == "POST":
