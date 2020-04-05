@@ -41,7 +41,7 @@
                        </div>
                     </div>
                     <div class="form-row" id="country_details_div">
-                       <div class="form-group col-md-4">
+                       <div class="form-group col-md-6">
                          <label for="nationality">Nationality : *</label>
                          <select class="form-control" name="nationality" id="nationality">
                               <option value="" disabled selected>Select Nationality</option>
@@ -50,15 +50,16 @@
                               {% endfor %}
                           </select>
                        </div>
-                       <div class="form-group col-md-4">
-                         <label for="comorbidity">Comorbidity : </label>
-                         <input class="form-control" type="text" id="comorbidity" name="comorbidity" placeholder="comorbidity"/>
+                       <div class="form-group col-md-6">
+                         <label for="site">Quarantine Site : *</label>
+                         <select class="form-control" name="q_site_name" id="q_site_name" >
+                              <option value="" disabled selected>Select Quarantine Site</option>
+                              {% for qty in qua_site %}
+                                  <option value="{{qty.site_name}}">{{qty.site_name}}</option>
+                              {% endfor %}
+                          </select>
                        </div>
-                       <div class="form-group col-md-4">
-                         <label for="drugs">Any drugs on? : </label>
-                         <input class="form-control" type="text" id="drugs" name="drugs" placeholder="Drugs"/>
-                       </div>
-                    </div>
+                     </div>
                     <div class="form-row" id="country_details_div">
                        <div class="form-group col-md-6">
                          <label for="country">Country of Origin : *</label>
@@ -113,10 +114,20 @@
                          <input class="form-control" type="text" id="place_of_diagnosis" name="place_of_diagnosis" size="45" placeholder="place of diagnosis" required/>
                        </div>
                        <div class="form-group col-md-6">
-                         <label for="datereport">Date of Contact : *</label>
+                         <label for="datereport">Date of Arrival : *</label>
                          <input class="form-control" type="date" value="{{ day }}" id="date_of_contact" max='2000-13-13' name="date_of_contact">
                        </div>
                      </div>
+                     <div class="form-row" id="country_details_div">
+                       <div class="form-group col-md-6">
+                         <label for="comorbidity">Comorbidity : </label>
+                         <input class="form-control" type="text" id="comorbidity" name="comorbidity" placeholder="comorbidity"/>
+                       </div>
+                       <div class="form-group col-md-6">
+                         <label for="drugs">Any drugs on? : </label>
+                         <input class="form-control" type="text" id="drugs" name="drugs" placeholder="Drugs"/>
+                       </div>
+                    </div>
                      <div class="form-row" id="gender_details_div">
                         <div class="form-group col-md-6">
                           <label for="callername">Next of Kin : </label>

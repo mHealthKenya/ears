@@ -555,6 +555,26 @@ class contact(models.Model):
     def __str__(self):
         return self.county.description + ' - ' + self.contact_type.description
 
+class quarantine_sites(models.Model):
+    person_phone_regex = RegexValidator(regex=r'^\+?1?\d{10,15}$', message="Phone number must be entered in the format: '+999999999'. Up to 15 digits allowed.")
+
+    site_name = models.CharField(max_length=500)
+    team_lead_names = models.CharField(max_length=500)
+    team_lead_phone = models.CharField(validators=[person_phone_regex], max_length=15, blank=True)
+    created_at = models.DateField(default=date.today)
+    updated_at = models.DateField(default=date.today)
+    created_by = models.ForeignKey(User, on_delete=models.CASCADE, related_name='quarantine_sites_updated_by')
+    updated_by = models.ForeignKey(User, on_delete=models.CASCADE, related_name='quarantine_sites_created_by')
+
+    def natural_key(self):
+        return (self.site_name)
+
+    def __str__(self):
+        return self.site_name
+
+    class meta:
+        unique_together=(('site_name'),)
+
 class quarantine_contacts(models.Model):
     person_phone_regex = RegexValidator(regex=r'^\+?1?\d{10,15}$', message="Phone number must be entered in the format: '+999999999'. Up to 15 digits allowed.")
 
@@ -576,10 +596,11 @@ class quarantine_contacts(models.Model):
     nok_phone_num = models.CharField(validators=[person_phone_regex], max_length=15, blank=True)
     cormobidity = models.CharField(max_length=50, blank=True)
     place_of_diagnosis = models.CharField(max_length=50, blank=True)
+    quarantine_site = models.ForeignKey(quarantine_sites, on_delete=models.DO_NOTHING, related_name='quarantine_site', default=1)
     date_of_contact = models.DateField(default=date.today)
     source = models.CharField(max_length=50, blank=False)
-    created_at = models.DateField(default=date.today)
-    updated_at = models.DateField(default=date.today)
+    created_at = models.DateTimeField(default=datetime.now())
+    updated_at = models.DateTimeField(default=datetime.now())
     created_by = models.ForeignKey(User, on_delete=models.CASCADE, related_name='quarantine_updated_by')
     updated_by = models.ForeignKey(User, on_delete=models.CASCADE, related_name='quarantine_created_by')
 
