@@ -578,6 +578,7 @@ class quarantine_sites(models.Model):
 class quarantine_contacts(models.Model):
     person_phone_regex = RegexValidator(regex=r'^\+?1?\d{10,15}$', message="Phone number must be entered in the format: '+999999999'. Up to 15 digits allowed.")
 
+    contact_uuid = models.CharField(max_length=50, blank=True)
     first_name = models.CharField(max_length=50)
     last_name = models.CharField(max_length=50)
     sex = models.CharField(max_length=50)
@@ -598,7 +599,9 @@ class quarantine_contacts(models.Model):
     place_of_diagnosis = models.CharField(max_length=50, blank=True)
     quarantine_site = models.ForeignKey(quarantine_sites, on_delete=models.DO_NOTHING, related_name='quarantine_site', default=1)
     date_of_contact = models.DateField(default=date.today)
-    source = models.CharField(max_length=50, blank=False)
+    contact_state = models.CharField(max_length=50, blank=True)
+    physical_address = models.CharField(max_length=50, blank=True)
+    source = models.CharField(max_length=50, blank=True)
     created_at = models.DateTimeField(default=datetime.now())
     updated_at = models.DateTimeField(default=datetime.now())
     created_by = models.ForeignKey(User, on_delete=models.CASCADE, related_name='quarantine_updated_by')

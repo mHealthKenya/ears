@@ -66,6 +66,14 @@ class organizational_unit_view(viewsets.ModelViewSet):
     queryset = organizational_units.objects.all()
     serializer_class = OrganizationalUnitsSerializer
 
+class myDict(dict):
+
+    def __init__(self):
+        self = dict()
+
+    def add(self, key, value):
+        self[key] = value
+
 def not_in_manager_group(user):
     if user:
         return user.groups.filter(name='National Managers').count() == 0
@@ -277,6 +285,9 @@ def dashboard(request):
         disease_report_stat[d_type.name] = diseases_count
         thirty_days_stat[d_type.name] = thirty_days_disease_count
 
+        # print("^^^thirty day^^^^")
+        # print(thirty_days_stat)
+
     #picking the highest disease numbers for dashboard diseases
     disease_reported_dash_vals = dict(Counter(thirty_days_stat).most_common(3))
 
@@ -351,6 +362,42 @@ def dashboard(request):
     #pulling all eoc status for the drop down for change
     eoc_Status = eoc_status.objects.all()
 
+    #covid-19 line graph quarantine sites_count
+    qua_sites = quarantine_sites.objects.all().order_by('site_name')
+    ongoing_cases = {}
+    completed_cases = {}
+    for qua_site in qua_sites:
+        ongoing_array = myDict()
+        completed_array = myDict()
+
+        qua_completed_contacts = quarantine_contacts.objects.filter(quarantine_site_id = qua_site.id).filter(created_at__gte = date.today()- timedelta(days=14)).count()
+        qua_ongoing_contacts = quarantine_contacts.objects.filter(quarantine_site_id = qua_site.id).filter(created_at__lte = date.today()- timedelta(days=14)).count()
+        qua_total_contacts = quarantine_contacts.objects.filter(quarantine_site_id = qua_site.id).count()
+
+        if qua_completed_contacts > 0 or qua_ongoing_contacts > 0:
+
+            ongoing_array.add('ongoing', qua_ongoing_contacts)
+            completed_array.add("completed",qua_completed_contacts)
+
+            ongoing_cases[qua_site.site_name + " - "+ str(qua_total_contacts) +" Cases"] = qua_ongoing_contacts
+            completed_cases[qua_site.site_name] = qua_completed_contacts
+
+    print(ongoing_cases)
+    print(completed_cases)
+
+        # **************************
+    #     combinded_array = myDict()
+    #     qua_completed_contacts = quarantine_contacts.objects.filter(quarantine_site_id = qua_site.id).filter(created_at__gte = date.today()- timedelta(days=14)).count()
+    #     qua_ongoing_contacts = quarantine_contacts.objects.filter(quarantine_site_id = qua_site.id).filter(created_at__lte = date.today()- timedelta(days=14)).count()
+    #
+    #     combinded_array.add("ongoing",qua_ongoing_contacts)
+    #     combinded_array.add("completed",qua_completed_contacts)
+    #     print("------")
+    #     # print(combinded_array)
+    #
+    #     ongoing_cases[qua_site.site_name] = combinded_array
+    # print(ongoing_cases)
+
     #pulling eoc status as set by only the eoc manager
     set_eoc_status = eoc_status.objects.all().exclude(active = False)
 
@@ -382,8 +429,8 @@ def dashboard(request):
         'thirty_days_stat': thirty_days_stat,
         'events_thirty_days_stat': events_thirty_days_stat,
         'elements': call_stats,
-        'sub_elements': sub_call_stat,
-        'disease_reported_dash_vals':disease_reported_dash_vals,
+        'sub_elements': sub_call_stat,'quarantine_completed_cases':completed_cases,
+        'disease_reported_dash_vals':disease_reported_dash_vals, 'quarantine_ongoing_cases': ongoing_cases,
         'pie_diseases': cases, 'pie_events': event_cases, 'dhis_graph_data': dhis_cases,
         'eoc_status': eoc_Status, 'set_eoc_status': set_eoc_status
     })
@@ -409,6 +456,9 @@ def county_dashboard(request):
     _ecall_logs = event.objects.all().filter(county = user_county_id).filter(data_source = 1).filter(incident_status = 2).filter(date_reported__gte = date.today()- timedelta(days=7)).order_by("-date_reported")
     _events = event.objects.all().filter(county = user_county_id).filter(incident_status = 2).filter(date_reported__gte = date.today()- timedelta(days=7)).order_by("-date_reported")
     _disease = disease.objects.all().filter(county = user_county_id).filter(incident_status = 2).filter(date_reported__gte = date.today()- timedelta(days=7)).order_by("-date_reported")
+    _total_cor_quarantine = quarantine_contacts.objects.all().filter(county = user_county_id).count()
+    _total_ongoing_quarantine = quarantine_contacts.objects.all().filter(county = user_county_id).filter(created_at__gte = date.today()- timedelta(days=14)).order_by("-created_at").count()
+    _total_completed_quarantine = quarantine_contacts.objects.all().filter(county = user_county_id).filter(created_at__lte = date.today()- timedelta(days=14)).order_by("-created_at").count()
     marquee_call_log = []#an array that collects all confirmed diseases and maps them to the marquee
     marquee_disease = []#an array that collects all confirmed diseases and maps them to the marquee
     marquee_events = []#an array that collects all confirmed diseases and maps them to the marquee
@@ -550,6 +600,29 @@ def county_dashboard(request):
     #pulling all eoc status for the drop down for change
     eoc_Status = eoc_status.objects.all()
 
+    #covid-19 line graph quarantine sites_count
+    qua_sites = quarantine_sites.objects.all().order_by('site_name')
+    ongoing_cases = {}
+    completed_cases = {}
+    for qua_site in qua_sites:
+        ongoing_array = myDict()
+        completed_array = myDict()
+
+        qua_completed_contacts = quarantine_contacts.objects.all().filter(county = user_county_id).filter(quarantine_site_id = qua_site.id).filter(created_at__gte = date.today()- timedelta(days=14)).count()
+        qua_ongoing_contacts = quarantine_contacts.objects.all().filter(county = user_county_id).filter(quarantine_site_id = qua_site.id).filter(created_at__lte = date.today()- timedelta(days=14)).count()
+        qua_total_contacts = quarantine_contacts.objects.all().filter(county = user_county_id).filter(quarantine_site_id = qua_site.id).count()
+
+        if qua_completed_contacts > 0 or qua_ongoing_contacts > 0:
+
+            ongoing_array.add('ongoing', qua_ongoing_contacts)
+            completed_array.add("completed",qua_completed_contacts)
+
+            ongoing_cases[qua_site.site_name + " - "+ str(qua_total_contacts) +" Cases"] = qua_ongoing_contacts
+            completed_cases[qua_site.site_name] = qua_completed_contacts
+
+    print(ongoing_cases)
+    print(completed_cases)
+
     #pulling eoc status as set by only the eoc manager
     set_eoc_status = eoc_status.objects.all().exclude(active = False)
 
@@ -558,6 +631,9 @@ def county_dashboard(request):
         'marquee_call_log': marquee_call_log,
         'marquee_disease': marquee_disease,
         'marquee_events': marquee_events,
+        'total_cor_quarantine': _total_cor_quarantine,
+        'total_ongoing_quarantine': _total_ongoing_quarantine,
+        'total_completed_quarantine': _total_completed_quarantine,
         'd_count': disease.objects.filter(date_reported__gte = date.today()- timedelta(days=30)).order_by("-date_reported").count(),
         'conf_disease_count': conf_disease_count,
         'rum_disease_count': rum_disease_count,
@@ -581,6 +657,8 @@ def county_dashboard(request):
         'sub_elements': sub_call_stat,
         'disease_reported_dash_vals':disease_reported_dash_vals,
         'county_name':county_name,
+        'sub_elements': sub_call_stat,'quarantine_completed_cases':completed_cases,
+        'disease_reported_dash_vals':disease_reported_dash_vals, 'quarantine_ongoing_cases': ongoing_cases,        
         'pie_diseases': cases, 'pie_events': event_cases, 'dhis_graph_data': dhis_cases,
         'eoc_status': eoc_Status, 'set_eoc_status': set_eoc_status
     })
@@ -1245,7 +1323,7 @@ def quarantine_register(request):
             user_phone = user_phone + str(phone)
             print("number not leading with 0")
 
-        print(user_phone)
+        # print(user_phone)
 
         #get todays date
         # current_date = date.today().strftime('%Y-%m-%d')
@@ -1699,39 +1777,59 @@ def f_up(request):
 
     final_array = []
     client_array = {}
-    follow_up_array = {}
+    # follow_up_array = {}
     for qrt_cnt in qrnt_contacts:
+        follow_up_array = myDict()
         follow = quarantine_follow_up.objects.filter(patient_contacts = qrt_cnt)
         # print(qrt_cnt.first_name)
-        client_array = {'first_name': qrt_cnt.first_name}
 
-        client_array.update(
-                    last_name = str(qrt_cnt.last_name),
-                    age = str(qrt_cnt.age),
-                    gender = str(qrt_cnt.sex),
-                    origin_country = str(qrt_cnt.origin_country),
-                    date_begin_quarantine = str(qrt_cnt.date_of_contact),
-                    place_of_quarantine = str(qrt_cnt.place_of_diagnosis),
-                )
+        follow_up_array.add('first_name', qrt_cnt.first_name)
+        follow_up_array.add('last_name', qrt_cnt.last_name)
+        follow_up_array.add('age', qrt_cnt.age)
+        follow_up_array.add('gender', qrt_cnt.sex)
+        follow_up_array.add('origin_country', qrt_cnt.origin_country)
+        follow_up_array.add('date_begin_quarantine', qrt_cnt.date_of_contact)
+        follow_up_array.add('quarantine_site', qrt_cnt.qua_site.site_name)
 
         for fllw in follow:
+            print(fllw.follow_up_day)
+            print(fllw.body_temperature)
+            client_array[qrt_cnt.patient_contacts] = follow_up_array
+
+            final_array.append(client_array)
+
+        print(final_array)
+
+
+        # client_array = {'first_name': qrt_cnt.first_name}
+
+        # client_array.update(
+        #             last_name = str(qrt_cnt.last_name),
+        #             age = str(qrt_cnt.age),
+        #             gender = str(qrt_cnt.sex),
+        #             origin_country = str(qrt_cnt.origin_country),
+        #             date_begin_quarantine = str(qrt_cnt.date_of_contact),
+        #             place_of_quarantine = str(qrt_cnt.place_of_diagnosis),
+        #         )
+
+        # for fllw in follow:
             # print(qrt_cnt.first_name)
             # print(fllw.follow_up_day)
             # print(fllw.body_temperature)
 
             # follow_array = {'day '+str(fllw.follow_up_day) : fllw.body_temperature
             # follow_up_array.update(follow_up = follow_array)
-            follow_up_array.update({'day '+str(fllw.follow_up_day) : fllw.body_temperature})
+            # follow_up_array.update({'day '+str(fllw.follow_up_day) : fllw.body_temperature})
 
-        if follow.__len__() >= 1:
-            print(qrt_cnt.first_name)
-            client_array['follow_up'] = follow_up_array
+        # if follow.__len__() >= 1:
+        #     print(qrt_cnt.first_name)
+            # client_array['follow_up'] = follow_up_array
             # print(client_array)
-            final_array.append(client_array)
+            # final_array.append(client_array)
 
             # print(final_array)
 
-    print(final_array)
+    # print(final_array)
     return render(request, 'veoc/f_up.html', {"data":qrnt_contacts})
 
 def follow_up(request):
