@@ -41,6 +41,22 @@
             <div class="well" style="border-color: #a94442">
                 <div class="small-box bg-aqua">
                     <div class="inner" style="height: 100px; width: 100%; ">
+                        <h4><b> COVID-19 Quarantine</b></h4>
+                        <h6>Total Quarantine : {{ total_cor_quarantine }} Cases</h6>
+                        <h6>Ongoing Quarantine : {{ total_ongoing_quarantine }} Cases</h6>
+                        <h6>Completed Quarantine : {{ total_completed_quarantine }} Cases</h6>
+                    </div>
+                    <div class="icon">
+                        <i class="ion ion-bag"></i>
+                    </div>
+                    <a href="/quarantine_list/" class="btn btn-primary">More infor</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="well" style="border-color: #a94442">
+                <div class="small-box bg-aqua">
+                    <div class="inner" style="height: 100px; width: 100%; ">
                         <h4><b> Diseases Reported</b></h4>
                         {% for key, value in disease_reported_dash_vals.items %}
                             <h6>{{ key }} : {{ value }} Cases</h6>
@@ -87,7 +103,7 @@
                 </div>
             </div>
         </div>
-        <div class="col-md-3">
+        <!-- <div class="col-md-3">
             <div class="well" style="border-color: #a94442">
                 <div class="small-box bg-red">
                     <div class="inner" style="height: 100px; width: 100%;">
@@ -102,12 +118,23 @@
                     <a href="/week_shift" class="btn btn-primary">More infor</a>
                 </div>
             </div>
+        </div> -->
+    </div>
+
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="well">
+                <div class="panel-heading" style="background-color:#3c8dbc">
+                    <h2 class="panel-title" align="center" style="color: #ffffff">. </h2>
+                </div>
+                <div id="covid_container" style="height:300px;width:100%;">
+                </div>
+            </div>
         </div>
     </div>
 
     <div class="row">
         <div class="col-sm-6">
-
             <div class="well">
                 <div class="panel-heading" style="background-color:#3c8dbc">
                     <h2 class="panel-title" align="center" style="color: #ffffff">. </h2>
@@ -139,37 +166,37 @@
         </div>
     </div>
 
-    <div class="row">
-      <div class="col-sm-6">
+      <!-- <div class="row">
+        <div class="col-sm-6">
 
-          <div class="well">
-              <div class="panel-heading" style="background-color:#3c8dbc">
-                  <h2 class="panel-title" align="center" style="color: #ffffff">. </h2>
-              </div>
-              <div id="EventsbarContainer" style="height: 300px; width: 100%;">
-              </div>
-          </div>
+            <div class="well">
+                <div class="panel-heading" style="background-color:#3c8dbc">
+                    <h2 class="panel-title" align="center" style="color: #ffffff">. </h2>
+                </div>
+                <div id="EventsbarContainer" style="height: 300px; width: 100%;">
+                </div>
+            </div>
 
-      </div>
-      <div class="col-sm-6">
-          <div class="well">
-              <div class="panel-heading" style="background-color:#3c8dbc">
-                <div class="form-row" align="right">
-                  <label for="events_pie_chart" style="color: #ffffff">PH Event filters: </label>
-                      <select name="events_pie_chart" id="events_pie_chart" onchange="change_mychart()">
-                          {% for cases in pie_events %}
-                              {% regroup cases by event_type__name as events_list %}
-                              {% for event in events_list %}
-                                  <option value="{{ event.grouper }}">{{ event.grouper }}</option>
-                              {% endfor %}
-                          {% endfor %}
-                      </select>
-                  </div>
-              </div>
-              <div id="piechartEvents" style="height: 300px; width: 100%;"></div>
-          </div>
-      </div>
-    </div>
+        </div>
+        <div class="col-sm-6">
+            <div class="well">
+                <div class="panel-heading" style="background-color:#3c8dbc">
+                  <div class="form-row" align="right">
+                    <label for="events_pie_chart" style="color: #ffffff">PH Event filters: </label>
+                        <select name="events_pie_chart" id="events_pie_chart" onchange="change_mychart()">
+                            {% for cases in pie_events %}
+                                {% regroup cases by event_type__name as events_list %}
+                                {% for event in events_list %}
+                                    <option value="{{ event.grouper }}">{{ event.grouper }}</option>
+                                {% endfor %}
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+                <div id="piechartEvents" style="height: 300px; width: 100%;"></div>
+            </div>
+        </div>
+      </div> -->
 
     <div class="row">
         <div class="col-md-12">
@@ -298,6 +325,111 @@
                 data: valx
             }],
         });
+
+        var centers = []
+        var completed = []
+        var ongoing = []
+        var combination = []
+        {% if quarantine_ongoing_cases %}
+            console.log("{{ quarantine_ongoing_cases.items }}")
+            {% for key, value in quarantine_ongoing_cases.items %}
+                centers.push('{{ key }}')
+                ongoing.push({{ value }})
+            {% endfor %}
+        {% else %}
+          console.log("No completed quarantine data to plot")
+            // valx.push({name: 'None', y: 0, drilldown: 'None'})
+        {% endif %}
+
+        {% if quarantine_completed_cases %}
+            console.log("{{ quarantine_completed_cases.items }}")
+            {% for key, value in quarantine_completed_cases.items %}
+                completed.push({{ value }})
+            {% endfor %}
+        {% else %}
+          console.log("No ongoing quarantine data to plot")
+            // valx.push({name: 'None', y: 0, drilldown: 'None'})
+        {% endif %}
+
+        console.log(ongoing)
+        console.log(centers)
+        console.log(completed)
+
+        // covid-19 Quarantine Centres Bargraph
+        var chart = Highcharts.chart('covid_container', {
+
+          chart: {
+              type: 'column'
+          },
+
+          title: {
+              text: 'COVID-19 COUNTY QUARANTINE SITES REPRESENTATION'
+          },
+
+          subtitle: {
+              text: 'Hover the graphs to see actial numbers'
+          },
+
+          legend: {
+              align: 'right',
+              verticalAlign: 'middle',
+              layout: 'vertical'
+          },
+
+          xAxis: {
+              categories: centers,
+              labels: {
+                  x: -10
+              }
+          },
+
+          yAxis: {
+              allowDecimals: false,
+              title: {
+                  text: 'Number of Cases'
+              }
+          },
+
+          series: [{
+              name: 'Ongoing Quarantine Cases',
+              data: ongoing
+          }, {
+              name: 'Completed Quarantine Cases',
+              data: completed
+          }],
+
+          responsive: {
+              rules: [{
+                  condition: {
+                      maxWidth: 500
+                  },
+                  chartOptions: {
+                      legend: {
+                          align: 'center',
+                          verticalAlign: 'bottom',
+                          layout: 'horizontal'
+                      },
+                      yAxis: {
+                          labels: {
+                              align: 'left',
+                              x: 0,
+                              y: -5
+                          },
+                          title: {
+                              text: null
+                          }
+                      },
+                      subtitle: {
+                          text: null
+                      },
+                      credits: {
+                          enabled: false
+                      }
+                  }
+              }]
+          }
+      });
+
     });
 
   // This function takes deseases data and should be used to populate the pie chart on the dashboard
