@@ -155,7 +155,7 @@
                               </div>
                           </div>
                         </form>
-                        <button type="submit" onClick="drawCountyChart()" class="btn btn-success btn-sm pull-right">View Map</button>
+                        <button type="submit" onClick="openMap()" class="btn btn-success btn-sm pull-right">View Map</button>
                     </div>
                   </div><!-- /div panel-default -->
                   <div class="panel panel-default">
@@ -319,9 +319,10 @@
       $(".drugs").val(drugs);
   });
 
-    google.charts.load('current', {'packages': ['map']});
-    google.charts.setOnLoadCallback(drawCountyChart);
-
+    function openMap(){
+      google.charts.load('current', {'packages': ['map']});
+      google.charts.setOnLoadCallback(drawCountyChart);
+    }    
 
     function drawCountyChart() {
       // console.log("inside drawCountyChart");

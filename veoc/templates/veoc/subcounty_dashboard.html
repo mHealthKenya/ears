@@ -59,9 +59,13 @@
                 <div class="small-box bg-aqua">
                     <div class="inner" style="height: 100px; width: 100%; ">
                         <h4><b> Diseases Reported</b></h4>
-                        {% for key, value in disease_reported_dash_vals.items %}
-                            <h6>{{ key }} : {{ value }} Cases</h6>
-                        {% endfor %}
+                        {% if disease_reported_dash_vals %}
+                          {% for key, value in disease_reported_dash_vals.items %}
+                              <h6>{{ key }} : {{ value }} Cases</h6>
+                          {% endfor %}
+                        {% else %}
+                          <h6>No Recent Cases </h6>
+                        {% endif %}
 
                     </div>
                     <div class="icon">

@@ -1791,21 +1791,55 @@ def daily_reports(request):
 
 def quarantine_list(request):
     global data
+
+    #check logged users access level to display relevant records -- national, county, SubCounty
+    current_user = request.user
+    u = User.objects.get(username=current_user.username)
+    user_access_level = u.persons.access_level
+    print("Access Level---")
+    print(user_access_level)
+
     if request.method == 'POST':
         q_site = request.POST.get('quarantine_site','')
 
-        #check logged users
-
-        #pull data whose quarantine site id is equal to q_site_name
-        q_data = quarantine_contacts.objects.filter(quarantine_site=q_site)
-        q_data_count = quarantine_contacts.objects.filter(quarantine_site=q_site).count()
-        quar_sites = quarantine_sites.objects.all()
+        if(user_access_level == "National"):
+            #pull data whose quarantine site id is equal to q_site_name
+            q_data = quarantine_contacts.objects.filter(quarantine_site=q_site)
+            q_data_count = quarantine_contacts.objects.filter(quarantine_site=q_site).count()
+            quar_sites = quarantine_sites.objects.all()
+        elif(user_access_level == "County"):
+            user_county_id = u.persons.county_id
+            print(user_county_id)
+            #pull data whose quarantine site id is equal to q_site_name
+            q_data = quarantine_contacts.objects.filter(quarantine_site=q_site).filter(county_id = user_county_id)
+            q_data_count = quarantine_contacts.objects.filter(quarantine_site=q_site).filter(county = user_county_id).count()
+            quar_sites = quarantine_sites.objects.all()
+        else:
+            user_sub_county_id = u.persons.sub_county_id
+            print(user_sub_county_id)
+            #pull data whose quarantine site id is equal to q_site_name
+            q_data = quarantine_contacts.objects.filter(quarantine_site=q_site).filter(subcounty_id = user_sub_county_id)
+            q_data_count = quarantine_contacts.objects.filter(quarantine_site=q_site).filter(subcounty_id = user_sub_county_id).count()
+            quar_sites = quarantine_sites.objects.all()
 
         data = {'quarantine_data': q_data, 'quarantine_data_count': q_data_count, 'quar_sites':quar_sites}
     else:
-        q_data = quarantine_contacts.objects.all()
-        q_data_count = quarantine_contacts.objects.all().count()
-        quar_sites = quarantine_sites.objects.all().order_by('site_name')
+        if(user_access_level == "National"):
+            q_data = quarantine_contacts.objects.all()
+            q_data_count = quarantine_contacts.objects.all().count()
+            quar_sites = quarantine_sites.objects.all().order_by('site_name')
+        elif(user_access_level == "County"):
+            user_county_id = u.persons.county_id
+            print(user_county_id)
+            q_data = quarantine_contacts.objects.all().filter(county_id = user_county_id)
+            q_data_count = quarantine_contacts.objects.all().filter(county_id = user_county_id).count()
+            quar_sites = quarantine_sites.objects.all().order_by('site_name')
+        else:
+            user_sub_county_id = u.persons.sub_county
+            print(user_sub_county_id)
+            q_data = quarantine_contacts.objects.all().filter(subcounty_id = user_sub_county_id)
+            q_data_count = quarantine_contacts.objects.all().filter(subcounty_id = user_sub_county_id).count()
+            quar_sites = quarantine_sites.objects.all().order_by('site_name')
 
         data = {'quarantine_data': q_data, 'quarantine_data_count': q_data_count, 'quar_sites':quar_sites}
 
