@@ -36,6 +36,7 @@
                               <th>Site Name</th>
                               <th>Team Lead Names</th>
                               <th>Team Lead Contacts</th>
+                              <th>Active Site</th>
                               <th>Created By</th>
                               <th>Action</th>
                           </tr>
@@ -46,6 +47,7 @@
                             <td>{{ site.site_name }}</td>
                             <td>{{ site.team_lead_names }}</td>
                             <td>{{ site.team_lead_phone }}</td>
+                            <td>{{ site.active }}</td>
                             <td>{{ site.created_by.username }}</td>
                             <td>
                                 <button type="button" class="btn btn-primary btn-xs view_button"
@@ -54,6 +56,7 @@
                                   data-site-name="{{ site.site_name }}"
                                   data-lead-name="{{ site.team_lead_names }}"
                                   data-lead-phone="{{ site.team_lead_phone }}"
+                                  data-active="{{ site.active }}"
                                   title="View">
                                   <i class="fa fa-eye">
                                   </i>
@@ -64,6 +67,7 @@
                                 data-site-name="{{ site.site_name }}"
                                 data-lead-name="{{ site.team_lead_names }}"
                                 data-lead-phone="{{ site.team_lead_phone }}"
+                                data-active="{{ site.active }}"
                                 title="Edit">
                                 <i class="fa fa-edit">
                                 </i>
@@ -140,6 +144,10 @@
     									<label>Team Leam Phone Number :</label>
     								  <input type="number" class="form-control view_lead_number" name="lead_number" readonly>
     								</div>
+                    <div class="form-group">
+    									<label>Active Status :</label>
+    								  <input type="text" class="form-control view_active" name="active" readonly>
+    								</div>
                 </div>
             </form>
             </div>
@@ -179,6 +187,14 @@
                       <div class="form-group">
       									<label>Team Leam Phone Number :</label>
       								  <input type="number" class="form-control edit_lead_number" name="lead_number">
+      								</div>
+                      <div class="form-group">
+      									<label>Active Status :</label>
+                        <select class="form-control input-sm active" data-width="100%" id="active" name="active" >
+                        <option value="" disabled selected>Select Status</option>
+                            <option value="True">Active</option>
+                            <option value="False">Inactive</option>
+      							   </select>
       								</div>
                     </div>
                     <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
@@ -240,12 +256,14 @@
       var s_name = $(this).data('site-name');
       var lead_name = $(this).data('lead-name');
       var lead_num = $(this).data('lead-phone');
+      var act = $(this).data('active');
 
       console.log(s_name);
 
       $(".view_site_name").val(s_name);
       $(".view_lead_names").val(lead_name);
       $(".view_lead_number").val(lead_num);
+      $(".view_active").val(act);
   });
 
     $(document).on( "click", '.edit_button',function(e) {

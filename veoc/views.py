@@ -156,7 +156,7 @@ def access_dashboard(request):
         next = '/subcounty_dashboard/'
         print(next)
 
-    messages.info(request, 'Your password was updated successfully!')
+    # messages.info(request, 'Your password was updated successfully!')
     return HttpResponseRedirect(next)
 
 def user_register(request):
@@ -895,6 +895,7 @@ def subcounty_dashboard(request):
 
     return HttpResponse(template.render(context.flatten()))
 
+@login_required
 def call_register(request):
 
     if request.method == 'POST':
@@ -1195,6 +1196,7 @@ def filter_call_report(request):
 
         return render(request, 'veoc/call_report.html', values)
 
+@login_required
 def disease_register(request):
 
     if request.method == 'POST':
@@ -1315,6 +1317,7 @@ def disease_register(request):
 
     return render(request, 'veoc/disease_form.html', data)
 
+@login_required
 def quarantine_register(request):
 
     if request.method == 'POST':
@@ -1402,7 +1405,7 @@ def quarantine_register(request):
 
     cntry = country.objects.all()
     county = organizational_units.objects.all().filter(hierarchylevel = 2).order_by('name')
-    qua_site = quarantine_sites.objects.all()
+    qua_site = quarantine_sites.objects.all().filter(active = True).order_by('site_name')
     day = time.strftime("%Y-%m-%d")
 
     data = {'country':cntry,'county':county, 'day':day, 'qua_site':qua_site}
@@ -1436,6 +1439,7 @@ def call_log_view(request, id = None):
     }
     return render(request, "veoc/call_log_view.html",context)
 
+@login_required
 def event_register(request):
 
     if request.method == 'POST':
@@ -1790,6 +1794,8 @@ def quarantine_list(request):
     if request.method == 'POST':
         q_site = request.POST.get('quarantine_site','')
 
+        #check logged users
+
         #pull data whose quarantine site id is equal to q_site_name
         q_data = quarantine_contacts.objects.filter(quarantine_site=q_site)
         q_data_count = quarantine_contacts.objects.filter(quarantine_site=q_site).count()
@@ -1799,7 +1805,7 @@ def quarantine_list(request):
     else:
         q_data = quarantine_contacts.objects.all()
         q_data_count = quarantine_contacts.objects.all().count()
-        quar_sites = quarantine_sites.objects.all()
+        quar_sites = quarantine_sites.objects.all().order_by('site_name')
 
         data = {'quarantine_data': q_data, 'quarantine_data_count': q_data_count, 'quar_sites':quar_sites}
 
@@ -2613,6 +2619,7 @@ def site_list(request):
         s_name = request.POST.get('site_name','')
         lead_name = request.POST.get('lead_names','')
         lead_phone = request.POST.get('lead_number','')
+        active = True
 
         #get todays date
         current_date = date.today().strftime('%Y-%m-%d')
@@ -2622,7 +2629,7 @@ def site_list(request):
         userObject = User.objects.get(pk = current_user.id)
 
         #saving values to databse
-        quarantine_sites.objects.create(site_name=s_name, team_lead_names=lead_name,
+        quarantine_sites.objects.create(site_name=s_name, team_lead_names=lead_name, active=active,
             team_lead_phone=lead_phone, created_at=current_date, updated_at=current_date,
             created_by=userObject, updated_by=userObject)
 
@@ -2654,16 +2661,16 @@ def edit_site_list(request):
         s_name = request.POST.get('site_name','')
         lead_name = request.POST.get('lead_names','')
         lead_phone = request.POST.get('lead_number','')
+        active = request.POST.get('active','')
 
         #updating values to database
-        quarantine_sites.objects.filter(pk=myid).update(site_name=s_name, team_lead_names=lead_name, team_lead_phone=lead_phone)
+        quarantine_sites.objects.filter(pk=myid).update(site_name=s_name, team_lead_names=lead_name, team_lead_phone=lead_phone, active=active)
 
     sites_count = quarantine_sites.objects.all().count
     site_vals = quarantine_sites.objects.all()
     values = {'sites_count':sites_count, 'site_vals': site_vals}
 
     return render(request, 'veoc/quarantine_sites.html', values)
-
 
 def disgnation_list(request):
     if request.method == "POST":
