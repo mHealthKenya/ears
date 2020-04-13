@@ -80,7 +80,7 @@
         </div><!-- /.padding-md -->
       </div><!-- /main-container -->
 
-      <!-- Add Event modal -->
+      <!-- Add Quarantine modal -->
 		   <div class="modal fade" id="addQuarantineModal" tabindex="-1" role="dialog" aria-hidden="true">
 					<div class="modal-dialog" role="document">
 						<div class="modal-content">
@@ -91,7 +91,7 @@
 							</button>
 						</div>
 						<div class="modal-body">
-							<form onsubmit="return validateform()" enctype="multipart/form-data" method="POST" action="{% url 'veoc:site_list' %}" >
+							<form class="quarantine_register_form" method="POST" action="{% url 'veoc:site_list' %}" >
 								{% csrf_token %}
                 <div class="form-group">
 									<label>Site Name :</label>
@@ -114,7 +114,7 @@
 					</div>
         </div>
 
-      <!-- View Event modal -->
+      <!-- View Quarantine modal -->
       <div class="modal fade" id="view_site_modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
         aria-hidden="true">
         <div class="modal-dialog" role="document">
@@ -150,7 +150,7 @@
         </div>
       </div>
 
-      <!-- Edit Event modal -->
+      <!-- Edit Quarantine modal -->
       <div class="modal fade" id="edit_site_modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
         aria-hidden="true">
         <div class="modal-dialog" role="document">
@@ -192,57 +192,67 @@
 {% endblock %}
 
 {% block script %}
-    <script>
-      $(document).ready(function () {
-          $('#site_table').DataTable({
-              "order": [],
-              dom: 'Bfrtip',
-              buttons: [
-                  'copy', 'csv', 'excel', 'pdf', 'print'
-              ]
-          });
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
+      integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+<!-- Latest compiled and minified JavaScript -->
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"
+        integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
+        crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootbox.js/4.4.0/bootbox.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
+<script src="https://cdn.jsdelivr.net/npm/promise-polyfill"></script>
+  <script>
+    $(document).ready(function () {
+        $('#site_table').DataTable({
+            "order": [],
+            dom: 'Bfrtip',
+            buttons: [
+                'copy', 'csv', 'excel', 'pdf', 'print'
+            ]
+        });
 
-          // Setup - add a text input to each footer cell
-          $('#site_table thead td').each(function () {
-              var title = $(this).text();
-              $(this).html('<input type="text" placeholder="Search ' + title + '" />');
-          });
+        // Setup - add a text input to each footer cell
+        $('#site_table thead td').each(function () {
+            var title = $(this).text();
+            $(this).html('<input type="text" placeholder="Search ' + title + '" />');
+        });
 
-          // DataTable
-          var table = $('#site_table').DataTable();
+        // DataTable
+        var table = $('#site_table').DataTable();
 
-          // Apply the search
-          table.columns().every(function () {
-              var that = this;
+        // Apply the search
+        table.columns().every(function () {
+            var that = this;
 
-              $('input', this.header()).on('keyup change', function () {
-                  if (that.search() !== this.value) {
-                      that
-                              .search(this.value)
-                              .draw();
-                  }
-              });
-          });
-      });
-
-      $(document).on( "click", '.view_button',function(e) {
-        var id = $(this).data('id');
-        var s_name = $(this).data('site-name');
-        var lead_name = $(this).data('lead-name');
-        var lead_num = $(this).data('lead-phone');
-
-        console.log(s_name);
-
-        $(".view_site_name").val(s_name);
-        $(".view_lead_names").val(lead_name);
-        $(".view_lead_number").val(lead_num);
+            $('input', this.header()).on('keyup change', function () {
+                if (that.search() !== this.value) {
+                    that
+                            .search(this.value)
+                            .draw();
+                }
+            });
+        });
     });
 
-      $(document).on( "click", '.edit_button',function(e) {
-        var id = $(this).data('id');
-        var s_name = $(this).data('site-name');
-        var lead_name = $(this).data('lead-name');
-        var lead_num = $(this).data('lead-phone');
+    $(document).on( "click", '.view_button',function(e) {
+      var id = $(this).data('id');
+      var s_name = $(this).data('site-name');
+      var lead_name = $(this).data('lead-name');
+      var lead_num = $(this).data('lead-phone');
+
+      console.log(s_name);
+
+      $(".view_site_name").val(s_name);
+      $(".view_lead_names").val(lead_name);
+      $(".view_lead_number").val(lead_num);
+  });
+
+    $(document).on( "click", '.edit_button',function(e) {
+      var id = $(this).data('id');
+      var s_name = $(this).data('site-name');
+      var lead_name = $(this).data('lead-name');
+      var lead_num = $(this).data('lead-phone');
 
       console.log(s_name);
 
@@ -252,5 +262,47 @@
       $(".edit_lead_number").val(lead_num);
   });
 
-    </script>
+  var quarantineForm = $(".quarantine_register_form")
+
+  quarantineForm.submit(function(e){
+    e.preventDefault();
+    console.log("inside quarantineForm");
+    var thisForm = $(this);
+    var endPoint = thisForm.attr("action") || window.location.href;
+    var method = thisForm.attr("method");
+    var formData = thisForm.serialize();
+
+    Swal.fire({
+      title: "Please wait!, Saving Details!",
+      imageUrl: "/static/images/ajax-loader.gif",
+      showConfirmButton: false,
+      allowOutsideClick: false
+    });
+    $.ajax({
+      type:method,
+      url:endPoint,
+      data: formData,
+      success:function(){
+        Swal.fire({
+          title: 'Success!',
+          text: 'Quarantine Site Saved',
+          icon: 'success'
+        });
+        quarantineForm[0].reset();
+      },
+      error:function(er){
+        console.log("Site saving error");
+        console.log(er.responseText);
+        Swal.fire({
+          title: 'Error!',
+          text: 'Quarantine Details Cannot be Saved',
+          icon: 'error'
+        });
+      }
+    });
+
+  });
+
+
+  </script>
 {% endblock %}

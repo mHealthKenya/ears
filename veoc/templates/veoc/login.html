@@ -40,10 +40,10 @@
                     <form class="login_form" method="POST" action=".?next={{ redirect_to }}">
                         {% csrf_token %}
                         <div class="input-group">
-                            <input type="text" name="username" class="form-control input-lg" placeholder="Username">
+                            <input type="text" name="username" class="form-control input-lg" placeholder="Username" required>
                         </div>
                         <div class="input-group">
-                            <input type="password" name="password" class="form-control input-lg" placeholder="Password">
+                            <input type="password" name="password" class="form-control input-lg" placeholder="Password" required>
                         </div>
                         <div class="p-t-20">
                             <button class="btn btn--radius btn--green" type="submit">Login</button>
@@ -86,48 +86,70 @@
 
     <!-- Main JS-->
     <script src="/static/js/global.js"></script>
-    <script type="text/javascript">
+    <script>
 
       // $(document).ready(function(e){
-      //   var loginForm = $(".login_form")
-      //
-      //   loginForm.submit(function(e){
-      //     e.preventDefault();
-      //     console.log("inside login_form");
-      //     var thisForm = $(this);
-      //     var endPoint = thisForm.attr("action") || window.location.href;
-      //     var method = thisForm.attr("method");
-      //     var formData = thisForm.serialize();
-      //
-      //     console.log(endPoint);
-      //     console.log(method);
-      //
-      //     $.ajax({
-      //       type:method,
-      //       url:endPoint,
-      //       data: formData,
-      //       success:function(){
-      //         Swal.fire({
-      //           title: 'Success!',
-      //           text: 'Login successfully',
-      //           icon: 'success'
-      //         });
-      //         loginForm[0].reset();
-      //       },
-      //       error:function(er){
-      //         console.log("Login error");
-      //         console.log(er.responseText);
-      //         Swal.fire({
-      //           title: 'Wrong Login credentials!!',
-      //           text: 'Username or Password does NOT exist!!',
+      //   {% if error %}
+      //   Swal.fire({
+      //           title: 'error!',
+      //           text: 'Username or password Does NOT exist !!',
       //           icon: 'error'
       //         });
-      //       }
-      //     });
+      //   {% else %}
+      //     console.log("Page reloaded!!")
       //
-      //   });
-      //
+      //   {% endif %}
       // });
+
+      var loginForm = $(".login_form");
+      loginForm.submit(function(e){
+        e.preventDefault();
+        console.log("inside login_form");
+        var thisForm = $(this);
+        var endPoint = thisForm.attr("action") || window.location.href;
+        var method = thisForm.attr("method");
+        var formData = thisForm.serialize();
+
+        console.log(endPoint);
+        console.log(method);
+
+        Swal.fire({
+          title: "Please wait!, Logging In!",
+          imageUrl: "/static/images/ajax-loader.gif",
+          showConfirmButton: false,
+          allowOutsideClick: false
+        });
+
+        $.ajax({
+          type:method,
+          url:endPoint,
+          data: formData,
+          success:function(data){
+            console.log(data)
+            if(data == "error"){
+              Swal.fire({
+                title: 'Wrong login credentials!!',
+                text: 'Wrong Username or Password !!',
+                icon: 'error'
+              });
+            }else{
+              loginForm[0].reset();
+              window.location.href = data;
+            }
+          },
+          error:function(er){
+            console.log("Login error");
+            // console.log(er.responseText);
+            Swal.fire({
+              title: 'Wrong Login credentials!!',
+              text: 'Username or Password does NOT exist!!',
+              icon: 'error'
+            });
+            window.location.href = "/login/";
+          }
+        });
+
+      });
 
     </script>
 

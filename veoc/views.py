@@ -81,6 +81,7 @@ def not_in_manager_group(user):
 
 def login(request):
     global next
+    context = {}
 
     if request.method == "POST":
         user_name = request.POST['username']
@@ -112,14 +113,17 @@ def login(request):
                     next = '/subcounty_dashboard/'
                     print(next)
 
-                # messages.info(request, 'Login successfully!')
-                return HttpResponseRedirect(next)
+                # return HttpResponseRedirect(next)
+                return HttpResponse(next)
             else:
-                # messages.info(request, 'Username or Password NOT matching!')
-                return HttpResponse("Inactive user.")
+                return HttpResponse("error")
+                # context["error"] = "User Not Active. Contact Admin for activations"
+                # return render(request, 'veoc/login.html', context)
         else:
-            # messages.error(request, 'User Not Registered!')
-            return HttpResponseRedirect(settings.LOGIN_URL)
+            return HttpResponse("error")
+            # return HttpResponseRedirect(settings.LOGIN_URL)
+            # context["error"] = "Username or Password Does NOT exists"
+            # return render(request, 'veoc/login.html', context)
     else:
         return render(request, 'veoc/login.html')
 
@@ -658,7 +662,7 @@ def county_dashboard(request):
         'disease_reported_dash_vals':disease_reported_dash_vals,
         'county_name':county_name,
         'sub_elements': sub_call_stat,'quarantine_completed_cases':completed_cases,
-        'disease_reported_dash_vals':disease_reported_dash_vals, 'quarantine_ongoing_cases': ongoing_cases,        
+        'disease_reported_dash_vals':disease_reported_dash_vals, 'quarantine_ongoing_cases': ongoing_cases,
         'pie_diseases': cases, 'pie_events': event_cases, 'dhis_graph_data': dhis_cases,
         'eoc_status': eoc_Status, 'set_eoc_status': set_eoc_status
     })
@@ -684,6 +688,9 @@ def subcounty_dashboard(request):
     _ecall_logs = event.objects.all().filter(subcounty = user_county_id).filter(data_source = 1).filter(incident_status = 2).filter(date_reported__gte = date.today()- timedelta(days=7)).order_by("-date_reported")
     _events = event.objects.all().filter(subcounty = user_county_id).filter(incident_status = 2).filter(date_reported__gte = date.today()- timedelta(days=7)).order_by("-date_reported")
     _disease = disease.objects.all().filter(subcounty = user_county_id).filter(incident_status = 2).filter(date_reported__gte = date.today()- timedelta(days=7)).order_by("-date_reported")
+    _total_cor_quarantine = quarantine_contacts.objects.all().filter(subcounty = user_county_id).count()
+    _total_ongoing_quarantine = quarantine_contacts.objects.all().filter(subcounty = user_county_id).filter(created_at__gte = date.today()- timedelta(days=14)).order_by("-created_at").count()
+    _total_completed_quarantine = quarantine_contacts.objects.all().filter(subcounty = user_county_id).filter(created_at__lte = date.today()- timedelta(days=14)).order_by("-created_at").count()
     marquee_call_log = []#an array that collects all confirmed diseases and maps them to the marquee
     marquee_disease = []#an array that collects all confirmed diseases and maps them to the marquee
     marquee_events = []#an array that collects all confirmed diseases and maps them to the marquee
@@ -825,6 +832,29 @@ def subcounty_dashboard(request):
     #pulling all eoc status for the drop down for change
     eoc_Status = eoc_status.objects.all()
 
+    #covid-19 line graph quarantine sites_count
+    qua_sites = quarantine_sites.objects.all().order_by('site_name')
+    ongoing_cases = {}
+    completed_cases = {}
+    for qua_site in qua_sites:
+        ongoing_array = myDict()
+        completed_array = myDict()
+
+        qua_completed_contacts = quarantine_contacts.objects.all().filter(subcounty = user_county_id).filter(quarantine_site_id = qua_site.id).filter(created_at__gte = date.today()- timedelta(days=14)).count()
+        qua_ongoing_contacts = quarantine_contacts.objects.all().filter(subcounty = user_county_id).filter(quarantine_site_id = qua_site.id).filter(created_at__lte = date.today()- timedelta(days=14)).count()
+        qua_total_contacts = quarantine_contacts.objects.all().filter(subcounty = user_county_id).filter(quarantine_site_id = qua_site.id).count()
+
+        if qua_completed_contacts > 0 or qua_ongoing_contacts > 0:
+
+            ongoing_array.add('ongoing', qua_ongoing_contacts)
+            completed_array.add("completed",qua_completed_contacts)
+
+            ongoing_cases[qua_site.site_name + " - "+ str(qua_total_contacts) +" Cases"] = qua_ongoing_contacts
+            completed_cases[qua_site.site_name] = qua_completed_contacts
+
+    print(ongoing_cases)
+    print(completed_cases)
+
     #pulling eoc status as set by only the eoc manager
     set_eoc_status = eoc_status.objects.all().exclude(active = False)
 
@@ -833,6 +863,9 @@ def subcounty_dashboard(request):
         'marquee_call_log': marquee_call_log,
         'marquee_disease': marquee_disease,
         'marquee_events': marquee_events,
+        'total_cor_quarantine': _total_cor_quarantine,
+        'total_ongoing_quarantine': _total_ongoing_quarantine,
+        'total_completed_quarantine': _total_completed_quarantine,
         'd_count': disease.objects.filter(date_reported__gte = date.today()- timedelta(days=30)).order_by("-date_reported").count(),
         'conf_disease_count': conf_disease_count,
         'rum_disease_count': rum_disease_count,
@@ -854,8 +887,8 @@ def subcounty_dashboard(request):
         'events_thirty_days_stat': events_thirty_days_stat,
         'elements': call_stats,
         'sub_elements': sub_call_stat,
-        'sub_county_name':sub_county_name,
-        'disease_reported_dash_vals':disease_reported_dash_vals,
+        'sub_county_name':sub_county_name, 'quarantine_completed_cases':completed_cases,
+        'disease_reported_dash_vals':disease_reported_dash_vals, 'quarantine_ongoing_cases': ongoing_cases,
         'pie_diseases': cases, 'pie_events': event_cases, 'dhis_graph_data': dhis_cases,
         'eoc_status': eoc_Status, 'set_eoc_status': set_eoc_status
     })
