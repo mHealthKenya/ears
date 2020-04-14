@@ -81,6 +81,7 @@ def not_in_manager_group(user):
 
 def login(request):
     global next
+    context = {}
 
     if request.method == "POST":
         user_name = request.POST['username']
@@ -112,14 +113,17 @@ def login(request):
                     next = '/subcounty_dashboard/'
                     print(next)
 
-                # messages.info(request, 'Login successfully!')
-                return HttpResponseRedirect(next)
+                # return HttpResponseRedirect(next)
+                return HttpResponse(next)
             else:
-                # messages.info(request, 'Username or Password NOT matching!')
-                return HttpResponse("Inactive user.")
+                return HttpResponse("error")
+                # context["error"] = "User Not Active. Contact Admin for activations"
+                # return render(request, 'veoc/login.html', context)
         else:
-            # messages.error(request, 'User Not Registered!')
-            return HttpResponseRedirect(settings.LOGIN_URL)
+            return HttpResponse("error")
+            # return HttpResponseRedirect(settings.LOGIN_URL)
+            # context["error"] = "Username or Password Does NOT exists"
+            # return render(request, 'veoc/login.html', context)
     else:
         return render(request, 'veoc/login.html')
 
@@ -152,7 +156,7 @@ def access_dashboard(request):
         next = '/subcounty_dashboard/'
         print(next)
 
-    messages.info(request, 'Your password was updated successfully!')
+    # messages.info(request, 'Your password was updated successfully!')
     return HttpResponseRedirect(next)
 
 def user_register(request):
@@ -658,7 +662,7 @@ def county_dashboard(request):
         'disease_reported_dash_vals':disease_reported_dash_vals,
         'county_name':county_name,
         'sub_elements': sub_call_stat,'quarantine_completed_cases':completed_cases,
-        'disease_reported_dash_vals':disease_reported_dash_vals, 'quarantine_ongoing_cases': ongoing_cases,        
+        'disease_reported_dash_vals':disease_reported_dash_vals, 'quarantine_ongoing_cases': ongoing_cases,
         'pie_diseases': cases, 'pie_events': event_cases, 'dhis_graph_data': dhis_cases,
         'eoc_status': eoc_Status, 'set_eoc_status': set_eoc_status
     })
@@ -684,6 +688,9 @@ def subcounty_dashboard(request):
     _ecall_logs = event.objects.all().filter(subcounty = user_county_id).filter(data_source = 1).filter(incident_status = 2).filter(date_reported__gte = date.today()- timedelta(days=7)).order_by("-date_reported")
     _events = event.objects.all().filter(subcounty = user_county_id).filter(incident_status = 2).filter(date_reported__gte = date.today()- timedelta(days=7)).order_by("-date_reported")
     _disease = disease.objects.all().filter(subcounty = user_county_id).filter(incident_status = 2).filter(date_reported__gte = date.today()- timedelta(days=7)).order_by("-date_reported")
+    _total_cor_quarantine = quarantine_contacts.objects.all().filter(subcounty = user_county_id).count()
+    _total_ongoing_quarantine = quarantine_contacts.objects.all().filter(subcounty = user_county_id).filter(created_at__gte = date.today()- timedelta(days=14)).order_by("-created_at").count()
+    _total_completed_quarantine = quarantine_contacts.objects.all().filter(subcounty = user_county_id).filter(created_at__lte = date.today()- timedelta(days=14)).order_by("-created_at").count()
     marquee_call_log = []#an array that collects all confirmed diseases and maps them to the marquee
     marquee_disease = []#an array that collects all confirmed diseases and maps them to the marquee
     marquee_events = []#an array that collects all confirmed diseases and maps them to the marquee
@@ -825,6 +832,29 @@ def subcounty_dashboard(request):
     #pulling all eoc status for the drop down for change
     eoc_Status = eoc_status.objects.all()
 
+    #covid-19 line graph quarantine sites_count
+    qua_sites = quarantine_sites.objects.all().order_by('site_name')
+    ongoing_cases = {}
+    completed_cases = {}
+    for qua_site in qua_sites:
+        ongoing_array = myDict()
+        completed_array = myDict()
+
+        qua_completed_contacts = quarantine_contacts.objects.all().filter(subcounty = user_county_id).filter(quarantine_site_id = qua_site.id).filter(created_at__gte = date.today()- timedelta(days=14)).count()
+        qua_ongoing_contacts = quarantine_contacts.objects.all().filter(subcounty = user_county_id).filter(quarantine_site_id = qua_site.id).filter(created_at__lte = date.today()- timedelta(days=14)).count()
+        qua_total_contacts = quarantine_contacts.objects.all().filter(subcounty = user_county_id).filter(quarantine_site_id = qua_site.id).count()
+
+        if qua_completed_contacts > 0 or qua_ongoing_contacts > 0:
+
+            ongoing_array.add('ongoing', qua_ongoing_contacts)
+            completed_array.add("completed",qua_completed_contacts)
+
+            ongoing_cases[qua_site.site_name + " - "+ str(qua_total_contacts) +" Cases"] = qua_ongoing_contacts
+            completed_cases[qua_site.site_name] = qua_completed_contacts
+
+    print(ongoing_cases)
+    print(completed_cases)
+
     #pulling eoc status as set by only the eoc manager
     set_eoc_status = eoc_status.objects.all().exclude(active = False)
 
@@ -833,6 +863,9 @@ def subcounty_dashboard(request):
         'marquee_call_log': marquee_call_log,
         'marquee_disease': marquee_disease,
         'marquee_events': marquee_events,
+        'total_cor_quarantine': _total_cor_quarantine,
+        'total_ongoing_quarantine': _total_ongoing_quarantine,
+        'total_completed_quarantine': _total_completed_quarantine,
         'd_count': disease.objects.filter(date_reported__gte = date.today()- timedelta(days=30)).order_by("-date_reported").count(),
         'conf_disease_count': conf_disease_count,
         'rum_disease_count': rum_disease_count,
@@ -854,14 +887,15 @@ def subcounty_dashboard(request):
         'events_thirty_days_stat': events_thirty_days_stat,
         'elements': call_stats,
         'sub_elements': sub_call_stat,
-        'sub_county_name':sub_county_name,
-        'disease_reported_dash_vals':disease_reported_dash_vals,
+        'sub_county_name':sub_county_name, 'quarantine_completed_cases':completed_cases,
+        'disease_reported_dash_vals':disease_reported_dash_vals, 'quarantine_ongoing_cases': ongoing_cases,
         'pie_diseases': cases, 'pie_events': event_cases, 'dhis_graph_data': dhis_cases,
         'eoc_status': eoc_Status, 'set_eoc_status': set_eoc_status
     })
 
     return HttpResponse(template.render(context.flatten()))
 
+@login_required
 def call_register(request):
 
     if request.method == 'POST':
@@ -1162,6 +1196,7 @@ def filter_call_report(request):
 
         return render(request, 'veoc/call_report.html', values)
 
+@login_required
 def disease_register(request):
 
     if request.method == 'POST':
@@ -1282,6 +1317,7 @@ def disease_register(request):
 
     return render(request, 'veoc/disease_form.html', data)
 
+@login_required
 def quarantine_register(request):
 
     if request.method == 'POST':
@@ -1369,7 +1405,7 @@ def quarantine_register(request):
 
     cntry = country.objects.all()
     county = organizational_units.objects.all().filter(hierarchylevel = 2).order_by('name')
-    qua_site = quarantine_sites.objects.all()
+    qua_site = quarantine_sites.objects.all().filter(active = True).order_by('site_name')
     day = time.strftime("%Y-%m-%d")
 
     data = {'country':cntry,'county':county, 'day':day, 'qua_site':qua_site}
@@ -1403,6 +1439,7 @@ def call_log_view(request, id = None):
     }
     return render(request, "veoc/call_log_view.html",context)
 
+@login_required
 def event_register(request):
 
     if request.method == 'POST':
@@ -1754,19 +1791,55 @@ def daily_reports(request):
 
 def quarantine_list(request):
     global data
+
+    #check logged users access level to display relevant records -- national, county, SubCounty
+    current_user = request.user
+    u = User.objects.get(username=current_user.username)
+    user_access_level = u.persons.access_level
+    print("Access Level---")
+    print(user_access_level)
+
     if request.method == 'POST':
         q_site = request.POST.get('quarantine_site','')
 
-        #pull data whose quarantine site id is equal to q_site_name
-        q_data = quarantine_contacts.objects.filter(quarantine_site=q_site)
-        q_data_count = quarantine_contacts.objects.filter(quarantine_site=q_site).count()
-        quar_sites = quarantine_sites.objects.all()
+        if(user_access_level == "National"):
+            #pull data whose quarantine site id is equal to q_site_name
+            q_data = quarantine_contacts.objects.filter(quarantine_site=q_site)
+            q_data_count = quarantine_contacts.objects.filter(quarantine_site=q_site).count()
+            quar_sites = quarantine_sites.objects.all()
+        elif(user_access_level == "County"):
+            user_county_id = u.persons.county_id
+            print(user_county_id)
+            #pull data whose quarantine site id is equal to q_site_name
+            q_data = quarantine_contacts.objects.filter(quarantine_site=q_site).filter(county_id = user_county_id)
+            q_data_count = quarantine_contacts.objects.filter(quarantine_site=q_site).filter(county = user_county_id).count()
+            quar_sites = quarantine_sites.objects.all()
+        else:
+            user_sub_county_id = u.persons.sub_county_id
+            print(user_sub_county_id)
+            #pull data whose quarantine site id is equal to q_site_name
+            q_data = quarantine_contacts.objects.filter(quarantine_site=q_site).filter(subcounty_id = user_sub_county_id)
+            q_data_count = quarantine_contacts.objects.filter(quarantine_site=q_site).filter(subcounty_id = user_sub_county_id).count()
+            quar_sites = quarantine_sites.objects.all()
 
         data = {'quarantine_data': q_data, 'quarantine_data_count': q_data_count, 'quar_sites':quar_sites}
     else:
-        q_data = quarantine_contacts.objects.all()
-        q_data_count = quarantine_contacts.objects.all().count()
-        quar_sites = quarantine_sites.objects.all()
+        if(user_access_level == "National"):
+            q_data = quarantine_contacts.objects.all()
+            q_data_count = quarantine_contacts.objects.all().count()
+            quar_sites = quarantine_sites.objects.all().order_by('site_name')
+        elif(user_access_level == "County"):
+            user_county_id = u.persons.county_id
+            print(user_county_id)
+            q_data = quarantine_contacts.objects.all().filter(county_id = user_county_id)
+            q_data_count = quarantine_contacts.objects.all().filter(county_id = user_county_id).count()
+            quar_sites = quarantine_sites.objects.all().order_by('site_name')
+        else:
+            user_sub_county_id = u.persons.sub_county
+            print(user_sub_county_id)
+            q_data = quarantine_contacts.objects.all().filter(subcounty_id = user_sub_county_id)
+            q_data_count = quarantine_contacts.objects.all().filter(subcounty_id = user_sub_county_id).count()
+            quar_sites = quarantine_sites.objects.all().order_by('site_name')
 
         data = {'quarantine_data': q_data, 'quarantine_data_count': q_data_count, 'quar_sites':quar_sites}
 
@@ -2580,6 +2653,7 @@ def site_list(request):
         s_name = request.POST.get('site_name','')
         lead_name = request.POST.get('lead_names','')
         lead_phone = request.POST.get('lead_number','')
+        active = True
 
         #get todays date
         current_date = date.today().strftime('%Y-%m-%d')
@@ -2589,7 +2663,7 @@ def site_list(request):
         userObject = User.objects.get(pk = current_user.id)
 
         #saving values to databse
-        quarantine_sites.objects.create(site_name=s_name, team_lead_names=lead_name,
+        quarantine_sites.objects.create(site_name=s_name, team_lead_names=lead_name, active=active,
             team_lead_phone=lead_phone, created_at=current_date, updated_at=current_date,
             created_by=userObject, updated_by=userObject)
 
@@ -2621,16 +2695,16 @@ def edit_site_list(request):
         s_name = request.POST.get('site_name','')
         lead_name = request.POST.get('lead_names','')
         lead_phone = request.POST.get('lead_number','')
+        active = request.POST.get('active','')
 
         #updating values to database
-        quarantine_sites.objects.filter(pk=myid).update(site_name=s_name, team_lead_names=lead_name, team_lead_phone=lead_phone)
+        quarantine_sites.objects.filter(pk=myid).update(site_name=s_name, team_lead_names=lead_name, team_lead_phone=lead_phone, active=active)
 
     sites_count = quarantine_sites.objects.all().count
     site_vals = quarantine_sites.objects.all()
     values = {'sites_count':sites_count, 'site_vals': site_vals}
 
     return render(request, 'veoc/quarantine_sites.html', values)
-
 
 def disgnation_list(request):
     if request.method == "POST":
