@@ -15,7 +15,6 @@ kombu==4.5.0
 lazy-object-proxy==1.4.2
 mysql-connector-python==8.0.5
 pefile==2019.4.18
-psycopg2==2.6.2
 PyInstaller==3.5
 PyMySQL==0.7.5
 python-dateutil==2.7.3

@@ -1,4 +1,4 @@
-#!/var/www/ears_system/venv/bin/python
+#!/var/www/ears_system/venv/bin/python3.8
 from django.core import management
 
 if __name__ == "__main__":
