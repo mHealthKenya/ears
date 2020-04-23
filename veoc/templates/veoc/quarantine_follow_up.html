@@ -54,7 +54,7 @@
                             <td>{{ follow.patient_contacts.origin_country }}</td>
                             <td>{{ follow.patient_contacts.date_of_contact|date:'d-m-Y' }}</td>
                             <td>{{ follow.follow_up_day }}</td>
-                            {% if follow.body_temperature > 38.0 %}
+                            {% if follow.body_temperature >= 38.0 %}
                             <td style="background-color: #F51B00">
                               <b>{{ follow.body_temperature }}</b></td>
                             {% else %}
