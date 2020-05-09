@@ -581,6 +581,7 @@ class quarantine_contacts(models.Model):
 
     # contact_uuid = models.CharField(max_length=50, blank=True)
     first_name = models.CharField(max_length=50)
+    middle_name = models.CharField(max_length=50, blank=True)
     last_name = models.CharField(max_length=50)
     sex = models.CharField(max_length=50)
     dob = models.DateField(default=date.today)
@@ -609,7 +610,7 @@ class quarantine_contacts(models.Model):
     updated_by = models.ForeignKey(User, on_delete=models.CASCADE, related_name='quarantine_created_by')
 
     def __str__(self):
-        return self.origin_country + ' - ' + self.place_of_diagnosis
+        return self.first_name + ' - ' + self.phone_number
 
     @property
     def age(self):
@@ -628,7 +629,56 @@ class quarantine_follow_up(models.Model):
     sms_status = models.CharField(max_length=10, default="No")
     lat = models.FloatField(default=0.0000)
     lng = models.FloatField(default=0.0000)
+    created_at = models.DateTimeField(default=datetime.now())
+
+class weighbridge_sites(models.Model):
+    person_phone_regex = RegexValidator(regex=r'^\+?1?\d{10,15}$', message="Phone number must be entered in the format: '+999999999'. Up to 15 digits allowed.")
+
+    weighbridge_name = models.CharField(max_length=50)
+    weighbridge_location = models.CharField(max_length=50)
+    team_lead_names = models.CharField(max_length=500)
+    team_lead_phone = models.CharField(validators=[person_phone_regex], max_length=15, blank=True)
+    active = models.BooleanField(default=True)
     created_at = models.DateField(default=date.today)
+    updated_at = models.DateField(default=date.today)
+    created_by = models.ForeignKey(User, on_delete=models.DO_NOTHING, related_name='weighbridge_sites_updated_by')
+    updated_by = models.ForeignKey(User, on_delete=models.DO_NOTHING, related_name='weighbridge_sites_created_by')
+
+    def natural_key(self):
+        return (self.weighbridge_name)
+
+    def __str__(self):
+        return self.weighbridge_name
+
+    class meta:
+        unique_together=(('weighbridge_name'),)
+
+class truck_quarantine_contacts(models.Model):
+    person_phone_regex = RegexValidator(regex=r'^\+?1?\d{10,15}$', message="Phone number must be entered in the format: '+999999999'. Up to 15 digits allowed.")
+
+    patient_contacts = models.ForeignKey(quarantine_contacts, on_delete=models.DO_NOTHING, related_name='truck_quarantine_contact')
+    street = models.CharField(max_length=50, blank=True)
+    village = models.CharField(max_length=50, blank=True)
+    vehicle_registration = models.CharField(max_length=50, blank=True)
+    company_name = models.CharField(max_length=50, blank=True)
+    company_phone = models.CharField(validators=[person_phone_regex], max_length=15, blank=False)
+    company_physical_address = models.CharField(max_length=50, blank=True)
+    company_street = models.CharField(max_length=50, blank=True)
+    company_building = models.CharField(max_length=50, blank=True)
+    weighbridge_facility = models.ForeignKey(weighbridge_sites, on_delete=models.DO_NOTHING, related_name='weighbridge_contact_facility', blank=False)
+    cough = models.BooleanField(default=True)
+    breathing_difficulty = models.BooleanField(default=True)
+    fever = models.BooleanField(default=True)
+    sample_taken = models.BooleanField(default=True)
+    action_taken = models.CharField(max_length=100, blank=True)
+    hotel = models.CharField(max_length=50, blank=True)
+    hotel_phone = models.CharField(validators=[person_phone_regex], max_length=15, blank=False)
+    hotel_town = models.CharField(max_length=50, blank=True)
+    date_check_in = models.DateField(default=date.today)
+    date_check_out = models.DateField(default=date.today)
+
+    def __str__(self):
+        return self.patient_contacts.first_name + ' - ' + self.vehicle_registration
 
 class watcher_team_leads(models.Model):
     team_lead=models.ForeignKey(contact, on_delete=models.CASCADE, blank=False)

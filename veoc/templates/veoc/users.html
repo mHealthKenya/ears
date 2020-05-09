@@ -187,6 +187,7 @@
                       <option value="National">National User</option>
                       <option value="County">County User</option>
                       <option value="SubCounty">Sub-County User</option>
+                      <option value="Border">Border Point User</option>
 							   </select>
 							</div><!-- /form-group -->
 							<div class="form-group" id="org_unit_div" style="display: none;">
@@ -431,12 +432,18 @@
          _super_user_div.style.display = 'block';
          // create ajax to pull user populate group where name contains County
          group_select(_access_level);
-       }else{
+       }else if(_access_level == "SubCounty"){
          _access_level_div.style.display = 'block';
          _access_county_div.style.display = 'block';
          _super_user_div.style.display = 'block';
          // create ajax to pull user populate group where name contains Sub-County
          group_select("Sub-County");
+       }else{
+         _access_level_div.style.display = 'none';
+         _access_county_div.style.display = 'none';
+         _super_user_div.style.display = 'block';
+         // create ajax to pull user populate group where name contains Sub-County
+         group_select("Border");
        }
     }
 

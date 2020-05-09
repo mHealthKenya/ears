@@ -136,16 +136,14 @@
       </div>
       <div class="col-md-6">
           <div class="well" style="border-color: #a94442">
-              <!-- <div class="small-box bg-aqua"> -->
-                  <div class="inner" style="height: 10px; width: 100%; ">
-                      <h5><b> Quarantine Case Responders Today :</b> {{ today_follow_up_stat }} Responder(s)</h5>
-                  </div>
-              <!-- </div> -->
+              <div class="inner" style="height: 10px; width: 100%; ">
+                  <h5><b> Quarantine Case Responders Today :</b> {{ today_follow_up_stat }} Responder(s)</h5>
+              </div>
           </div>
       </div>
     </div>
 
-    <div class="row">
+    <!-- <div class="row">
         <div class="col-sm-12">
             <div class="well">
                 <div class="panel-heading" style="background-color:#3c8dbc">
@@ -155,11 +153,40 @@
                 </div>
             </div>
         </div>
+    </div> -->
+
+    <div class="row">
+        <div class="col-sm-4">
+            <div class="well">
+                <div class="panel-heading" style="background-color:#3c8dbc">
+                    <h2 class="panel-title" align="center" style="color: #ffffff">. </h2>
+                </div>
+                <div id="total_piechart" style="height: 300px; width: 100%;">
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-4">
+            <div class="well">
+                <div class="panel-heading" style="background-color:#3c8dbc">
+                    <h2 class="panel-title" align="center" style="color: #ffffff">. </h2>
+                </div>
+                <div id="ongoing_piechart" style="height: 300px; width: 100%;">
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-4">
+            <div class="well">
+                <div class="panel-heading" style="background-color:#3c8dbc">
+                    <h2 class="panel-title" align="center" style="color: #ffffff">. </h2>
+                </div>
+                <div id="completed_piechart" style="height: 300px; width: 100%;">
+                </div>
+            </div>
+        </div>
     </div>
 
     <div class="row">
         <div class="col-sm-6">
-
             <div class="well">
                 <div class="panel-heading" style="background-color:#3c8dbc">
                     <h2 class="panel-title" align="center" style="color: #ffffff">. </h2>
@@ -167,7 +194,6 @@
                 <div id="barContainer" style="height: 300px; width: 100%;">
                 </div>
             </div>
-
         </div>
         <div class="col-sm-6">
             <div class="well">
@@ -253,8 +279,6 @@
         </div>
     </div>
 
-    <!-- {% csrf_token %} -->
-
 {% endblock %}
 
 {% block script %}
@@ -303,7 +327,6 @@
   $(document).ready(function () {
         // Create the chart
         var valx = []
-
         // console.log("thirty_days_stat length : " + '{{ thirty_days_stat| length }}');
 
         {% if thirty_days_stat %}
@@ -378,84 +401,211 @@
             // valx.push({name: 'None', y: 0, drilldown: 'None'})
         {% endif %}
 
-        console.log(ongoing)
-        console.log(centers)
-        console.log(completed)
-
         // covid-19 Quarantine Centres Bargraph
-        var chart = Highcharts.chart('covid_container', {
+      //   var chart = Highcharts.chart('covid_container', {
+      //
+      //     chart: {
+      //         type: 'column'
+      //     },
+      //
+      //     title: {
+      //         text: 'COVID-19 QUARANTINE SITES REPRESENTATION'
+      //     },
+      //
+      //     subtitle: {
+      //         text: 'Hover the graphs to see actial numbers'
+      //     },
+      //
+      //     legend: {
+      //         align: 'right',
+      //         verticalAlign: 'middle',
+      //         layout: 'vertical'
+      //     },
+      //
+      //     xAxis: {
+      //         categories: centers,
+      //         labels: {
+      //             x: -10
+      //         }
+      //     },
+      //
+      //     yAxis: {
+      //         allowDecimals: false,
+      //         title: {
+      //             text: 'Number of Cases'
+      //         }
+      //     },
+      //
+      //     series: [{
+      //         name: 'Ongoing Quarantine Cases',
+      //         data: ongoing
+      //     }, {
+      //         name: 'Completed Quarantine Cases',
+      //         data: completed
+      //     }],
+      //
+      //     responsive: {
+      //         rules: [{
+      //             condition: {
+      //                 maxWidth: 500
+      //             },
+      //             chartOptions: {
+      //                 legend: {
+      //                     align: 'center',
+      //                     verticalAlign: 'bottom',
+      //                     layout: 'horizontal'
+      //                 },
+      //                 yAxis: {
+      //                     labels: {
+      //                         align: 'left',
+      //                         x: 0,
+      //                         y: -5
+      //                     },
+      //                     title: {
+      //                         text: null
+      //                     }
+      //                 },
+      //                 subtitle: {
+      //                     text: null
+      //                 },
+      //                 credits: {
+      //                     enabled: false
+      //                 }
+      //             }
+      //         }]
+      //     }
+      // });
 
+      // gender pie Charts
+      // totals pie chart
+      Highcharts.chart('total_piechart', {
           chart: {
-              type: 'column'
+              plotBackgroundColor: null,
+              plotBorderWidth: null,
+              plotShadow: false,
+              type: 'pie'
           },
-
           title: {
-              text: 'COVID-19 QUARANTINE SITES REPRESENTATION'
+              text: 'Total Quarantine based on gender'
           },
-
-          subtitle: {
-              text: 'Hover the graphs to see actial numbers'
+          tooltip: {
+              pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
           },
-
-          legend: {
-              align: 'right',
-              verticalAlign: 'middle',
-              layout: 'vertical'
-          },
-
-          xAxis: {
-              categories: centers,
-              labels: {
-                  x: -10
+          accessibility: {
+              point: {
+                  valueSuffix: '%'
               }
           },
-
-          yAxis: {
-              allowDecimals: false,
-              title: {
-                  text: 'Number of Cases'
-              }
-          },
-
-          series: [{
-              name: 'Ongoing Quarantine Cases',
-              data: ongoing
-          }, {
-              name: 'Completed Quarantine Cases',
-              data: completed
-          }],
-
-          responsive: {
-              rules: [{
-                  condition: {
-                      maxWidth: 500
+          plotOptions: {
+              pie: {
+                  allowPointSelect: true,
+                  cursor: 'pointer',
+                  dataLabels: {
+                      enabled: false
                   },
-                  chartOptions: {
-                      legend: {
-                          align: 'center',
-                          verticalAlign: 'bottom',
-                          layout: 'horizontal'
-                      },
-                      yAxis: {
-                          labels: {
-                              align: 'left',
-                              x: 0,
-                              y: -5
-                          },
-                          title: {
-                              text: null
-                          }
-                      },
-                      subtitle: {
-                          text: null
-                      },
-                      credits: {
-                          enabled: false
-                      }
-                  }
+                  showInLegend: true
+              }
+          },
+          colors: ['#058DC7', '#50B432'],
+          series: [{
+              name: 'Gender',
+              colorByPoint: true,
+              data: [{
+                  name: 'Male - '+ {{ total_pie_male }},
+                  y: {{ total_pie_male }}
+              }, {
+                  name: 'Female - '+ {{ total_pie_female }},
+                  y: {{ total_pie_female }}
               }]
-          }
+          }]
       });
+
+      // ongoing pie chart
+      Highcharts.chart('ongoing_piechart', {
+          chart: {
+              plotBackgroundColor: null,
+              plotBorderWidth: null,
+              plotShadow: false,
+              type: 'pie'
+          },
+          title: {
+              text: 'Ongoing Quarantine based on gender'
+          },
+          tooltip: {
+              pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+          },
+          accessibility: {
+              point: {
+                  valueSuffix: '%'
+              }
+          },
+          plotOptions: {
+              pie: {
+                  allowPointSelect: true,
+                  cursor: 'pointer',
+                  dataLabels: {
+                      enabled: false
+                  },
+                  showInLegend: true
+              }
+          },
+          colors: ['#64E572', '#ED561B'],
+          series: [{
+              name: 'Gender',
+              colorByPoint: true,
+              data: [{
+                  name: 'Male - '+ {{ total_pie_ong_male }},
+                  y: {{ total_pie_ong_male }}
+              }, {
+                  name: 'Female - '+ {{ total_pie_ong_female }},
+                  y: {{ total_pie_ong_female }}
+              }]
+          }]
+      });
+
+      // completed pie chart
+      Highcharts.chart('completed_piechart', {
+          chart: {
+              plotBackgroundColor: null,
+              plotBorderWidth: null,
+              plotShadow: false,
+              type: 'pie'
+          },
+          title: {
+              text: 'Completed Quarantine based on gender'
+          },
+          tooltip: {
+              pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+          },
+          accessibility: {
+              point: {
+                  valueSuffix: '%'
+              }
+          },
+          plotOptions: {
+              pie: {
+                  allowPointSelect: true,
+                  cursor: 'pointer',
+                  dataLabels: {
+                      enabled: false
+                  },
+                  showInLegend: true
+              }
+          },
+          colors: ['#24CBE5', '#DDDF00'],
+          series: [{
+              name: 'Gender',
+              colorByPoint: true,
+              data: [{
+                  name: 'Male - '+ {{ total_pie_comp_male }},
+                  y: {{ total_pie_comp_male }}
+              }, {
+                  name: 'Female - '+ {{ total_pie_comp_female }},
+                  y: {{ total_pie_comp_female }}
+              }]
+          }]
+      });
+
 
   });
 
@@ -1099,7 +1249,7 @@
   var disease_report_stat_key = []
   var disease_report_stat_value = []
   {% for key, value in trl.disease_report_stat.items %}
-      console.log("Key: " + '{{ key }}');
+      // console.log("Key: " + '{{ key }}');
       disease_report_stat_value.push({{value}})
       disease_report_stat_key.push(['{{ key }}'])
   {% endfor %}

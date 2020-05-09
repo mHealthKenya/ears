@@ -1,0 +1,1399 @@
+{% extends "veoc/main_template.html" %}
+
+{% block main %}
+    <script type="text/javascript"
+            src="https://cdn.datatables.net/v/dt/jqc-1.12.3/jszip-2.5.0/pdfmake-0.1.18/dt-1.10.12/b-1.2.2/b-flash-1.2.2/b-html5-1.2.2/b-print-1.2.2/datatables.min.js"></script>
+
+
+    <div class="panel panel-default">
+      <div class="panel-body" align="center">
+          <h3 align="center">COUNTRY BORDER DASHBOARD</h3>
+        </div>
+    </div><!-- /div panel-default -->
+
+    <!-- <div class="alert alert-danger alert-dismissible" role="alert">
+        <button type="button" onclick="this.parentNode.parentNode.removeChild(this.parentNode);" class="close"
+                data-dismiss="alert"><span aria-hidden="true">×</span><span class="sr-only">Close</span></button>
+        <strong><i class="fa fa-warning"></i> bountry border view - Live updates!</strong>
+        <marquee onmouseover="this.stop()" onmouseout="this.start()"><p style="font-family: Impact; font-size: 18pt">
+            CONFIRMED CALL LOGS:
+            {% for maq in marquee_call_log %}
+
+                <a href="/{{ maq.id }}/call_log_view/">{{ maq }}</a>...
+
+            {% endfor %}
+            CONFIRMED DISEASES:
+            {% for maq in marquee_disease %}
+
+                <a href="/{{ maq.id }}/disease_view/">{{ maq }}</a>...
+
+            {% endfor %}
+            CONFIRMED EVENTS:
+            {% for maq in marquee_events %}
+
+                <a href="/{{ maq.id }}/event_view/">{{ maq }}</a>
+
+            {% endfor %}</p>
+        </marquee>
+    </div> -->
+
+    <div class="row">
+      <div class="col-md-3">
+          <div class="well" style="border-color: #a94442">
+              <div class="small-box bg-aqua">
+                  <div class="inner" style="height: 100px; width: 100%; ">
+                      <h4><b> COVID-19 Quarantine</b></h4>
+                      <h6>Total Quarantine : {{ total_cor_quarantine }} Cases</h6>
+                      <h6>Ongoing Quarantine : {{ total_ongoing_quarantine }} Cases</h6>
+                      <h6>Completed Quarantine : {{ total_completed_quarantine }} Cases</h6>
+                  </div>
+                  <div class="icon">
+                      <i class="ion ion-bag"></i>
+                  </div>
+                  <a href="/quarantine_list/" class="btn btn-primary">More infor</a>
+              </div>
+          </div>
+      </div>
+        <div class="col-md-3">
+            <div class="well" style="border-color: #a94442">
+                <div class="small-box bg-aqua">
+                    <div class="inner" style="height: 100px; width: 100%; ">
+                        <h4><b> Diseases Reported</b></h4>
+                        {% if disease_reported_dash_vals %}
+                          {% for key, value in disease_reported_dash_vals.items %}
+                              <h6>{{ key }} : {{ value }} Cases</h6>
+                          {% endfor %}
+                        {% else %}
+                          <h6>No Recent Cases </h6>
+                        {% endif %}
+
+                    </div>
+                    <div class="icon">
+                        <i class="ion ion-bag"></i>
+                    </div>
+                    <a href="/disease_report/" class="btn btn-primary">More infor</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="well" style="border-color: #a94442">
+                <div class="small-box bg-green">
+                    <div class="inner" style="height: 100px; width: 100%;">
+                        <h4><b>Calls Received</b></h4>
+                        <h6>Reported disease : {{ disease_related_calls }}</h6>
+                        <h6>Reported PH events : {{ event_related_calls }} </h6>
+                        <h6>General enquiries : {{ total_unrelated_calls }}</h6>
+                    </div>
+                    <div class="icon">
+                        <i class="ion ion-stats-bars"></i>
+                    </div>
+                    <a href="/call_report" class="btn btn-primary">More infor</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="well" style="border-color: #a94442">
+                <div class="small-box bg-yellow">
+                    <div class="inner" style="height: 100px; width: 100%;">
+                        <h4><b>Public Health Events </b></h4>
+                        <h6>Confirmed cases : {{ conf_event_count }} </h6>
+                        <h6>Rumour cases : {{ rum_event_count }} </h6>
+                        <h6>Suspected cases :{{ susp_event_count }} </h6>
+
+                    </div>
+                    <div class="icon">
+                        <i class="ion ion-person-add"></i>
+                    </div>
+                    <a href="/events_report" class="btn btn-primary">More infor</a>
+                </div>
+            </div>
+        </div>
+        <!-- <div class="col-md-3">
+            <div class="well" style="border-color: #a94442">
+                <div class="small-box bg-red">
+                    <div class="inner" style="height: 100px; width: 100%;">
+                        <h4><b>EOC Calendar</b></h4>
+
+                        <h3> No events</h3>
+
+                    </div>
+                    <div class="icon">
+                        <i class="ion ion-pie-graph"></i>
+                    </div>
+                    <a href="/week_shift" class="btn btn-primary">More infor</a>
+                </div>
+            </div>
+        </div> -->
+    </div>
+
+    <div class="row">
+      <div class="col-md-6">
+          <div class="well" style="border-color: #a94442">
+              <!-- <div class="small-box bg-aqua"> -->
+                  <div class="inner" style="height: 10px; width: 100%; ">
+                      <h5><b> Total Quarantine Case Responses : {{ total_follow_up_stat }} Cases</b></h5>
+                  </div>
+              <!-- </div> -->
+          </div>
+      </div>
+      <div class="col-md-6">
+          <div class="well" style="border-color: #a94442">
+              <!-- <div class="small-box bg-aqua"> -->
+                  <div class="inner" style="height: 10px; width: 100%; ">
+                      <h5><b> Quarantine Case Responses Today : {{ today_follow_up_stat }} Cases</b></h5>
+                  </div>
+              <!-- </div> -->
+          </div>
+      </div>
+    </div>
+
+    <!-- <div class="row">
+        <div class="col-sm-12">
+            <div class="well">
+                <div class="panel-heading" style="background-color:#3c8dbc">
+                    <h2 class="panel-title" align="center" style="color: #ffffff">. </h2>
+                </div>
+                <div id="covid_container" style="height:300px;width:100%;">
+                </div>
+            </div>
+        </div>
+    </div> -->
+
+    <div class="row">
+        <div class="col-sm-4">
+            <div class="well">
+                <div class="panel-heading" style="background-color:#3c8dbc">
+                    <h2 class="panel-title" align="center" style="color: #ffffff">. </h2>
+                </div>
+                <div id="total_piechart" style="height: 300px; width: 100%;">
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-4">
+            <div class="well">
+                <div class="panel-heading" style="background-color:#3c8dbc">
+                    <h2 class="panel-title" align="center" style="color: #ffffff">. </h2>
+                </div>
+                <div id="ongoing_piechart" style="height: 300px; width: 100%;">
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-4">
+            <div class="well">
+                <div class="panel-heading" style="background-color:#3c8dbc">
+                    <h2 class="panel-title" align="center" style="color: #ffffff">. </h2>
+                </div>
+                <div id="completed_piechart" style="height: 300px; width: 100%;">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-sm-6">
+
+            <div class="well">
+                <div class="panel-heading" style="background-color:#3c8dbc">
+                    <h2 class="panel-title" align="center" style="color: #ffffff">. </h2>
+                </div>
+                <div id="barContainer" style="height: 300px; width: 100%;">
+                </div>
+            </div>
+
+        </div>
+        <div class="col-sm-6">
+            <div class="well">
+                <div class="panel-heading" style="background-color:#3c8dbc">
+                  <div class="form-row" align="right">
+                    <label for="pie_chart" style="color: #ffffff">Disease filters: </label>
+                        <select name="pie_chart" id="pie_chart" onchange="mychart()">
+                            {% for cases in pie_diseases %}
+                                {% regroup cases by disease_type__name as disease_list %}
+                                {% for disease in disease_list %}
+                                    <option value="{{ disease.grouper }}">{{ disease.grouper }}</option>
+                                {% endfor %}
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+                <div id="piechartContainers" style="height: 300px; width: 100%;">
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- <div class="row">
+      <div class="col-sm-6">
+
+          <div class="well">
+              <div class="panel-heading" style="background-color:#3c8dbc">
+                  <h2 class="panel-title" align="center" style="color: #ffffff">. </h2>
+              </div>
+              <div id="EventsbarContainer" style="height: 300px; width: 100%;">
+              </div>
+          </div>
+
+      </div>
+      <div class="col-sm-6">
+          <div class="well">
+              <div class="panel-heading" style="background-color:#3c8dbc">
+                <div class="form-row" align="right">
+                  <label for="events_pie_chart" style="color: #ffffff">PH Event filters: </label>
+                      <select name="events_pie_chart" id="events_pie_chart" onchange="change_mychart()">
+                          {% for cases in pie_events %}
+                              {% regroup cases by event_type__name as events_list %}
+                              {% for event in events_list %}
+                                  <option value="{{ event.grouper }}">{{ event.grouper }}</option>
+                              {% endfor %}
+                          {% endfor %}
+                      </select>
+                  </div>
+              </div>
+              <div id="piechartEvents" style="height: 300px; width: 100%;"></div>
+          </div>
+      </div>
+    </div> -->
+
+    <div class="row">
+        <div class="col-md-12">
+            <div class="panel">
+                <div class="tab-content">
+                    <div class="tab-pane active well" id="logs" style="height: 500px; width: 100%;">
+                        <div class="panel-heading" style="background-color:#3c8dbc">
+                            <div class="form-row" align="right">
+                              <label for="dhis_graph_disease" style="color: #ffffff">IDSR Disease filters: </label>
+                              <select name="dhis_graph_disease" id="dhis_graph_disease" onchange="dhis_graph_change()">
+                                  {% for cases in dhis_graph_data %}
+                                      {% regroup cases by idsr_disease_id__name as dhis_list %}
+                                      {% for dhis in dhis_list %}
+                                          <option value="{{ dhis.grouper }}">{{ dhis.grouper }}</option>
+                                      {% endfor %}
+                                  {% endfor %}
+                              </select>
+                                <!-- <select name="mydtype" id="mydtype" onchange="populateMap()">
+                                </select> -->
+                            </div>
+                        </div>
+                        <div id="dhis_data" style="height:450px;width:auto"></div>
+                        <!-- <div id="map_div" style="height:250px;width:auto">
+
+                        </div> -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- {% csrf_token %} -->
+
+{% endblock %}
+
+{% block script %}
+
+<script type="text/javascript" src="/static/js/canvasjs.min.js"></script>
+<script src="http://cdn.jsdelivr.net/alasql/0.3/alasql.min.js"></script>
+<script type="text/javascript">
+
+  // google.charts.load('current', {'packages': ['map']});
+  // google.charts.setOnLoadCallback(showmap);
+
+  window.onload = testing();
+  window.onload = mychart();
+  window.onload = change_mychart();
+  window.onload = dhis_graph_change();
+
+  $(document).ready(function () {
+      $.ajax({
+          url: '/get_diseases/',
+          type: 'POST',
+          datatype: 'json',
+          data: {csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val()},
+
+          success: function (data) {
+              console.log("returned data : " + data)
+              var options = '<option value="" selected disabled>select Disease</option>';
+              $('#mydtype').html(options);
+
+              for (var i = 0; i < data.length; i++) {
+                  //console.log(data);
+                  var options = '<option value="' + data[i].fields['name'] + '">' + data[i].fields['name'] + '</option>';
+                  $('#mydtype').append(options);
+              }
+          },
+          error: function () {
+              // alert("error getting data from server");
+              console.log("Error returning data")
+              var options = '<option value="" selected disabled>select county</option>';
+              $('#subcounty').html(options);
+          }
+      });
+  });
+
+  // start of new hichart drill down graph
+
+  $(document).ready(function () {
+        // Create the chart
+        var valx = []
+
+        console.log("thirty_days_stat length : " + '{{ thirty_days_stat| length }}');
+
+        {% if thirty_days_stat %}
+            {% for key, value in thirty_days_stat.items %}
+                valx.push({name: '{{ key }}', y: {{ value }}, drilldown: '{{ key }}'})
+            {% endfor %}
+        {% else %}
+            valx.push({name: 'None', y: 0, drilldown: 'None'})
+
+        {% endif %}
+
+        Highcharts.chart('barContainer', {
+            chart: {
+                type: 'column'
+            },
+            title: {
+                text: 'Reported priority diseases last 30 days'
+            },
+            xAxis: {
+                type: 'category'
+            },
+            yAxis: {
+                title: {
+                    text: 'Number of Cases'
+                }
+            },
+            legend: {
+                enabled: false
+            },
+            plotOptions: {
+                series: {
+                    borderWidth: 0,
+                    dataLabels: {
+                        enabled: true,
+                        format: '{point.y:1f}'
+                    }
+                }
+            },
+
+            tooltip: {
+                headerFormat: '<span style="font-size:11px">{series.name}</span><br>',
+                pointFormat: '<span style="color:{point.color}">{point.name}</span>: <b>{point.y:2f}</b> reported cases<br/>'
+            },
+
+            series: [{
+                name: 'Disease',
+                colorByPoint: true,
+                data: valx
+            }],
+        });
+
+        var centers = []
+        var completed = []
+        var ongoing = []
+        var combination = []
+        {% if quarantine_ongoing_cases %}
+            console.log("{{ quarantine_ongoing_cases.items }}")
+            {% for key, value in quarantine_ongoing_cases.items %}
+                centers.push('{{ key }}')
+                ongoing.push({{ value }})
+            {% endfor %}
+        {% else %}
+          console.log("No completed quarantine data to plot")
+            // valx.push({name: 'None', y: 0, drilldown: 'None'})
+        {% endif %}
+
+        {% if quarantine_completed_cases %}
+            console.log("{{ quarantine_completed_cases.items }}")
+            {% for key, value in quarantine_completed_cases.items %}
+                completed.push({{ value }})
+            {% endfor %}
+        {% else %}
+          console.log("No ongoing quarantine data to plot")
+            // valx.push({name: 'None', y: 0, drilldown: 'None'})
+        {% endif %}
+
+        // covid-19 Quarantine Centres Bargraph
+      //   var chart = Highcharts.chart('covid_container', {
+      //
+      //     chart: {
+      //         type: 'column'
+      //     },
+      //
+      //     title: {
+      //         text: 'COVID-19 COUNTY QUARANTINE SITES REPRESENTATION'
+      //     },
+      //
+      //     subtitle: {
+      //         text: 'Hover the graphs to see actial numbers'
+      //     },
+      //
+      //     legend: {
+      //         align: 'right',
+      //         verticalAlign: 'middle',
+      //         layout: 'vertical'
+      //     },
+      //
+      //     xAxis: {
+      //         categories: centers,
+      //         labels: {
+      //             x: -10
+      //         }
+      //     },
+      //
+      //     yAxis: {
+      //         allowDecimals: false,
+      //         title: {
+      //             text: 'Number of Cases'
+      //         }
+      //     },
+      //
+      //     series: [{
+      //         name: 'Ongoing Quarantine Cases',
+      //         data: ongoing
+      //     }, {
+      //         name: 'Completed Quarantine Cases',
+      //         data: completed
+      //     }],
+      //
+      //     responsive: {
+      //         rules: [{
+      //             condition: {
+      //                 maxWidth: 500
+      //             },
+      //             chartOptions: {
+      //                 legend: {
+      //                     align: 'center',
+      //                     verticalAlign: 'bottom',
+      //                     layout: 'horizontal'
+      //                 },
+      //                 yAxis: {
+      //                     labels: {
+      //                         align: 'left',
+      //                         x: 0,
+      //                         y: -5
+      //                     },
+      //                     title: {
+      //                         text: null
+      //                     }
+      //                 },
+      //                 subtitle: {
+      //                     text: null
+      //                 },
+      //                 credits: {
+      //                     enabled: false
+      //                 }
+      //             }
+      //         }]
+      //     }
+      // });
+
+      // gender pie Charts
+      // totals pie chart
+      Highcharts.chart('total_piechart', {
+          chart: {
+              plotBackgroundColor: null,
+              plotBorderWidth: null,
+              plotShadow: false,
+              type: 'pie'
+          },
+          title: {
+              text: 'Total Quarantine based on gender'
+          },
+          tooltip: {
+              pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+          },
+          accessibility: {
+              point: {
+                  valueSuffix: '%'
+              }
+          },
+          plotOptions: {
+              pie: {
+                  allowPointSelect: true,
+                  cursor: 'pointer',
+                  dataLabels: {
+                      enabled: false
+                  },
+                  showInLegend: true
+              }
+          },
+          colors: ['#058DC7', '#50B432'],
+          series: [{
+              name: 'Gender',
+              colorByPoint: true,
+              data: [{
+                  name: 'Male - '+ {{ total_pie_male }},
+                  y: {{ total_pie_male }}
+              }, {
+                  name: 'Female - '+ {{ total_pie_female }},
+                  y: {{ total_pie_female }}
+              }]
+          }]
+      });
+
+      // ongoing pie chart
+      Highcharts.chart('ongoing_piechart', {
+          chart: {
+              plotBackgroundColor: null,
+              plotBorderWidth: null,
+              plotShadow: false,
+              type: 'pie'
+          },
+          title: {
+              text: 'Ongoing Quarantine based on gender'
+          },
+          tooltip: {
+              pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+          },
+          accessibility: {
+              point: {
+                  valueSuffix: '%'
+              }
+          },
+          plotOptions: {
+              pie: {
+                  allowPointSelect: true,
+                  cursor: 'pointer',
+                  dataLabels: {
+                      enabled: false
+                  },
+                  showInLegend: true
+              }
+          },
+          colors: ['#64E572', '#ED561B'],
+          series: [{
+              name: 'Gender',
+              colorByPoint: true,
+              data: [{
+                  name: 'Male - '+ {{ total_pie_ong_male }},
+                  y: {{ total_pie_ong_male }}
+              }, {
+                  name: 'Female - '+ {{ total_pie_ong_female }},
+                  y: {{ total_pie_ong_female }}
+              }]
+          }]
+      });
+
+      // completed pie chart
+      Highcharts.chart('completed_piechart', {
+          chart: {
+              plotBackgroundColor: null,
+              plotBorderWidth: null,
+              plotShadow: false,
+              type: 'pie'
+          },
+          title: {
+              text: 'Completed Quarantine based on gender'
+          },
+          tooltip: {
+              pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+          },
+          accessibility: {
+              point: {
+                  valueSuffix: '%'
+              }
+          },
+          plotOptions: {
+              pie: {
+                  allowPointSelect: true,
+                  cursor: 'pointer',
+                  dataLabels: {
+                      enabled: false
+                  },
+                  showInLegend: true
+              }
+          },
+          colors: ['#24CBE5', '#DDDF00'],
+          series: [{
+              name: 'Gender',
+              colorByPoint: true,
+              data: [{
+                  name: 'Male - '+ {{ total_pie_comp_male }},
+                  y: {{ total_pie_comp_male }}
+              }, {
+                  name: 'Female - '+ {{ total_pie_comp_female }},
+                  y: {{ total_pie_comp_female }}
+              }]
+          }]
+      });
+
+
+    });
+
+  // This function takes deseases data and should be used to populate the pie chart on the dashboard
+  function testing() {
+
+    var csrfToken = $('[name="csrfmiddlewaretoken"]').val();
+      $.ajax({
+          url: '/get_chart_vals/',
+          type: 'POST',
+          datatype: 'json',
+          data: {csrfmiddlewaretoken: csrfToken},
+          success: function (data) {
+              pie_chart_data = data;
+              console.log("pie_chart_data : " + pie_chart_data);
+              var options = '<option value="" selected disabled>select disease</option>';
+              $('#pietype').html(options);
+
+              for (var x = 0; x < data.length; x++) {
+                  var vals = data[x];
+                  console.log("First PAIR " + x + ": " + vals);
+                  console.log("Length : " + vals.length);
+              }
+          },
+          error: function () {
+              console.log("error occured");
+          }
+      });
+  }
+
+  function mychart() {
+
+      var mydata = [];
+      var myseries = [];
+
+      var dtype = $("#pie_chart").val();
+
+      $.ajax({
+          url: '/get_pie_disease/',
+          type: 'POST',
+          datatype: 'json',
+          data: {dtype: dtype, csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val()},
+
+          success: function (data) {
+              console.log(data);
+              var mytot = 0;
+              var curtotal = 0;
+
+              for (var i = 0; i < data.length; i++) {
+
+                  var descrpt = data[i]['county__name']; //get the overall total of the specified disease
+                  mytot += data[i]['mytotal']; //get the overall total of the specified disease
+
+                  console.log('dis_descript : ' + descrpt);
+
+                  // x=data[i]['county__description'];//get the longitude from models
+                  x = alasql('SELECT *,COUNT(county__name) AS mycount FROM ? GROUP BY county__name', [data]);
+
+                  y1 = data[i]['subcounty__name'];
+              }
+
+              console.log(mytot);
+              console.log("modified");
+              for (var test = 0; test < x.length; test++) {
+                  console.log(x[test]['county__name']);
+                  console.log("the count is: ");
+                  console.log(x[test]['mycount']);
+
+                  curtotal = x[test]['mycount'];
+                  //additional code
+                  if (x[test]['county__name'] == 'none') {
+                      mydata.push({
+                          name: 'Global Cases',
+                          y: curtotal / mytot * 100,
+                          drilldown: 'Global Cases'
+                      });
+                  } else {
+                      mydata.push({
+                          name: x[test]['county__name'],
+                          y: curtotal / mytot * 100,
+                          drilldown: x[test]['county__name']
+                      });
+                      myseries.push({
+                          name: x[test]['county__name'],
+                          id: x[test]['county__name'],
+                          data: returnDrillDownArray(x[test]['county__name'], dtype)
+                      });
+                  }
+
+                  myseries.push({
+                      name: x[test]['county__name'],
+                      id: x[test]['county__name'],
+                      data: returnDrillDownArray(x[test]['county__name'], dtype)
+                  });
+
+              }//end of for
+
+              //highchart rendering
+              Highcharts.chart('piechartContainers', {
+                  chart: {
+                      type: 'pie'
+                  },
+                  title: {
+                      text: 'Disease Representation Last 30 days'
+                  },
+
+                  plotOptions: {
+                      series: {
+                          dataLabels: {
+                              enabled: true,
+                              format: '{point.name}: {point.y:.1f}%'
+                          }
+                      }
+                  },
+
+                  tooltip: {
+                      headerFormat: '<span style="font-size:11px">{series.name}</span><br>',
+                      pointFormat: '<span style="color:{point.color}">{point.name}</span>: <b>{point.y:.2f}%</b> of total<br/>'
+                  },
+                  series: [{
+                      name: 'Counties',
+                      colorByPoint: true,
+                      data: mydata
+
+                  }],
+                  drilldown: {
+                      series: myseries
+                  }
+              });
+
+          },
+          error: function (error) {
+              console.log("error occured" + error);
+          }
+      });
+
+  }
+
+  function change_mychart() {
+
+      var mydata = [];
+      var myseries = [];
+
+      var etype = $("#events_pie_chart").val();
+
+      $.ajax({
+          url: '/get_pie_event/',
+          type: 'POST',
+          datatype: 'json',
+          data: {etype: etype, csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val()},
+
+          success: function (data) {
+              console.log(data);
+              var mytot = 0;
+              var curtotal = 0;
+
+              for (var i = 0; i < data.length; i++) {
+
+                  var descrpt = data[i]['county__name']; //get the overall total of the specified event
+                  mytot += data[i]['mytotal']; //get the overall total of the specified event
+
+                  console.log('dis_descript : ' + descrpt);
+
+                  // x=data[i]['county__description'];//get the longitude from models
+                  x = alasql('SELECT *,COUNT(county__name) AS mycount FROM ? GROUP BY county__name', [data]);
+
+                  y1 = data[i]['subcounty__name'];
+              }
+
+              console.log(mytot);
+              console.log("modified");
+              for (var test = 0; test < x.length; test++) {
+                  console.log(x[test]['county__name']);
+                  console.log("the count is: ");
+                  console.log(x[test]['mycount']);
+
+                  curtotal = x[test]['mycount'];
+                  //additional code
+                  if (x[test]['county__name'] == 'none') {
+                      mydata.push({
+                          name: 'Global Cases',
+                          y: curtotal / mytot * 100,
+                          drilldown: 'Global Cases'
+                      });
+                  } else {
+                      mydata.push({
+                          name: x[test]['county__name'],
+                          y: curtotal / mytot * 100,
+                          drilldown: x[test]['county__name']
+                      });
+                      myseries.push({
+                          name: x[test]['county__name'],
+                          id: x[test]['county__name'],
+                          data: returnEventDrillDownArray(x[test]['county__name'], etype)
+                      });
+                  }
+
+                  myseries.push({
+                      name: x[test]['county__name'],
+                      id: x[test]['county__name'],
+                      data: returnEventDrillDownArray(x[test]['county__name'], etype)
+                  });
+
+              }//end of for
+
+              //highchart rendering
+              Highcharts.chart('piechartEvents', {
+                  chart: {
+                      type: 'pie'
+                  },
+                  title: {
+                      text: 'Reported Public Health Events last 30 days'
+                  },
+
+                  plotOptions: {
+                      series: {
+                          dataLabels: {
+                              enabled: true,
+                              format: '{point.name}: {point.y:.1f}%'
+                          }
+                      }
+                  },
+
+                  tooltip: {
+                      headerFormat: '<span style="font-size:11px">{series.name}</span><br>',
+                      pointFormat: '<span style="color:{point.color}">{point.name}</span>: <b>{point.y:.2f}%</b> of total<br/>'
+                  },
+                  series: [{
+                      name: 'Counties',
+                      colorByPoint: true,
+                      data: mydata
+
+                  }],
+                  drilldown: {
+                      series: myseries
+                  }
+              });
+
+          },
+          error: function (error) {
+              console.log("error occured" + error);
+          }
+      });
+
+  }
+
+  function dhis_graph_change(){
+    var cases = [];
+    var deaths = [];
+    var weeknum = [];
+
+    var dhis_disease_type = $("#dhis_graph_disease").val();
+
+    console.log(dhis_disease_type);
+
+    $.ajax({
+        url: '/get_dhis_disease/',
+        type: 'POST',
+        datatype: 'json',
+        data: {dhis_disease_type: dhis_disease_type, csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val()},
+        success: function (data) {
+            // console.log(data);
+
+            for(var i=0; i < data.length; i++){
+              var cas = data[i]['idsr_incident_id__name'];
+              var week = data[i]['period'];
+              // var data_val = data[i]['data_value'];
+              var case_data = data[i]['cases'];
+              var death_data = data[i]['deaths'];
+
+              // if(cas == "Cases"){
+              //   cases.push(data_val);
+              //   if(weeknum.indexOf(week) === -1){
+              //     weeknum.push(week);
+              //   }
+              // }else{
+              //   deaths.push(data_val);
+              // }
+              //check the legth of the weeknum
+              var week_len = week.length;
+
+              cases.push(case_data);
+              deaths.push(death_data);
+
+              if(week_len < 7){
+                //add 0 on second last character
+                var wk = week.slice(0, 5)+"0"+week.slice(5);
+                weeknum.push(wk);
+              }else{
+                weeknum.push(week);
+              }
+
+           }
+
+           function pad(num) {
+             return String("0" + num).slice(-2);
+           }
+
+           //function to pick weeknumbers to help sort in order
+           function sortYearWeek(elem1, elem2) {
+             var as = elem1.split('W'),
+                 bs = elem2.split('W'),
+                 aa = as[0]+pad(as[1]), // yyyymm
+                 bb = bs[0]+pad(bs[1]);
+             return aa - bb;
+           }
+
+           // weeknum.sort(sortYearWeek);
+
+            Highcharts.chart('dhis_data', {
+              chart: {
+                  type: 'spline'
+              },
+              title: {
+                  text: 'DHIS2 MOH505 Reported Diseases for '+dhis_disease_type
+              },
+              subtitle: {
+                  text: 'Source: hiskenya.org'
+              },
+              xAxis: {
+                //get dynamic week numbers for the past 10 weeks frm current week number
+                  categories: weeknum
+              },
+              yAxis: {
+                  title: {
+                      text: 'Number of Incidences'
+                  },
+                  labels: {
+                      formatter: function () {
+                          return this.value + '';
+                      }
+                  }
+              },
+              tooltip: {
+                  crosshairs: true,
+                  shared: true
+              },
+              plotOptions: {
+                  spline: {
+                      marker: {
+                          radius: 4,
+                          lineColor: '#666666',
+                          lineWidth: 1
+                      }
+                  }
+              },
+              series: [{
+                  name: 'Cases',
+                  marker: {
+                      symbol: 'square'
+                  },
+                  data: cases
+              }, {
+                  name: 'Deaths',
+                  marker: {
+                      symbol: 'diamond'
+                  },
+                  data: deaths
+              }]
+          });
+
+        },
+        error: function (error) {
+            console.log("error occured" + error);
+        }
+    });
+  }
+
+  function returnDrillDownArray(cty, dtype) {
+
+      var x = [];
+      $.ajax({
+          url: '/get_piedrilldown_disease/',
+          type: 'POST',
+          async: false,
+          datatype: 'json',
+          data: {ctype: cty, dtype: dtype, csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val()},
+          success: function (data) {
+
+              console.log("drilldown data");
+              console.log(data);
+
+              var mytot = 0;
+              var curtotal = 0;
+              var val = 0;
+
+              for (var i = 0; i < data.length; i++) {
+
+                  mytot += data[i]['mytotal']; //get the overall total of the specified disease
+              }
+
+              for (var d = 0; d < data.length; d++) {
+
+                  var desc = data[d]['subcounty__name'];
+                  curtotal = data[d]['mytotal'];
+                  val = curtotal / mytot * 100;
+                  x.push([desc, val]);
+
+              }
+          },
+          error: function () {
+              x = [
+                  ['error', 4],
+                  ['error2', 17.2],
+                  ['error3', 8.11],
+                  ['error4', 0.5]
+              ];
+          }
+      });
+
+      return x;
+  }
+
+  function returnEventDrillDownArray(cty, etype) {
+
+      var x = [];
+      $.ajax({
+          url: '/get_piedrilldown_event/',
+          type: 'POST',
+          async: false,
+          datatype: 'json',
+          data: {ctype: cty, etype: etype, csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val()},
+          success: function (data) {
+
+              console.log("drilldown data");
+              console.log(data);
+
+              var mytot = 0;
+              var curtotal = 0;
+              var val = 0;
+
+              for (var i = 0; i < data.length; i++) {
+
+                  mytot += data[i]['mytotal']; //get the overall total of the specified disease
+              }
+
+              for (var d = 0; d < data.length; d++) {
+
+                  var desc = data[d]['subcounty__name'];
+                  curtotal = data[d]['mytotal'];
+                  val = curtotal / mytot * 100;
+                  x.push([desc, val]);
+
+              }
+          },
+          error: function () {
+              x = [
+                  ['error', 4],
+                  ['error2', 17.2],
+                  ['error3', 8.11],
+                  ['error4', 0.5]
+              ];
+          }
+      });
+
+      return x;
+  }
+
+  function populateMap() {
+
+      var dtype = $('#mydtype').val();
+
+      $.ajax({
+
+          url: '/get_disease_cordinates/',
+          type: 'POST',
+          datatype: 'json',
+          data: {dtype: dtype, csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val()},
+
+          success: function (data) {
+
+              var mydata = new google.visualization.DataTable();
+              mydata.addColumn('number', 'LATITUDE');
+              mydata.addColumn('number', 'LONGITUDE');
+              mydata.addColumn('string', 'NAME');
+              mydata.addColumn('string', 'Marker');
+
+              var options = {
+                  icons: {
+                      default: {
+                          normal: 'http://icons.iconarchive.com/icons/icons-land/vista-map-markers/32/Map-Marker-Bubble-Chartreuse-icon.png',
+                          selected: 'http://icons.iconarchive.com/icons/icons-land/vista-map-markers/32/Map-Marker-Bubble-Chartreuse-icon.png'
+                      },
+                      police: {
+                          normal: 'http://icons.iconarchive.com/icons/icons-land/vista-map-markers/32/Map-Marker-Marker-Outside-Azure-icon.png',
+                          selected: 'http://icons.iconarchive.com/icons/icons-land/vista-map-markers/32/Map-Marker-Marker-Outside-Azure-icon.png'
+                      },
+                      referal: {
+                          normal: 'http://icons.iconarchive.com/icons/icons-land/vista-map-markers/32/Map-Marker-Ball-Pink-icon.png',
+                          selected: 'http://icons.iconarchive.com/icons/icons-land/vista-map-markers/32/Map-Marker-Ball-Pink-icon.png'
+                      }
+                  },
+                  showTip: true,
+                  useMapTypeControl: true,
+                  zoomLevel: 7,
+                  enableScrollWheel: true,
+                  mapType: 'styledMap',
+
+                  maps: {
+                      // Your custom mapTypeId holding custom map styles.
+                      styledMap: {
+                          name: 'Styled Map', // This name will be displayed in the map type control.
+                          styles: [
+                              {
+                                  featureType: 'poi.attraction',
+                                  stylers: [{color: '#fce8b2'}]
+                              },
+                              {
+                                  featureType: 'road.highway',
+                                  stylers: [{hue: '#0277bd'}, {saturation: -50}]
+                              },
+                              {
+                                  featureType: 'road.highway',
+                                  elementType: 'labels.icon',
+                                  stylers: [{hue: '#000'}, {saturation: 100}, {lightness: 50}]
+                              },
+                              {
+                                  featureType: 'landscape',
+                                  stylers: [{hue: '#259b24'}, {saturation: 10}, {lightness: -22}]
+                              }
+                          ]
+                      }
+                  }
+              };
+
+              for (var i = 0; i < data.length; i++) {
+                  console.log(data[i]['county__description']);
+
+                  x = data[i]['county__latitude'];//get the longitude from models
+                  y = data[i]['county__longitude'];//get latitude from models
+                  z = data[i]['county__description'];//get the position from models
+                  x = parseFloat(x);//convert the longitude to float from string
+                  y = parseFloat(y);//convert the latitude to float from string
+                  mydata.addRow([x, y, z, 'police']);//add the coordinates to the map
+
+              }
+
+              var map = new google.visualization.Map(document.getElementById('map_div'));
+              // map.controls[google.maps.ControlPosition.TOP_LEFT].push(input);
+              map.draw(mydata, options);
+
+          },
+
+      });
+  }
+
+  function showmap() {
+
+      var mydata = new google.visualization.DataTable();
+      mydata.addColumn('number', 'LATITUDE');
+      mydata.addColumn('number', 'LONGITUDE');
+      mydata.addColumn('string', 'NAME');
+      mydata.addColumn('string', 'Marker');
+
+      var options = {
+          icons: {
+              default: {
+                  normal: 'http://icons.iconarchive.com/icons/icons-land/vista-map-markers/32/Map-Marker-Bubble-Chartreuse-icon.png',
+                  selected: 'http://icons.iconarchive.com/icons/icons-land/vista-map-markers/32/Map-Marker-Bubble-Chartreuse-icon.png'
+              },
+              police: {
+                  normal: 'http://icons.iconarchive.com/icons/icons-land/vista-map-markers/32/Map-Marker-Marker-Outside-Azure-icon.png',
+                  selected: 'http://icons.iconarchive.com/icons/icons-land/vista-map-markers/32/Map-Marker-Marker-Outside-Azure-icon.png'
+              },
+              referal: {
+                  normal: 'http://icons.iconarchive.com/icons/icons-land/vista-map-markers/32/Map-Marker-Ball-Pink-icon.png',
+                  selected: 'http://icons.iconarchive.com/icons/icons-land/vista-map-markers/32/Map-Marker-Ball-Pink-icon.png'
+              }
+          },
+          showTip: true,
+          useMapTypeControl: true,
+          zoomLevel: 7,
+          enableScrollWheel: true,
+          mapType: 'styledMap',
+
+          maps: {
+              // Your custom mapTypeId holding custom map styles.
+              styledMap: {
+                  name: 'Styled Map', // This name will be displayed in the map type control.
+                  styles: [
+                      {
+                          featureType: 'poi.attraction',
+                          stylers: [{color: '#fce8b2'}]
+                      },
+                      {
+                          featureType: 'road.highway',
+                          stylers: [{hue: '#0277bd'}, {saturation: -50}]
+                      },
+                      {
+                          featureType: 'road.highway',
+                          elementType: 'labels.icon',
+                          stylers: [{hue: '#000'}, {saturation: 100}, {lightness: 50}]
+                      },
+                      {
+                          featureType: 'landscape',
+                          stylers: [{hue: '#259b24'}, {saturation: 10}, {lightness: -22}]
+                      }
+                  ]
+              }
+          }
+      };
+
+      mydata.addRow([-1.2921, 36.8219, 'Nairobi', 'police']);
+      var map = new google.visualization.Map(document.getElementById('map_div'));
+      // map.controls[google.maps.ControlPosition.TOP_LEFT].push(input);
+      map.draw(mydata, options);
+  }
+
+  function drawBarChart() {
+
+      var dt = $("#mydtype1").val();
+      var valx = [];
+
+      $.ajax({
+          url: '/get_barchartvals/',
+          type: 'POST',
+          datatype: 'json',
+          data: {dt: dt, csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val()},
+          success: function (data) {
+              console.log("barchartvals");
+              console.log(data);
+
+              for (var i = 0; i < data.length; i++) {
+
+                  x = alasql('SELECT *,COUNT(county__description) AS mycount FROM ? GROUP BY county__description', [data]);
+              }
+
+              for (var test = 0; test < x.length; test++) {
+                  console.log(x[test]['county__description']);
+                  console.log("the count is: ");
+                  console.log(x[test]['mycount']);
+                  valx.push({name: x[test]['county__description'], y: x[test]['mycount'], drilldown: ''});
+
+              }
+
+              Highcharts.chart('barContainer', {
+                  chart: {
+                      type: 'column'
+                  },
+                  xAxis: {
+                      type: 'category'
+                  },
+                  yAxis: {
+                      title: {
+                          text: 'Number of Calls'
+                      }
+
+                  },
+                  legend: {
+                      enabled: false
+                  },
+                  plotOptions: {
+                      series: {
+                          borderWidth: 0,
+                          dataLabels: {
+                              enabled: true,
+                              format: '{point.y:1f}'
+                          }
+                      }
+                  },
+
+                  tooltip: {
+                      headerFormat: '<span style="font-size:11px">{series.name}</span><br>',
+                      pointFormat: '<span style="color:{point.color}">{point.name}</span>: <b>{point.y:2f}</b> total calls<br/>'
+                  },
+
+                  series: [{
+                      name: 'County',
+                      colorByPoint: true,
+                      data: valx
+                  }],
+              });
+          },
+          error: function () {
+              console.log("error occured getting barchartvals");
+          }
+      });
+  }
+
+  function modal_data() {
+      $.ajax({
+          url: '/get_disease_modal/',
+          type: 'POST',
+          datatype: 'json',
+          data: {csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val()},
+
+          success: function (data) {
+              console.log(data);
+
+              for (var x = 0; x < data.length; x++) {
+                  var vals = data[x];
+                  console.log("First PAIR " + x + ": " + vals);
+                  console.log("Length : " + vals.length);
+              }
+          },
+          error: function () {
+              console.log("error occured");
+          }
+      });
+  }
+
+  var disease_report_stat_key = []
+  var disease_report_stat_value = []
+  {% for key, value in trl.disease_report_stat.items %}
+      console.log("Key: " + '{{ key }}');
+      disease_report_stat_value.push({{value}})
+      disease_report_stat_key.push(['{{ key }}'])
+  {% endfor %}
+
+  var data = [{
+      values: disease_report_stat_value,
+      labels: disease_report_stat_key,
+      type: 'pie'
+  }];
+
+  var layout = {
+      title: '',
+      height: 300,
+      width: 400
+  };
+
+  // Public health events bar graph
+  $(document).ready(function () {
+        // Create the chart
+        var valx = []
+
+        // console.log("thirty_days_stat length : " + '{{ thirty_days_stat| length }}');
+
+        {% if events_thirty_days_stat %}
+            {% for key, value in events_thirty_days_stat.items %}
+                valx.push({name: '{{ key }}', y: {{ value }}, drilldown: '{{ key }}'})
+            {% endfor %}
+        {% else %}
+            valx.push({name: 'None', y: 0, drilldown: 'None'})
+
+        {% endif %}
+
+        Highcharts.chart('EventsbarContainer', {
+            chart: {
+                type: 'column'
+            },
+            title: {
+                text: 'Reported Public Health Events last 30 days'
+            },
+            xAxis: {
+                type: 'category'
+            },
+            yAxis: {
+                title: {
+                    text: 'Number of Cases'
+                }
+            },
+            legend: {
+                enabled: false
+            },
+            plotOptions: {
+                series: {
+                    borderWidth: 0,
+                    dataLabels: {
+                        enabled: true,
+                        format: '{point.y:1f}'
+                    }
+                }
+            },
+
+            tooltip: {
+                headerFormat: '<span style="font-size:11px">{series.name}</span><br>',
+                pointFormat: '<span style="color:{point.color}">{point.name}</span>: <b>{point.y:2f}</b> reported cases<br/>'
+            },
+
+            series: [{
+                name: 'Event',
+                colorByPoint: true,
+                data: valx
+            }],
+        });
+    });
+
+</script>
+{% endblock %}
