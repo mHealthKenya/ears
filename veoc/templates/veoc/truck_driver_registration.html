@@ -17,7 +17,7 @@
                       <h5><font color="#FF0000"><b><u>NB</u> : Inputs with * must have values, Fill in all sections.</b></font></h5>
                     </div>
                     <div class="form-group col-md-12">
-                      <h4 align="center"><b><u>SECTION A : TRAVELER / TRUCK DRIVER DETAILS</u></b></h4>
+                      <h4 align="center"><b><u>SECTION A : TRAVELLER / TRUCK DRIVER DETAILS</u></b></h4>
                     </div>
                     <div class="form-row" id="caller_details_div">
                        <div class="form-group col-md-4">
@@ -36,7 +36,7 @@
                     <div class="form-row" id="gender_details_div">
                       <div class="form-group col-md-4">
                         <label for="callername">Phone Number : *</label>
-                        <input class="form-control" type="number" id="phone_number" name="phone_number" minlength="10" placeholder="phone number" required/>
+                        <input class="form-control" type="tel" id="phone_number" name="phone_number" onchange="checkPhone()" minlength="10" placeholder="country code first e.g +254720000000" required/>
                       </div>
                        <div class="form-group col-md-4">
                          <label for="sex">Gender : *</label>
@@ -98,6 +98,26 @@
                       </div>
                     </div>
                     <div class="form-row" id="gender_details_div">
+                       <div class="form-group col-md-6">
+                         <label for="borderpoint">Border Point : </label>
+                         <select class="form-control" name="border_name" id="border_name" >
+                              <option value="" disabled selected>Select Border Point</option>
+                              {% for b_point in border_points %}
+                                  <option value="{{b_point.border_name}}">{{b_point.border_name}}</option>
+                              {% endfor %}
+                          </select>
+                       </div>
+                       <div class="form-group col-md-6">
+                         <label for="weighbridgesite">Weighbridge Site : *</label>
+                         <select class="form-control" name="weighbridge_name" id="weighbridge_name" >
+                              <option value="" disabled selected>Select Weighbridge Site</option>
+                              {% for qty in weigh_site %}
+                                  <option value="{{qty.weighbridge_name}}">{{qty.weighbridge_name}}</option>
+                              {% endfor %}
+                          </select>
+                        </div>
+                    </div>
+                    <div class="form-row" id="gender_details_div">
                        <div class="form-group col-md-4">
                          <label for="callername">Next of Kin : </label>
                          <input class="form-control" type="text" id="nok" name="nok" placeholder="next of kin"/>
@@ -112,22 +132,13 @@
                        </div>
                     </div>
                     <div class="form-row" id="country_details_div">
-                      <div class="form-group col-md-4">
-                        <label for="firstname">Street : *</label>
+                      <div class="form-group col-md-6">
+                        <label for="firstname">Street : </label>
                         <input class="form-control" type="text" id="street" name="street" size="45" placeholder="Strees" />
                       </div>
-                       <div class="form-group col-md-4">
+                       <div class="form-group col-md-6">
                          <label for="datereport">Date of Arrival : *</label>
                          <input class="form-control" type="date" value="{{ day }}" id="date_of_arrival" max='2000-13-13' name="date_of_arrival">
-                       </div>
-                       <div class="form-group col-md-4">
-                         <label for="weighbridgesite">Weighbridge Site : *</label>
-                         <select class="form-control" name="weighbridge_name" id="weighbridge_name" >
-                              <option value="" disabled selected>Select Weighbridge Site</option>
-                              {% for qty in weigh_site %}
-                                  <option value="{{qty.weighbridge_name}}">{{qty.weighbridge_name}}</option>
-                              {% endfor %}
-                          </select>
                        </div>
                      </div>
                       <div class="form-row col-md-12">
@@ -137,30 +148,34 @@
                      <div class="form-row" id="symptoms_div">
                        <div class="form-group col-md-3">
                          <label for="cough">Cough : </label>
-                         <select class="form-control" id="cough" name="cough">
-                             <option value="t">Yes</option>
-                             <option value="f">No</option>
+                         <select class="form-control" id="cough" name="cough" required>
+                           <option value="" disabled selected>Select Option</option>
+                           <option value="t">Yes</option>
+                           <option value="f">No</option>
                          </select>
                        </div>
                        <div class="form-group col-md-3">
                          <label for="breathing">Breathing Difficulty : </label>
-                         <select class="form-control" id="breathing_difficulty" name="breathing_difficulty">
-                             <option value="t">Yes</option>
-                             <option value="f">No</option>
+                         <select class="form-control" id="breathing_difficulty" name="breathing_difficulty" required>
+                           <option value="" disabled selected>Select Option</option>
+                           <option value="t">Yes</option>
+                           <option value="f">No</option>
                          </select>
                        </div>
                        <div class="form-group col-md-3">
                          <label for="fever">Fever : </label>
-                         <select class="form-control" id="fever" name="fever">
-                             <option value="t">Yes</option>
-                             <option value="f">No</option>
+                         <select class="form-control" id="fever" name="fever" required>
+                           <option value="" disabled selected>Select Option</option>
+                           <option value="t">Yes</option>
+                           <option value="f">No</option>
                          </select>
                        </div>
                        <div class="form-group col-md-3">
                          <label for="sample">Sample Taken : </label>
-                         <select class="form-control" id="sample_taken" name="sample_taken">
-                             <option value="t">Yes</option>
-                             <option value="f">No</option>
+                         <select class="form-control" id="sample_taken" name="sample_taken" required>
+                           <option value="" disabled selected>Select Option</option>
+                           <option value="t">Yes</option>
+                           <option value="f">No</option>
                          </select>
                        </div>
                      </div>
@@ -181,12 +196,12 @@
                      <br><br>
                      <div class="form-row" id="company_div">
                        <div class="form-group col-md-4">
-                         <label for="c_name">Company Name : </label>
-                         <input class="form-control" type="text" id="company_name" name="company_name" size="45" placeholder="company name"/>
+                         <label for="c_name">Company Name : *</label>
+                         <input class="form-control" type="text" id="company_name" name="company_name" size="45" placeholder="company name" required/>
                        </div>
                        <div class="form-group col-md-4">
-                         <label for="c_phone">Company Phone : </label>
-                         <input class="form-control" type="number" id="company_phone" name="company_phone" placeholder="company phone">
+                         <label for="c_phone">Company Phone : *</label>
+                         <input class="form-control" type="tel" id="company_phone" name="company_phone" placeholder="company phone" required>
                        </div>
                        <div class="form-group col-md-4">
                          <label for="c_address">Company Physical Address : </label>
@@ -203,8 +218,8 @@
                          <input class="form-control" type="text" id="company_street" name="company_street" placeholder="company street">
                        </div>
                        <div class="form-group col-md-4">
-                         <label for="v_reg">Vehicle Registration : </label>
-                         <input class="form-control" type="text" id="vehicle_registration" name="vehicle_registration" placeholder="vehicle registration">
+                         <label for="v_reg">Vehicle Registration : *</label>
+                         <input class="form-control" type="text" id="vehicle_registration" name="vehicle_registration" placeholder="vehicle registration" required>
                        </div>
                      </div>
                      <div class="form-row col-md-12">
@@ -219,7 +234,7 @@
                        </div>
                        <div class="form-group col-md-4">
                          <label for="h_phone">Hotel Phone Number: </label>
-                         <input class="form-control" type="number" id="hotel_phone" name="hotel_phone" placeholder="hotel phone">
+                         <input class="form-control" type="tel" id="hotel_phone" name="hotel_phone" placeholder="hotel phone">
                        </div>
                        <div class="form-group col-md-4">
                          <label for="h_town">Hotel Town : </label>
@@ -413,6 +428,28 @@
            $('#ward').html(options);
          }
        });
+     }
+
+     function checkPhone(){
+       var number = $('#phone_number').val();
+       // console.log(number);
+       if(number.length < 10 || number.length > 15){
+         console.log("Enter valid phone number");
+         Swal.fire({
+           title: 'error!',
+           text: 'Enter a valid phone Number',
+           icon: 'error'
+         });
+         document.getElementById("phone_number").focus();
+       }else if(number.substring(0, 1) !== "+"){
+         console.log("Enter country code with +")
+         Swal.fire({
+           title: 'error!',
+           text: 'Enter Country code with + e.g +254',
+           icon: 'error'
+         });
+         document.getElementById("phone_number").focus();
+       }
      }
 
     </script>

@@ -30,8 +30,6 @@ import json
 from itertools import chain
 from operator import attrgetter
 
-register = template.Library()
-
 # Create your views here.
 contacts = contact_type.objects.all()
 
@@ -79,6 +77,7 @@ register = template.Library()
 
 @register.filter(name='has_group')
 def has_group(user, group_name):
+
     return user.groups.filter(name=group_name).exists()
 
 def not_in_manager_group(user):
@@ -343,8 +342,8 @@ def dashboard(request):
     current_date = date.today().strftime('%Y-%m-%d')
     c_date = date.today()
     today_time = datetime.combine(c_date, datetime.min.time())
-    midnight = today_time.strftime('%Y-%m-%d')
-    #midnight = today_time.strftime('%Y-%m-%d %H:%M:%S')
+    # midnight = today_time.strftime('%Y-%m-%d')
+    midnight = today_time.strftime('%Y-%m-%d %H:%M:%S')
     midnight_time = midnight+"+03"
     print(midnight)
     print(midnight_time)
@@ -356,8 +355,8 @@ def dashboard(request):
 
     #populating the todays quarantine respondents
     for today_qua_contact in qua_contacts:
-        today_followup = quarantine_follow_up.objects.all().filter(patient_contacts = today_qua_contact.id).filter(created_at__gte = midnight).count()
-        #today_followup = quarantine_follow_up.objects.all().filter(patient_contacts = today_qua_contact.id).filter(Q(created_at__gte = midnight) | Q(created_at__gte = midnight_time)).count()
+        # today_followup = quarantine_follow_up.objects.all().filter(patient_contacts = today_qua_contact.id).filter(created_at__gte = midnight).count()
+        today_followup = quarantine_follow_up.objects.all().filter(patient_contacts = today_qua_contact.id).filter(Q(created_at__gte = midnight) | Q(created_at__gte = midnight_time)).count()
         if today_followup > 0:
             today_follow_up_stat += 1
 
@@ -387,6 +386,13 @@ def dashboard(request):
     print("completed gender numbers....")
     print(completed_male)
     print(completed_female)
+
+    current_user = request.user
+    print(current_user)
+    # userObject = User.objects.get(pk = current_user.id)
+    grp = User.objects.filter(pk=current_user.id, groups__name='National Managers').exists()
+    print("User group....")
+    print(grp)
 
     #Populating the bargraph
     # counties = organizational_units.objects.all().filter(hierarchylevel = 2).order_by('name')
@@ -727,7 +733,7 @@ def county_dashboard(request):
     current_date = date.today().strftime('%Y-%m-%d')
     c_date = date.today()
     today_time = datetime.combine(c_date, datetime.min.time())
-    midnight = today_time.strftime('%Y-%m-%d')
+    midnight = today_time.strftime('%Y-%m-%d %H:%M:%S')
     midnight_time = midnight+"+03"
     print(midnight)
     print(midnight_time)
@@ -740,7 +746,7 @@ def county_dashboard(request):
     #populating the todays quarantine respondents
     for today_qua_contact in qua_contacts:
         current_date = date.today().strftime('%Y-%m-%d')
-        today_followup = quarantine_follow_up.objects.all().filter(patient_contacts = today_qua_contact.id).filter(patient_contacts = today_qua_contact.id).filter(created_at__gte = midnight).count()
+        today_followup = quarantine_follow_up.objects.all().filter(patient_contacts = today_qua_contact.id).filter(patient_contacts = today_qua_contact.id).filter(Q(created_at__gte = midnight) | Q(created_at__gte = midnight_time)).count()
         if today_followup > 0:
             today_follow_up_stat += 1
 
@@ -1022,7 +1028,7 @@ def subcounty_dashboard(request):
     current_date = date.today().strftime('%Y-%m-%d')
     c_date = date.today()
     today_time = datetime.combine(c_date, datetime.min.time())
-    midnight = today_time.strftime('%Y-%m-%d')
+    midnight = today_time.strftime('%Y-%m-%d %H:%M:%S')
     midnight_time = midnight+"+03"
     print(midnight)
     print(midnight_time)
@@ -1035,7 +1041,7 @@ def subcounty_dashboard(request):
     #populating the todays quarantine respondents
     for today_qua_contact in qua_contacts:
         current_date = date.today().strftime('%Y-%m-%d')
-        today_followup = quarantine_follow_up.objects.all().filter(patient_contacts = today_qua_contact.id).filter(patient_contacts = today_qua_contact.id).filter(created_at__gte = midnight).count()
+        today_followup = quarantine_follow_up.objects.all().filter(patient_contacts = today_qua_contact.id).filter(patient_contacts = today_qua_contact.id).filter(Q(created_at__gte = midnight) | Q(created_at__gte = midnight_time)).count()
         if today_followup > 0:
             today_follow_up_stat += 1
 
@@ -1315,7 +1321,7 @@ def border_dashboard(request):
     current_date = date.today().strftime('%Y-%m-%d')
     c_date = date.today()
     today_time = datetime.combine(c_date, datetime.min.time())
-    midnight = today_time.strftime('%Y-%m-%d')
+    midnight = today_time.strftime('%Y-%m-%d %H:%M:%S')
     midnight_time = midnight+"+03"
     print(midnight)
     print(midnight_time)
@@ -1328,7 +1334,7 @@ def border_dashboard(request):
     #populating the todays quarantine respondents
     for today_qua_contact in qua_contacts:
         current_date = date.today().strftime('%Y-%m-%d')
-        today_followup = quarantine_follow_up.objects.all().filter(patient_contacts = today_qua_contact.id).filter(patient_contacts = today_qua_contact.id).filter(created_at__gte = midnight).count()
+        today_followup = quarantine_follow_up.objects.all().filter(patient_contacts = today_qua_contact.id).filter(patient_contacts = today_qua_contact.id).filter(Q(created_at__gte = midnight) | Q(created_at__gte = midnight_time)).count()
         if today_followup > 0:
             today_follow_up_stat += 1
 
@@ -1984,6 +1990,7 @@ def truck_driver_register(request):
         village = request.POST.get('village','')
         street = request.POST.get('street','')
         weighbridge_name = request.POST.get('weighbridge_name','')
+        border_name = request.POST.get('border_name','')
         date_of_contact = request.POST.get('date_of_arrival','')
         cough = request.POST.get('cough','')
         breathing_difficulty = request.POST.get('breathing_difficulty','')
@@ -2013,11 +2020,18 @@ def truck_driver_register(request):
             subcountyObject = organizational_units.objects.get(organisationunitid = 18)
             wardObject = organizational_units.objects.get(organisationunitid = 18)
 
+        # country_code = country.objects.get(name = )
         user_phone = "+254"
         #check if the leading character is 0
         if str(phone_number[0]) == "0":
             user_phone = user_phone + str(phone_number[1:])
             print("number leading with 0")
+        elif str(phone_number[0]) == "+":
+            user_phone = phone_number
+            print("Save phone number as it is")
+        elif str(phone_number[0:2]) == "25":
+            user_phone = "+" + str(phone_number[0:])
+            print("Save phone number with appended +")
         else:
             user_phone = user_phone + str(phone_number)
             print("number not leading with 0")
@@ -2028,9 +2042,10 @@ def truck_driver_register(request):
 
         #get current user
         current_user = request.user
-        print(current_user)
+        # print(current_user)
         userObject = User.objects.get(pk = current_user.id)
         weigh_site = weighbridge_sites.objects.get(weighbridge_name = weighbridge_name)
+        bord_name = border_points.objects.get(border_name = border_name)
         site_name = ''
         quar_site = quarantine_sites.objects.filter(site_name = "Country Border")
         for site in quar_site:
@@ -2061,7 +2076,7 @@ def truck_driver_register(request):
             patientObject = quarantine_contacts.objects.get(pk = patient_contact)
             #save contacts in the track_quarantine_contacts
             truck_quarantine_contacts.objects.create(patient_contacts=patientObject, street=street, village=village,
-            vehicle_registration=vehicle_registration, company_name=company_name, company_phone=company_phone,
+            vehicle_registration=vehicle_registration, company_name=company_name, company_phone=company_phone,border_point=bord_name,
             company_physical_address=company_address, company_street=company_street,company_building=company_building,
             weighbridge_facility=weigh_site, cough=cough, breathing_difficulty=breathing_difficulty, fever=fever,sample_taken=sample_taken,
             action_taken=action_taken, hotel=hotel, hotel_phone=hotel_phone,hotel_town=hotel_town, date_check_in=date_check_in, date_check_out=date_check_out)
@@ -2070,7 +2085,7 @@ def truck_driver_register(request):
         #check if details have been saved
         if contact_save:
             # send sms to the patient for successful registration_form
-            #url = "https://mlab.mhealthkenya.co.ke/api/sms/gateway"
+           # url = "https://mlab.mhealthkenya.co.ke/api/sms/gateway"
             url = "http://mlab.localhost/api/sms/gateway"
             # msg = "Thank you " + first_name + " for registering. You will be required to send your temperature details during this quarantine period of 14 days. Please download the self reporting app on this link: https://cutt.ly/AtbvdxD"
             msg = "Thank you " + first_name + " for registering on self quarantine. You will be required to send your daily temperature details during this quarantine period of 14 days. Ministry of Health"
@@ -2114,9 +2129,10 @@ def truck_driver_register(request):
         cntry = country.objects.all()
         county = organizational_units.objects.all().filter(hierarchylevel = 2).order_by('name')
         weigh_site = weighbridge_sites.objects.all().filter(active = True).order_by('weighbridge_name')
+        b_points = border_points.objects.all().filter(active = True).order_by('border_name')
         day = time.strftime("%Y-%m-%d")
 
-        data = {'country':cntry,'county':county, 'day':day, 'weigh_site':weigh_site}
+        data = {'country':cntry,'county':county, 'day':day, 'weigh_site':weigh_site, 'border_points':b_points}
 
         return render(request, 'veoc/truck_driver_registration.html', data)
 
@@ -2124,9 +2140,10 @@ def truck_driver_register(request):
         cntry = country.objects.all()
         county = organizational_units.objects.all().filter(hierarchylevel = 2).order_by('name')
         weigh_site = weighbridge_sites.objects.all().filter(active = True).order_by('weighbridge_name')
+        b_points = border_points.objects.all().filter(active = True).order_by('border_name')
         day = time.strftime("%Y-%m-%d")
 
-        data = {'country':cntry,'county':county, 'day':day, 'weigh_site':weigh_site}
+        data = {'country':cntry,'county':county, 'day':day, 'weigh_site':weigh_site, 'border_points':b_points}
 
         return render(request, 'veoc/truck_driver_registration.html', data)
 
@@ -2761,6 +2778,9 @@ def truck_follow_up(request):
     #if temperature is higher and sms_status = No send an sms
     for f_data in follow_data:
         temp = f_data.body_temperature
+        cough = f_data.cough
+        breathe = f_data.difficulty_breathing
+        fever = f_data.fever
         cntry = f_data.patient_contacts.origin_country
         case_f_name = f_data.patient_contacts.first_name
         case_l_name = f_data.patient_contacts.last_name
@@ -2770,41 +2790,41 @@ def truck_follow_up(request):
         date_reported = f_data.created_at
         q_site = f_data.patient_contacts.quarantine_site_id
 
+        quasites = quarantine_sites.objects.all().filter(pk = q_site)
+        phone = ''
+        user_phone = "+254"
+        site_name = ''
+        for quasite in quasites:
+            site_name = quasite.site_name
+        # print(site_name)
+
+        if site_name == "Country Border":
+            #Get contacts of the creator of the cases from the persos table
+            person_phone = persons.objects.filter(user_id = cap_user)
+            for pers_ph in person_phone:
+                phone = pers_ph.phone_number
+                # print("EOC user contact")
+        else:
+            #Get contact of the quarantine site lead from quarantine sites table
+            phone = quasite.team_lead_phone
+            # print("quarantine lead contact")
+
+        #check if the leading character is 0
+        if str(phone[0]) == "0":
+            user_phone = user_phone + str(phone[1:])
+            # print("number leading with 0")
+        else:
+            user_phone = user_phone + str(phone)
+            # print("number not leading with 0")
+
+        # print(user_phone)
+
         if temp >= 38.0 and sms_stat == "No":
-            quasites = quarantine_sites.objects.all().filter(pk = q_site)
-            phone = ''
-            user_phone = "+254"
-            site_name = ''
-            for quasite in quasites:
-                site_name = quasite.site_name
-
-            # print(site_name)
-            if site_name == "Country Border":
-                #Get contacts of the creator of the cases from the persos table
-                person_phone = persons.objects.filter(user_id = cap_user)
-                for pers_ph in person_phone:
-                    phone = pers_ph.phone_number
-                    print("EOC user contact")
-                    # print(phone)
-            else:
-                #Get contact of the quarantine site lead from quarantine sites table
-                phone = quasite.team_lead_phone
-                print("quarantine lead contact")
-                # print(phone)
-
-            #check if the leading character is 0
-            if str(phone[0]) == "0":
-                user_phone = user_phone + str(phone[1:])
-                # print("number leading with 0")
-            else:
-                user_phone = user_phone + str(phone)
-                # print("number not leading with 0")
-
-            print(user_phone)
+            print("High temperature")
             #send sms notification to the phone number, append +254
             # url = "https://mlab.mhealthkenya.co.ke/api/sms/gateway"
             url = "http://mlab.localhost/api/sms/gateway"
-            msg = "Hello " + str(cap_name) + ", your registered quarantined case - "+ str(case_f_name)+" "+str(case_l_name)+", quarantined at "+str(site_name)+", requires contact. Reported with high temperature of " + str(temp) +" degrees on "+ str(date_reported.strftime("%d-%m-%Y")) +". Login to EARS system for more details."
+            msg = "Hello " + str(cap_name) + ", your registered quarantined case - "+ str(case_f_name)+" "+str(case_l_name)+", quarantined at "+str(site_name)+", requires contact. Reported with temperature of " + str(temp) +" degrees on "+ str(date_reported.strftime("%d-%m-%Y")) +". Login to EARS system for more details."
 
             pp = {"phone_no": user_phone, "message": msg}
             payload = json.dumps(pp)
@@ -2818,11 +2838,85 @@ def truck_follow_up(request):
 
             response = requests.request("POST", url, headers=headers, data = payload, verify=False)
 
-            # print(response.text.encode('utf8'))
+            print(response.text.encode('utf8'))
 
             #check if message response is success then update the sms_status column
             quarantine_follow_up.objects.filter(pk=f_data.id).update(sms_status="Yes")
 
+        elif cough == "Yes" and sms_stat == "No":
+            print("Has Cough")
+            #send sms notification to the phone number, append +254
+            # url = "https://mlab.mhealthkenya.co.ke/api/sms/gateway"
+            url = "http://mlab.localhost/api/sms/gateway"
+            msg = "Hello " + str(cap_name) + ", your registered quarantined case - "+ str(case_f_name)+" "+str(case_l_name)+", quarantined at "+str(site_name)+", requires contact. Reported with cough on "+ str(date_reported.strftime("%d-%m-%Y")) +". Login to EARS system for more details."
+
+            pp = {"phone_no": user_phone, "message": msg}
+            payload = json.dumps(pp)
+
+            headers = {
+              'Content-Type': 'application/json',
+              'Authorization': 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImp0aSI6IjE3MGExZGI0ZjFiYWE1ZWNkOGI4YTBiODNlNDc0MTA2NTJiNDg4Mzc4ZTQwNjExNDA0MGQwZmQ2NTEzNTM1NTg5MjFhYjBmNzI1ZDM3NzYwIn0.eyJhdWQiOiI0IiwianRpIjoiMTcwYTFkYjRmMWJhYTVlY2Q4YjhhMGI4M2U0NzQxMDY1MmI0ODgzNzhlNDA2MTE0MDQwZDBmZDY1MTM1MzU1ODkyMWFiMGY3MjVkMzc3NjAiLCJpYXQiOjE1ODQxODk0NTMsIm5iZiI6MTU4NDE4OTQ1MywiZXhwIjoxNjE1NzI1NDUzLCJzdWIiOiI2Iiwic2NvcGVzIjpbXX0.e2Pt76bE6IT7J0hSBpnc7tHShg9BKSXOMuwnQwqC3_xpJXUo2ez7sQPUa4uPp77XQ05xsumNbWapXkqxvVxp-3Gjn-o9UJ39AWHBFRJYqOXM_foZcxRBoXajUfJTTRS5BTMFEfMn2nMeLie9BH7mbgfKBpZXU_3_tClWGUcNbsibbhXgjSxskJoDls8XGVUdgc5pqMZBBBlR9cCrtK3H8PJf6XywMn9CYbw4KF8V1ADC9dYz-Iyhmwe2_LmU3ByTQMaVHCd3GVKWIvlGwNhm2_gRcEHjjZ8_PXR38itUT0M3NTmT6LBeeeb8IWV-3YFkhilbbjA03q9_6f2gjlOpChF4Ut2rC5pqTg7sW5A4PV8gepPnIBpJy5xKQzgf75zDUmuhKlYlirk8MKoRkiIUgWqOZSf49DUxbIaKIijjX3TYrwmBwZ0RTm2keSvk3bt4QutpLRxel6cajbI32rZLuDjs1_MCZNPKAK1ZgPvwt1OaHLM3om0TmSKyugPvhgNJ5fW_on_HLkTbQV6EPqN3Us7S5whFv1MQcwlgsxU9a4CJZa89elr1TaKvqbkaKqGjetwlCDf6AKQmThy5IqQ5zlIRNwlZDgz_DsGyeZUStQhc-HW65NsB_J_fe_jI5tMeRNCz4PE8T0Rghbs8xHLTFKuMGrJL0Rheq6kfEk4c0UM'
+            }
+
+            requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
+
+            response = requests.request("POST", url, headers=headers, data = payload, verify=False)
+
+            print(response.text.encode('utf8'))
+
+            #check if message response is success then update the sms_status column
+            quarantine_follow_up.objects.filter(pk=f_data.id).update(sms_status="Yes")
+
+        elif breathe == "Yes" and sms_stat == "No":
+            print("Has Difficulty Breathing")
+            #send sms notification to the phone number, append +254
+            # url = "https://mlab.mhealthkenya.co.ke/api/sms/gateway"
+            url = "http://mlab.localhost/api/sms/gateway"
+            msg = "Hello " + str(cap_name) + ", your registered quarantined case - "+ str(case_f_name)+" "+str(case_l_name)+", quarantined at "+str(site_name)+", requires contact. Reported with difficulty breathing on "+ str(date_reported.strftime("%d-%m-%Y")) +". Login to EARS system for more details."
+
+            pp = {"phone_no": user_phone, "message": msg}
+            payload = json.dumps(pp)
+
+            headers = {
+              'Content-Type': 'application/json',
+              'Authorization': 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImp0aSI6IjE3MGExZGI0ZjFiYWE1ZWNkOGI4YTBiODNlNDc0MTA2NTJiNDg4Mzc4ZTQwNjExNDA0MGQwZmQ2NTEzNTM1NTg5MjFhYjBmNzI1ZDM3NzYwIn0.eyJhdWQiOiI0IiwianRpIjoiMTcwYTFkYjRmMWJhYTVlY2Q4YjhhMGI4M2U0NzQxMDY1MmI0ODgzNzhlNDA2MTE0MDQwZDBmZDY1MTM1MzU1ODkyMWFiMGY3MjVkMzc3NjAiLCJpYXQiOjE1ODQxODk0NTMsIm5iZiI6MTU4NDE4OTQ1MywiZXhwIjoxNjE1NzI1NDUzLCJzdWIiOiI2Iiwic2NvcGVzIjpbXX0.e2Pt76bE6IT7J0hSBpnc7tHShg9BKSXOMuwnQwqC3_xpJXUo2ez7sQPUa4uPp77XQ05xsumNbWapXkqxvVxp-3Gjn-o9UJ39AWHBFRJYqOXM_foZcxRBoXajUfJTTRS5BTMFEfMn2nMeLie9BH7mbgfKBpZXU_3_tClWGUcNbsibbhXgjSxskJoDls8XGVUdgc5pqMZBBBlR9cCrtK3H8PJf6XywMn9CYbw4KF8V1ADC9dYz-Iyhmwe2_LmU3ByTQMaVHCd3GVKWIvlGwNhm2_gRcEHjjZ8_PXR38itUT0M3NTmT6LBeeeb8IWV-3YFkhilbbjA03q9_6f2gjlOpChF4Ut2rC5pqTg7sW5A4PV8gepPnIBpJy5xKQzgf75zDUmuhKlYlirk8MKoRkiIUgWqOZSf49DUxbIaKIijjX3TYrwmBwZ0RTm2keSvk3bt4QutpLRxel6cajbI32rZLuDjs1_MCZNPKAK1ZgPvwt1OaHLM3om0TmSKyugPvhgNJ5fW_on_HLkTbQV6EPqN3Us7S5whFv1MQcwlgsxU9a4CJZa89elr1TaKvqbkaKqGjetwlCDf6AKQmThy5IqQ5zlIRNwlZDgz_DsGyeZUStQhc-HW65NsB_J_fe_jI5tMeRNCz4PE8T0Rghbs8xHLTFKuMGrJL0Rheq6kfEk4c0UM'
+            }
+
+            requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
+
+            response = requests.request("POST", url, headers=headers, data = payload, verify=False)
+
+            print(response.text.encode('utf8'))
+
+            #check if message response is success then update the sms_status column
+            quarantine_follow_up.objects.filter(pk=f_data.id).update(sms_status="Yes")
+
+        elif fever == "Yes" and sms_stat == "No":
+            print("Has Fever")
+            #send sms notification to the phone number, append +254
+            # url = "https://mlab.mhealthkenya.co.ke/api/sms/gateway"
+            url = "http://mlab.localhost/api/sms/gateway"
+            msg = "Hello " + str(cap_name) + ", your registered quarantined case - "+ str(case_f_name)+" "+str(case_l_name)+", quarantined at "+str(site_name)+", requires contact. Reported with fever on "+ str(date_reported.strftime("%d-%m-%Y")) +". Login to EARS system for more details."
+
+            pp = {"phone_no": user_phone, "message": msg}
+            payload = json.dumps(pp)
+
+            headers = {
+              'Content-Type': 'application/json',
+              'Authorization': 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImp0aSI6IjE3MGExZGI0ZjFiYWE1ZWNkOGI4YTBiODNlNDc0MTA2NTJiNDg4Mzc4ZTQwNjExNDA0MGQwZmQ2NTEzNTM1NTg5MjFhYjBmNzI1ZDM3NzYwIn0.eyJhdWQiOiI0IiwianRpIjoiMTcwYTFkYjRmMWJhYTVlY2Q4YjhhMGI4M2U0NzQxMDY1MmI0ODgzNzhlNDA2MTE0MDQwZDBmZDY1MTM1MzU1ODkyMWFiMGY3MjVkMzc3NjAiLCJpYXQiOjE1ODQxODk0NTMsIm5iZiI6MTU4NDE4OTQ1MywiZXhwIjoxNjE1NzI1NDUzLCJzdWIiOiI2Iiwic2NvcGVzIjpbXX0.e2Pt76bE6IT7J0hSBpnc7tHShg9BKSXOMuwnQwqC3_xpJXUo2ez7sQPUa4uPp77XQ05xsumNbWapXkqxvVxp-3Gjn-o9UJ39AWHBFRJYqOXM_foZcxRBoXajUfJTTRS5BTMFEfMn2nMeLie9BH7mbgfKBpZXU_3_tClWGUcNbsibbhXgjSxskJoDls8XGVUdgc5pqMZBBBlR9cCrtK3H8PJf6XywMn9CYbw4KF8V1ADC9dYz-Iyhmwe2_LmU3ByTQMaVHCd3GVKWIvlGwNhm2_gRcEHjjZ8_PXR38itUT0M3NTmT6LBeeeb8IWV-3YFkhilbbjA03q9_6f2gjlOpChF4Ut2rC5pqTg7sW5A4PV8gepPnIBpJy5xKQzgf75zDUmuhKlYlirk8MKoRkiIUgWqOZSf49DUxbIaKIijjX3TYrwmBwZ0RTm2keSvk3bt4QutpLRxel6cajbI32rZLuDjs1_MCZNPKAK1ZgPvwt1OaHLM3om0TmSKyugPvhgNJ5fW_on_HLkTbQV6EPqN3Us7S5whFv1MQcwlgsxU9a4CJZa89elr1TaKvqbkaKqGjetwlCDf6AKQmThy5IqQ5zlIRNwlZDgz_DsGyeZUStQhc-HW65NsB_J_fe_jI5tMeRNCz4PE8T0Rghbs8xHLTFKuMGrJL0Rheq6kfEk4c0UM'
+            }
+
+            requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
+
+            response = requests.request("POST", url, headers=headers, data = payload, verify=False)
+
+            print(response.text.encode('utf8'))
+
+            #check if message response is success then update the sms_status column
+            quarantine_follow_up.objects.filter(pk=f_data.id).update(sms_status="Yes")
+
+        else:
+            print("has none")
 
     data = {'follow_data': follow_data, 'follow_data_count': follow_data_count}
 
@@ -3419,12 +3513,6 @@ def weekly_report_submit(request):
 
     return render(request, 'veoc/weekly_report.html', events)
 
-def Periodic_Report(request):
-    return render(request, 'veoc/periodic_report.html')
-
-def analytics(request):
-    return render(request, 'veoc/analytics.html')
-
 @login_required
 def users_list(request):
     users_count = User.objects.all().count()
@@ -3737,18 +3825,6 @@ def police_map(request):
 def lab_refferal_map(request):
     return render(request, 'veoc/lab_refferal-map.html')
 
-def flot_charts(request):
-    return render(request, 'veoc/flot-charts.html')
-
-def bar_charts(request):
-    return render(request, 'veoc/bar-charts.html')
-
-def line_charts(request):
-    return render(request, 'veoc/line-charts.html')
-
-def area_charts(request):
-    return render(request, 'veoc/area-charts.html')
-
 # @login_required
 @transaction.atomic
 def update_profile(request):
@@ -4004,6 +4080,9 @@ def heat_maps(request):
 
     return render(request, 'veoc/heat_maps.html')
 
+def Periodic_Report(request):
+    return render(request, 'veoc/periodic_report.html')
+
 def get_facilities_ward(request):
 
     if request.method=="POST":
@@ -4092,12 +4171,10 @@ def get_lab_posts(request):
 
 def week_shift(request):
     event = {'events': eoc_events_calendar.objects.all()}
-    print(event)
     return render(request, 'veoc/weekly_shift.html', event)
 
 def calendar_events_create(request):
     if request.method=='POST':
-
         name=request.POST.get('name','')
         description = request.POST.get('description', '')
         start_date=request.POST.get('start_date','')
@@ -4200,7 +4277,6 @@ def contact_edit(request):
         success="Contact not created,try again"
         messages.error(request, success)
         return render(request,"veoc/surveillance_contacts.html",{"success":success,'eocContacts': staff_contact.objects.all(), 'designation': designation.objects.all()})
-
 
 def allocation_sheet(request):
     return render(request, 'veoc/alocation_sheet.html')

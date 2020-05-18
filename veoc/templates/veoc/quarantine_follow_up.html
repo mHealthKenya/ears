@@ -35,6 +35,7 @@
                             <th>Origin Country</th>
                             <th>Date of last contact</th>
                             <th>Follow up Day</th>
+                            <th>Has Thermometer</th>
                             <th>Temperature</th>
                             <th>Has Fever?</th>
                             <th>Has Cough?</th>
@@ -54,6 +55,11 @@
                             <td>{{ follow.patient_contacts.origin_country }}</td>
                             <td>{{ follow.patient_contacts.date_of_contact|date:'d-m-Y' }}</td>
                             <td>{{ follow.follow_up_day }}</td>
+                            {% if follow.thermal_gun == "t" %}
+                              <td>Yes</td>
+                            {% else %}
+                              <td>No</td>
+                            {% endif %}
                             {% if follow.body_temperature >= 38.0 %}
                             <td style="background-color: #F51B00">
                               <b>{{ follow.body_temperature }}</b></td>

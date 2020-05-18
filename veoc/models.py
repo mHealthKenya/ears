@@ -653,6 +653,28 @@ class weighbridge_sites(models.Model):
     class meta:
         unique_together=(('weighbridge_name'),)
 
+class border_points(models.Model):
+    person_phone_regex = RegexValidator(regex=r'^\+?1?\d{10,15}$', message="Phone number must be entered in the format: '+999999999'. Up to 15 digits allowed.")
+
+    border_name = models.CharField(max_length=50)
+    border_location = models.CharField(max_length=50)
+    team_lead_names = models.CharField(max_length=500)
+    team_lead_phone = models.CharField(validators=[person_phone_regex], max_length=15, blank=True)
+    active = models.BooleanField(default=True)
+    created_at = models.DateField(default=date.today)
+    updated_at = models.DateField(default=date.today)
+    created_by = models.ForeignKey(User, on_delete=models.DO_NOTHING, related_name='border_points_updated_by')
+    updated_by = models.ForeignKey(User, on_delete=models.DO_NOTHING, related_name='border_points_created_by')
+
+    def natural_key(self):
+        return (self.border_name)
+
+    def __str__(self):
+        return self.border_name
+
+    class meta:
+        unique_together=(('border_name'),)
+
 class truck_quarantine_contacts(models.Model):
     person_phone_regex = RegexValidator(regex=r'^\+?1?\d{10,15}$', message="Phone number must be entered in the format: '+999999999'. Up to 15 digits allowed.")
 
@@ -666,6 +688,7 @@ class truck_quarantine_contacts(models.Model):
     company_street = models.CharField(max_length=50, blank=True)
     company_building = models.CharField(max_length=50, blank=True)
     weighbridge_facility = models.ForeignKey(weighbridge_sites, on_delete=models.DO_NOTHING, related_name='weighbridge_contact_facility', blank=False)
+    border_point = models.ForeignKey(border_points, on_delete=models.DO_NOTHING, related_name='border_contact_facility', blank=False)
     cough = models.BooleanField(default=True)
     breathing_difficulty = models.BooleanField(default=True)
     fever = models.BooleanField(default=True)

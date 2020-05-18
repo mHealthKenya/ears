@@ -139,6 +139,26 @@
     <!-- Sidebar -->
     <div id="sidebar-wrapper">
         <ul class="sidebar-nav nav-pills nav-stacked" id="menu">
+          <script>
+            {% if user.groups.all.0.name == "National Managers" %}
+                console.log("User belongs to National Managers");
+            {% elif request.user|has_group:"National Watchers" %}
+                console.log("User belong to National Watchers");
+            {% elif request.user|has_group:"County Managers" %}
+                console.log("User belong to County Managers");
+            {% elif request.user|has_group:"Sub-County Managers" %}
+                console.log("User belong to Sub-County Managers");
+            {% elif request.user|has_group:"County Watchers" %}
+                console.log("User belong to County Watchers");
+            {% elif request.user|has_group:"Sub-County Watchers" %}
+                console.log("User belong to Sub-County Watchers");
+            {% elif request.user|has_group:"Border Watchers" %}
+                console.log("User belong to Border Watchers");
+            {% else %}
+              console.log("User doesn't belong to any group");
+            {% endif %}
+
+          </script>
           <li>
               <a href="/access_dashboard"><span class="fa-stack fa-lg pull-left"><i
                       class="fa fa-dashboard fa-stack-1x "></i></span> DASHBOARD</a>
