@@ -555,6 +555,28 @@ class contact(models.Model):
     def __str__(self):
         return self.county.description + ' - ' + self.contact_type.description
 
+class translation_languages(models.Model):
+    language_name = models.CharField(max_length=20)
+    created_at = models.DateField(default=date.today)
+    updated_at = models.DateField(default=date.today)
+    created_by = models.ForeignKey(User, on_delete=models.CASCADE, related_name='language_updated_by')
+    updated_by = models.ForeignKey(User, on_delete=models.CASCADE, related_name='language_created_by')
+
+    def __str__(self):
+        return self.language_name
+
+class translation_messages(models.Model):
+    language = models.ForeignKey(translation_languages, on_delete=models.CASCADE, blank=False)
+    massage = models.CharField(max_length=200)
+    message_description = models.CharField(max_length=50)
+    created_at = models.DateField(default=date.today)
+    updated_at = models.DateField(default=date.today)
+    created_by = models.ForeignKey(User, on_delete=models.CASCADE, related_name='massage_updated_by')
+    updated_by = models.ForeignKey(User, on_delete=models.CASCADE, related_name='massage_created_by')
+
+    def __str__(self):
+        return self.language_name
+
 class quarantine_sites(models.Model):
     person_phone_regex = RegexValidator(regex=r'^\+?1?\d{10,15}$', message="Phone number must be entered in the format: '+999999999'. Up to 15 digits allowed.")
 
@@ -579,14 +601,14 @@ class quarantine_sites(models.Model):
 class quarantine_contacts(models.Model):
     person_phone_regex = RegexValidator(regex=r'^\+?1?\d{10,15}$', message="Phone number must be entered in the format: '+999999999'. Up to 15 digits allowed.")
 
-    # contact_uuid = models.CharField(max_length=50, blank=True)
+    contact_uuid = models.CharField(max_length=50, blank=True)
     first_name = models.CharField(max_length=50)
     middle_name = models.CharField(max_length=50, blank=True)
     last_name = models.CharField(max_length=50)
     sex = models.CharField(max_length=50)
     dob = models.DateField(default=date.today)
     passport_number = models.CharField(max_length=50, blank=True)
-    phone_number = models.CharField(validators=[person_phone_regex], max_length=15, blank=False)
+    phone_number = models.CharField(validators=[person_phone_regex], max_length=255, blank=False)
     email_address = models.EmailField(max_length=20, blank=True)
     origin_country = models.CharField(max_length=50,default='KENYA')
     county = models.ForeignKey(organizational_units, on_delete=models.CASCADE, related_name='quarantine_county', blank=True)
@@ -596,7 +618,7 @@ class quarantine_contacts(models.Model):
     place_of_diagnosis = models.CharField(max_length=50, blank=True)
     drugs = models.CharField(max_length=50, blank=True)
     nok = models.CharField(max_length=50, blank=True)
-    nok_phone_num = models.CharField(validators=[person_phone_regex], max_length=15, blank=True)
+    nok_phone_num = models.CharField(validators=[person_phone_regex], max_length=255, blank=True)
     cormobidity = models.CharField(max_length=50, blank=True)
     place_of_diagnosis = models.CharField(max_length=50, blank=True)
     quarantine_site = models.ForeignKey(quarantine_sites, on_delete=models.DO_NOTHING, related_name='quarantine_site', default=1)
@@ -604,6 +626,7 @@ class quarantine_contacts(models.Model):
     contact_state = models.CharField(max_length=50, blank=True)
     physical_address = models.CharField(max_length=50, blank=True)
     source = models.CharField(max_length=50, blank=True)
+    communication_language = models.ForeignKey(translation_languages, on_delete=models.DO_NOTHING, related_name='quarantine_language', default='1')
     created_at = models.DateTimeField(default=datetime.now())
     updated_at = models.DateTimeField(default=datetime.now())
     created_by = models.ForeignKey(User, on_delete=models.CASCADE, related_name='quarantine_updated_by')
@@ -659,7 +682,7 @@ class border_points(models.Model):
     border_name = models.CharField(max_length=50)
     border_location = models.CharField(max_length=50)
     team_lead_names = models.CharField(max_length=500)
-    team_lead_phone = models.CharField(validators=[person_phone_regex], max_length=15, blank=True)
+    team_lead_phone = models.CharField(validators=[person_phone_regex], max_length=255, blank=True)
     active = models.BooleanField(default=True)
     created_at = models.DateField(default=date.today)
     updated_at = models.DateField(default=date.today)
@@ -683,7 +706,7 @@ class truck_quarantine_contacts(models.Model):
     village = models.CharField(max_length=50, blank=True)
     vehicle_registration = models.CharField(max_length=50, blank=True)
     company_name = models.CharField(max_length=50, blank=True)
-    company_phone = models.CharField(validators=[person_phone_regex], max_length=15, blank=False)
+    company_phone = models.CharField(validators=[person_phone_regex], max_length=255, blank=False)
     company_physical_address = models.CharField(max_length=50, blank=True)
     company_street = models.CharField(max_length=50, blank=True)
     company_building = models.CharField(max_length=50, blank=True)
@@ -692,10 +715,11 @@ class truck_quarantine_contacts(models.Model):
     cough = models.BooleanField(default=True)
     breathing_difficulty = models.BooleanField(default=True)
     fever = models.BooleanField(default=True)
+    temperature = models.FloatField(max_length=20, blank=True, default='0.0')
     sample_taken = models.BooleanField(default=True)
     action_taken = models.CharField(max_length=100, blank=True)
     hotel = models.CharField(max_length=50, blank=True)
-    hotel_phone = models.CharField(validators=[person_phone_regex], max_length=15, blank=False)
+    hotel_phone = models.CharField(validators=[person_phone_regex], max_length=255, blank=False)
     hotel_town = models.CharField(max_length=50, blank=True)
     date_check_in = models.DateField(default=date.today)
     date_check_out = models.DateField(default=date.today)
