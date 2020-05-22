@@ -727,6 +727,33 @@ class truck_quarantine_contacts(models.Model):
     def __str__(self):
         return self.patient_contacts.first_name + ' - ' + self.vehicle_registration
 
+class truck_quarantine_lab(models.Model):
+    patient_contacts = models.ForeignKey(quarantine_contacts, on_delete=models.DO_NOTHING, related_name='truck_lab_contact')
+    test_sample_uuid = models.CharField(max_length=50, blank=True)
+    covid_test_done = models.BooleanField(default=False)
+    specimen_taken = models.BooleanField(default=False)
+    reason_speciment_not_taken = models.CharField(max_length=255, blank=True)
+    date_specimen_collected = models.DateTimeField(default=datetime.now())
+    specimen_type = models.CharField(max_length=50, blank=True)
+    other_specimen_type = models.CharField(max_length=50, blank=True)
+    viral_respiratory_illness = models.BooleanField(default=False)
+    respiratory_illness_results = models.CharField(max_length=50, blank=True)
+    date_specimen_taken_lab = models.DateTimeField(default=datetime.now())
+    name_of_lab = models.CharField(max_length=50, blank=True)
+    assay_used = models.CharField(max_length=50, blank=True)
+    sequencing_done = models.CharField(max_length=50, blank=True)
+    lab_results = models.CharField(max_length=50, blank=True)
+    date_lab_confirmation = models.DateTimeField(default=datetime.now())
+    source = models.CharField(max_length=50, blank=True)
+    created_at = models.DateTimeField(default=datetime.now())
+    updated_at = models.DateTimeField(default=datetime.now())
+    created_by = models.ForeignKey(User, on_delete=models.CASCADE, related_name='truck_lab_updated_by')
+    updated_by = models.ForeignKey(User, on_delete=models.CASCADE, related_name='truck_lab_created_by')
+
+    def __str__(self):
+        return self.patient_contacts.first_name + ' - ' + self.specimen_type
+
+
 class watcher_team_leads(models.Model):
     team_lead=models.ForeignKey(contact, on_delete=models.CASCADE, blank=False)
     team_name=models.CharField(max_length=20)

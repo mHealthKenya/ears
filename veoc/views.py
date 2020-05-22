@@ -1909,8 +1909,8 @@ def quarantine_register(request):
         #check if details have been saved
         if contact_save:
             # send sms to the patient for successful registration_form
-            url = "https://mlab.mhealthkenya.co.ke/api/sms/gateway"
-            # url = "http://mlab.localhost/api/sms/gateway"
+            # url = "https://mlab.mhealthkenya.co.ke/api/sms/gateway"
+            url = "http://mlab.localhost/api/sms/gateway"
             # msg = "Thank you " + first_name + " for registering. You will be required to send your temperature details during this quarantine period of 14 days. Please download the self reporting app on this link: https://cutt.ly/AtbvdxD"
             msg = "Thank you " + first_name + " for registering on self quarantine. You will be required to send your daily temperature details during this quarantine period of 14 days. Ministry of Health"
             msg2 = first_name +", for self reporting iPhone users and non-smart phone users, dial *299# to send daily details, for Android phone users, download the self reporting app on this link: http://bit.ly/jitenge_moh . Ministry of Health"
@@ -1968,6 +1968,26 @@ def quarantine_register(request):
         data = {'country':cntry,'county':county, 'day':day, 'qua_site':qua_site}
 
         return render(request, 'veoc/quarantine_registration_form.html', data)
+
+def test_profile(request, profileid):
+
+    # lab_data = truck_quarantine_lab.objects.get(pk=profileid).annotate(
+    lab_data = truck_quarantine_lab.objects.all().annotate(
+            first_name=F("patient_contacts__first_name"),
+            last_name=F("patient_contacts__last_name"),
+            sex=F("patient_contacts__sex"),
+            age=F("patient_contacts__dob"),
+            passport_number=F("patient_contacts__passport_number"),
+            phone_number=F("patient_contacts__phone_number"),
+            nationality=F("patient_contacts__nationality"),
+            origin_country=F("patient_contacts__origin_country"),
+            date_of_contact=F("patient_contacts__date_of_contact"),
+            # created_by=F("patient_contacts__created_by"),
+        )
+
+    print(lab_data)
+
+    return render(request, 'veoc/truck_driver_profile.html', {'lab_data': lab_data})
 
 @login_required
 def truck_driver_register(request):
@@ -2165,6 +2185,11 @@ def truck_driver_register(request):
         b_points = border_points.objects.all().filter(active = True).order_by('border_name')
         language = translation_languages.objects.all()
         day = time.strftime("%Y-%m-%d")
+
+        qs = User.objects.filter(groups__name='National Watchers')
+        print(qs.query)
+        # for q in qs :
+        #     val = q.
 
 
         data = {'country':cntry,'county':county, 'day':day, 'weigh_site':weigh_site, 'border_points':b_points, 'language':language}
@@ -2648,7 +2673,7 @@ def truck_quarantine_list(request):
             nationality=F("patient_contacts__nationality"),
             origin_country=F("patient_contacts__origin_country"),
             date_of_contact=F("patient_contacts__date_of_contact"),
-            created_by=F("patient_contacts__created_by"),
+            created_by=F("patient_contacts__created_by_id__username"),
         )
 
     print(all_data)

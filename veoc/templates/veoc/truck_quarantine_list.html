@@ -47,7 +47,7 @@
                           <tr>
                             <th>Last Name</th>
                             <th>First Name</th>
-                            <th>Age</th>
+                            <th>DOB</th>
                             <th>Gender</th>
                             <th>Contact</th>
                             <th>Passport No</th>
@@ -59,6 +59,7 @@
                             <th>Company Details</th>
                             <th>Acommodation</th>
                             <th>Map View</th>
+{#                            <th>Lab View</th>#}
                             <!-- <th>Edit</th> -->
                           </tr>
                           </thead>
@@ -67,7 +68,7 @@
                           <tr>
                             <td>{{ q_data.last_name }}</td>
                             <td>{{ q_data.first_name }}</td>
-                            <td>{{ q_data.age }}</td>
+                            <td>{{ q_data.age|date:'d-m-Y' }}</td>
                             <td>{{ q_data.sex }}</td>
                             <td>{{ q_data.phone_number }}</td>
                             <td>{{ q_data.passport_number }}</td>
@@ -75,7 +76,7 @@
                             <td>{{ q_data.origin_country }}</td>
                             <td>{{ q_data.weighbridge_facility }}</td>
                             <td>{{ q_data.date_of_contact }}</td>
-                            <td>{{ q_data.created_by.username }}</td>
+                            <td>{{ q_data.created_by }}</td>
                             <td>
                               <button type="button" id="company_view" class="btn btn-info btn-xs company_view"
                                 data-toggle="modal" data-target="#view_company_modal"
@@ -124,6 +125,7 @@
                                </i>
                              </button>
                            </td>
+{#                           <td><a href="/test_profile/{{q_data.pk}}"><i class="fa fa-pencil-square-o" aria-hidden="true" style="font-size:20px;color:blue;"></i></a>#}
                            <!-- <td>
                              <button type="button" class="btn btn-primary btn-xs edit_button"
                                data-toggle="modal" data-target="#edit_quarantine_modal"
