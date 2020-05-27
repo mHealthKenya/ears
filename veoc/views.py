@@ -2135,9 +2135,9 @@ def truck_driver_register(request):
         #check if details have been saved
         if contact_save:
             # send sms to the patient for successful registration_form
-            # url = "https://mlab.mhealthkenya.co.ke/api/sms/gateway"
+           # url = "https://mlab.mhealthkenya.co.ke/api/sms/gateway"
             url = "http://mlab.localhost/api/sms/gateway"
-            # msg = ''
+            msg = ''
             msg2 = ''
             print(language)
             if language == "1" :
