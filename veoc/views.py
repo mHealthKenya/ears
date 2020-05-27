@@ -1972,6 +1972,23 @@ def quarantine_register(request):
 def test_profile(request, profileid):
 
     # lab_data = truck_quarantine_lab.objects.get(pk=profileid).annotate(
+    patient_details = truck_quarantine_contacts.objects.filter(id=profileid).annotate(
+            first_name=F("patient_contacts__first_name"),
+            last_name=F("patient_contacts__last_name"),
+            sex=F("patient_contacts__sex"),
+            age=F("patient_contacts__dob"),
+            passport_number=F("patient_contacts__passport_number"),
+            phone_number=F("patient_contacts__phone_number"),
+            nationality=F("patient_contacts__nationality"),
+            origin_country=F("patient_contacts__origin_country"),
+            quarantine_site=F("patient_contacts__quarantine_site_id__site_name"),
+            source=F("patient_contacts__source"),
+            date_of_contact=F("patient_contacts__date_of_contact"),
+            created_by=F("patient_contacts__created_by_id__username"),
+        )
+
+    print(patient_details)
+
     lab_data = truck_quarantine_lab.objects.all().annotate(
             first_name=F("patient_contacts__first_name"),
             last_name=F("patient_contacts__last_name"),
@@ -1982,12 +1999,14 @@ def test_profile(request, profileid):
             nationality=F("patient_contacts__nationality"),
             origin_country=F("patient_contacts__origin_country"),
             date_of_contact=F("patient_contacts__date_of_contact"),
-            # created_by=F("patient_contacts__created_by"),
+            # created_by=F("patient_contacts__created_by_id__username"),
         )
 
     print(lab_data)
 
-    return render(request, 'veoc/truck_driver_profile.html', {'lab_data': lab_data})
+    data = {'lab_data': lab_data, 'patient_details':patient_details}
+
+    return render(request, 'veoc/truck_driver_profile.html', data)
 
 @login_required
 def truck_driver_register(request):
@@ -2090,30 +2109,35 @@ def truck_driver_register(request):
             languageObject = translation_languages.objects.get(pk = language)
             #saving values to quarantine_contacts database first
             contact_save = quarantine_contacts.objects.create(first_name=first_name, last_name=last_name, middle_name=middle_name,
-            county=countyObject, subcounty=subcountyObject, ward=wardObject,sex=sex, dob=dob, passport_number=passport_number,
-            phone_number=user_phone, date_of_contact=date_of_contact,  communication_language=languageObject,
-            nationality=nationality, drugs=drugs, nok=nextofkin, nok_phone_num=nok_phone_number,cormobidity=comorbidity,
-            origin_country=origin_country, quarantine_site= quarantineObject, source=source,
-            updated_at=current_date, created_by=userObject, updated_by=userObject, created_at=current_date)
+                county=countyObject, subcounty=subcountyObject, ward=wardObject,sex=sex, dob=dob, passport_number=passport_number,
+                phone_number=user_phone, date_of_contact=date_of_contact,  communication_language=languageObject,
+                nationality=nationality, drugs=drugs, nok=nextofkin, nok_phone_num=nok_phone_number,cormobidity=comorbidity,
+                origin_country=origin_country, quarantine_site= quarantineObject, source=source,
+                updated_at=current_date, created_by=userObject, updated_by=userObject, created_at=current_date)
 
             contact_save.save()
             patient_contact = contact_save.pk
-            # print(patient_contact)
+            print(patient_contact)
             patientObject = quarantine_contacts.objects.get(pk = patient_contact)
-            #save contacts in the track_quarantine_contacts
-            truck_quarantine_contacts.objects.create(patient_contacts=patientObject, street=street, village=village,
-            vehicle_registration=vehicle_registration, company_name=company_name, company_phone=company_phone,border_point=bord_name,
-            company_physical_address=company_address, company_street=company_street,company_building=company_building, temperature=temp,
-            weighbridge_facility=weigh_site, cough=cough, breathing_difficulty=breathing_difficulty, fever=fever,sample_taken=sample_taken,
-            action_taken=action_taken, hotel=hotel, hotel_phone=hotel_phone,hotel_town=hotel_town, date_check_in=date_check_in, date_check_out=date_check_out)
+            #save contacts in the track_quarantine_contacts if data has been saved on the quarantine contacts
+            if patient_contact :
+                truck_save = truck_quarantine_contacts.objects.create(patient_contacts=patientObject, street=street, village=village,
+                    vehicle_registration=vehicle_registration, company_name=company_name, company_phone=company_phone,border_point=bord_name,
+                    company_physical_address=company_address, company_street=company_street,company_building=company_building, temperature=temp,
+                    weighbridge_facility=weigh_site, cough=cough, breathing_difficulty=breathing_difficulty, fever=fever,sample_taken=sample_taken,
+                    action_taken=action_taken, hotel=hotel, hotel_phone=hotel_phone,hotel_town=hotel_town, date_check_in=date_check_in, date_check_out=date_check_out)
+
+                truck_save.save();
+            else :
+                print("data not saved in truck quarantine contacts")
 
 
         #check if details have been saved
         if contact_save:
             # send sms to the patient for successful registration_form
-            url = "https://mlab.mhealthkenya.co.ke/api/sms/gateway"
-            # url = "http://mlab.localhost/api/sms/gateway"
-            msg = ''
+            # url = "https://mlab.mhealthkenya.co.ke/api/sms/gateway"
+            url = "http://mlab.localhost/api/sms/gateway"
+            # msg = ''
             msg2 = ''
             print(language)
             if language == "1" :
@@ -2682,6 +2706,29 @@ def truck_quarantine_list(request):
 
     return render(request, 'veoc/truck_quarantine_list.html', data)
 
+def truck_q_list(request):
+
+    all_data = quarantine_contacts.objects.all().filter(source = 'Truck Registration')
+    q_data_count = quarantine_contacts.objects.all().filter(source = 'Truck Registration').count()
+    quar_sites = weighbridge_sites.objects.all().order_by('weighbridge_name')
+    # hotel_details = truck_quarantine_contacts.objects.filter(patient_contacts__in=q_data)
+    hotel_details = []
+    for d in all_data:
+        h_details = truck_quarantine_contacts.objects.filter(patient_contacts=d.id)
+        hotel_details.append(h_details)
+
+    print(all_data)
+    print(q_data_count)
+    print(hotel_details)
+    my_list_data = zip(all_data, hotel_details)
+
+    print(my_list_data)
+
+    data = {'all_data': my_list_data, 'quarantine_data_count': q_data_count, 'weigh_name':quar_sites}
+
+    return render(request, 'veoc/truck_quarantine_list.html', data)
+
+
 def f_up(request):
     qrnt_contacts = quarantine_contacts.objects.all()
 
@@ -2840,6 +2887,14 @@ def truck_follow_up(request):
         cap_name = f_data.patient_contacts.created_by.first_name
         date_reported = f_data.created_at
         q_site = f_data.patient_contacts.quarantine_site_id
+        contact_id = f_data.patient_contacts.id
+        print(contact_id)
+        #get weighbring based on the contact_id
+        # border_p = truck_quarantine_contacts.objects.get(patient_contacts=contact_id)
+        # print(border_p)
+        # for b in border_p:
+        #     bp = b.weighbridge_facility.team_lead_phone
+        #     print(bp)
 
         quasites = quarantine_sites.objects.all().filter(pk = q_site)
         phone = ''

@@ -25,42 +25,48 @@
 
                   <div class="text-center">
                     <img src="http://ssl.gstatic.com/accounts/ui/avatar_2x.png" class="avatar img-circle img-thumbnail" alt="avatar">
-                     <h4>Truck Driver Names</h4>
+                      {% for patient_detail in patient_details %}
+                     <h4>{{ patient_detail.first_name }} {{ patient_detail.last_name }}</h4>
+                       {% endfor %}
 {#                    <h6>Upload a different photo...</h6>#}
 {#                    <input type="file" class="text-center center-block file-upload">#}
                   </div></hr><br>
 
                       <ul class="list-group">
+                          {% for patient_detail in patient_details %}
                         <li class="list-group-item text-muted">Details <i class="fa fa-info-circle fa-1x"></i></li>
-                        <li class="list-group-item text-right"><span class="pull-left"><strong>Nationality</strong></span> Kenya</li>
-                          <li class="list-group-item text-right"><span class="pull-left"><strong>Gender</strong></span> Male</li>
-                        <li class="list-group-item text-right"><span class="pull-left"><strong>Age</strong></span> 125</li>
+                        <li class="list-group-item text-right"><span class="pull-left"><strong>Nationality</strong></span> {{ patient_detail.nationality }}</li>
+                          <li class="list-group-item text-right"><span class="pull-left"><strong>Gender</strong></span> {{ patient_detail.sex }}</li>
+                        <li class="list-group-item text-right"><span class="pull-left"><strong>Age</strong></span> {{ patient_detail.age|date:'d-m-Y' }}</li>
+                          {% endfor %}
                       </ul>
 
                     </div><!--/col-3-->
                     <div class="col-sm-9">
                         <ul class="nav nav-tabs">
-                            <li class="active"><a data-toggle="tab" href="#home">Home</a></li>
+                            <li class="active"><a data-toggle="tab" href="#home">Details</a></li>
                             <li><a data-toggle="tab" href="#test">Laboratory Test</a></li>
                             <li><a data-toggle="tab" href="#results">Laboratory Results</a></li>
+                            <li><a data-toggle="tab" href="#attestation">Attestation</a></li>
                           </ul>
 
                           <div class="tab-content">
                             <div class="tab-pane active" id="home">
                                 <hr>
                                   <form class="form" action="##" method="post" id="registrationForm">
+                                      {% for patient_detail in patient_details %}
                                       <div class="form-group">
 
                                           <div class="col-xs-6">
                                               <label for="first_name"><h4>First name</h4></label>
-                                              <input type="text" class="form-control" name="first_name" id="first_name" >
+                                              <input type="text" class="form-control" name="first_name" id="first_name" value="{{ patient_detail.first_name }}" readonly>
                                           </div>
                                       </div>
                                       <div class="form-group">
 
                                           <div class="col-xs-6">
                                             <label for="last_name"><h4>Last name</h4></label>
-                                              <input type="text" class="form-control" name="last_name" id="last_name">
+                                              <input type="text" class="form-control" name="last_name" id="last_name" value="{{ patient_detail.last_name }}" readonly>
                                           </div>
                                       </div>
 
@@ -68,76 +74,78 @@
 
                                           <div class="col-xs-6">
                                               <label for="phone"><h4>Phone Number</h4></label>
-                                              <input type="text" class="form-control" name="phone" id="phone">
+                                              <input type="text" class="form-control" name="phone" id="phone" value="{{ patient_detail.phone_number }}" readonly>
                                           </div>
                                       </div>
 
                                       <div class="form-group">
                                           <div class="col-xs-6">
-                                             <label for="mobile"><h4>ID/Passport Number</h4></label>
-                                              <input type="text" class="form-control" name="mobile" id="mobile" placeholder="enter mobile number" title="enter your mobile number if any.">
+                                             <label for="passport"><h4>ID/Passport Number</h4></label>
+                                              <input type="text" class="form-control" name="passport" id="passport" value="{{ patient_detail.passport_number }}" readonly>
                                           </div>
                                       </div>
                                       <div class="form-group">
 
                                           <div class="col-xs-6">
                                               <label for="email"><h4>Country of Origin</h4></label>
-                                              <input type="email" class="form-control" name="email" id="email" placeholder="you@email.com" title="enter your email.">
+                                              <input type="email" class="form-control" name="email" id="email" value="{{ patient_detail.origin_country }}" readonly>
                                           </div>
                                       </div>
                                       <div class="form-group">
 
                                           <div class="col-xs-6">
                                               <label for="email"><h4>Quarantine Site</h4></label>
-                                              <input type="email" class="form-control" id="location" placeholder="somewhere" title="enter a location">
+                                              <input type="email" class="form-control" id="location" value="{{ patient_detail.quarantine_site }}" readonly>
                                           </div>
                                       </div>
                                       <div class="form-group">
 
                                           <div class="col-xs-6">
-                                              <label for="password"><h4>Date Registered</h4></label>
-                                              <input type="password" class="form-control" name="password" id="password" placeholder="password" title="enter your password.">
+                                              <label for="reg_Date"><h4>Date Registered</h4></label>
+                                              <input type="date" class="form-control" name="reg_Date" id="reg_Date" value="{{ patient_detail.quarantine_site }}" readonly>
                                           </div>
                                       </div>
                                       <div class="form-group">
 
                                           <div class="col-xs-6">
-                                            <label for="password2"><h4>Source of Registration</h4></label>
-                                              <input type="password" class="form-control" name="password2" id="password2" placeholder="password2" title="enter your password2.">
+                                            <label for="source"><h4>Source of Registration</h4></label>
+                                              <input type="text" class="form-control" name="source" id="source" value="{{ patient_detail.source }}" readonly>
                                           </div>
                                       </div>
                                       <div class="form-group">
 
                                           <div class="col-xs-6">
-                                              <label for="password"><h4>Entry Border Point</h4></label>
-                                              <input type="password" class="form-control" name="password" id="password" placeholder="password" title="enter your password.">
+                                              <label for="border"><h4>Entry Border Point</h4></label>
+                                              <input type="text" class="form-control" name="border" id="border" value="{{ patient_detail.border_point }}" readonly>
                                           </div>
                                       </div>
                                       <div class="form-group">
 
                                           <div class="col-xs-6">
-                                            <label for="password2"><h4>Vehicle Registration</h4></label>
-                                              <input type="password" class="form-control" name="password2" id="password2" placeholder="password2" title="enter your password2.">
+                                            <label for="v_reg"><h4>Vehicle Registration</h4></label>
+                                              <input type="text" class="form-control" name="v_reg" id="v_reg" value="{{ patient_detail.vehicle_registration }}" readonly>
                                           </div>
+                                      </div>
+                                          <div class="form-group">
+                                           <div class="col-xs-12">
+                                                <br>
+                                               <a href="#" class="btn btn-primary btn-lg btn-success pull-right" role="button" id="edit" onclick="editInputField()"><i class="glyphicon glyphicon-edit"></i> Edit</a>
+                                                <button class="btn btn-lg btn-success pull-right hide" type="submit" id="save"><i class="glyphicon glyphicon-floppy-saved" ></i> Save</button>
+                                            </div>
                                       </div>
                                       <div class="form-group">
                                            <div class="col-xs-12">
                                                 <br>
                                             </div>
                                       </div>
+                                      {% endfor %}
                                 </form>
-
                               <hr>
-
                              </div><!--/tab-pane-->
                              <div class="tab-pane" id="test">
-
-{#                               <h2></h2>#}
-
                                <hr>
                                   <form class="form" action="##" method="post" id="registrationForm">
                                       <div class="form-group">
-
                                           <div class="col-xs-6">
                                               <label for="covid_test"><h4>Tested for COVID-19 ?</h4></label>
                                               <select class="form-control" id="covid_test" name="covid_test" required>
@@ -164,35 +172,30 @@
                                           </div>
                                       </div>
                                       <div class="form-group">
-
                                           <div class="col-xs-6">
                                               <label for="reason_not_taken"><h4>if NOT taken, state reason</h4></label>
                                               <input type="text" class="form-control" name="reason_not_taken" id="reason_not_taken" placeholder="Enter Reasons" title="enter reasons if any.">
                                           </div>
                                       </div>
-
                                       <div class="form-group">
-
                                           <div class="col-xs-6">
-                                              <label for="specimen_type"><h4>Specimen Type</h4></label>
-                                              <input type="text" class="form-control" id="specimen_type" name="specimen_type" title="enter a lspecimen">
-{#                                                  <label class="checkbox-inline col-xs-3">#}
-{#                                                     <input type="checkbox" value="">Option 1#}
-{#                                                  </label>#}
-{#                                                  <label class="checkbox-inline col-xs-3">#}
-{#                                                    <input type="checkbox" value="">Option 2#}
-{#                                                  </label>#}
+                                            <label for="specimen_type"><h4>Speciment Type</h4></label>
+                                             <select id="specimen_type" name="specimen_type[]" multiple class="form-group" >
+                                              <option value="1">NP Swab</option>
+                                              <option value="2">OP Swab</option>
+                                              <option value="3">Serum</option>
+                                              <option value="4">Sputum</option>
+                                              <option value="5">Tracheal Aspirate</option>
+                                             </select>
                                           </div>
                                       </div>
                                       <div class="form-group">
-
                                           <div class="col-xs-6">
                                               <label for="other_specimen"><h4>Other specimen type</h4></label>
                                               <input type="text" class="form-control" id="other_specimen" name="other_specimen" title="enter other specimen type">
                                           </div>
                                       </div>
                                       <div class="form-group">
-
                                           <div class="col-xs-6">
                                               <label for="respiratory_illness"><h4>Any viral respiratory illness ?</h4></label>
                                               <select class="form-control" id="respiratory_illness" name="respiratory_illness" required>
@@ -203,14 +206,12 @@
                                           </div>
                                       </div>
                                       <div class="form-group">
-
                                           <div class="col-xs-6">
                                             <label for="respiratory_illness_results"><h4>If Yes, specify results</h4></label>
                                               <input type="text" class="form-control" name="respiratory_illness_results" id="respiratory_illness_results" >
                                           </div>
                                       </div>
                                       <div class="form-group">
-
                                           <div class="col-xs-6">
                                               <label for="date_specimen_taken_lab"><h4>Date specimen taken lab</h4></label>
                                               <input class="form-control" type="date" value="{{ day }}" id="date_specimen_taken_lab" name="date_specimen_taken_lab">
@@ -219,7 +220,7 @@
                                       <div class="form-group">
                                            <div class="col-xs-12">
                                                 <br>
-                                                <button class="btn btn-lg btn-success pull-right" type="submit"><i class="glyphicon glyphicon-ok-sign"></i> Save</button>
+                                                <button class="btn btn-lg btn-success pull-right" type="submit"><i class="glyphicon glyphicon-floppy-saved"></i> Save</button>
                                                 <!--<button class="btn btn-lg" type="reset"><i class="glyphicon glyphicon-repeat"></i> Reset</button>-->
                                             </div>
                                       </div>
@@ -260,8 +261,109 @@
                                             </tbody>
                                         </table>
                                     </div>
-                                </div>
-                              </div>
+                                  </div>
+                             </div>
+                             <div class="tab-pane" id="attestation">
+                                  <hr>
+                                  <div class="panel panel-default table-responsive">
+        							<div class="panel-heading">
+        								Laboratory Results
+{#        								<span class="label label-info pull-right" id="totalspan">{{quarantine_data_count}} Number of tests </span>#}
+        							</div>
+        							<div class="invoice-box">
+                                        <table cellpadding="0" cellspacing="0">
+                                            <tr class="top">
+                                                <td colspan="2">
+                                                    <table>
+                                                        <tr>
+                                                            <td class="title" align="center">
+                                                                <img src="/static/images/emblem.png" style="width:40%; max-width:100px;">
+                                                                <br>Ministry of Health <br> COVID-19 TEST RESULTS
+                                                            </td>
+                                                        </tr>
+                                                    </table>
+                                                </td>
+                                            </tr>
+                                            <tr class="information">
+                                                <td colspan="2">
+                                                    <table>
+                                                        <tr>
+                                                            <td>Facility: Malaba POE</td>
+                                                            <td>Testing Lab: KEMRI,Nairobi HIV Lab</td>
+                                                        </tr>
+                                                    </table>
+                                                </td>
+                                            </tr>
+                                            <tr class="heading">
+                                                <td>Patient Data</td>
+                                                <td>Details</td>
+                                            </tr>
+                                            <tr class="item">
+                                                <td>Unique Case Identifier</td>
+                                                <td>BG-KLM-009/98</td>
+                                            </tr>
+                                            <tr class="item">
+                                                <td>DOB (Years)</td>
+                                                <td>45 Years</td>
+                                            </tr>
+                                            <tr class="item">
+                                                <td>Gender</td>
+                                                <td>Male</td>
+                                            </tr>
+                                            <tr class="item">
+                                                <td>Date Sample Collected</td>
+                                                <td>25-May-2020</td>
+                                            </tr>
+                                            <tr class="item">
+                                                <td>Date Sample Received</td>
+                                                <td>28-May-2020</td>
+                                            </tr>
+                                            <tr class="item">
+                                                <td>Date Test Performed</td>
+                                                <td>25-May-2020</td>
+                                            </tr>
+                                            <tr class="item">
+                                                <td>Helath Status</td>
+                                                <td>Stable</td>
+                                            </tr>
+                                            <tr class="heading">
+                                                <td>Facility Tester</td>
+                                                <td>Details</td>
+                                            </tr>
+                                            <tr class="item">
+                                                <td>Name of staff</td>
+                                                <td>Evelyne Walela</td>
+                                            </tr>
+                                            <tr class="item">
+                                                <td>Sample Type</td>
+                                                <td>Sputum</td>
+                                            </tr>
+                                            <tr class="item">
+                                                <td>Date Received</td>
+                                                <td>30-05-2020</td>
+                                            </tr>
+                                            <tr class="item">
+                                                <td>Results Received by</td>
+                                                <td>Evelyne Walela</td>
+                                            </tr>
+                                            <tr class="item last">
+                                                <td>Date dispatched</td>
+                                                <td>30-05-2020</td>
+                                            </tr>
+                                            <tr class="total">
+                                                <td>Lab Results</td>
+                                                <td>Negative</td>
+                                            </tr>
+                                            <tr>
+                                                <td></td>
+                                                <td>
+                                                    <button class="btn btn-lg btn-success pull-right" type="submit"><i class="glyphicon glyphicon-print"></i> Print Result</button>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </div>
+                                  </div>
+                             </div>
 
                               </div><!--/tab-pane-->
                           </div><!--/tab-content-->
@@ -279,8 +381,17 @@
 {% block script %}
    <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-multiselect/0.9.15/js/bootstrap-multiselect.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-multiselect/0.9.15/js/bootstrap-multiselect.min.js"></script>
   <script>
     $(document).ready(function() {
+
+        $('#specimen_type').multiselect({
+          nonSelectedText: 'Select Specimen Type',
+          enableFiltering: true,
+          enableCaseInsensitiveFiltering: true,
+          buttonWidth:'400px'
+         });
 
         var readURL = function(input) {
             if (input.files && input.files[0]) {
@@ -300,6 +411,18 @@
         });
     });
 
+
+    function editInputField(){
+       document.getElementById("first_name").readOnly = false;
+        document.getElementById("last_name").readOnly = false;
+        document.getElementById("phone").readOnly = false;
+        document.getElementById("passport").readOnly = false;
+        document.getElementById("v_reg").readOnly = false;
+
+        document.getElementById('save').classList.add('show');
+        document.getElementById('edit').classList.add('hide');
+
+    }
 
   </script>
 {% endblock %}
