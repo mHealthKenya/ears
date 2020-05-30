@@ -752,18 +752,17 @@ class truck_quarantine_lab(models.Model):
     specimen_taken = models.BooleanField(default=False)
     reason_speciment_not_taken = models.CharField(max_length=255, blank=True)
     date_specimen_collected = models.DateTimeField(default=datetime.now())
-    specimen_type = models.ForeignKey(covid_sample_types, on_delete=models.DO_NOTHING, related_name='lab_specimen_type')
+    specimen_type = models.ForeignKey(covid_sample_types, on_delete=models.DO_NOTHING, related_name='lab_specimen_type', default=1)
     other_specimen_type = models.CharField(max_length=50, blank=True)
     viral_respiratory_illness = models.BooleanField(default=False)
     respiratory_illness_results = models.CharField(max_length=50, blank=True)
     date_specimen_taken_lab = models.DateTimeField(default=datetime.now())
-    name_of_lab = models.ForeignKey(testing_labs, on_delete=models.DO_NOTHING, related_name='lab_name')
-    assay_used = models.CharField(max_length=50, blank=True)
-    sequencing_done = models.CharField(max_length=50, blank=True)
-    lab_results = models.ForeignKey(covid_results_classifications, on_delete=models.DO_NOTHING, related_name='lab_results')
+    lab = models.ForeignKey(testing_labs, on_delete=models.DO_NOTHING, related_name='lab_name', default=1)
+    lab_results = models.ForeignKey(covid_results_classifications, on_delete=models.DO_NOTHING, related_name='lab_results', default=4)
     date_lab_confirmation = models.DateTimeField(default=datetime.now())
-    source = models.CharField(max_length=50, blank=True)
-    processed = models.IntegerField(blank=True)
+    processed = models.IntegerField(blank=True, default=0)
+    received = models.IntegerField(null=True)
+    lab_sample_id = models.IntegerField(null=True)
     created_at = models.DateTimeField(default=datetime.now())
     updated_at = models.DateTimeField(default=datetime.now())
     created_by = models.ForeignKey(User, on_delete=models.DO_NOTHING, related_name='truck_lab_updated_by')
@@ -771,6 +770,7 @@ class truck_quarantine_lab(models.Model):
 
     def __str__(self):
         return self.patient_contacts.first_name + ' - ' + self.specimen_type.name
+
 
 class watcher_team_leads(models.Model):
     team_lead=models.ForeignKey(contact, on_delete=models.CASCADE, blank=False)

@@ -419,7 +419,7 @@
                                 <td>{{ lab.date_specimen_collected|date:'d-m-Y' }}</td>
                                 <td>{{ lab.specimen_type }}</td>
                                 <td>{{ lab.date_specimen_taken_lab|date:'d-m-Y' }}</td>
-                                <td>{{ lab.name_of_lab }}</td>
+                                <td>{{ lab.lab.name }}</td>
                                 <td>{{ lab.lab_results }}</td>
                                 <td>{{ lab.date_lab_confirmation|date:'d-m-Y' }}</td>
                               </tr>
@@ -474,7 +474,7 @@
 										<table>
 											<tr>
 												<td>Facility: Malaba POE</td>
-												<td>{{ lab.name_of_lab }}</td>
+												<td>{{ lab.lab.name }}</td>
 											</tr>
 										</table>
 									</td>
@@ -602,7 +602,7 @@
                                                     ID/Passport N0._____<i><b>{{ lab.patient_contacts.passport_number }}</b></i>_____working at (specify
                                                     exact place of work)_________________________________ has been
                                                     tested and found negative for COVID-19 following laboratory tests conducted
-                                                    on _________/__________ 2020 at the ____<i><b>{{ lab.name_of_lab }}</b></i>___
+                                                    on ___<i><b>{{ lab.date_lab_confirmation|date:'d-m-Y' }}</b></i>____ at the ____<i><b>{{ lab.lab.name }}</b></i>___
                                                     (indicate laboratory facility)
                                                     This attestation is issued in accordance with Public Health Act Cap 242 Laws of Kenya
                                                     and the applicable Rules and Regulations for Prevention and Suppression of Infectious

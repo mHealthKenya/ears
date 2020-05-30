@@ -2315,8 +2315,8 @@ def truck_driver_lab_test(request):
         save_lab = truck_quarantine_lab.objects.create(patient_contacts=contact_object, test_sample_uuid=lab_identifier, covid_test_done=covid_test,
                                                        specimen_taken=speci_taken, reason_speciment_not_taken=sample_not_taken, date_specimen_collected=date_collected,
                                                        specimen_type=samp_typesObjects, other_specimen_type=other_specimen, viral_respiratory_illness=respiratory_illness,
-                                                       respiratory_illness_results=respiratory_illness_results, date_specimen_taken_lab=date_taken_lab, name_of_lab=labsObjects,
-                                                       assay_used="", sequencing_done="", lab_results=lab_res_typesObjects, date_lab_confirmation=current_date, source="", created_at=current_date,
+                                                       respiratory_illness_results=respiratory_illness_results, date_specimen_taken_lab=date_taken_lab, lab=labsObjects,
+                                                       lab_results=lab_res_typesObjects, date_lab_confirmation=current_date, created_at=current_date,
                                                        updated_at=current_date, created_by=userObject, updated_by=userObject, processed=0)
 
         if save_lab:
