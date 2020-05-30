@@ -45,25 +45,26 @@
         							<table class="table table-hover" id="quarantine_report">
         								<thead class="thead-dark">
                           <tr>
-                            <th>Last Name</th>
+                            <th>Last Names</th>
                             <th>First Name</th>
                             <th>Age</th>
                             <th>Gender</th>
-                            <th>Contact</th>
+                            <th>Mobile</th>
                             <th>Passport No</th>
                             <th>Nationality</th>
                             <th>Origin Country</th>
-                            <th>Weighbridge Site</th>
+{#                            <th>Weighbridge Site</th>#}
                             <th>date of contact</th>
                             <th>Registered by</th>
-                            <th>Company Details</th>
-                            <th>Acommodation</th>
+{#                            <th>Company Details</th>#}
+{#                            <th>Acommodation</th>#}
                             <th>Map View</th>
+                            <th>View Profile</th>
                             <!-- <th>Edit</th> -->
                           </tr>
                           </thead>
                           <tbody>
-                          {% for q_data, hotel_details in all_data %}
+                          {% for q_data, truck_cont_details in all_data %}
                           <tr>
                             <td>{{ q_data.last_name }}</td>
                             <td>{{ q_data.first_name }}</td>
@@ -73,46 +74,45 @@
                             <td>{{ q_data.passport_number }}</td>
                             <td>{{ q_data.nationality }}</td>
                             <td>{{ q_data.origin_country }}</td>
-                            <td>{{ q_data.quarantine_site.site_name }}</td>
-                            <!-- <td>{{ hotel_details.date_check_in }}</td> -->
+{#                            <td>{{ truck_cont_details.weighbridge_facility.weighbridge_name }}</td>#}
                             <td>{{ q_data.date_of_contact }}</td>
-                            <td>{{ q_data.created_by.username }}</td>
-                            <td>
-                              <button type="button" id="company_view" class="btn btn-info btn-xs company_view"
-                                data-toggle="modal" data-target="#view_company_modal"
-                                data-id="{{ hotel_details.pk }}"
-                                data-company_name="{{ hotel_details.company_name }}"
-                                data-company_phone="{{ hotel_details.company_phone }}"
-                                data-company_address="{{ hotel_details.company_physical_address}}"
-                                data-company_street="{{ hotel_details.company_street }}"
-                                data-company_building="{{ hotel_details.company_building }}"
-                                data-vehicle_registration="{{ hotel_details.vehicle_registration }}"
-                                data-village="{{ hotel_details.village }}"
-                                data-street="{{ hotel_details.street }}"
-                                title="Company">
-                                <i class="fa fa-industry">
-                                </i>
-                            </button>
-                            </td>
-                            <td>
-                              <button type="button" id="hotel_view" class="btn btn-info btn-xs hotel_view"
-                                data-toggle="modal" data-target="#view_hotel_modal"
-                                data-id="{{ hotel_details.pk }}"
-                                data-hotel="{{ hotel_details.hotel }}"
-                                data-hotel_phone="{{ hotel_details.hotel_phone }}"
-                                data-hotel_town="{{ hotel_details.hotel_town}}"
-                                data-date_check_in="{{ hotel_details.date_check_in }}"
-                                data-date_check_out="{{ hotel_details.date_check_out }}"
-                                data-cough="{{ hotel_details.cough }}"
-                                data-breathing_difficulty="{{ hotel_details.breathing_difficulty }}"
-                                data-fever="{{ hotel_details.fever }}"
-                                data-sample_taken="{{ hotel_details.sample_taken }}"
-                                data-action_taken="{{ hotel_details.action_taken }}"
-                                title="Accomodation">
-                                <i class="fa fa-hotel">
-                                </i>
-                            </button>
-                            </td>
+                            <td>{{ q_data.created_by }}</td>
+{#                            <td>#}
+{#                              <button type="button" id="company_view" class="btn btn-info btn-xs company_view"#}
+{#                                data-toggle="modal" data-target="#view_company_modal"#}
+{#                                data-id="{{ q_data.pk }}"#}
+{#                                data-company_name="{{ q_data.company_name }}"#}
+{#                                data-company_phone="{{ q_data.company_phone }}"#}
+{#                                data-company_address="{{ q_data.company_physical_address}}"#}
+{#                                data-company_street="{{ q_data.company_street }}"#}
+{#                                data-company_building="{{ q_data.company_building }}"#}
+{#                                data-vehicle_registration="{{ q_data.vehicle_registration }}"#}
+{#                                data-village="{{ q_data.village }}"#}
+{#                                data-street="{{ q_data.street }}"#}
+{#                                title="Company">#}
+{#                                <i class="fa fa-industry">#}
+{#                                </i>#}
+{#                            </button>#}
+{#                            </td>#}
+{#                            <td>#}
+{#                              <button type="button" id="hotel_view" class="btn btn-info btn-xs hotel_view"#}
+{#                                data-toggle="modal" data-target="#view_hotel_modal"#}
+{#                                data-id="{{ q_data.pk }}"#}
+{#                                data-hotel="{{ q_data.hotel }}"#}
+{#                                data-hotel_phone="{{ q_data.hotel_phone }}"#}
+{#                                data-hotel_town="{{ q_data.hotel_town}}"#}
+{#                                data-date_check_in="{{ q_data.date_check_in }}"#}
+{#                                data-date_check_out="{{ q_data.date_check_out }}"#}
+{#                                data-cough="{{ q_data.cough }}"#}
+{#                                data-breathing_difficulty="{{ q_data.breathing_difficulty }}"#}
+{#                                data-fever="{{ q_data.fever }}"#}
+{#                                data-sample_taken="{{ q_data.sample_taken }}"#}
+{#                                data-action_taken="{{ q_data.action_taken }}"#}
+{#                                title="Accomodation">#}
+{#                                <i class="fa fa-hotel">#}
+{#                                </i>#}
+{#                            </button>#}
+{#                            </td>#}
                             <td>
                              <button type="button" id="map_view" class="btn btn-info btn-sm pull-left map_view"
                                data-toggle="modal" data-target="#mapViewModal"
@@ -125,21 +125,25 @@
                                </i>
                              </button>
                            </td>
+                           <td>
+                               <a href="/truck_driver_profile/{{q_data.pk}}" class="btn btn-info btn-sm pull-left" title="View Profile"><i class="fa fa-eye"></i></a>
+                           </td>
+{#                           <td><a href="/test_profile/{{q_data.pk}}"><i class="btn btn-info btn-sm pull-left" aria-hidden="true" role="button" title="View Profile"></i></a>#}
                            <!-- <td>
                              <button type="button" class="btn btn-primary btn-xs edit_button"
                                data-toggle="modal" data-target="#edit_quarantine_modal"
-                               data-id="{{ follow.pk }}"
-                               data-last_name="{{ follow.last_name }}"
-                               data-first_name="{{ follow.first_name }}"
-                               data-phone_number="{{ follow.phone_number }}"
-                               data-nationality="{{ follow.nationality }}"
-                               data-origin_country="{{ follow.origin_country }}"
-                               data-place_of_diagnosis="{{ follow.place_of_diagnosis }}"
-                               data-quarantine_site="{{ follow.quarantine_site.site_name }}"
-                               data-nok="{{ follow.nok }}"
-                               data-nok_phone_num="{{ follow.nok_phone_num }}"
-                               data-cormobidity="{{ follow.cormobidity }}"
-                               data-drugs="{{ follow.drugs }}"
+                               data-id="{{ q_data.pk }}"
+                               data-last_name="{{ q_data.last_name }}"
+                               data-first_name="{{ q_data.first_name }}"
+                               data-phone_number="{{ q_data.phone_number }}"
+                               data-nationality="{{ q_data.nationality }}"
+                               data-origin_country="{{ q_data.origin_country }}"
+                               data-place_of_diagnosis="{{ q_data.place_of_diagnosis }}"
+                               data-quarantine_site="{{ q_data.quarantine_site.site_name }}"
+                               data-nok="{{ q_data.nok }}"
+                               data-nok_phone_num="{{ q_data.nok_phone_num }}"
+                               data-cormobidity="{{ q_data.cormobidity }}"
+                               data-drugs="{{ q_data.drugs }}"
                                title="Edit">
                                <i class="fa fa-edit">
                                </i>

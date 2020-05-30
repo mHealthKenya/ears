@@ -43,6 +43,11 @@
 
     <!-- Bootstrap JavaScript -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.0.0-alpha/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-multiselect/0.9.15/js/bootstrap-multiselect.js"></script>
+
+{#    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-3-typeahead/4.0.2/bootstrap3-typeahead.min.js"></script>#}
+{#    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-multiselect/0.9.13/js/bootstrap-multiselect.js"></script>#}
+{#    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-multiselect/0.9.15/css/bootstrap-multiselect.css" rel="stylesheet">#}
 
     <script src="/static/js/jquery.multi-select.js"></script>
 
@@ -162,15 +167,17 @@
                   POINTS OF ENTRY</a>
               <ul class="nav-pills nav-stacked" style="list-style-type:none;">
                   <li><a href="/truck_driver_register"><span class="fa-stack fa-lg pull-left"><i
-                          class="fa fa-phone fa-stack-1x "></i></span>Truck Driver Register</a></li>
+                          class="fa fa-address-card fa-stack-1x "></i></span>Truck Driver Register</a></li>
                   <li><a href="/truck_quarantine_list"><span class="fa-stack fa-lg pull-left"><i
-                          class="fa fa-code-fork fa-stack-1x "></i></span>Drivers Quarantine List</a></li>
+                          class="fa fa-list fa-stack-1x "></i></span>Drivers Quarantine List</a></li>
                   <!-- <li><a href="/accomodation_list"><span class="fa-stack fa-lg pull-left"><i
                           class="fa fa-code-fork fa-stack-1x "></i></span>Accomodation Details</a></li> -->
                   <li><a href="/truck_follow_up"><span class="fa-stack fa-lg pull-left"><i
-                          class="fa fa-child fa-stack-1x "></i></span>Quarantine Follow Up</a></li>
+                          class="fa fa-handshake-o fa-stack-1x "></i></span>Quarantine Follow Up</a></li>
+                  <li><a href="/truck_ongoing_quarantine"><span class="fa-stack fa-lg pull-left"><i
+                      class="fa fa-tasks fa-stack-1x "></i></span>Ongoing Quarantine</a></li>
                   <li><a href="/truck_complete_quarantine"><span class="fa-stack fa-lg pull-left"><i
-                      class="fa fa-archive fa-stack-1x "></i></span>Completed Quarantine</a></li>
+                      class="fa fa-window-close fa-stack-1x "></i></span>Completed Quarantine</a></li>
               </ul>
           </li>
           <li>
@@ -427,6 +434,7 @@
 <script src="/static/jsPDF-1.3.2/main.js"></script> -->
 <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.5.3/jspdf.debug.js" integrity="sha384-NaWTHo/8YCBYJ59830LTz/P4aQZK1sS0SneOgAvhsIl3zBu8r9RevNg5lHCHAuQ/" crossorigin="anonymous"></script> -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.3.2/jspdf.min.js"></script>
+<link rel='stylesheet' href='/static/css/receipt.css'/>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/0.4.1/html2canvas.min.js" integrity="sha256-c3RzsUWg+y2XljunEQS0LqWdQ04X1D3j22fd/8JCAKw=" crossorigin="anonymous"></script>
 
 {% block script %}

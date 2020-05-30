@@ -29,6 +29,8 @@ import time
 import json
 from itertools import chain
 from operator import attrgetter
+from time import gmtime, strftime
+import uuid
 
 # Create your views here.
 contacts = contact_type.objects.all()
@@ -1969,10 +1971,18 @@ def quarantine_register(request):
 
         return render(request, 'veoc/quarantine_registration_form.html', data)
 
-def test_profile(request, profileid):
+@login_required
+def truck_driver_profile(request, profileid):
+
+    # print(profileid)
+
+    patient_contact_object = truck_quarantine_contacts.objects.filter(id = profileid)
+
+    lab_res = truck_quarantine_lab.objects.filter(patient_contacts = profileid)
+    lab_res_count = truck_quarantine_lab.objects.filter(patient_contacts = profileid).count()
 
     # lab_data = truck_quarantine_lab.objects.get(pk=profileid).annotate(
-    patient_details = truck_quarantine_contacts.objects.filter(id=profileid).annotate(
+    patient_details = truck_quarantine_contacts.objects.filter(patient_contacts = profileid).annotate(
             first_name=F("patient_contacts__first_name"),
             last_name=F("patient_contacts__last_name"),
             sex=F("patient_contacts__sex"),
@@ -1987,9 +1997,27 @@ def test_profile(request, profileid):
             created_by=F("patient_contacts__created_by_id__username"),
         )
 
-    print(patient_details)
+    # print(patient_details)
 
-    lab_data = truck_quarantine_lab.objects.all().annotate(
+    follow_up_details = quarantine_follow_up.objects.filter(patient_contacts = profileid).order_by('follow_up_day').annotate(
+            first_name=F("patient_contacts__first_name"),
+            last_name=F("patient_contacts__last_name"),
+            sex=F("patient_contacts__sex"),
+            age=F("patient_contacts__dob"),
+            passport_number=F("patient_contacts__passport_number"),
+            phone_number=F("patient_contacts__phone_number"),
+            nationality=F("patient_contacts__nationality"),
+            origin_country=F("patient_contacts__origin_country"),
+            quarantine_site=F("patient_contacts__quarantine_site_id__site_name"),
+            source=F("patient_contacts__source"),
+            date_of_contact=F("patient_contacts__date_of_contact"),
+            created_by=F("patient_contacts__created_by_id__username"),
+        )
+
+    # print(follow_up_details)
+    follow_up_details_count = quarantine_follow_up.objects.filter(patient_contacts = profileid).order_by('follow_up_day').count()
+
+    lab_data = truck_quarantine_lab.objects.filter(patient_contacts = profileid).annotate(
             first_name=F("patient_contacts__first_name"),
             last_name=F("patient_contacts__last_name"),
             sex=F("patient_contacts__sex"),
@@ -2002,11 +2030,35 @@ def test_profile(request, profileid):
             # created_by=F("patient_contacts__created_by_id__username"),
         )
 
-    print(lab_data)
+    # print(lab_data)
 
-    data = {'lab_data': lab_data, 'patient_details':patient_details}
+    labs = testing_labs.objects.all()
+    lab_res_types = covid_results_classifications.objects.all().order_by('id')
+    samp_types = covid_sample_types.objects.all().order_by('id')
+    day = time.strftime("%Y-%m-%d")
+
+    data = {'patient_contact_object': patient_contact_object, 'lab_data': lab_data, 'patient_details':patient_details, 'lab_res': lab_res,
+            'lab_res_count':lab_res_count,  'labs': labs, 'lab_res_types':lab_res_types, 'samp_types':samp_types, 'day':day,
+            'follow_up_details':follow_up_details, 'follow_up_details_count':follow_up_details_count}
 
     return render(request, 'veoc/truck_driver_profile.html', data)
+
+@login_required
+def lab_certificate(request):
+
+    if request.method == 'POST':
+        lab_id = request.POST.get('lab_id','')
+        print(lab_id)
+
+        cert_data = truck_quarantine_lab.objects.get(pk=lab_id)
+        print(cert_data)
+
+        serialized=serialize('json',cert_data)
+        obj_list=json.loads(serialized)
+
+        return HttpResponse(json.dumps(obj_list),content_type="application/json")
+
+        # return JsonResponse({'success':cert_data})
 
 @login_required
 def truck_driver_register(request):
@@ -2219,6 +2271,64 @@ def truck_driver_register(request):
         data = {'country':cntry,'county':county, 'day':day, 'weigh_site':weigh_site, 'border_points':b_points, 'language':language}
 
         return render(request, 'veoc/truck_driver_registration.html', data)
+
+@login_required
+def truck_driver_lab_test(request):
+
+    if request.method == 'POST':
+        patient_contact = request.POST.get('id','')
+        covid_test = request.POST.get('covid_test','')
+        sample_not_taken = request.POST.get('sample_not_taken', '')
+        date_collected = request.POST.get('date_specimen_collected','')
+        speci_taken = request.POST.get('specimen_taken','')
+        speci_type = request.POST.get('specimen_type','')
+        other_specimen = request.POST.get('other_specimen','')
+        respiratory_illness = request.POST.get('respiratory_illness','')
+        respiratory_illness_results = request.POST.get('respiratory_illness_results','')
+        date_taken_lab = request.POST.get('date_specimen_taken_lab','')
+        lab_name = request.POST.get('lab_name','')
+
+        #get todays date
+        current_date = strftime("%Y-%m-%d %H:%M:%S", gmtime())
+        # print(current_date)
+
+        #get current user
+        current_user = request.user
+        userObject = User.objects.get(pk = current_user.id)
+
+        patient_contact_object = truck_quarantine_contacts.objects.filter(id = patient_contact)
+        labsObjects = testing_labs.objects.get(pk=lab_name)
+        lab_res_typesObjects = covid_results_classifications.objects.get(pk=4)
+        samp_typesObjects = covid_sample_types.objects.get(pk=speci_type)
+        p_contacts = ''
+
+        for p_cont in patient_contact_object:
+            p_contacts = p_cont.patient_contacts.id
+
+        # print(p_contacts)
+        contact_object = quarantine_contacts.objects.get(pk = p_contacts)
+
+        lab_identifier = uuid.uuid4().hex
+        # print(lab_identifier)
+
+        #save_lab_details
+        save_lab = truck_quarantine_lab.objects.create(patient_contacts=contact_object, test_sample_uuid=lab_identifier, covid_test_done=covid_test,
+                                                       specimen_taken=speci_taken, reason_speciment_not_taken=sample_not_taken, date_specimen_collected=date_collected,
+                                                       specimen_type=samp_typesObjects, other_specimen_type=other_specimen, viral_respiratory_illness=respiratory_illness,
+                                                       respiratory_illness_results=respiratory_illness_results, date_specimen_taken_lab=date_taken_lab, name_of_lab=labsObjects,
+                                                       assay_used="", sequencing_done="", lab_results=lab_res_typesObjects, date_lab_confirmation=current_date, source="", created_at=current_date,
+                                                       updated_at=current_date, created_by=userObject, updated_by=userObject, processed=0)
+
+        if save_lab:
+            print("Saving success")
+            return JsonResponse({'success':True})
+
+        else:
+            print("Saving error")
+            return JsonResponse({'error':"error"})
+
+
+    return HttpResponse("Hello from Laboratory!")
 
 @login_required
 def disease_view(request, id = None):
@@ -2687,22 +2797,15 @@ def truck_quarantine_list(request):
     q_data_count = quarantine_contacts.objects.all().filter(source = 'Truck Registration').count()
     quar_sites = weighbridge_sites.objects.all().order_by('weighbridge_name')
 
-    all_data = truck_quarantine_contacts.objects.all().annotate(
-            first_name=F("patient_contacts__first_name"),
-            last_name=F("patient_contacts__last_name"),
-            sex=F("patient_contacts__sex"),
-            age=F("patient_contacts__dob"),
-            passport_number=F("patient_contacts__passport_number"),
-            phone_number=F("patient_contacts__phone_number"),
-            nationality=F("patient_contacts__nationality"),
-            origin_country=F("patient_contacts__origin_country"),
-            date_of_contact=F("patient_contacts__date_of_contact"),
-            created_by=F("patient_contacts__created_by_id__username"),
-        )
+    all_data = quarantine_contacts.objects.all().filter(source = 'Truck Registration')
+    truck_cont_details = []
+    for d in all_data:
+        t_details = truck_quarantine_contacts.objects.filter(patient_contacts=d.id)
+        truck_cont_details.append(t_details)
 
-    print(all_data)
+    my_list_data = zip(all_data, truck_cont_details)
 
-    data = {'quarantine_data_count': q_data_count, 'weigh_name':quar_sites, 'all_data' :all_data}
+    data = {'quarantine_data_count': q_data_count, 'weigh_name':quar_sites, 'all_data' :my_list_data}
 
     return render(request, 'veoc/truck_quarantine_list.html', data)
 
@@ -2728,7 +2831,6 @@ def truck_q_list(request):
 
     return render(request, 'veoc/truck_quarantine_list.html', data)
 
-
 def f_up(request):
     qrnt_contacts = quarantine_contacts.objects.all()
 
@@ -2746,12 +2848,12 @@ def f_up(request):
         follow_up_array.add('gender', qrt_cnt.sex)
         follow_up_array.add('origin_country', qrt_cnt.origin_country)
         follow_up_array.add('date_begin_quarantine', qrt_cnt.date_of_contact)
-        follow_up_array.add('quarantine_site', qrt_cnt.qua_site.site_name)
+        follow_up_array.add('quarantine_site', qrt_cnt.quarantine_site.site_name)
 
         for fllw in follow:
             print(fllw.follow_up_day)
             print(fllw.body_temperature)
-            client_array[qrt_cnt.patient_contacts] = follow_up_array
+            client_array[qrt_cnt.id] = follow_up_array
 
             final_array.append(client_array)
 
@@ -3059,13 +3161,23 @@ def complete_quarantine(request):
 
     return render(request, 'veoc/quarantine_complete.html', data)
 
+def truck_ongoing_quarantine(request):
+
+    all_data = quarantine_contacts.objects.all().filter(source = 'Truck Registration').filter(date_of_contact__gte = date.today()- timedelta(days=14))
+    q_data_count = quarantine_contacts.objects.all().filter(source = 'Truck Registration').filter(date_of_contact__gte = date.today()- timedelta(days=14)).count()
+    quar_sites = weighbridge_sites.objects.all().order_by('weighbridge_name')
+
+    data = {'all_data': all_data, 'all_data_count': q_data_count, 'weigh_name':quar_sites}
+
+    return render(request, 'veoc/truck_ongoing_complete.html', data)
+
 def truck_complete_quarantine(request):
 
-    qua_contacts = quarantine_contacts.objects.all().filter(source__contains="Truck Registration")
-    follow_data = quarantine_follow_up.objects.filter(patient_contacts__in=qua_contacts).filter(created_at__lte = date.today()- timedelta(days=14))
-    follow_data_count = quarantine_follow_up.objects.filter(patient_contacts__in=qua_contacts).filter(created_at__lte = date.today()- timedelta(days=14)).count()
+    all_data = quarantine_contacts.objects.all().filter(source = 'Truck Registration').filter(date_of_contact__lte = date.today()- timedelta(days=14))
+    q_data_count = quarantine_contacts.objects.all().filter(source = 'Truck Registration').filter(date_of_contact__lte = date.today()- timedelta(days=14)).count()
+    quar_sites = weighbridge_sites.objects.all().order_by('weighbridge_name')
 
-    data = {'follow_data': follow_data, 'follow_data_count': follow_data_count}
+    data = {'all_data': all_data, 'all_data_count': q_data_count, 'weigh_name':quar_sites}
 
     return render(request, 'veoc/truck_quarantine_complete.html', data)
 

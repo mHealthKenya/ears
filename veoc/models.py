@@ -725,7 +725,25 @@ class truck_quarantine_contacts(models.Model):
     date_check_out = models.DateField(default=date.today)
 
     def __str__(self):
-        return self.patient_contacts.first_name + ' - ' + self.vehicle_registration
+        return self.patient_contacts.first_name + ' - ' + self.vehicle_registration + ' - ' + self.weighbridge_facility.weighbridge_name
+
+class testing_labs(models.Model):
+    name=models.CharField(max_length=200)
+
+    def __str__(self):
+        return self.name
+
+class covid_results_classifications(models.Model):
+    name=models.CharField(max_length=200)
+
+    def __str__(self):
+        return self.name
+
+class covid_sample_types(models.Model):
+    name=models.CharField(max_length=200)
+
+    def __str__(self):
+        return self.name
 
 class truck_quarantine_lab(models.Model):
     patient_contacts = models.ForeignKey(quarantine_contacts, on_delete=models.DO_NOTHING, related_name='truck_lab_contact')
@@ -734,25 +752,25 @@ class truck_quarantine_lab(models.Model):
     specimen_taken = models.BooleanField(default=False)
     reason_speciment_not_taken = models.CharField(max_length=255, blank=True)
     date_specimen_collected = models.DateTimeField(default=datetime.now())
-    specimen_type = models.CharField(max_length=50, blank=True)
+    specimen_type = models.ForeignKey(covid_sample_types, on_delete=models.DO_NOTHING, related_name='lab_specimen_type')
     other_specimen_type = models.CharField(max_length=50, blank=True)
     viral_respiratory_illness = models.BooleanField(default=False)
     respiratory_illness_results = models.CharField(max_length=50, blank=True)
     date_specimen_taken_lab = models.DateTimeField(default=datetime.now())
-    name_of_lab = models.CharField(max_length=50, blank=True)
+    name_of_lab = models.ForeignKey(testing_labs, on_delete=models.DO_NOTHING, related_name='lab_name')
     assay_used = models.CharField(max_length=50, blank=True)
     sequencing_done = models.CharField(max_length=50, blank=True)
-    lab_results = models.CharField(max_length=50, blank=True)
+    lab_results = models.ForeignKey(covid_results_classifications, on_delete=models.DO_NOTHING, related_name='lab_results')
     date_lab_confirmation = models.DateTimeField(default=datetime.now())
     source = models.CharField(max_length=50, blank=True)
+    processed = models.IntegerField(blank=True)
     created_at = models.DateTimeField(default=datetime.now())
     updated_at = models.DateTimeField(default=datetime.now())
-    created_by = models.ForeignKey(User, on_delete=models.CASCADE, related_name='truck_lab_updated_by')
-    updated_by = models.ForeignKey(User, on_delete=models.CASCADE, related_name='truck_lab_created_by')
+    created_by = models.ForeignKey(User, on_delete=models.DO_NOTHING, related_name='truck_lab_updated_by')
+    updated_by = models.ForeignKey(User, on_delete=models.DO_NOTHING, related_name='truck_lab_created_by')
 
     def __str__(self):
-        return self.patient_contacts.first_name + ' - ' + self.specimen_type
-
+        return self.patient_contacts.first_name + ' - ' + self.specimen_type.name
 
 class watcher_team_leads(models.Model):
     team_lead=models.ForeignKey(contact, on_delete=models.CASCADE, blank=False)
