@@ -750,7 +750,7 @@ class truck_quarantine_lab(models.Model):
     test_sample_uuid = models.CharField(max_length=50, blank=True)
     covid_test_done = models.BooleanField(default=False)
     specimen_taken = models.BooleanField(default=False)
-    reason_speciment_not_taken = models.CharField(max_length=255, blank=True)
+    reason_specimen_not_taken = models.CharField(max_length=255, blank=True)
     date_specimen_collected = models.DateTimeField(default=datetime.now())
     specimen_type = models.ForeignKey(covid_sample_types, on_delete=models.DO_NOTHING, related_name='lab_specimen_type', default=1)
     other_specimen_type = models.CharField(max_length=50, blank=True)
