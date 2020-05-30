@@ -3,6 +3,7 @@
   <component name="ChangeListManager">
     <list default="true" id="72072e3c-6f4f-4b4b-8a7f-afe45125924a" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/virtual_eoc/settings.py" afterPath="$PROJECT_DIR$/virtual_eoc/settings.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/veoc/templates/veoc/truck_driver_registration.html" afterPath="$PROJECT_DIR$/veoc/templates/veoc/truck_driver_registration.html" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="virtual_eoc.iws" />
@@ -141,11 +142,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="settings.py" pinned="false" current-in-tab="true">
+      <file leaf-file-name="settings.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/virtual_eoc/settings.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.7814371" vertical-offset="1643" max-vertical-offset="2907">
-              <caret line="112" column="74" selection-start-line="112" selection-start-column="74" selection-end-line="112" selection-end-column="74" />
+            <state vertical-scroll-proportion="-10.44" vertical-offset="1643" max-vertical-offset="2907">
+              <caret line="112" column="50" selection-start-line="112" selection-start-column="46" selection-end-line="112" selection-end-column="50" />
               <folding />
             </state>
           </provider>
@@ -198,8 +199,8 @@
       <file leaf-file-name="truck_driver_profile.html" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/veoc/templates/veoc/truck_driver_profile.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-6.8846154" vertical-offset="3459" max-vertical-offset="5712">
-              <caret line="381" column="73" selection-start-line="381" selection-start-column="73" selection-end-line="381" selection-end-column="73" />
+            <state vertical-scroll-proportion="-16.038462" vertical-offset="3255" max-vertical-offset="5712">
+              <caret line="383" column="38" selection-start-line="383" selection-start-column="38" selection-end-line="383" selection-end-column="38" />
               <folding>
                 <element signature="n#div#0;n#div#0;n#div#1;n#div#1;n#!!top" expanded="false" />
                 <element signature="n#div#1;n#div#0;n#div#1;n#div#1;n#!!top" expanded="false" />
@@ -207,6 +208,18 @@
                 <element signature="n#div#4;n#div#0;n#div#1;n#div#1;n#!!top" expanded="false" />
                 <element signature="n#div#5;n#div#0;n#div#1;n#div#1;n#!!top" expanded="false" />
                 <element signature="n#div#6;n#div#0;n#div#1;n#div#1;n#!!top" expanded="false" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="truck_driver_registration.html" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/veoc/templates/veoc/truck_driver_registration.html">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.83653843" vertical-offset="4937" max-vertical-offset="7990">
+              <caret line="316" column="10" selection-start-line="315" selection-start-column="9" selection-end-line="316" selection-end-column="10" />
+              <folding>
+                <element signature="e#21427#22360#0#HTML" expanded="false" />
               </folding>
             </state>
           </provider>
@@ -234,7 +247,6 @@
         <option value="$PROJECT_DIR$/veoc/templates/veoc/login.html" />
         <option value="$USER_HOME$/Desktop/DHIS/dhis2_script/dhis_script.py" />
         <option value="$USER_HOME$/Desktop/DHIS/dhis_weekly_national_report/dhis_national_script.py" />
-        <option value="$PROJECT_DIR$/veoc/templates/veoc/truck_driver_registration.html" />
         <option value="$PROJECT_DIR$/veoc/static/css/receipt.css" />
         <option value="$PROJECT_DIR$/veoc/templates/veoc/users.html" />
         <option value="$PROJECT_DIR$/veoc/static/css/bootstrap-multiselect.css" />
@@ -250,6 +262,7 @@
         <option value="$PROJECT_DIR$/veoc/views.py" />
         <option value="$PROJECT_DIR$/veoc/models.py" />
         <option value="$PROJECT_DIR$/virtual_eoc/settings.py" />
+        <option value="$PROJECT_DIR$/veoc/templates/veoc/truck_driver_registration.html" />
       </list>
     </option>
   </component>
@@ -686,7 +699,7 @@
       <window_info id="Python Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32970452" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.42528737" sideWeight="0.5" order="11" side_tool="false" content_ui="tabs" />
+      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.15660919" sideWeight="0.5" order="11" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
@@ -1083,14 +1096,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/veoc/templates/veoc/truck_driver_registration.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="105" max-vertical-offset="8296">
-          <caret line="14" column="36" selection-start-line="14" selection-start-column="20" selection-end-line="14" selection-end-column="36" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/veoc/templates/veoc/events_report.html">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="-36.96154" vertical-offset="4802" max-vertical-offset="7038">
@@ -1172,25 +1177,52 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/veoc/templates/veoc/truck_driver_profile.html">
+    <entry file="file://$PROJECT_DIR$/veoc/models.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-6.8846154" vertical-offset="3459" max-vertical-offset="5712">
-          <caret line="381" column="73" selection-start-line="381" selection-start-column="73" selection-end-line="381" selection-end-column="73" />
+        <state vertical-scroll-proportion="-0.68" vertical-offset="7446" max-vertical-offset="9588">
+          <caret line="752" column="19" selection-start-line="752" selection-start-column="19" selection-end-line="752" selection-end-column="19" />
           <folding>
-            <element signature="n#div#0;n#div#0;n#div#1;n#div#1;n#!!top" expanded="false" />
-            <element signature="n#div#1;n#div#0;n#div#1;n#div#1;n#!!top" expanded="false" />
-            <element signature="n#style#0;n#td#3;n#tr#0;n#tbody#0;n#table#0;n#div#1;n#div#0;n#div#2;n#div#0;n#div#1;n#div#1;n#!!top" expanded="true" />
-            <element signature="n#div#4;n#div#0;n#div#1;n#div#1;n#!!top" expanded="false" />
-            <element signature="n#div#5;n#div#0;n#div#1;n#div#1;n#!!top" expanded="false" />
-            <element signature="n#div#6;n#div#0;n#div#1;n#div#1;n#!!top" expanded="false" />
+            <element signature="e#0#28#0" expanded="true" />
+            <element signature="e#8597#10437#0" expanded="false" />
+            <element signature="e#10470#12162#0" expanded="false" />
+            <element signature="e#12197#13870#0" expanded="false" />
+            <element signature="e#13917#14845#0" expanded="false" />
+            <element signature="e#14883#15418#0" expanded="false" />
+            <element signature="e#15459#15608#0" expanded="false" />
+            <element signature="e#15659#15824#0" expanded="false" />
+            <element signature="e#15879#16398#0" expanded="false" />
+            <element signature="e#16452#16601#0" expanded="false" />
+            <element signature="e#16651#17248#0" expanded="false" />
+            <element signature="e#17300#17710#0" expanded="false" />
+            <element signature="e#17762#17911#0" expanded="false" />
+            <element signature="e#17959#18533#0" expanded="false" />
+            <element signature="e#18583#18966#0" expanded="false" />
+            <element signature="e#19021#19527#0" expanded="false" />
+            <element signature="e#19580#19988#0" expanded="false" />
+            <element signature="e#20048#20506#0" expanded="false" />
+            <element signature="e#20559#21434#0" expanded="false" />
+            <element signature="e#22769#23864#0" expanded="false" />
+            <element signature="e#23905#25001#0" expanded="false" />
+            <element signature="e#25040#25486#0" expanded="false" />
+            <element signature="e#25526#26104#0" expanded="false" />
+            <element signature="e#26139#26312#0" expanded="false" />
+            <element signature="e#26347#27583#0" expanded="false" />
+            <element signature="e#32392#33144#0" expanded="false" />
+            <element signature="e#34233#35204#0" expanded="false" />
+            <element signature="e#39509#39990#0" expanded="false" />
+            <element signature="e#40031#40647#0" expanded="false" />
+            <element signature="e#40690#41297#0" expanded="false" />
+            <element signature="e#41344#41995#0" expanded="false" />
+            <element signature="e#42033#42197#0" expanded="false" />
+            <element signature="e#42246#42710#0" expanded="false" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/veoc/templates/veoc/truck_quarantine_list.html">
+    <entry file="file://$PROJECT_DIR$/virtual_eoc/settings.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-15.423077" vertical-offset="551" max-vertical-offset="10659">
-          <caret line="56" column="29" selection-start-line="56" selection-start-column="29" selection-end-line="56" selection-end-column="29" />
+        <state vertical-scroll-proportion="-10.44" vertical-offset="1643" max-vertical-offset="2907">
+          <caret line="112" column="50" selection-start-line="112" selection-start-column="46" selection-end-line="112" selection-end-column="50" />
           <folding />
         </state>
       </provider>
@@ -1278,53 +1310,36 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/veoc/models.py">
+    <entry file="file://$PROJECT_DIR$/veoc/templates/veoc/truck_quarantine_list.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-0.68" vertical-offset="7446" max-vertical-offset="9588">
-          <caret line="752" column="19" selection-start-line="752" selection-start-column="19" selection-end-line="752" selection-end-column="19" />
+        <state vertical-scroll-proportion="-15.423077" vertical-offset="551" max-vertical-offset="10659">
+          <caret line="56" column="29" selection-start-line="56" selection-start-column="29" selection-end-line="56" selection-end-column="29" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/veoc/templates/veoc/truck_driver_profile.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-16.038462" vertical-offset="3255" max-vertical-offset="5712">
+          <caret line="383" column="38" selection-start-line="383" selection-start-column="38" selection-end-line="383" selection-end-column="38" />
           <folding>
-            <element signature="e#0#28#0" expanded="true" />
-            <element signature="e#8597#10437#0" expanded="false" />
-            <element signature="e#10470#12162#0" expanded="false" />
-            <element signature="e#12197#13870#0" expanded="false" />
-            <element signature="e#13917#14845#0" expanded="false" />
-            <element signature="e#14883#15418#0" expanded="false" />
-            <element signature="e#15459#15608#0" expanded="false" />
-            <element signature="e#15659#15824#0" expanded="false" />
-            <element signature="e#15879#16398#0" expanded="false" />
-            <element signature="e#16452#16601#0" expanded="false" />
-            <element signature="e#16651#17248#0" expanded="false" />
-            <element signature="e#17300#17710#0" expanded="false" />
-            <element signature="e#17762#17911#0" expanded="false" />
-            <element signature="e#17959#18533#0" expanded="false" />
-            <element signature="e#18583#18966#0" expanded="false" />
-            <element signature="e#19021#19527#0" expanded="false" />
-            <element signature="e#19580#19988#0" expanded="false" />
-            <element signature="e#20048#20506#0" expanded="false" />
-            <element signature="e#20559#21434#0" expanded="false" />
-            <element signature="e#22769#23864#0" expanded="false" />
-            <element signature="e#23905#25001#0" expanded="false" />
-            <element signature="e#25040#25486#0" expanded="false" />
-            <element signature="e#25526#26104#0" expanded="false" />
-            <element signature="e#26139#26312#0" expanded="false" />
-            <element signature="e#26347#27583#0" expanded="false" />
-            <element signature="e#32392#33144#0" expanded="false" />
-            <element signature="e#34233#35204#0" expanded="false" />
-            <element signature="e#39509#39990#0" expanded="false" />
-            <element signature="e#40031#40647#0" expanded="false" />
-            <element signature="e#40690#41297#0" expanded="false" />
-            <element signature="e#41344#41995#0" expanded="false" />
-            <element signature="e#42033#42197#0" expanded="false" />
-            <element signature="e#42246#42710#0" expanded="false" />
+            <element signature="n#div#0;n#div#0;n#div#1;n#div#1;n#!!top" expanded="false" />
+            <element signature="n#div#1;n#div#0;n#div#1;n#div#1;n#!!top" expanded="false" />
+            <element signature="n#style#0;n#td#3;n#tr#0;n#tbody#0;n#table#0;n#div#1;n#div#0;n#div#2;n#div#0;n#div#1;n#div#1;n#!!top" expanded="true" />
+            <element signature="n#div#4;n#div#0;n#div#1;n#div#1;n#!!top" expanded="false" />
+            <element signature="n#div#5;n#div#0;n#div#1;n#div#1;n#!!top" expanded="false" />
+            <element signature="n#div#6;n#div#0;n#div#1;n#div#1;n#!!top" expanded="false" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/virtual_eoc/settings.py">
+    <entry file="file://$PROJECT_DIR$/veoc/templates/veoc/truck_driver_registration.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.7814371" vertical-offset="1643" max-vertical-offset="2907">
-          <caret line="112" column="74" selection-start-line="112" selection-start-column="74" selection-end-line="112" selection-end-column="74" />
-          <folding />
+        <state vertical-scroll-proportion="0.83653843" vertical-offset="4937" max-vertical-offset="7990">
+          <caret line="316" column="10" selection-start-line="315" selection-start-column="9" selection-end-line="316" selection-end-column="10" />
+          <folding>
+            <element signature="e#21427#22360#0#HTML" expanded="false" />
+          </folding>
         </state>
       </provider>
     </entry>

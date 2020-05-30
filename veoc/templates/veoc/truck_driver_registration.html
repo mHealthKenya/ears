@@ -47,7 +47,7 @@
                        </div>
                        <div class="form-group col-md-4">
                          <label for="callernumber">Date of Birth : *</label>
-                         <input class="form-control" type="date" value="{{ day }}" id="dob" max='2000-13-13' name="dob">
+                         <input class="form-control" type="date" value="{{ day }}" id="dob" max='2000-13-13' name="dob" required="">
                        </div>
                     </div>
                     <div class="form-row" id="country_details_div">
@@ -138,7 +138,7 @@
                       </div>
                        <div class="form-group col-md-6">
                          <label for="datereport">Date of Arrival : *</label>
-                         <input class="form-control" type="date" value="{{ day }}" id="date_of_arrival" max='2000-13-13' name="date_of_arrival">
+                         <input class="form-control" type="date" value="{{ day }}" id="date_of_arrival" max="{{ day }}" name="date_of_arrival">
                        </div>
                      </div>
                       <div class="form-row col-md-12">
@@ -256,11 +256,11 @@
                      <div class="form-row" id="dates_div">
                        <div class="form-group col-md-6">
                          <label for="check_in">Date Check In : </label>
-                         <input class="form-control" type="date" value="{{ day }}" id="date_check_in" max='2000-13-13' name="date_check_in">
+                         <input class="form-control" type="date" value="{{ day }}" id="date_check_in" min='{{ day }}' name="date_check_in">
                        </div>
                        <div class="form-group col-md-6">
                          <label for="check_out">Date Check Out : </label>
-                         <input class="form-control" type="date" value="{{ day }}" id="date_check_out" max='2000-13-13' name="date_check_out">
+                         <input class="form-control" type="date" value="{{ day }}" id="date_check_out" min='{{ day }}' name="date_check_out">
                        </div>
                      </div>
                      <div class="form-row" id="action_div">
@@ -310,6 +310,14 @@
     // document.getElementById("datereported").setAttribute("max", today);
 
     $(document).ready(function(e){
+
+{#        $('#date_of_arrival').attr("max",today);#}
+        $('#dob').attr("max",today);
+{#        $('#date_check_in').attr("min",today);#}
+{#        $('#date_check_out').attr("min",today);#}
+
+
+
       var trucksForm = $(".track_driver_form")
       var call_category = $("#callCategory")
       console.log(call_category);
