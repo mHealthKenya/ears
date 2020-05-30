@@ -110,7 +110,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
         'NAME': os.environ.get('DB_NAME','virtual_eoc'),
         'USER': os.environ.get('DB_USER','postgres'),
-        'PASSWORD': os.environ.get('DB_PASS','r-_<Q_;\\1`9*6B'),
+        'PASSWORD': os.environ.get('DB_PASS','*oA1)=QQM/2yKC*(MT3W8^[Zq6?C'),
         'HOST': 'localhost',
         'PORT': '5432',
     }
