@@ -8,8 +8,8 @@
     <div id="container bootstrap snippet">
         <div id="breadcrumb">
             <ul class="breadcrumb">
-                 <li><i class="fa fa-home"></i><a href="{% url 'veoc:access_dashboard' %}"> Dashboard</a></li>
-                 <li class="inactive"></i><a href="{% url 'veoc:truck_quarantine_list' %}"> Truck Driver Quarantine Cases</a></li>
+                <li><i class="fa fa-home"></i><a href="{% url 'veoc:access_dashboard' %}"> Dashboard</a></li>
+                <li class="inactive"></i><a href="{% url 'veoc:truck_quarantine_list' %}"> Truck Driver Quarantine Cases</a></li>
                 <li class="active"> Truck Driver Profile</li>
             </ul>
         </div><!-- /breadcrumb-->
@@ -30,33 +30,27 @@
                 </h3>
             </div>
         </div>
+    </div>
     <div class="row">
-  		<div class="col-sm-3"><!--left col-->
-
-
-      <div class="text-center">
-        <img src="http://ssl.gstatic.com/accounts/ui/avatar_2x.png" class="avatar img-circle img-thumbnail" alt="avatar">
-
-          {% for patient_detail in patient_details %}
-              <h3>Names: {{ patient_detail.first_name }} {{ patient_detail.last_name }}</h3>
-          {% endfor %}
-
-        <!--<h6>Upload a different photo...</h6>
-        <input type="file" class="text-center center-block file-upload">-->
-      </div>
+        <div class="col-sm-3"><!--left col-->
+            <div class="text-center">
+                <img src="http://ssl.gstatic.com/accounts/ui/avatar_2x.png" class="avatar img-circle img-thumbnail" alt="avatar">
+                {% for patient_detail in patient_contact_object %}
+                    <h3>Names: {{ patient_detail.first_name }} {{ patient_detail.last_name }}</h3>
+                {% endfor %}
+            </div>
             </hr><br>
-            {% for patient_detail in patient_details %}
-          <ul class="list-group">
-			<li class="list-group-item text-right"><span class="pull-left"><strong>Nationality</strong></span> {{ patient_detail.nationality }}</li>
-			<li class="list-group-item text-right"><span class="pull-left"><strong>Gender</strong></span> {{ patient_detail.sex }}</li>
-			<li class="list-group-item text-right"><span class="pull-left"><strong>Age</strong></span> {{ patient_detail.age|date:'d-m-Y' }}</li>
-            <li class="list-group-item text-right"><span class="pull-left"><strong>No. of lab tests ever done</strong></span> {{ lab_res_count }}</li>
-            <li class="list-group-item text-right"><span class="pull-left"><strong>No. of self reporting days</strong></span> {{ follow_up_details_count }}</li>
-          </ul>
+            {% for patient_detail in patient_contact_object %}
+                <ul class="list-group">
+                    <li class="list-group-item text-right"><span class="pull-left"><strong>Nationality</strong></span> {{ patient_detail.nationality }}</li>
+                    <li class="list-group-item text-right"><span class="pull-left"><strong>Gender</strong></span> {{ patient_detail.sex }}</li>
+                    <li class="list-group-item text-right"><span class="pull-left"><strong>Age</strong></span> {{ patient_detail.age }}</li>
+                    <li class="list-group-item text-right"><span class="pull-left"><strong>No. of lab tests ever done</strong></span> {{ lab_res_count }}</li>
+                    <li class="list-group-item text-right"><span class="pull-left"><strong>No. of self reporting days</strong></span> {{ follow_up_details_count }}</li>
+                </ul>
             {% endfor %}
-
         </div><!--/col-3-->
-    	<div class="col-sm-9">
+        <div class="col-sm-9">
             <ul class="nav nav-tabs">
                 <li class="active"><a data-toggle="tab" href="#home">Personal Details</a></li>
                 <li><a data-toggle="tab" href="#company">Other Details</a></li>
@@ -65,13 +59,16 @@
                 <li><a data-toggle="tab" href="#lab_results">Lab Results</a></li>
                 <li><a data-toggle="tab" href="#certificate">Lab Certificate</a></li>
                 <li><a data-toggle="tab" href="#attestation">Attestation</a></li>
-              </ul>
-
-          <div class="tab-content">
-            <div class="tab-pane active" id="home">
+            </ul>
+            <div class="tab-content">
+                <div class="tab-pane active" id="home">
                 <hr>
-                  <form class="form" action="##" method="post" id="registrationForm">
+                  <form class="track_edit_form"  method="POST" action="{% url 'veoc:truck_driver_edit' %}">
+                    {% csrf_token %}
                       {% for patient_detail in patient_details %}
+                      <div class="form-group" style="display: none;">
+                          <input class="form-control id" name="id" value="{{ patient_detail.id }}" style="display: none;">
+                      </div>
                       <div class="form-group">
 						  <div class="col-xs-6">
 							  <label for="first_name"><h4>First name</h4></label>
@@ -96,22 +93,34 @@
 							  <input type="text" class="form-control" name="passport" id="passport" value="{{ patient_detail.passport_number }}" readonly>
 						  </div>
 					  </div>
-                      <div class="form-group">
+                          <div class="form-group">
 						  <div class="col-xs-6">
-							  <label for="email"><h4>Country of Origin</h4></label>
-							  <input type="email" class="form-control" name="email" id="email" value="{{ patient_detail.origin_country }}" readonly>
+							  <label for="nok"><h4>Next Of Kin</h4></label>
+							  <input type="text" class="form-control" name="nok" id="nok" value="{{ patient_detail.nok }}" readonly>
 						  </div>
 					  </div>
                       <div class="form-group">
 						  <div class="col-xs-6">
-							  <label for="email"><h4>Quarantine Site</h4></label>
-							  <input type="email" class="form-control" id="location" value="{{ patient_detail.quarantine_site }}" readonly>
+							 <label for="nok_phone_num"><h4>Next of Kin Number</h4></label>
+							  <input type="text" class="form-control" name="nok_phone_num" id="nok_phone_num" value="{{ patient_detail.nok_phone_num }}" readonly>
 						  </div>
 					  </div>
                       <div class="form-group">
 						  <div class="col-xs-6">
-							  <label for="reg_Date"><h4>Date Registered</h4></label>
-							  <input type="date" class="form-control" name="reg_Date" id="reg_Date" value="{{ patient_detail.quarantine_site }}" readonly>
+							  <label for="cou_origin"><h4>Country of Origin</h4></label>
+							  <input type="text" class="form-control" name="cou_origin" id="cou_origin" value="{{ patient_detail.origin_country }}" readonly>
+						  </div>
+					  </div>
+                      <div class="form-group">
+						  <div class="col-xs-6">
+							  <label for="nationality"><h4>Nationality</h4></label>
+							  <input type="text" class="form-control" id="nationality" name="nationality" value="{{ patient_detail.nationality }}" readonly>
+						  </div>
+					  </div>
+                      <div class="form-group">
+						  <div class="col-xs-6">
+							  <label for="date_of_contact"><h4>Date of Arrival</h4></label>
+							  <input type="text" class="form-control" name="date_of_contact" id="date_of_contact" value="{{ patient_detail.date_of_contact|date:'d-m-Y' }}" readonly>
 						  </div>
 					  </div>
                       <div class="form-group">
@@ -141,46 +150,44 @@
                             </div>
                       </div>
                       {% endfor %}
-              	</form>
-
-              <hr>
-
-             </div><!--/tab-pane-->
-             <div class="tab-pane" id="company">
-                <hr>
+                  </form>
+                    <hr>
+                </div><!--/tab-pane-->
+                <div class="tab-pane" id="company">
+                    <hr>
                   <form class="form" action="##" method="post" id="companyForm">
                       {% for company_detail in patient_details %}
-                      <div class="form-group">
+                          <div class="form-group">
 						  <div class="col-xs-6">
 							  <label for="company_name"><h4>Company name</h4></label>
 							  <input type="text" class="form-control" name="company_name" id="company_name" value="{{ company_detail.company_name }}" readonly>
 						  </div>
 					  </div>
-                      <div class="form-group">
+                          <div class="form-group">
 						  <div class="col-xs-6">
 							  <label for="company_phone"><h4>Company Phone</h4></label>
 							  <input type="text" class="form-control" name="company_phone" id="company_phone" value="{{ company_detail.company_phone }}" readonly>
 						  </div>
 					  </div>
-                      <div class="form-group">
+                          <div class="form-group">
 						  <div class="col-xs-6">
 							 <label for="physical_address"><h4>Physical address</h4></label>
 							  <input type="text" class="form-control" name="physical_address" id="physical_address" value="{{ company_detail.company_physical_address }}" readonly>
 						  </div>
 					  </div>
-                      <div class="form-group">
+                          <div class="form-group">
 						  <div class="col-xs-6">
 							  <label for="company_building"><h4>Company Building</h4></label>
 							  <input type="text" class="form-control" name="company_building" id="company_building" value="{{ company_detail.company_building }}" readonly>
 						  </div>
 					  </div>
-                      <div class="form-group">
+                          <div class="form-group">
 						  <div class="col-xs-6">
 							  <label for="company_street"><h4>Company Street</h4></label>
 							  <input type="text" class="form-control" id="company_street" name="company_street" value="{{ company_detail.company_street }}" readonly>
 						  </div>
 					  </div>
-                      <div class="form-group">
+                          <div class="form-group">
 						  <div class="col-xs-6">
 							  <label for="vehicle_registration"><h4>Vehicle Registration</h4></label>
 							  <input type="text" class="form-control" name="vehicle_registration" id="vehicle_registration" value="{{ company_detail.vehicle_registration }}" readonly>
@@ -192,31 +199,31 @@
 							  <input type="text" class="form-control" name="hotel_name" id="hotel_name" value="{{ hotel_detail.hotel }}" readonly>
 						  </div>
 					  </div>
-                      <div class="form-group">
+                          <div class="form-group">
 						  <div class="col-xs-6">
 							  <label for="hotel_phone"><h4>Hotel Number</h4></label>
 							  <input type="text" class="form-control" name="hotel_phone" id="hotel_phone" value="{{ hotel_detail.hotel_phone }}" readonly>
 						  </div>
 					  </div>
-                      <div class="form-group">
+                          <div class="form-group">
 						  <div class="col-xs-6">
 							 <label for="hotel_town"><h4>Hotel Town</h4></label>
 							  <input type="text" class="form-control" name="hotel_town" id="hotel_town" value="{{ hotel_detail.hotel_town }}" readonly>
 						  </div>
 					  </div>
-                      <div class="form-group">
+                          <div class="form-group">
 						  <div class="col-xs-6">
 							  <label for="date_check_in"><h4>Date Check-in</h4></label>
 							  <input type="date" class="form-control" name="date_check_in" id="date_check_in" value="{{ hotel_detail.date_check_in }}" readonly>
 						  </div>
 					  </div>
-                      <div class="form-group">
+                          <div class="form-group">
 						  <div class="col-xs-6">
 							  <label for="date_check_out"><h4>Date Check-out</h4></label>
 							  <input type="date" class="form-control" name="date_check_out" id="date_check_out" value="{{ hotel_detail.date_check_out }}" readonly>
 						  </div>
 					  </div>
-					  <div class="form-group">
+                          <div class="form-group">
 						  <div class="col-xs-6">
 							  <label for="action_taken"><h4>Action Taken</h4></label>
 							  <input type="text" class="form-control" name="action_taken" id="action_taken" value="{{ patient_detail.action_taken }}" readonly>
@@ -224,468 +231,470 @@
                       <hr>
 					  </div>
                           <div class="form-group">
-                           <div class="col-xs-12">
-                                <br>
-                              	<button class="btn btn-lg btn-success hide" type="submit" id="save_company"><i class="glyphicon glyphicon-floppy-saved"></i> Save</button>
-                               	<!--<button class="btn btn-lg" type="reset"><i class="glyphicon glyphicon-repeat"></i> Reset</button>-->
-{#								<a href="#" class="btn btn-primary btn-lg btn-success" role="button" id="edit" onclick="editInputField()"><i class="glyphicon glyphicon-edit"></i> Edit</a>#}
-                            </div>
+                          <div class="col-xs-12">
+                              <br>
+                              <button class="btn btn-lg btn-success hide" type="submit" id="save_company"><i class="glyphicon glyphicon-floppy-saved"></i> Save</button>
+                          </div>
                       </div>
                       {% endfor %}
-              	</form>
-
-              <hr>
-
-             </div><!--/tab-pane-->
-             <div class="tab-pane" id="follow_up">
-                  <hr>
-                  <div class="panel panel-default table-responsive">
-                    <div class="panel-heading">
-                        Quarantine Follow Up
-                        <span class="label label-info pull-right" id="totalspan">Number of self reporting days = {{follow_up_details_count}} </span>
+                  </form>
+                    <hr>
+                </div><!--/tab-pane-->
+                <div class="tab-pane" id="follow_up">
+                    <hr>
+                    <div class="panel panel-default table-responsive">
+                        <div class="panel-heading">
+                            Quarantine Follow Up
+                            <span class="label label-info pull-right" id="totalspan">Number of self reporting days = {{follow_up_details_count}} </span>
+                        </div>
+                        <div class="padding-md clearfix">
+                            <table class="table table-hover" id="events_report">
+                                <thead class="thead-dark">
+                                <tr>
+                                    <th>Follow up Day</th>
+                                    <th>Has Thermometer</th>
+                                    <th>Temperature</th>
+                                    <th>Has Fever?</th>
+                                    <th>Has Cough?</th>
+                                    <th>Difficulty in breathing?</th>
+                                    <th>Comments</th>
+                                    <th>Reported Date</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {% for follow in follow_up_details %}
+                                    <tr>
+                                        <td>{{ follow.follow_up_day }}</td>
+                                        {% if follow.thermal_gun == "t" %}
+                                            <td>Yes</td>
+                                        {% else %}
+                                            <td>No</td>
+                                        {% endif %}
+                                        {% if follow.body_temperature >= 38.0 %}
+                                            <td style="background-color: #F51B00">
+                                                <b>{{ follow.body_temperature }}</b></td>
+                                        {% else %}
+                                            <td>{{ follow.body_temperature }}</td>
+                                        {% endif %}
+                                        <td>{{ follow.fever }}</td>
+                                        <td>{{ follow.cough }}</td>
+                                        <td>{{ follow.difficulty_breathing }}</td>
+                                        {% if follow.comment.strip %}
+                                            <td>{{ follow.comment }}</td>
+                                        {% else %}
+                                            <td>None</td>
+                                        {% endif %}
+                                        <td>{{ follow.created_at|date:'d-m-Y' }}</td>
+                                    </tr>
+                                {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
-                    <div class="padding-md clearfix">
-                        <table class="table table-hover" id="events_report">
-                            <thead class="thead-dark">
-                              <tr>
-                                <th>Follow up Day</th>
-                                <th>Has Thermometer</th>
-                                <th>Temperature</th>
-                                <th>Has Fever?</th>
-                                <th>Has Cough?</th>
-                                <th>Difficulty in breathing?</th>
-                                <th>Comments</th>
-                                <th>Reported Date</th>
-                              </tr>
-                            </thead>
-                            <tbody>
-                            {% for follow in follow_up_details %}
-                              <tr>
-                                <td>{{ follow.follow_up_day }}</td>
-                                {% if follow.thermal_gun == "t" %}
-                                  <td>Yes</td>
-                                {% else %}
-                                  <td>No</td>
-                                {% endif %}
-                                {% if follow.body_temperature >= 38.0 %}
-                                <td style="background-color: #F51B00">
-                                  <b>{{ follow.body_temperature }}</b></td>
-                                {% else %}
-                                    <td>{{ follow.body_temperature }}</td>
-                                {% endif %}
-                                <td>{{ follow.fever }}</td>
-                                <td>{{ follow.cough }}</td>
-                                <td>{{ follow.difficulty_breathing }}</td>
-                                {% if follow.comment.strip %}
-                                  <td>{{ follow.comment }}</td>
-                                {% else %}
-                                  <td>None</td>
-                                {% endif %}
-                                <td>{{ follow.created_at|date:'d-m-Y' }}</td>
-                              </tr>
+                </div>
+                <div class="tab-pane" id="lab_test">
+                    <hr>
+                    <form class="track_driver_profile" method="POST" action="{% url 'veoc:truck_driver_lab_test' %}">
+                        {% csrf_token %}
+                        <div class="form-group" style="display: none;">
+                            {% for patient_detail in patient_details %}
+                                <input class="form-control id" name="id" value="{{ patient_detail.id }}" style="display: none;">
                             {% endfor %}
-                            </tbody>
-                        </table>
-                    </div>
-                  </div>
-             </div>
-             <div class="tab-pane" id="lab_test">
-
-               <h2></h2>
-
-               <hr>
-                  <form class="track_driver_profile" method="POST" action="{% url 'veoc:truck_driver_lab_test' %}">
-                  {% csrf_token %}
-                      <div class="form-group" style="display: none;">
-                          {% for patient_detail in patient_details %}
-                        <input class="form-control id" name="id" value="{{ patient_detail.id }}" style="display: none;">
-                          {% endfor %}
-                      </div>
-                      <div class="form-group">
-						  <div class="col-xs-6">
-							  <label for="covid_test"><h4>Tested for COVID-19 ?</h4></label>
-							  <select class="form-control" id="covid_test" name="covid_test" required>
-								<option value="" disabled selected>Select Option</option>
-								<option value="t">Yes</option>
-								<option value="f">No</option>
-							  </select>
-						  </div>
-					  </div>
-                      <div class="form-group">
-						  <div class="col-xs-6">
-							 <label for="date_specimen_collected"><h4>Date specimen collected</h4></label>
-							  <input class="form-control" type="date" value="{{ day }}" id="date_specimen_collected" name="date_specimen_collected">
-						  </div>
-					  </div>
-                      <div class="form-group">
-						  <div class="col-xs-6">
-							<label for="specimen_taken"><h4>Was specimen collected ?</h4></label>
-							 <select class="form-control" id="specimen_taken" name="specimen_taken" required>
-								<option value="" disabled selected>Select Option</option>
-								<option value="t">Yes</option>
-								<option value="f">No</option>
-							  </select>
-						  </div>
-					  </div>
-                      <div class="form-group">
-						  <div class="col-xs-6">
-							 <label for="sample_not_taken"><h4>Reason sample not taken</h4></label>
-							  <input class="form-control" type="text" id="sample_not_taken" name="sample_not_taken">
-						  </div>
-					  </div>
-
-                      <div class="form-group">
-						  <div class="col-xs-6">
-							<label for="specimen_taken"><h4>Speciment Type</h4></label>
-							 <select class="form-control" id="specimen_type" name="specimen_type" required>
-                                 <option value="" disabled selected>Select specimen type</option>
-                                 {% for samp in samp_types %}
-                                     <option value="{{ samp.id }}">{{ samp.name }}</option>
-                                 {% endfor %}
-                             </select>
-						  </div>
-					  </div>
-                      <div class="form-group">
-						  <div class="col-xs-6">
-							  <label for="other_specimen"><h4>Other specimen type</h4></label>
-							  <input type="text" class="form-control" id="other_specimen" name="other_specimen" title="enter other specimen type">
-						  </div>
-					  </div>
-                      <div class="form-group">
-						  <div class="col-xs-6">
-							  <label for="respiratory_illness"><h4>Any viral respiratory illness ?</h4></label>
-							  <select class="form-control" id="respiratory_illness" name="respiratory_illness" required>
-								<option value="" disabled selected>Select Option</option>
-								<option value="t">Yes</option>
-								<option value="f">No</option>
-							  </select>
-						  </div>
-					  </div>
-                      <div class="form-group">
-						  <div class="col-xs-6">
-							<label for="respiratory_illness_results"><h4>If Yes, specify results</h4></label>
-							  <input type="text" class="form-control" name="respiratory_illness_results" id="respiratory_illness_results" >
-						  </div>
-					  </div>
-                      <div class="form-group">
-						  <div class="col-xs-6">
-							  <label for="date_specimen_taken_lab"><h4>Date specimen taken lab</h4></label>
-							  <input class="form-control" type="date" value="{{ day }}" id="date_specimen_taken_lab" name="date_specimen_taken_lab">
-						  </div>
-					  </div>
-                      <div class="form-group">
-						  <div class="col-xs-6">
-							  <label for="lab_name"><h4>Labaratory Name</h4></label>
-                              <select class="form-control" id="lab_name" name="lab_name" required>
-                                 <option value="" disabled selected>Select specimen type</option>
-                                 {% for lab in labs %}
-                                     <option value="{{ lab.id }}">{{ lab.name }}</option>
-                                 {% endfor %}
-                             </select>
-						  </div>
-					  </div>
-                      <div class="form-group">
-                           <div class="col-xs-12">
-                                <br>
-                              	<button class="btn btn-lg btn-success" type="submit" id="truck_lab_test"><i class="glyphicon glyphicon-floppy-saved"></i> Save</button>
-                               	<!--<button class="btn btn-lg" type="reset"><i class="glyphicon glyphicon-repeat"></i> Reset</button>-->
+                        </div>
+                        <div class="form-group">
+                            <div class="col-xs-6">
+                                <label for="covid_test"><h4>Tested for COVID-19 ?</h4></label>
+                                <select class="form-control" id="covid_test" name="covid_test" required>
+                                    <option value="" disabled selected>Select Option</option>
+                                    <option value="t">Yes</option>
+                                    <option value="f">No</option>
+                                </select>
                             </div>
-                      </div>
-              	</form>
-
-             </div><!--/tab-pane-->
-             <div class="tab-pane" id="lab_results">
-                  <hr>
-                  <div class="panel panel-default table-responsive">
-                    <div class="panel-heading">
-                        Laboratory Results
-                        <span class="label label-info pull-right" id="totalspan">{{lab_res_count}} Number of tests </span>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-xs-6">
+                                <label for="date_specimen_collected"><h4>Date specimen collected</h4></label>
+                                <input class="form-control" type="date" value="{{ day }}" id="date_specimen_collected" name="date_specimen_collected">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-xs-6">
+                                <label for="specimen_taken"><h4>Was specimen collected ?</h4></label>
+                                <select class="form-control" id="specimen_taken" name="specimen_taken" required>
+                                    <option value="" disabled selected>Select Option</option>
+                                    <option value="t">Yes</option>
+                                    <option value="f">No</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-xs-6">
+                                <label for="sample_not_taken"><h4>Reason sample not taken</h4></label>
+                                <input class="form-control" type="text" id="sample_not_taken" name="sample_not_taken">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-xs-6">
+                                <label for="specimen_taken"><h4>Speciment Type</h4></label>
+                                <select class="form-control" id="specimen_type" name="specimen_type" required>
+                                    <option value="" disabled selected>Select specimen type</option>
+                                    {% for samp in samp_types %}
+                                        <option value="{{ samp.id }}">{{ samp.name }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-xs-6">
+                                <label for="other_specimen"><h4>Other specimen type</h4></label>
+                                <input type="text" class="form-control" id="other_specimen" name="other_specimen" title="enter other specimen type">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-xs-6">
+                                <label for="respiratory_illness"><h4>Any viral respiratory illness ?</h4></label>
+                                <select class="form-control" id="respiratory_illness" name="respiratory_illness" required>
+                                    <option value="" disabled selected>Select Option</option>
+                                    <option value="t">Yes</option>
+                                    <option value="f">No</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-xs-6">
+                                <label for="respiratory_illness_results"><h4>If Yes, specify results</h4></label>
+                                <input type="text" class="form-control" name="respiratory_illness_results" id="respiratory_illness_results" >
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-xs-6">
+                                <label for="date_specimen_taken_lab"><h4>Date specimen taken lab</h4></label>
+                                <input class="form-control" type="date" value="{{ day }}" id="date_specimen_taken_lab" name="date_specimen_taken_lab">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-xs-6">
+                                <label for="lab_name"><h4>Labaratory Name</h4></label>
+                                <select class="form-control" id="lab_name" name="lab_name" required>
+                                    <option value="" disabled selected>Select specimen type</option>
+                                    {% for lab in labs %}
+                                        <option value="{{ lab.id }}">{{ lab.name }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-xs-12">
+                                <br>
+                                <button class="btn btn-lg btn-success" type="submit" id="truck_lab_test"><i class="glyphicon glyphicon-floppy-saved"></i> Save</button>
+                            </div>
+                        </div>
+                    </form>
+                </div><!--/tab-pane-->
+                <div class="tab-pane" id="lab_results">
+                    <hr>
+                    <div class="panel panel-default table-responsive">
+                        <div class="panel-heading">
+                            Laboratory Results
+                            <span class="label label-info pull-right" id="totalspan">{{lab_res_count}} Number of tests </span>
+                        </div>
+                        <div class="padding-md clearfix">
+                            <table class="table table-hover" id="lab_report">
+                                <thead class="thead-dark">
+                                <tr>
+                                    <th>Date Collected</th>
+                                    <th>Specimen type</th>
+                                    <th>Date taken lab</th>
+                                    <th>Name of lab</th>
+                                    <th>Lab Results</th>
+                                    <th>Date Lab Confirmed</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {% for lab in lab_res %}
+                                    <tr>
+                                        <td>{{ lab.date_specimen_collected|date:'d-m-Y' }}</td>
+                                        <td>{{ lab.specimen_type }}</td>
+                                        <td>{{ lab.date_specimen_taken_lab|date:'d-m-Y' }}</td>
+                                        <td>{{ lab.lab.name }}</td>
+                                        <td>{{ lab.lab_results }}</td>
+                                        <td>{{ lab.date_lab_confirmation|date:'d-m-Y' }}</td>
+                                    </tr>
+                                {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
-                    <div class="padding-md clearfix">
-                        <table class="table table-hover" id="lab_report">
-                            <thead class="thead-dark">
-                              <tr>
-                                <th>Date Collected</th>
-                                <th>Specimen type</th>
-                                <th>Date taken lab</th>
-                                <th>Name of lab</th>
-                                <th>Lab Results</th>
-                                <th>Date Lab Confirmed</th>
-                              </tr>
-                            </thead>
-                            <tbody>
-                            {% for lab in lab_res %}
-                              <tr>
-                                <td>{{ lab.date_specimen_collected|date:'d-m-Y' }}</td>
-                                <td>{{ lab.specimen_type }}</td>
-                                <td>{{ lab.date_specimen_taken_lab|date:'d-m-Y' }}</td>
-                                <td>{{ lab.lab.name }}</td>
-                                <td>{{ lab.lab_results }}</td>
-                                <td>{{ lab.date_lab_confirmation|date:'d-m-Y' }}</td>
-                              </tr>
-                            {% endfor %}
-                            </tbody>
-                        </table>
-                    </div>
-                  </div>
-             </div>
-              <div class="tab-pane" id="certificate">
-                  <hr>
-                  <div class="panel panel-default table-responsive">
-						<div class="panel-heading">
-							Laboratory Certificate
-						</div>
-                      <div class="panel-body" align="center">
-                          <form class="form-inline" method="post" action="{% url 'veoc:lab_certificate' %}">
-                            {% csrf_token %}
-                              <div class="form-group">
-                                  <label for="site"><b>Show Certificate by Test Date :&nbsp; &nbsp; </b></label>
-                                  <select class="form-control" id="lab_id" name="lab_id">
-                                     <option value="" disabled selected>Select testing date</option>
-                                     {% for lab in lab_res %}
-                                         <option value="{{ lab.id }}">{{ lab.date_specimen_collected|date:'d-m-Y' }}</option>
-                                     {% endfor %}
-                                 </select>
-                              </div>
-
-                              <button type="submit" class="btn btn-primary" align="right">Update</button>
-                          </form>
-                          <!-- <button type="submit" class="btn btn-primary" align="right">Update</button> -->
-                      </div>
+                </div>
+                <div class="tab-pane" id="certificate">
+                    <hr>
+                    <div class="panel panel-default table-responsive">
+                        <div class="panel-heading">
+                            Laboratory Certificate
+                        </div>
+                        <div class="panel-body" align="center">
+                            <form class="form-inline" method="post" action="{% url 'veoc:lab_certificate' %}">
+                                {% csrf_token %}
+                                <div class="form-group">
+                                    <label for="site"><b>Show Certificate by Test Date :&nbsp; &nbsp; </b></label>
+                                    <select class="form-control" id="lab_id" name="lab_id">
+                                        <option value="" disabled selected>Select testing date</option>
+                                        {% for lab in lab_res %}
+                                            <option value="{{ lab.id }}">{{ lab.date_specimen_collected|date:'d-m-Y' }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                                <button type="submit" class="btn btn-primary" align="right">Update</button>
+                            </form>
+                        </div>
                         <hr>
-						<div class="invoice-box" id="dvContainer">
+                        <div class="invoice-box" id="dvContainer">
                             {% for lab in lab_res %}
                                 {% if forloop.last %}
-							<table cellpadding="0" cellspacing="0">
-								<tr class="top">
-									<td colspan="2">
-										<table>
-											<tr>
-												<td class="title" align="center">
-													<img src="/static/images/emblem.png" style="width:40%; max-width:100px;">
-													<br>Ministry of Health <br> COVID-19 TEST RESULTS
-												</td>
-											</tr>
-										</table>
-									</td>
-								</tr>
-								<tr class="information">
-									<td colspan="2">
-										<table>
-											<tr>
-												<td>Facility: Malaba POE</td>
-												<td>{{ lab.lab.name }}</td>
-											</tr>
-										</table>
-									</td>
-								</tr>
-								<tr class="heading">
-									<td>Patient Data</td>
-									<td>Details</td>
-								</tr>
-								<tr class="item">
-									<td>Individual Names</td>
-									<td>{{ lab.patient_contacts.first_name }} {{ lab.patient_contacts.last_name }}</td>
-								</tr>
-                                <tr class="item">
-									<td>Nationality</td>
-									<td>{{ lab.patient_contacts.nationality }}</td>
-								</tr>
-								<tr class="item">
-									<td>DOB (Years)</td>
-									<td>{{ lab.patient_contacts.age }}</td>
-								</tr>
-								<tr class="item">
-									<td>Gender</td>
-									<td>{{ lab.patient_contacts.sex }}</td>
-								</tr>
-								<tr class="item">
-									<td>Date Sample Collected</td>
-									<td>{{ lab.date_specimen_collected|date:'d-m-Y' }}</td>
-								</tr>
-								<tr class="item">
-									<td>Date Test Confirmation</td>
-									<td>{{ lab.date_lab_confirmation|date:'d-m-Y' }}</td>
-								</tr>
-								<tr class="item">
-									<td>Health Status</td>
-									<td>Stable</td>
-								</tr>
-								<tr class="heading">
-									<td>Facility Tester</td>
-									<td>Details</td>
-								</tr>
-								<tr class="item">
-									<td>Sample Type</td>
-									<td>{{ lab.specimen_type.name }}</td>
-								<tr class="item">
-									<td>Results Received by</td>
-									<td>Evelyne Walela</td>
-								</tr>
-								<tr class="item last">
-									<td>Date dispatched</td>
-									<td>{{ lab.date_lab_confirmation|date:'d-m-Y' }}</td>
-								</tr>
-								<tr class="total">
-									<td>Lab Results</td>
-									<td>{{ lab.lab_results }}</td>
-								</tr>
-							</table>
+                                    <table cellpadding="0" cellspacing="0">
+                                        <tr class="top">
+                                            <td colspan="2">
+                                                <table>
+                                                    <tr>
+                                                        <td class="title" align="center">
+                                                            <img src="/static/images/emblem.png" style="width:40%; max-width:100px;">
+                                                            <br>Ministry of Health <br> COVID-19 TEST RESULTS
+                                                        </td>
+                                                    </tr>
+                                                </table>
+                                            </td>
+                                        </tr>
+                                        <tr class="information">
+                                            <td colspan="2">
+                                                <table>
+                                                    <tr>
+                                                        {% for pat in patient_details %}
+                                                        <td>Facility: <i>{{ pat.border_point.border_name }} POE</i></td>
+                                                    {% endfor %}
+                                                        <td><i>{{ lab.lab.name }}</i></td>
+                                                    </tr>
+                                                </table>
+                                            </td>
+                                        </tr>
+                                        <tr class="heading">
+                                            <td>Patient Data</td>
+                                            <td>Details</td>
+                                        </tr>
+                                        <tr class="item">
+                                            <td>Individual Names</td>
+                                            <td><i>{{ lab.patient_contacts.first_name }} {{ lab.patient_contacts.last_name }}</i></td>
+                                        </tr>
+                                        <tr class="item">
+                                            <td>Nationality</td>
+                                            <td><i>{{ lab.patient_contacts.nationality }}</i></td>
+                                        </tr>
+                                        <tr class="item">
+                                            <td>DOB (Years)</td>
+                                            <td><i>{{ lab.patient_contacts.age }}</i></td>
+                                        </tr>
+                                        <tr class="item">
+                                            <td>Gender</td>
+                                            <td><i>{{ lab.patient_contacts.sex }}</i></td>
+                                        </tr>
+                                        <tr class="item">
+                                            <td>Date Sample Collected</td>
+                                            <td><i>{{ lab.date_specimen_collected|date:'d-m-Y' }}</td>
+                                        </tr>
+                                        <tr class="item">
+                                            <td>Date Test Confirmation</td>
+                                            <td><i>{{ lab.date_lab_confirmation|date:'d-m-Y' }}</i></td>
+                                        </tr>
+                                        <tr class="item">
+                                            <td>Health Status</td>
+                                            <td>Stable</td>
+                                        </tr>
+                                        <tr class="heading">
+                                            <td>Facility Tester</td>
+                                            <td>Details</td>
+                                        </tr>
+                                        <tr class="item">
+                                            <td>Sample Type</td>
+                                            <td><i>{{ lab.specimen_type.name }}</i></td>
+                                        <tr class="item">
+                                        <td>Results Received by</td>
+                                        {% for pat in patient_details %}
+                                            <td><i>{{ pat.border_point.team_lead_names }}</i></i></td>
+                                        {% endfor %}
+                                    </tr>
+                                        <tr class="item last">
+                                            <td>Date dispatched</td>
+                                            <td><i>{{ lab.date_lab_confirmation|date:'d-m-Y' }}</i></td>
+                                        </tr>
+                                        <tr class="total">
+                                            <td>Lab Results</td>
+                                            <td><i>{{ lab.lab_results }}</i></td>
+                                        </tr>
+                                    </table>
                                 {% endif %}
                             {% endfor %}
-						</div>
+                        </div>
                         <div>
-                             <hr>
+                            <hr>
                             <button class="btn btn-lg btn-success pull-right" type="submit" id="btnPrint"><i class="glyphicon glyphicon-print"></i> Print Result</button>
                         </div>
-					  </div>
-				 </div>
-            <div class="tab-pane" id="attestation">
-                  <hr>
-                  <div class="panel panel-default table-responsive">
-						<div class="panel-heading">
-							Attestation
-						</div>
+                    </div>
+                </div>
+                <div class="tab-pane" id="attestation">
+                    <hr>
+                    <div class="panel panel-default table-responsive">
+                        <div class="panel-heading">
+                            Attestation
+                        </div>
                         <hr>
-						<div class="invoice-box" id="dvAttestation">
+                        <div class="invoice-box" id="dvAttestation">
                             {% for lab in lab_res %}
                                 {% if forloop.last %}
-							<table cellpadding="0" cellspacing="0">
-                                <tr class="heading">
-									<td colspan="2">
-										<table>
-											<tr>
-												<td>CAP 242</td>
-                                                <td>Public Health Revised  2012</td>
-											</tr>
-										</table>
-									</td>
-								</tr>
-                                <tr class="information">
-									<td colspan="2">
-										<table>
-											<tr>
-												<td></td>
-                                                <td>Certificate No. <br> MOH/cap 242/2020</td>
-											</tr>
-										</table>
-									</td>
-								</tr>
-								<tr class="top">
-									<td colspan="2">
-										<table>
-											<tr>
-												<td class="title" align="center">
-													<img src="/static/images/emblem.png" style="width:40%; max-width:100px;">
-													<br>REPUBLIC OF KENYA <br><h3>MINISTRY OF HEALTH</h3>
-												</td>
-											</tr>
-										</table>
-									</td>
-								</tr>
-                                <tr class="information">
-									<td colspan="2">
-										<table>
-											<tr>
-												<td class="title" align="center">
-													<br><h2>ATTESTATION OF COVID-19 TESTING</h2>
-												</td>
-											</tr>
-										</table>
-									</td>
-								</tr>
-								<tr class="information">
-									<td colspan="2">
-										<table>
-											<tr>
-												<td>This is to certify that: ___<i><b>{{ lab.patient_contacts.first_name }} {{ lab.patient_contacts.last_name }}</b></i>____
-                                                    ID/Passport N0._____<i><b>{{ lab.patient_contacts.passport_number }}</b></i>_____working at (specify
-                                                    exact place of work)_________________________________ has been
-                                                    tested and found negative for COVID-19 following laboratory tests conducted
-                                                    on ___<i><b>{{ lab.date_lab_confirmation|date:'d-m-Y' }}</b></i>____ at the ____<i><b>{{ lab.lab.name }}</b></i>___
-                                                    (indicate laboratory facility)
-                                                    This attestation is issued in accordance with Public Health Act Cap 242 Laws of Kenya
-                                                    and the applicable Rules and Regulations for Prevention and Suppression of Infectious
-                                                    Diseases (Prevention, Control and Suppression of COVID—19) Rules, 2020 (section 6
-                                                    & 7). </td>
-												<td></td>
-											</tr>
-										</table>
-									</td>
-								</tr>
-                                <tr class="information">
-									<td colspan="2">
-										<table>
-											<tr>
-												<td><b>This attestation does not guarantee future infections and therefore you must observe the highest hygienic standards including regular
-                                                hand washing and the use of face mask at all times.</b> </td>
-												<td></td>
-											</tr>
-										</table>
-									</td>
-								</tr>
-								<tr class="information">
-									<td></td>
-									<td></td>
-								</tr>
-                                <tr class="information">
-									<td><b>Issuing Officer </b></td>
-									<td><b>Official Stamp</b></td>
-								</tr>
-								<tr class="information">
-									<td></td>
-									<td></td>
-								</tr>
-								<tr class="information">
-									<td></td>
-									<td></td>
-								</tr>
-								<tr class="information">
-									<td>Print Name:........................</td>
-									<td></td>
-								</tr>
-								<tr class="information">
-									<td>Designation:.......................</td>
-									<td>Signature:........................</td>
-								</tr>
-                                <tr class="information">
-									<td></td>
-									<td>Date:.........................</td>
-								</tr>
-							</table>
-                                {% endif %}
-                            {% endfor %}
-						</div>
-                        <div>
-                             <hr>
-                            <button class="btn btn-lg btn-success pull-right" type="submit" id="btnPrint"><i class="glyphicon glyphicon-print"></i> Print Result</button>
-                        </div>
-					  </div>
-				 </div>
-
-              </div><!--/tab-pane-->
-          </div><!--/tab-content-->
-
+                                    <table cellpadding="0" cellspacing="0">
+                                        <tr class="heading">
+                                            <td colspan="2">
+                                                <table>
+                                                    <tr>
+                                                        <td>CAP 242</td>
+                                                        <td>Public Health Revised  2012</td>
+                                                    </tr>
+                                                </table>
+                                            </td>
+                                        </tr>
+                                        <tr class="information">
+                                            <td colspan="2">
+                                                <table>
+                                                    <tr>
+                                                        <td id="qr-td" align="left"></td>
+                                                        <td>Certificate No. <br><i style="color:#1034A6;"></i> MOH/cap 242/2020</i></td>
+                                                    </tr>
+                                                </table>
+                                            </td>
+                                        </tr>
+                                        <tr class="top">
+                                            <td colspan="2">
+                                                <table>
+                                                    <tr>
+                                                        <td class="title" align="center" style="color:#1034A6;">
+                                                            <img src="/static/images/emblem.png" style="width:40%; max-width:100px;">
+                                                            <br>REPUBLIC OF KENYA <br><h3>MINISTRY OF HEALTH</h3>
+                                                        </td>
+                                                    </tr>
+                                                </table>
+                                            </td>
+                                        </tr>
+                                        <tr class="information">
+                                            <td colspan="2">
+                                                <table>
+                                                    <tr>
+                                                        <td class="title" align="center">
+                                                            <br><h2>ATTESTATION OF COVID-19 TESTING</h2>
+                                                        </td>
+                                                    </tr>
+                                                </table>
+                                            </td>
+                                        </tr>
+                                        <tr class="information">
+                                            <td colspan="2">
+                                                <table>
+                                                    <tr>
+                                                        <td>This is to certify that: ___<i><b>{{ lab.patient_contacts.first_name }} {{ lab.patient_contacts.last_name }}</b></i>____
+                                                        ID/Passport N0._____<i><b>{{ lab.patient_contacts.passport_number }}</b></i>_____working at (specify
+                                                        exact place of work){% for l in patient_details %}
+                                                                    ____<i><b>{{ l.company_name }}</b></i>________{% endfor %} has been
+                                                        tested and found negative for COVID-19 following laboratory tests conducted
+                                                        on ___<i><b>{{ lab.date_lab_confirmation|date:'d-m-Y' }}</b></i>____ at the ____<i><b>{{ lab.lab.name }}</b></i>___
+                                                        (indicate laboratory facility)
+                                                        This attestation is issued in accordance with Public Health Act Cap 242 Laws of Kenya
+                                                        and the applicable Rules and Regulations for Prevention and Suppression of Infectious
+                                                        Diseases (Prevention, Control and Suppression of COVID—19) Rules, 2020 (section 6
+                                                        & 7).
+                                                        </td>
+                                                        <td></td>
+                                                    </tr>
+                                                </table>
+                                            </td>
+                                        </tr>
+                                        <tr class="information">
+                                            <td colspan="2">
+                                                <table>
+                                                    <tr>
+                                                        <td><b>This attestation does not guarantee future infections and therefore you must observe the highest hygienic standards including regular
+                                                        hand washing and the use of face mask at all times.</b>
+                                                        </td>
+                                                        <td></td>
+                                                    </tr>
+                                                </table>
+                                            </td>
+                                        </tr>
+                                        <tr class="information">
+                                            <td></td>
+                                            <td></td>
+                                        </tr>
+                                        <tr class="information">
+                                            <td><b>Issuing Officer </b></td>
+                                            <td><b>Official Stamp</b></td>
+                                        </tr>
+                                        <tr class="information">
+                                            <td></td>
+                                            <td></td>
+                                        </tr>
+                                        <tr class="information">
+                                            <td></td>
+                                            <td></td>
+                                        </tr>
+                                        <tr class="information">
+                                            {% for pat in patient_details %}
+                                                <td>Print Name:...<i><b>{{ pat.border_point.team_lead_names }}</b></i>......</td>
+                                            {% endfor %}
+                                            <td></td>
+                                        </tr>
+                                        <tr class="information">
+                                            {% for pat in patient_details %}
+                                                <td>Designation:....<i><b>{{ pat.border_point.border_name }} Lead</b></i>...</td>
+                                            {% endfor %}
+                                            <td>Signature:........................</td>
+                                        </tr>
+                                        <tr class="information">
+                                            <td></td>
+                                            <td></td>
+                                        </tr>
+                                        <tr class="information">
+                                            <td></td>
+                                            <td>Date:....<i><b>{{ lab.updated_at|date:'d-m-Y' }}</b></i>........</td>
+                                        </tr>
+                                    </table>
+                                </div>
+                            <div>
+                            <hr>
+                                <button class="btn btn-lg btn-success pull-right" onclick="javascript:PrintElem();" type="submit" id="btnAttPrint"><i class="glyphicon glyphicon-print"></i> Print Result</button>
+                            </div>
+                        {% endif %}
+                        {% endfor %}
+                    </div>
+                </div>
+            </div><!--/tab-content-->
         </div><!--/col-9-->
     </div><!--/row-->
-    </div>
+{#    </div>#}
 
 
 {% endblock %}
 
 {% block script %}
-   <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
-   <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-{#    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-multiselect/0.9.15/js/bootstrap-multiselect.js"></script>#}
-{#    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-multiselect/0.9.15/js/bootstrap-multiselect.min.js"></script>#}
+{#    <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>#}
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootbox.js/4.4.0/bootbox.min.js"> </script>
-   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
-   <script src="https://cdn.jsdelivr.net/npm/promise-polyfill"></script>
-    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
+    <script src="https://cdn.jsdelivr.net/npm/promise-polyfill"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.1.4/jspdf.plugin.autotable.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/0.4.1/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.1.4/jspdf.plugin.autotable.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.3.2/jspdf.min.js"></script>
   <script>
     $(document).ready(function() {
 
         var labForm = $(".track_driver_profile")
+        var editDetailsForm = $(".track_edit_form")
 
         labForm.submit(function(e){
         e.preventDefault();
@@ -710,13 +719,13 @@
             if(data == "error"){
               Swal.fire({
                 title: 'Duplicate Data Entry!!',
-                text: 'Names and Phone number entered already exist in the system and still ongoing quarantine!!',
+                text: 'Lab details already captured into the system!!',
                 icon: 'info'
               });
             }else{
               Swal.fire({
                 title: 'Success!',
-                text: 'Lab Details Details Saved',
+                text: 'Lab Details Submitted',
                 icon: 'success'
               });
               labForm[0].reset();
@@ -735,19 +744,84 @@
 
       });
 
+        editDetailsForm.submit(function(e){
+            e.preventDefault();
+            console.log("inside editDetailsForm");
+            var thisForm = $(this);
+            var endPoint = thisForm.attr("action") || window.location.href;
+            var method = thisForm.attr("method");
+            var formData = thisForm.serialize();
+
+            Swal.fire({
+              title: "Please wait!,Saving Edited Details!",
+              // text: "Please wait",
+              imageUrl: "/static/images/ajax-loader.gif",
+              showConfirmButton: false,
+              allowOutsideClick: false
+            });
+            $.ajax({
+              type:method,
+              url:endPoint,
+              data: formData,
+              success:function(data){
+                if(data == "error"){
+                  Swal.fire({
+                    title: 'Error Editting!!',
+                    text: 'Errors during edit!!',
+                    icon: 'info'
+                  });
+                }else{
+                  Swal.fire({
+                    title: 'Success!',
+                    text: 'Edit Details Saved',
+                    icon: 'success'
+                  });
+                  labForm[0].reset();
+                }
+              },
+              error:function(er){
+                console.log("Lab saving error");
+                console.log(er.responseText);
+                Swal.fire({
+                  title: 'Error!',
+                  text: 'Lab Details Cannot be Saved',
+                  icon: 'error'
+                });
+              }
+            });
+
+      });
+
+        //System QR Code for the attestation
+        var qrcode = new QRCode(document.getElementById('qr-td'),{
+            width:100,
+            height:100
+        });
+
+        var msg = ""
+        {% for lab in lab_res %}
+            {% if forloop.last %}
+                {% for l in patient_details %}
+                    msg = "Names : {{ lab.patient_contacts.first_name }} {{ lab.patient_contacts.last_name }} \nID/Passport No : {{ lab.patient_contacts.passport_number }} \nPhone No : {{ lab.patient_contacts.phone_number }}" +
+                    " \nCompany : {{ l.company_name }} \nLab : {{ lab.lab.name }} \nLab Results: {{ lab.lab_results }}";
+                    qrcode.makeCode(msg)
+                {% endfor %}
+            {% endif %}
+        {% endfor %}
+
     });
 
 
     function editInputField(){
-       document.getElementById("first_name").readOnly = false;
+        document.getElementById("first_name").readOnly = false;
         document.getElementById("last_name").readOnly = false;
+        document.getElementById("nok").readOnly = false;
+        document.getElementById("nok_phone_num").readOnly = false;
         document.getElementById("phone").readOnly = false;
         document.getElementById("passport").readOnly = false;
         document.getElementById("v_reg").readOnly = false;
-
         document.getElementById('save').classList.add('show');
         document.getElementById('edit').classList.add('hide');
-
     }
 
     $("#btnPrint").live("click", function () {
@@ -757,6 +831,21 @@
         printWindow.document.close();
         printWindow.print();
     });
+
+  function PrintElem() {
+    var mywindow = window.open('', 'PRINT', 'height=400,width=600');
+      var divContents = $("#dvAttestation").html();
+
+    mywindow.document.write(divContents);
+
+    mywindow.document.close(); // necessary for IE >= 10
+    mywindow.focus(); // necessary for IE >= 10*/
+
+    mywindow.print();
+    mywindow.close();
+
+    return true;
+}
 
   </script>
 {% endblock %}

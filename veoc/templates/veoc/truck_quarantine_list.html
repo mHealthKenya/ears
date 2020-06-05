@@ -64,7 +64,7 @@
                           </tr>
                           </thead>
                           <tbody>
-                          {% for q_data, truck_cont_details in all_data %}
+                          {% for q_data, truck_cont_details in my_list_data %}
                           <tr>
                             <td>{{ q_data.last_name }}</td>
                             <td>{{ q_data.first_name }}</td>
@@ -74,7 +74,7 @@
                             <td>{{ q_data.passport_number }}</td>
                             <td>{{ q_data.nationality }}</td>
                             <td>{{ q_data.origin_country }}</td>
-{#                            <td>{{ truck_cont_details.weighbridge_facility.weighbridge_name }}</td>#}
+{#                            <td>{{ truck_cont_details.weighbridge_facility }}</td>#}
                             <td>{{ q_data.date_of_contact }}</td>
                             <td>{{ q_data.created_by }}</td>
 {#                            <td>#}

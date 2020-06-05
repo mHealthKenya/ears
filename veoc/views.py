@@ -12,9 +12,13 @@ import requests
 from requests.packages.urllib3.exceptions import InsecureRequestWarning
 from django.conf import settings
 from django.core.serializers import serialize
-from django.db import transaction
+from django.db import IntegrityError, transaction
 from django.db.models import *
-# from django.db.models import Q
+# from reportlab.graphics.barcode import code128
+# from reportlab.lib.units import mm
+# from reportlab.pdfgen import canvas
+# from qr_code.qrcode.utils import ContactDetail
+from django.http import FileResponse
 from veoc.models import *
 from veoc.forms import *
 from django.views.decorators.csrf import *
@@ -1976,7 +1980,8 @@ def truck_driver_profile(request, profileid):
 
     # print(profileid)
 
-    patient_contact_object = truck_quarantine_contacts.objects.filter(id = profileid)
+    patient_contact_object = quarantine_contacts.objects.filter(id = profileid)
+    print(patient_contact_object)
 
     lab_res = truck_quarantine_lab.objects.filter(patient_contacts = profileid)
     lab_res_count = truck_quarantine_lab.objects.filter(patient_contacts = profileid).count()
@@ -2042,6 +2047,50 @@ def truck_driver_profile(request, profileid):
             'follow_up_details':follow_up_details, 'follow_up_details_count':follow_up_details_count}
 
     return render(request, 'veoc/truck_driver_profile.html', data)
+
+@login_required
+def truck_driver_edit(request):
+    if request.method=='POST':
+
+        myid=request.POST.get('id','')
+        first_name = request.POST.get('first_name','')
+        last_name = request.POST.get('last_name','')
+        phone_number = request.POST.get('phone','')
+        passport_number = request.POST.get('passport','')
+        v_reg = request.POST.get('v_reg','')
+        nextofkin = request.POST.get('nok','')
+        nok_phone_number = request.POST.get('nok_phone_num','')
+
+        # print(myid)
+        current_user = request.user
+        userObject = User.objects.get(pk = current_user.id)
+
+        patient_contact_object = truck_quarantine_contacts.objects.filter(id = myid)
+        p_contacts = ''
+
+        for p_cont in patient_contact_object:
+            p_contacts = p_cont.patient_contacts.id
+
+        # print(p_contacts)
+        # contact_object = quarantine_contacts.objects.get(pk = p_contacts)
+
+        qua_edit = quarantine_contacts.objects.filter(pk=p_contacts).update(first_name=first_name, last_name=last_name, phone_number=phone_number, passport_number=passport_number,
+                                                           nok=nextofkin, nok_phone_num=nok_phone_number,  created_by=userObject)
+
+        truck_quarantine_contacts.objects.filter(patient_contacts=myid).update(vehicle_registration = v_reg)
+
+        # print(qua_edit)
+
+        if qua_edit:
+            print("Saving success")
+            return JsonResponse({'success':True})
+
+        else:
+            print("Saving error")
+            return JsonResponse({'error':"error"})
+
+
+    return HttpResponse("Hello from Edit!")
 
 @login_required
 def lab_certificate(request):
@@ -2150,7 +2199,7 @@ def truck_driver_register(request):
         contact_save = ''
         source = "Truck Registration"
         #Check if mobile number exists in the table
-        details_exist = quarantine_contacts.objects.filter(phone_number = user_phone, first_name = first_name, last_name=last_name, date_of_contact__lte = date.today()- timedelta(days=14))
+        details_exist = quarantine_contacts.objects.filter(phone_number = user_phone, first_name = first_name, last_name=last_name, date_of_contact__gte = date.today()- timedelta(days=14))
         if details_exist :
             for mob_ex in details_exist:
                 print("Details exist Phone Number" + str(mob_ex.phone_number) + "Registered on :" + str(mob_ex.created_at))
@@ -2159,27 +2208,35 @@ def truck_driver_register(request):
         else:
             quarantineObject = quarantine_sites.objects.get(pk = site_name)
             languageObject = translation_languages.objects.get(pk = language)
+            contact_identifier = uuid.uuid4().hex
             #saving values to quarantine_contacts database first
             contact_save = quarantine_contacts.objects.create(first_name=first_name, last_name=last_name, middle_name=middle_name,
                 county=countyObject, subcounty=subcountyObject, ward=wardObject,sex=sex, dob=dob, passport_number=passport_number,
                 phone_number=user_phone, date_of_contact=date_of_contact,  communication_language=languageObject,
                 nationality=nationality, drugs=drugs, nok=nextofkin, nok_phone_num=nok_phone_number,cormobidity=comorbidity,
-                origin_country=origin_country, quarantine_site= quarantineObject, source=source,
+                origin_country=origin_country, quarantine_site= quarantineObject, source=source, contact_uuid=contact_identifier,
                 updated_at=current_date, created_by=userObject, updated_by=userObject, created_at=current_date)
 
             contact_save.save()
-            patient_contact = contact_save.pk
-            print(patient_contact)
-            patientObject = quarantine_contacts.objects.get(pk = patient_contact)
-            #save contacts in the track_quarantine_contacts if data has been saved on the quarantine contacts
-            if patient_contact :
-                truck_save = truck_quarantine_contacts.objects.create(patient_contacts=patientObject, street=street, village=village,
-                    vehicle_registration=vehicle_registration, company_name=company_name, company_phone=company_phone,border_point=bord_name,
-                    company_physical_address=company_address, company_street=company_street,company_building=company_building, temperature=temp,
-                    weighbridge_facility=weigh_site, cough=cough, breathing_difficulty=breathing_difficulty, fever=fever,sample_taken=sample_taken,
-                    action_taken=action_taken, hotel=hotel, hotel_phone=hotel_phone,hotel_town=hotel_town, date_check_in=date_check_in, date_check_out=date_check_out)
+            trans_one = transaction.savepoint()
 
-                truck_save.save();
+            patient_id = contact_save.pk
+            print(patient_id)
+            patientObject = quarantine_contacts.objects.get(pk = patient_id)
+            #save contacts in the track_quarantine_contacts if data has been saved on the quarantine contacts
+            if patient_id :
+                try:
+                    truck_save = truck_quarantine_contacts.objects.create(patient_contacts=patientObject, street=street, village=village,
+                        vehicle_registration=vehicle_registration, company_name=company_name, company_phone=company_phone,border_point=bord_name,
+                        company_physical_address=company_address, company_street=company_street,company_building=company_building, temperature=temp,
+                        weighbridge_facility=weigh_site, cough=cough, breathing_difficulty=breathing_difficulty, fever=fever,sample_taken=sample_taken,
+                        action_taken=action_taken, hotel=hotel, hotel_phone=hotel_phone,hotel_town=hotel_town, date_check_in=date_check_in, date_check_out=date_check_out)
+
+                    truck_save.save()
+                except IntegrityError:
+                    transaction.savepoint_rollback(trans_one)
+                    return HttpResponse("error")
+
             else :
                 print("data not saved in truck quarantine contacts")
 
@@ -2187,8 +2244,8 @@ def truck_driver_register(request):
         #check if details have been saved
         if contact_save:
             # send sms to the patient for successful registration_form
-           # url = "https://mlab.mhealthkenya.co.ke/api/sms/gateway"
-            url = "http://mlab.localhost/api/sms/gateway"
+            url = "https://mlab.mhealthkenya.co.ke/api/sms/gateway"
+            # url = "http://mlab.localhost/api/sms/gateway"
             msg = ''
             msg2 = ''
             print(language)
@@ -2797,15 +2854,15 @@ def truck_quarantine_list(request):
     q_data_count = quarantine_contacts.objects.all().filter(source = 'Truck Registration').count()
     quar_sites = weighbridge_sites.objects.all().order_by('weighbridge_name')
 
-    all_data = quarantine_contacts.objects.all().filter(source = 'Truck Registration')
+    q_data = quarantine_contacts.objects.all().filter(source = 'Truck Registration')
     truck_cont_details = []
-    for d in all_data:
+    for d in q_data:
         t_details = truck_quarantine_contacts.objects.filter(patient_contacts=d.id)
         truck_cont_details.append(t_details)
 
-    my_list_data = zip(all_data, truck_cont_details)
+    my_list_data = zip(q_data, truck_cont_details)
 
-    data = {'quarantine_data_count': q_data_count, 'weigh_name':quar_sites, 'all_data' :my_list_data}
+    data = {'quarantine_data_count': q_data_count, 'weigh_name':quar_sites, 'my_list_data' :my_list_data}
 
     return render(request, 'veoc/truck_quarantine_list.html', data)
 

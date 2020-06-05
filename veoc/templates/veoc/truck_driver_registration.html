@@ -311,20 +311,12 @@
 
     $(document).ready(function(e){
 
-{#        $('#date_of_arrival').attr("max",today);#}
         $('#dob').attr("max",today);
-{#        $('#date_check_in').attr("min",today);#}
-{#        $('#date_check_out').attr("min",today);#}
-
 
 
       var trucksForm = $(".track_driver_form")
-      var call_category = $("#callCategory")
-      console.log(call_category);
+      console.log(trucksForm);
 
-      if (call_category == ""){
-
-      }
       trucksForm.submit(function(e){
         e.preventDefault();
         console.log("inside trucksForm");

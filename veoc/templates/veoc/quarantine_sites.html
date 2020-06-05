@@ -32,57 +32,58 @@
         							<div class="padding-md clearfix">
         							<table class="table table-hover" id="site_table">
         								<thead class="thead-dark">
-                          <tr>
-                              <th>Site Name</th>
-                              <th>Team Lead Names</th>
-                              <th>Team Lead Contacts</th>
-                              <th>Active Site</th>
-                              <th>Created By</th>
-                              <th>Action</th>
-                          </tr>
-                          </thead>
-                          <tbody>
-                            {% for site in site_vals %}
-                            <tr>
-                            <td>{{ site.site_name }}</td>
-                            <td>{{ site.team_lead_names }}</td>
-                            <td>{{ site.team_lead_phone }}</td>
-                            <td>{{ site.active }}</td>
-                            <td>{{ site.created_by.username }}</td>
-                            <td>
-                                <button type="button" class="btn btn-primary btn-xs view_button"
-                                  data-toggle="modal" data-target="#view_site_modal"
-                                  data-id="{{ site.pk }}"
-                                  data-site-name="{{ site.site_name }}"
-                                  data-lead-name="{{ site.team_lead_names }}"
-                                  data-lead-phone="{{ site.team_lead_phone }}"
-                                  data-active="{{ site.active }}"
-                                  title="View">
-                                  <i class="fa fa-eye">
-                                  </i>
-                              </button>
-                              <button type="button" class="btn btn-primary btn-xs edit_button"
-                                data-toggle="modal" data-target="#edit_site_modal"
-                                data-id="{{ site.pk }}"
-                                data-site-name="{{ site.site_name }}"
-                                data-lead-name="{{ site.team_lead_names }}"
-                                data-lead-phone="{{ site.team_lead_phone }}"
-                                data-active="{{ site.active }}"
-                                title="Edit">
-                                <i class="fa fa-edit">
-                                </i>
-                              </button>
-                            </td>
-                          </tr>
-                          {% endfor %}
-                      </tbody>
-    							</table>
-                </div>
-              </div>
-    				</div>
+                                          <tr>
+                                              <th>Site Name</th>
+                                              <th>Team Lead Names</th>
+                                              <th>Team Lead Contacts</th>
+                                              <th>Active Site</th>
+                                              <th>Created By</th>
+                                              <th>Action</th>
+                                          </tr>
+                                          </thead>
+                                          <tbody>
+                                            {% for site in site_vals %}
+                                            <tr>
+                                            <td>{{ site.site_name }}</td>
+                                            <td>{{ site.team_lead_names }}</td>
+                                            <td>{{ site.team_lead_phone }}</td>
+                                            <td>{{ site.active }}</td>
+                                            <td>{{ site.created_by.username }}</td>
+                                            <td>
+                                                <button type="button" class="btn btn-primary btn-xs view_button"
+                                                  data-toggle="modal" data-target="#view_site_modal"
+                                                  data-id="{{ site.pk }}"
+                                                  data-site-name="{{ site.site_name }}"
+                                                  data-lead-name="{{ site.team_lead_names }}"
+                                                  data-lead-phone="{{ site.team_lead_phone }}"
+                                                  data-active="{{ site.active }}"
+                                                  title="View">
+                                                  <i class="fa fa-eye">
+                                                  </i>
+                                              </button>
+                                              <button type="button" class="btn btn-primary btn-xs edit_button"
+                                                data-toggle="modal" data-target="#edit_site_modal"
+                                                data-id="{{ site.pk }}"
+                                                data-site-name="{{ site.site_name }}"
+                                                data-lead-name="{{ site.team_lead_names }}"
+                                                data-lead-phone="{{ site.team_lead_phone }}"
+                                                data-active="{{ site.active }}"
+                                                title="Edit">
+                                                <i class="fa fa-edit">
+                                                </i>
+                                              </button>
+                                            </td>
+                                          </tr>
+                                          {% endfor %}
+                                      </tbody>
+    							    </table>
+                                </div>
+                            </div>
+    				    </div>
+                    </div>
     			</div><!-- /row-->
-        </div><!-- /.padding-md -->
-      </div><!-- /main-container -->
+            </div><!-- /.padding-md -->
+        </div><!-- /main-container -->
 
       <!-- Add Quarantine modal -->
 		   <div class="modal fade" id="addQuarantineModal" tabindex="-1" role="dialog" aria-hidden="true">

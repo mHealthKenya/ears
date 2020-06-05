@@ -36,6 +36,7 @@ urlpatterns = [
     url(r'^quarantine_register/$', views.quarantine_register, name='quarantine_register'),
     url(r'^truck_driver_profile/(?P<profileid>[0-9]+)/$', views.truck_driver_profile, name='truck_driver_profile'),
     url(r'^truck_driver_register/$', views.truck_driver_register, name='truck_driver_register'),
+    url(r'^truck_driver_edit/$', views.truck_driver_edit, name='truck_driver_edit'),
     url(r'^truck_driver_lab_test/$', views.truck_driver_lab_test, name='truck_driver_lab_test'),
     url(r'^lab_certificate/$', views.lab_certificate, name='lab_certificate'),
     url(r'^feedback_create/$', views.feedback_create, name='feedback_create'),
