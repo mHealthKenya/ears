@@ -314,7 +314,7 @@
                         <div class="form-group">
                             <div class="col-xs-6">
                                 <label for="date_specimen_collected"><h4>Date specimen collected</h4></label>
-                                <input class="form-control" type="date" value="{{ day }}" id="date_specimen_collected" name="date_specimen_collected">
+                                <input class="form-control" type="date" value="{{ day }}" max="{{ day }}" id="date_specimen_collected" name="date_specimen_collected">
                             </div>
                         </div>
                         <div class="form-group">
@@ -369,7 +369,7 @@
                         <div class="form-group">
                             <div class="col-xs-6">
                                 <label for="date_specimen_taken_lab"><h4>Date specimen taken lab</h4></label>
-                                <input class="form-control" type="date" value="{{ day }}" id="date_specimen_taken_lab" name="date_specimen_taken_lab">
+                                <input class="form-control" type="date" value="{{ day }}" max="{{ day }}" id="date_specimen_taken_lab" name="date_specimen_taken_lab">
                             </div>
                         </div>
                         <div class="form-group">
@@ -802,8 +802,9 @@
         {% for lab in lab_res %}
             {% if forloop.last %}
                 {% for l in patient_details %}
-                    msg = "Names : {{ lab.patient_contacts.first_name }} {{ lab.patient_contacts.last_name }} \nID/Passport No : {{ lab.patient_contacts.passport_number }} \nPhone No : {{ lab.patient_contacts.phone_number }}" +
-                    " \nCompany : {{ l.company_name }} \nLab : {{ lab.lab.name }} \nLab Results: {{ lab.lab_results }}";
+                    msg = "UUID : {{ lab.test_sample_uuid }}"
+{#                    msg = "Names : {{ lab.patient_contacts.first_name }} {{ lab.patient_contacts.last_name }} \nID/Passport No : {{ lab.patient_contacts.passport_number }} \nPhone No : {{ lab.patient_contacts.phone_number }}" +#}
+{#                    " \nCompany : {{ l.company_name }} \nLab : {{ lab.lab.name }} \nLab Results: {{ lab.lab_results }}";#}
                     qrcode.makeCode(msg)
                 {% endfor %}
             {% endif %}
