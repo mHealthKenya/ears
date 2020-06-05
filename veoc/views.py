@@ -1894,6 +1894,7 @@ def quarantine_register(request):
         qua_site = quarantine_sites.objects.get(site_name = site_name)
         contact_save = ''
         source = "Web Registration"
+        contact_identifier = uuid.uuid4().hex
         #Check if mobile number exists in the table
         details_exist = quarantine_contacts.objects.filter(phone_number = user_phone, first_name = first_name, last_name=last_name)
         if details_exist :
@@ -1907,7 +1908,7 @@ def quarantine_register(request):
             county=countyObject, subcounty=subcountyObject, ward=wardObject,sex=sex, dob=dob, passport_number=passport_number,
             phone_number=user_phone, email_address=email_address, date_of_contact=date_of_contact, source=source,
             nationality=nationality, drugs=drugs, nok=nextofkin, nok_phone_num=nok_phone_number,cormobidity=comorbidity,
-            origin_country=origin_country, place_of_diagnosis=place_of_diagnosis, quarantine_site= qua_site,
+            origin_country=origin_country, place_of_diagnosis=place_of_diagnosis, quarantine_site= qua_site,contact_uuid=contact_identifier,
             updated_at=current_date, created_by=userObject, updated_by=userObject, created_at=current_date)
 
             contact_save.save()
