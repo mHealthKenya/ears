@@ -8,7 +8,7 @@
             <div id="main-container">
         			<div id="breadcrumb">
         				<ul class="breadcrumb">
-        					 <li><i class="fa fa-home"></i><a href="{% url 'veoc:dashboard' %}"> Dashboard</a></li>
+        					 <li><i class="fa fa-home"></i><a href="{% url 'veoc:access_dashboard' %}"> Dashboard</a></li>
         					 <li class="active">Quarantine Sites</li>
         				</ul>
         			</div><!-- /breadcrumb-->
@@ -36,6 +36,8 @@
                                               <th>Site Name</th>
                                               <th>Team Lead Names</th>
                                               <th>Team Lead Contacts</th>
+                                              <th>County</th>
+                                              <th>Sub County</th>
                                               <th>Active Site</th>
                                               <th>Created By</th>
                                               <th>Action</th>
@@ -47,6 +49,8 @@
                                             <td>{{ site.site_name }}</td>
                                             <td>{{ site.team_lead_names }}</td>
                                             <td>{{ site.team_lead_phone }}</td>
+                                            <td>{{ site.county.name }}</td>
+                                            <td>{{ site.subcounty.name }}</td>
                                             <td>{{ site.active }}</td>
                                             <td>{{ site.created_by.username }}</td>
                                             <td>
@@ -56,6 +60,8 @@
                                                   data-site-name="{{ site.site_name }}"
                                                   data-lead-name="{{ site.team_lead_names }}"
                                                   data-lead-phone="{{ site.team_lead_phone }}"
+                                                  data-county="{{ site.county.name }}"
+                                                  data-subcounty="{{ site.subcounty.name }}"
                                                   data-active="{{ site.active }}"
                                                   title="View">
                                                   <i class="fa fa-eye">
@@ -67,6 +73,8 @@
                                                 data-site-name="{{ site.site_name }}"
                                                 data-lead-name="{{ site.team_lead_names }}"
                                                 data-lead-phone="{{ site.team_lead_phone }}"
+                                                data-county="{{ site.county.name }}"
+                                                data-subcounty="{{ site.subcounty.name }}"
                                                 data-active="{{ site.active }}"
                                                 title="Edit">
                                                 <i class="fa fa-edit">
@@ -87,36 +95,51 @@
 
       <!-- Add Quarantine modal -->
 		   <div class="modal fade" id="addQuarantineModal" tabindex="-1" role="dialog" aria-hidden="true">
-					<div class="modal-dialog" role="document">
-						<div class="modal-content">
-						<div class="modal-header">
-							<h5 class="modal-title" id="exampleModalLongTitle">Add Quarantine Site</h5>
-							<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-							<span aria-hidden="true">&times;</span>
-							</button>
-						</div>
-						<div class="modal-body">
-							<form class="quarantine_register_form" method="POST" action="{% url 'veoc:site_list' %}" >
-								{% csrf_token %}
-                <div class="form-group">
-									<label>Site Name :</label>
-								  <input type="text" class="form-control input-sm"  name="site_name" id="site_name" required>
-								</div>
-                <div class="form-group">
-									<label>Team Lead Names :</label>
-								  <input type="text" class="form-control input-sm" name="lead_names" id="lead_names" >
-								</div>
-                <div class="form-group">
-									<label>Team Leam Phone Number :</label>
-								  <input type="number" class="form-control input-sm" name="lead_number" id="lead_number">
-								</div>
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLongTitle">Add Quarantine Site</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form class="quarantine_register_form" method="POST" action="{% url 'veoc:site_list' %}" >
+                        {% csrf_token %}
+                          <div class="form-group">
+                            <label>Site Name :</label>
+                          <input type="text" class="form-control input-sm"  name="site_name" id="site_name" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Team Lead Names :</label>
+                          <input type="text" class="form-control input-sm" name="lead_names" id="lead_names" >
+                        </div>
+                        <div class="form-group">
+                            <label>Team Leam Phone Number :</label>
+                          <input type="number" class="form-control input-sm" name="lead_number" id="lead_number">
+                        </div>
+                        <div class="form-group">
+                            <label for="county">County : *</label>
+                             <select class="form-control" name="county" id="county" onchange="getsubcounty()">
+                                  <option value="" disabled selected>Select County</option>
+                                  {% for cnty in county %}
+                                      <option value="{{cnty.name}}">{{cnty.name}}</option>
+                                  {% endfor %}
+                              </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="subcounty">Subcounty : *</label>
+                             <select class="form-control" name="subcounty" id="subcounty">
+                                  <option value="" disabled selected>Select sub-county</option>
+                              </select>
+                        </div>
 
-								<button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
-								<button type="submit" id="addsitebtn" class="btn btn-success btn-sm pull-right"> <i class="fa fa-plus" aria-hidden="true"></i> Add Quarantine Site</button>
-							</form>
-						</div>
-						</div>
-					</div>
+                        <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                        <button type="submit" id="addsitebtn" class="btn btn-success btn-sm pull-right"> <i class="fa fa-plus" aria-hidden="true"></i> Add Quarantine Site</button>
+                    </form>
+                </div>
+                </div>
+            </div>
         </div>
 
       <!-- View Quarantine modal -->
@@ -134,21 +157,29 @@
               <form method="post" action="#">
                 <div class="modal-body">
                     <div class="form-group">
-    									<label>Site Name :</label>
-    								  <input type="text" class="form-control view_site_name"  name="site_name" readonly>
-    								</div>
+                        <label>Site Name :</label>
+                      <input type="text" class="form-control view_site_name"  name="site_name" readonly>
+                    </div>
                     <div class="form-group">
-    									<label>Team Lead Names :</label>
-    								  <input type="text" class="form-control view_lead_names" name="lead_names" readonly >
-    								</div>
+                        <label>Team Lead Names :</label>
+                      <input type="text" class="form-control view_lead_names" name="lead_names" readonly >
+                    </div>
                     <div class="form-group">
-    									<label>Team Leam Phone Number :</label>
-    								  <input type="number" class="form-control view_lead_number" name="lead_number" readonly>
-    								</div>
+                        <label>Team Leam Phone Number :</label>
+                      <input type="number" class="form-control view_lead_number" name="lead_number" readonly>
+                    </div>
                     <div class="form-group">
-    									<label>Active Status :</label>
-    								  <input type="text" class="form-control view_active" name="active" readonly>
-    								</div>
+                        <label>County :</label>
+                      <input type="text" class="form-control view_county" name="county" readonly>
+                    </div>
+                    <div class="form-group">
+                        <label>Sub county :</label>
+                      <input type="text" class="form-control view_subcounty" name="subcounty" readonly>
+                    </div>
+                    <div class="form-group">
+                        <label>Active Status :</label>
+                      <input type="text" class="form-control view_active" name="active" readonly>
+                    </div>
                 </div>
             </form>
             </div>
@@ -178,26 +209,41 @@
                         <input class="form-control edit_id" name="id" style="display: none;">
                     </div>
                       <div class="form-group">
-      									<label>Site Name :</label>
-      								  <input type="text" class="form-control edit_site_name"  name="site_name" >
-      								</div>
+                            <label>Site Name :</label>
+                          <input type="text" class="form-control edit_site_name"  name="site_name" >
+                        </div>
                       <div class="form-group">
-      									<label>Team Lead Names :</label>
-      								  <input type="text" class="form-control edit_lead_names" name="lead_names" >
-      								</div>
+                            <label>Team Lead Names :</label>
+                          <input type="text" class="form-control edit_lead_names" name="lead_names" >
+                        </div>
                       <div class="form-group">
-      									<label>Team Leam Phone Number :</label>
-      								  <input type="number" class="form-control edit_lead_number" name="lead_number">
-      								</div>
+                            <label>Team Leam Phone Number :</label>
+                          <input type="number" class="form-control edit_lead_number" name="lead_number">
+                        </div>
                       <div class="form-group">
-      									<label>Active Status :</label>
+                            <label for="county">County : *</label>
+                             <select class="form-control edit_county" name="county" onchange="getsubcounty()">
+                                  <option value="" disabled selected>Select County</option>
+                                  {% for cnty in county %}
+                                      <option value="{{cnty.name}}">{{cnty.name}}</option>
+                                  {% endfor %}
+                              </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="subcounty">Subcounty : *</label>
+                             <select class="form-control edit_subcounty" name="subcounty">
+                                  <option value="" disabled selected>Select sub-county</option>
+                              </select>
+                        </div>
+                      <div class="form-group">
+                        <label>Active Status :</label>
                         <select class="form-control input-sm active" data-width="100%" id="active" name="active" >
                         <option value="" disabled selected>Select Status</option>
                             <option value="True">Active</option>
                             <option value="False">Inactive</option>
       							   </select>
       								</div>
-                    </div>
+                        </div>
                     <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
                     <button type="submit" id="addeditsitebtn" class="btn btn-success btn-sm pull-right">Save Changes</button>
                 </form>
@@ -209,47 +255,41 @@
 {% endblock %}
 
 {% block script %}
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
-      integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
-<!-- Latest compiled and minified JavaScript -->
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"
-        integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
-        crossorigin="anonymous"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/bootbox.js/4.4.0/bootbox.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
 <script src="https://cdn.jsdelivr.net/npm/promise-polyfill"></script>
   <script>
     $(document).ready(function () {
-        $('#site_table').DataTable({
-            "order": [],
-            dom: 'Bfrtip',
-            buttons: [
-                'copy', 'csv', 'excel', 'pdf', 'print'
-            ]
-        });
+          $('#site_table').DataTable({
+              "order": [],
+              dom: 'Bfrtip',
+              buttons: [
+                  'copy', 'csv', 'excel', 'pdf', 'print'
+              ]
+          });
 
-        // Setup - add a text input to each footer cell
-        $('#site_table thead td').each(function () {
-            var title = $(this).text();
-            $(this).html('<input type="text" placeholder="Search ' + title + '" />');
-        });
+          // Setup - add a text input to each footer cell
+          $('#site_table thead td').each(function () {
+              var title = $(this).text();
+              $(this).html('<input type="text" placeholder="Search ' + title + '" />');
+          });
 
-        // DataTable
-        var table = $('#site_table').DataTable();
+          // DataTable
+          var table = $('#site_table').DataTable();
 
-        // Apply the search
-        table.columns().every(function () {
-            var that = this;
+          // Apply the search
+          table.columns().every(function () {
+              var that = this;
 
-            $('input', this.header()).on('keyup change', function () {
-                if (that.search() !== this.value) {
-                    that
-                            .search(this.value)
-                            .draw();
-                }
-            });
-        });
+              $('input', this.header()).on('keyup change', function () {
+                  if (that.search() !== this.value) {
+                      that
+                              .search(this.value)
+                              .draw();
+                  }
+              });
+          });
+
     });
 
     $(document).on( "click", '.view_button',function(e) {
@@ -257,6 +297,8 @@
       var s_name = $(this).data('site-name');
       var lead_name = $(this).data('lead-name');
       var lead_num = $(this).data('lead-phone');
+      var county = $(this).data('county');
+      var subcounty = $(this).data('subcounty');
       var act = $(this).data('active');
 
       console.log(s_name);
@@ -264,6 +306,8 @@
       $(".view_site_name").val(s_name);
       $(".view_lead_names").val(lead_name);
       $(".view_lead_number").val(lead_num);
+      $(".view_county").val(county);
+      $(".view_subcounty").val(subcounty);
       $(".view_active").val(act);
   });
 
@@ -272,13 +316,17 @@
       var s_name = $(this).data('site-name');
       var lead_name = $(this).data('lead-name');
       var lead_num = $(this).data('lead-phone');
+      var cnty = $(this).data('county');
+      var subcnty = $(this).data('subcounty');
 
-      console.log(s_name);
+      console.log(subcnty);
 
       $(".edit_id").val(id);
       $(".edit_site_name").val(s_name);
       $(".edit_lead_names").val(lead_name);
       $(".edit_lead_number").val(lead_num);
+      $(".edit_county").val(cnty);
+      $(".edit_subcounty").val(subcnty);
   });
 
   var quarantineForm = $(".quarantine_register_form")
@@ -322,6 +370,33 @@
 
   });
 
+    function getsubcounty(){
+
+       var county=$('#county').val();
+       console.log(county);
+       $.ajax({
+         url:'/get_subcounty/',
+         type:'POST',
+         datatype:'json',
+         data:{county:county,csrfmiddlewaretoken:$('input[name=csrfmiddlewaretoken]').val()},
+
+         success:function(data){
+           var options = '<option value="" selected disabled>Select Subcounty</option>';
+           console.log("in success");
+           console.log(data);
+           $('#subcounty').html(options);
+           for(var i=0;i<data.length;i++){
+
+             var options = '<option value="' + data[i].fields['name'] + '">' + data[i].fields['name'] + '</option>';
+             $('#subcounty').append(options);
+           }
+         },error:function(){
+           console.log("in error");
+           var options = '<option value="" selected disabled>select county</option>';
+           $('#subcounty').html(options);
+         }
+       });
+     }
 
   </script>
 {% endblock %}

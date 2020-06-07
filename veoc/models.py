@@ -583,6 +583,8 @@ class quarantine_sites(models.Model):
     site_name = models.CharField(max_length=500)
     team_lead_names = models.CharField(max_length=500)
     team_lead_phone = models.CharField(validators=[person_phone_regex], max_length=15, blank=True)
+    county = models.ForeignKey(organizational_units, on_delete=models.CASCADE, related_name='quarantine_site_county', blank=True, default = 16256)
+    subcounty = models.ForeignKey(organizational_units, on_delete=models.CASCADE, related_name='quarantine_site_subcounty', blank=True, default = 12324)
     active = models.BooleanField(default=True)
     created_at = models.DateField(default=date.today)
     updated_at = models.DateField(default=date.today)
@@ -770,7 +772,6 @@ class truck_quarantine_lab(models.Model):
 
     def __str__(self):
         return self.patient_contacts.first_name + ' - ' + self.specimen_type.name
-
 
 class watcher_team_leads(models.Model):
     team_lead=models.ForeignKey(contact, on_delete=models.CASCADE, blank=False)

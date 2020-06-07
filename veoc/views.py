@@ -131,7 +131,6 @@ def login(request):
                     next = '/border_dashboard/'
                     print(next)
 
-                # return HttpResponseRedirect(next)
                 return HttpResponse(next)
             else:
                 return HttpResponse("error")
@@ -2765,6 +2764,7 @@ def daily_reports(request):
         day = time.strftime("%Y-%m-%d")
         return render(request, 'veoc/generate_pdf.html',{'day': day})
 
+@login_required
 def quarantine_site_data(request):
     #covid-19 line graph quarantine sites_count
     qua_sites_count = quarantine_sites.objects.all().count()
@@ -2794,6 +2794,7 @@ def quarantine_site_data(request):
 
     return render(request, 'veoc/quarantine_site_data.html', {"data":data_values})
 
+@login_required
 def quarantine_list(request):
     global data
 
@@ -2807,8 +2808,9 @@ def quarantine_list(request):
     if request.method == 'POST':
         q_site = request.POST.get('quarantine_site','')
 
-        if(user_access_level == "National"):
+        if(user_access_level == 'National'):
             #pull data whose quarantine site id is equal to q_site_name
+            print("inside National")
             q_data = quarantine_contacts.objects.filter(quarantine_site=q_site)
             q_data_count = quarantine_contacts.objects.filter(quarantine_site=q_site).count()
             quar_sites = quarantine_sites.objects.all()
@@ -2818,38 +2820,53 @@ def quarantine_list(request):
             #pull data whose quarantine site id is equal to q_site_name
             q_data = quarantine_contacts.objects.filter(quarantine_site=q_site).filter(county_id = user_county_id)
             q_data_count = quarantine_contacts.objects.filter(quarantine_site=q_site).filter(county = user_county_id).count()
-            quar_sites = quarantine_sites.objects.all()
-        else:
+            quar_sites = quarantine_sites.objects.all().filter(county = user_county_id).order_by('site_name')
+        elif (user_access_level == "SubCounty"):
             user_sub_county_id = u.persons.sub_county_id
             print(user_sub_county_id)
             #pull data whose quarantine site id is equal to q_site_name
             q_data = quarantine_contacts.objects.filter(quarantine_site=q_site).filter(subcounty_id = user_sub_county_id)
             q_data_count = quarantine_contacts.objects.filter(quarantine_site=q_site).filter(subcounty_id = user_sub_county_id).count()
-            quar_sites = quarantine_sites.objects.all()
+            quar_sites = quarantine_sites.objects.all().filter(subcounty_id = user_sub_county_id).order_by('site_name')
+        else:
+            q_data = quarantine_contacts.objects.filter(quarantine_site=q_site).filter(cormobidity = "1")
+            q_data_count = quarantine_contacts.objects.filter(quarantine_site=q_site).filter(cormobidity = "1").count()
+            quar_sites = quarantine_sites.objects.all().filter(active = False).order_by('site_name')
 
         data = {'quarantine_data': q_data, 'quarantine_data_count': q_data_count, 'quar_sites':quar_sites}
     else:
         if(user_access_level == "National"):
+            print("inside National")
             q_data = quarantine_contacts.objects.all()
             q_data_count = quarantine_contacts.objects.all().count()
             quar_sites = quarantine_sites.objects.all().order_by('site_name')
         elif(user_access_level == "County"):
+            print("inside County")
             user_county_id = u.persons.county_id
             print(user_county_id)
             q_data = quarantine_contacts.objects.all().filter(county_id = user_county_id)
             q_data_count = quarantine_contacts.objects.all().filter(county_id = user_county_id).count()
-            quar_sites = quarantine_sites.objects.all().order_by('site_name')
-        else:
+            quar_sites = quarantine_sites.objects.all().filter(county_id = user_county_id).order_by('site_name')
+        elif(user_access_level == "SubCounty"):
+            print("inside SubCounty")
             user_sub_county_id = u.persons.sub_county
             print(user_sub_county_id)
             q_data = quarantine_contacts.objects.all().filter(subcounty_id = user_sub_county_id)
             q_data_count = quarantine_contacts.objects.all().filter(subcounty_id = user_sub_county_id).count()
-            quar_sites = quarantine_sites.objects.all().order_by('site_name')
+            quar_sites = quarantine_sites.objects.all().filter(subcounty_id = user_sub_county_id).order_by('site_name')
+        else:
+            print("inside Border")
+            user_sub_county_id = u.persons.sub_county
+            print(user_sub_county_id)
+            q_data = quarantine_contacts.objects.all().filter(cormobidity = "1")
+            q_data_count = quarantine_contacts.objects.all().filter(cormobidity = "1").count()
+            quar_sites = quarantine_sites.objects.all().filter(active = False).order_by('site_name')
 
         data = {'quarantine_data': q_data, 'quarantine_data_count': q_data_count, 'quar_sites':quar_sites}
 
     return render(request, 'veoc/quarantine_list.html', data)
 
+@login_required
 def truck_quarantine_list(request):
 
     q_data_count = quarantine_contacts.objects.all().filter(source = 'Truck Registration').count()
@@ -2867,6 +2884,7 @@ def truck_quarantine_list(request):
 
     return render(request, 'veoc/truck_quarantine_list.html', data)
 
+@login_required
 def truck_q_list(request):
 
     all_data = quarantine_contacts.objects.all().filter(source = 'Truck Registration')
@@ -2889,6 +2907,7 @@ def truck_q_list(request):
 
     return render(request, 'veoc/truck_quarantine_list.html', data)
 
+@login_required
 def f_up(request):
     qrnt_contacts = quarantine_contacts.objects.all()
 
@@ -2949,11 +2968,39 @@ def f_up(request):
     # print(final_array)
     return render(request, 'veoc/f_up.html', {"data":qrnt_contacts})
 
+@login_required
 def follow_up(request):
-    # work on this to ensure accesslevel is implemented on what data to see
 
-    follow_data = quarantine_follow_up.objects.all()
-    follow_data_count = quarantine_follow_up.objects.all().count()
+    global data, follow_data, follow_data_count
+
+    #check logged users access level to display relevant records -- national, county, SubCounty
+    current_user = request.user
+    u = User.objects.get(username=current_user.username)
+    user_access_level = u.persons.access_level
+    print("Access Level---")
+    print(user_access_level)
+
+    if(user_access_level == 'National'):
+            #pull data whose quarantine site id is equal to q_site_name
+            print("inside National")
+            follow_data = quarantine_follow_up.objects.all()
+            follow_data_count = quarantine_follow_up.objects.all().count()
+
+    elif(user_access_level == "County"):
+        user_county_id = u.persons.county_id
+        print(user_county_id)
+        follow_data = quarantine_follow_up.objects.filter(patient_contacts__county_id = user_county_id)
+        follow_data_count = quarantine_follow_up.objects.filter(patient_contacts__county_id = user_county_id).count()
+
+    elif (user_access_level == "SubCounty"):
+        user_sub_county_id = u.persons.sub_county_id
+        print(user_sub_county_id)
+        follow_data = quarantine_follow_up.objects.filter(patient_contacts__subcounty_id = user_sub_county_id)
+        follow_data_count = quarantine_follow_up.objects.filter(patient_contacts__subcounty_id = user_sub_county_id).count()
+
+    else:
+        follow_data = quarantine_follow_up.objects.filter(self_quarantine = False)
+        follow_data_count = quarantine_follow_up.objects.filter(self_quarantine = False).count()
 
     #check if temperature is higher than 38.0 to send sms
     #if temperature is higher and sms_status = No send an sms
@@ -3026,6 +3073,7 @@ def follow_up(request):
 
     return render(request, 'veoc/quarantine_follow_up.html', data)
 
+@login_required
 def truck_follow_up(request):
 
     qua_contacts = quarantine_contacts.objects.all().filter(source__contains="Truck Registration")
@@ -3188,37 +3236,44 @@ def truck_follow_up(request):
 
     return render(request, 'veoc/truck_quarantine_follow_up.html', data)
 
+@login_required
 def complete_quarantine(request):
-    # work on this to ensure accesslevel is implemented on what data to see
-    # global data
+    global follow_data, follow_data_count
 
     #check logged users access level to display relevant records -- national, county, SubCounty
-    # current_user = request.user
-    # u = User.objects.get(username=current_user.username)
-    # user_access_level = u.persons.access_level
-    # print("Access Level---")
-    # print(user_access_level)
-    #
-    # if(user_access_level == "National"):
-    #     follow_data = quarantine_follow_up.objects.all().filter(created_at__lte = date.today()- timedelta(days=14))
-    #     follow_data_count = quarantine_follow_up.objects.all().filter(created_at__lte = date.today()- timedelta(days=14)).count()
-    # elif(user_access_level == "County"):
-    #     user_county_id = u.persons.county_id
-    #     follow_data = quarantine_follow_up.objects.all().filter(created_at__lte = date.today()- timedelta(days=14))
-    #     follow_data_count = quarantine_follow_up.objects.all().filter(created_at__lte = date.today()- timedelta(days=14)).count()
-    # else:
-    #     user_sub_county_id = u.persons.sub_county
-    #     follow_data = quarantine_follow_up.objects.all().filter(created_at__lte = date.today()- timedelta(days=14))
-    #     follow_data_count = quarantine_follow_up.objects.all().filter(created_at__lte = date.today()- timedelta(days=14)).count()
+    current_user = request.user
+    u = User.objects.get(username=current_user.username)
+    user_access_level = u.persons.access_level
+    print("Access Level---")
+    print(user_access_level)
 
+    if(user_access_level == 'National'):
+        #pull data whose quarantine site id is equal to q_site_name
+        print("inside National")
+        follow_data = quarantine_follow_up.objects.filter(created_at__lte = date.today()- timedelta(days=14))
+        follow_data_count = quarantine_follow_up.objects.filter(created_at__lte = date.today()- timedelta(days=14)).count()
 
-    follow_data = quarantine_follow_up.objects.all().filter(created_at__lte = date.today()- timedelta(days=14))
-    follow_data_count = quarantine_follow_up.objects.all().filter(created_at__lte = date.today()- timedelta(days=14)).count()
+    elif(user_access_level == "County"):
+        user_county_id = u.persons.county_id
+        print(user_county_id)
+        follow_data = quarantine_follow_up.objects.filter(patient_contacts__county_id = user_county_id).filter(created_at__lte = date.today()- timedelta(days=14))
+        follow_data_count = quarantine_follow_up.objects.filter(patient_contacts__county_id = user_county_id).filter(created_at__lte = date.today()- timedelta(days=14)).count()
+
+    elif (user_access_level == "SubCounty"):
+        user_sub_county_id = u.persons.sub_county_id
+        print(user_sub_county_id)
+        follow_data = quarantine_follow_up.objects.filter(patient_contacts__subcounty_id = user_sub_county_id).filter(created_at__lte = date.today()- timedelta(days=14))
+        follow_data_count = quarantine_follow_up.objects.filter(patient_contacts__subcounty_id = user_sub_county_id).filter(created_at__lte = date.today()- timedelta(days=14)).count()
+
+    else:
+        follow_data = quarantine_follow_up.objects.filter(self_quarantine = False)
+        follow_data_count = quarantine_follow_up.objects.filter(self_quarantine = False).count()
 
     data = {'follow_data': follow_data, 'follow_data_count': follow_data_count}
 
     return render(request, 'veoc/quarantine_complete.html', data)
 
+@login_required
 def truck_ongoing_quarantine(request):
 
     all_data = quarantine_contacts.objects.all().filter(source = 'Truck Registration').filter(date_of_contact__gte = date.today()- timedelta(days=14))
@@ -3229,6 +3284,7 @@ def truck_ongoing_quarantine(request):
 
     return render(request, 'veoc/truck_ongoing_complete.html', data)
 
+@login_required
 def truck_complete_quarantine(request):
 
     all_data = quarantine_contacts.objects.all().filter(source = 'Truck Registration').filter(date_of_contact__lte = date.today()- timedelta(days=14))
@@ -3239,6 +3295,7 @@ def truck_complete_quarantine(request):
 
     return render(request, 'veoc/truck_quarantine_complete.html', data)
 
+@login_required
 def ongoing_tasks(request):
     if request.method == 'POST':
         id = request.POST.get('id','')
@@ -3284,6 +3341,7 @@ def ongoing_tasks(request):
 
     return render(request, 'veoc/ongoing_tasks.html', diseas)
 
+@login_required
 def filter_ongoing_tasks(request):
     if request.method == 'POST':
         date_from = request.POST.get('date_from','')
@@ -3318,6 +3376,7 @@ def filter_ongoing_tasks(request):
 
         return render(request, 'veoc/ongoing_tasks.html', diseas)
 
+@login_required
 def case_definition(request):
 
     if request.method == "POST":
@@ -3352,9 +3411,11 @@ def case_definition(request):
 
     return render(request, "veoc/case_defination.html", data_values)
 
+@login_required
 def generate_pdf(request):
     return render(request, 'veoc/generate_pdf.html')
 
+@login_required
 def All_contacts_report(request):
 
     contacts = {'contacts_val': contact.objects.all(),
@@ -3362,6 +3423,7 @@ def All_contacts_report(request):
 
     return render(request, 'veoc/all_contacts_report.html', contacts)
 
+@login_required
 def Contact_type_report(request, id):
     contacts = contact_type.objects.all()
     contacts = {'contacts_val': contact.objects.all().filter(contact_type_id = id),
@@ -3370,6 +3432,7 @@ def Contact_type_report(request, id):
 
     return render(request, 'veoc/all_contacts_report.html', contacts)
 
+@login_required
 def all_contact_edit(request,editid):
     all_contacts = {'all_contacts': contact.objects.get(pk=editid)}
 
@@ -3398,6 +3461,7 @@ def contacts_edited_submit(request):
 
         return render(request, 'veoc/surveillance_contacts.html', values)
 
+@login_required
 def idsr_data(request):
 
     if request.method == "POST":
@@ -3419,6 +3483,7 @@ def idsr_data(request):
         values = {'dhis_cases': dhis_cases, 'week_no': week_no}
         return render(request, 'veoc/idsr_report.html', values)
 
+@login_required
 def reportable_diseases(request):
 
     _dhis_reported_diseases_count = dhis_reported_diseases.objects.all().count()
@@ -3442,6 +3507,7 @@ def reportable_diseases(request):
 
     return render(request, 'veoc/reportable_diseases_report.html', values)
 
+@login_required
 def reportable_diseases_filters(request):
     global filt_data
     if request.method == 'POST':
@@ -3518,6 +3584,7 @@ def reportable_diseases_filters(request):
 
     return render(request, 'veoc/reportable_diseases_report.html', values)
 
+@login_required
 def reportable_event(request):
 
     _dhis_reported_events_count = dhis_reported_events.objects.all().count()
@@ -3918,6 +3985,8 @@ def site_list(request):
         s_name = request.POST.get('site_name','')
         lead_name = request.POST.get('lead_names','')
         lead_phone = request.POST.get('lead_number','')
+        cnty = request.POST.get('county','')
+        sub_cnty = request.POST.get('subcounty','')
         active = True
 
         #get todays date
@@ -3927,14 +3996,18 @@ def site_list(request):
         current_user = request.user
         userObject = User.objects.get(pk = current_user.id)
 
+        countyObject = organizational_units.objects.get(name = cnty)
+        subcountyObject = organizational_units.objects.get(name = sub_cnty)
+
         #saving values to databse
-        quarantine_sites.objects.create(site_name=s_name, team_lead_names=lead_name, active=active,
-            team_lead_phone=lead_phone, created_at=current_date, updated_at=current_date,
+        quarantine_sites.objects.create(site_name=s_name, team_lead_names=lead_name, active=active, county=countyObject,
+            team_lead_phone=lead_phone, created_at=current_date, updated_at=current_date, subcounty=subcountyObject,
             created_by=userObject, updated_by=userObject)
 
     sites_count = quarantine_sites.objects.all().count
     site_vals = quarantine_sites.objects.all()
-    values = {'sites_count':sites_count, 'site_vals': site_vals}
+    county = organizational_units.objects.all().filter(hierarchylevel = 2).order_by('name')
+    values = {'sites_count':sites_count, 'site_vals': site_vals, 'county':county}
 
     return render(request, 'veoc/quarantine_sites.html', values)
 
@@ -3959,11 +4032,23 @@ def edit_site_list(request):
         myid = request.POST.get('id','')
         s_name = request.POST.get('site_name','')
         lead_name = request.POST.get('lead_names','')
+        cnty = request.POST.get('county','')
+        sub_cnty = request.POST.get('subcounty','')
         lead_phone = request.POST.get('lead_number','')
         active = request.POST.get('active','')
 
+        #get todays date
+        current_date = date.today().strftime('%Y-%m-%d')
+
+        #get current user
+        current_user = request.user
+        userObject = User.objects.get(pk = current_user.id)
+        countyObject = organizational_units.objects.get(name = cnty)
+        subcountyObject = organizational_units.objects.get(name = sub_cnty)
+
         #updating values to database
-        quarantine_sites.objects.filter(pk=myid).update(site_name=s_name, team_lead_names=lead_name, team_lead_phone=lead_phone, active=active)
+        quarantine_sites.objects.filter(pk=myid).update(site_name=s_name, team_lead_names=lead_name, team_lead_phone=lead_phone, active=active, updated_at=current_date,
+                                                        updated_by=userObject, county=countyObject, subcounty=subcountyObject)
 
     sites_count = quarantine_sites.objects.all().count
     site_vals = quarantine_sites.objects.all()
