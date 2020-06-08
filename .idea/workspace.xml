@@ -2,10 +2,10 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="72072e3c-6f4f-4b4b-8a7f-afe45125924a" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/veoc/templates/veoc/main_template.html" afterPath="$PROJECT_DIR$/veoc/templates/veoc/main_template.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/veoc/models.py" afterPath="$PROJECT_DIR$/veoc/models.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/veoc/templates/veoc/quarantine_sites.html" afterPath="$PROJECT_DIR$/veoc/templates/veoc/quarantine_sites.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/veoc/templates/veoc/truck_quarantine_list.html" afterPath="$PROJECT_DIR$/veoc/templates/veoc/truck_quarantine_list.html" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/veoc/templates/veoc/facility_dashboard.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/virtual_eoc/settings.py" afterPath="$PROJECT_DIR$/virtual_eoc/settings.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/veoc/urls.py" afterPath="$PROJECT_DIR$/veoc/urls.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/veoc/templates/veoc/users.html" afterPath="$PROJECT_DIR$/veoc/templates/veoc/users.html" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/veoc/views.py" afterPath="$PROJECT_DIR$/veoc/views.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
@@ -41,8 +41,8 @@
       <file leaf-file-name="urls.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/veoc/urls.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-6.24" vertical-offset="286" max-vertical-offset="3417">
-              <caret line="26" column="69" selection-start-line="26" selection-start-column="69" selection-end-line="26" selection-end-column="69" />
+            <state vertical-scroll-proportion="-9.64" vertical-offset="286" max-vertical-offset="3417">
+              <caret line="31" column="84" selection-start-line="31" selection-start-column="84" selection-end-line="31" selection-end-column="84" />
               <folding>
                 <element signature="e#0#41#0" expanded="true" />
               </folding>
@@ -50,19 +50,95 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="views.py" pinned="false" current-in-tab="false">
+      <file leaf-file-name="views.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/veoc/views.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-7.16" vertical-offset="2915" max-vertical-offset="66912">
-              <caret line="234" column="0" selection-start-line="234" selection-start-column="0" selection-end-line="234" selection-end-column="0" />
+            <state vertical-scroll-proportion="0.41728395" vertical-offset="16219" max-vertical-offset="55437">
+              <caret line="2558" column="12" selection-start-line="2558" selection-start-column="12" selection-end-line="2558" selection-end-column="12" />
               <folding>
                 <element signature="e#0#64#0" expanded="true" />
-                <element signature="e#5092#5139#0" expanded="false" />
-                <element signature="e#6151#8308#0" expanded="false" />
-                <element signature="e#8352#24986#0" expanded="false" />
-                <element signature="e#25040#41936#0" expanded="false" />
-                <element signature="e#41993#58967#0" expanded="false" />
-                <element signature="e#59021#75992#0" expanded="false" />
+                <element signature="e#5282#5329#0" expanded="false" />
+                <element signature="e#6483#8640#0" expanded="false" />
+                <element signature="e#8684#25318#0" expanded="false" />
+                <element signature="e#25372#42268#0" expanded="false" />
+                <element signature="e#42325#59299#0" expanded="false" />
+                <element signature="e#93707#102006#0" expanded="false" />
+                <element signature="e#102037#102371#0" expanded="false" />
+                <element signature="e#102405#102865#0" expanded="false" />
+                <element signature="e#102899#103367#0" expanded="false" />
+                <element signature="e#103397#103850#0" expanded="false" />
+                <element signature="e#103879#104297#0" expanded="false" />
+                <element signature="e#104329#106542#0" expanded="false" />
+                <element signature="e#106581#108220#0" expanded="false" />
+                <element signature="e#108274#114857#0" expanded="false" />
+                <element signature="e#114913#122851#0" expanded="false" />
+                <element signature="e#122920#126581#0" expanded="false" />
+                <element signature="e#126635#128210#0" expanded="false" />
+                <element signature="e#128263#128675#0" expanded="false" />
+                <element signature="e#141778#144604#0" expanded="false" />
+                <element signature="e#144664#144831#0" expanded="false" />
+                <element signature="e#144889#145050#0" expanded="false" />
+                <element signature="e#145111#145281#0" expanded="false" />
+                <element signature="e#145333#150327#0" expanded="false" />
+                <element signature="e#150380#151228#0" expanded="false" />
+                <element signature="e#151280#151331#0" expanded="false" />
+                <element signature="e#151373#153079#0" expanded="false" />
+                <element signature="e#153144#154622#0" expanded="false" />
+                <element signature="e#154673#155711#0" expanded="false" />
+                <element signature="e#155773#156094#0" expanded="false" />
+                <element signature="e#156152#156932#0" expanded="false" />
+                <element signature="e#156983#157969#0" expanded="false" />
+                <element signature="e#158011#158725#0" expanded="false" />
+                <element signature="e#158776#162184#0" expanded="false" />
+                <element signature="e#162241#163673#0" expanded="false" />
+                <element signature="e#163725#168760#0" expanded="false" />
+                <element signature="e#169533#170369#0" expanded="false" />
+                <element signature="e#170410#172636#0" expanded="false" />
+                <element signature="e#190342#192330#0" expanded="false" />
+                <element signature="e#192392#192941#0" expanded="false" />
+                <element signature="e#193004#193556#0" expanded="false" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="facility_dashboard.html" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/veoc/templates/veoc/facility_dashboard.html">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="-9.807693" vertical-offset="510" max-vertical-offset="23885">
+              <caret line="45" column="68" selection-start-line="45" selection-start-column="48" selection-end-line="45" selection-end-column="68" />
+              <folding>
+                <element signature="n#style#0;n#div#0;n#div#0;n#div#1;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#div#0;n#div#0;n#div#0;n#div#0;n#div#1;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#div#0;n#div#1;n#div#1;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#div#0;n#div#0;n#div#0;n#div#1;n#div#1;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#div#0;n#div#2;n#div#1;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#div#0;n#div#0;n#div#0;n#div#2;n#div#1;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#div#0;n#div#3;n#div#1;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#div#0;n#div#0;n#div#0;n#div#3;n#div#1;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#div#0;n#div#0;n#div#2;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#div#0;n#div#0;n#div#0;n#div#2;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#div#0;n#div#1;n#div#2;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#div#0;n#div#0;n#div#1;n#div#2;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#div#0;n#div#0;n#div#0;n#div#3;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#h2#0;n#div#0;n#div#0;n#div#0;n#div#3;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#div#1;n#div#0;n#div#0;n#div#3;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#div#0;n#div#0;n#div#1;n#div#3;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#h2#0;n#div#0;n#div#0;n#div#1;n#div#3;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#div#1;n#div#0;n#div#1;n#div#3;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#div#0;n#div#0;n#div#2;n#div#3;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#h2#0;n#div#0;n#div#0;n#div#2;n#div#3;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#div#1;n#div#0;n#div#2;n#div#3;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#div#0;n#div#0;n#div#0;n#div#4;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#h2#0;n#div#0;n#div#0;n#div#0;n#div#4;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#div#1;n#div#0;n#div#0;n#div#4;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#div#0;n#div#0;n#div#1;n#div#4;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#label#0;n#div#0;n#div#0;n#div#0;n#div#1;n#div#4;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#div#1;n#div#0;n#div#1;n#div#4;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#div#0;n#div#0;n#div#0;n#div#0;n#div#5;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#div#0;n#div#0;n#div#0;n#div#0;n#div#0;n#div#5;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#label#0;n#div#0;n#div#0;n#div#0;n#div#0;n#div#0;n#div#0;n#div#5;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#div#1;n#div#0;n#div#0;n#div#0;n#div#0;n#div#5;n#!!top" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -78,12 +154,79 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="settings.py" pinned="false" current-in-tab="true">
+      <file leaf-file-name="settings.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/virtual_eoc/settings.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.21658987" vertical-offset="1810" max-vertical-offset="2890">
-              <caret line="112" column="74" selection-start-line="112" selection-start-column="74" selection-end-line="112" selection-end-column="74" />
+            <state vertical-scroll-proportion="-3.76" vertical-offset="1810" max-vertical-offset="2890">
+              <caret line="112" column="50" selection-start-line="112" selection-start-column="46" selection-end-line="112" selection-end-column="50" />
               <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="models.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/veoc/models.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="-32.48" vertical-offset="4662" max-vertical-offset="8024">
+              <caret line="625" column="19" selection-start-line="625" selection-start-column="4" selection-end-line="625" selection-end-column="19" />
+              <folding>
+                <element signature="e#8597#10437#0" expanded="false" />
+                <element signature="e#10470#12162#0" expanded="false" />
+                <element signature="e#12197#13870#0" expanded="false" />
+                <element signature="e#13917#14845#0" expanded="false" />
+                <element signature="e#14883#15418#0" expanded="false" />
+                <element signature="e#15459#15608#0" expanded="false" />
+                <element signature="e#15659#15824#0" expanded="false" />
+                <element signature="e#15879#16398#0" expanded="false" />
+                <element signature="e#16452#16601#0" expanded="false" />
+                <element signature="e#16651#17248#0" expanded="false" />
+                <element signature="e#17300#17710#0" expanded="false" />
+                <element signature="e#17762#17911#0" expanded="false" />
+                <element signature="e#17959#18533#0" expanded="false" />
+                <element signature="e#18583#18966#0" expanded="false" />
+                <element signature="e#19021#19527#0" expanded="false" />
+                <element signature="e#19580#19988#0" expanded="false" />
+                <element signature="e#20048#20506#0" expanded="false" />
+                <element signature="e#20559#21434#0" expanded="false" />
+                <element signature="e#22769#23864#0" expanded="false" />
+                <element signature="e#23905#25001#0" expanded="false" />
+                <element signature="e#25040#25486#0" expanded="false" />
+                <element signature="e#25526#26104#0" expanded="false" />
+                <element signature="e#26139#26312#0" expanded="false" />
+                <element signature="e#26347#27583#0" expanded="false" />
+                <element signature="e#27632#28051#0" expanded="false" />
+                <element signature="e#28099#28664#0" expanded="false" />
+                <element signature="e#33488#34491#0" expanded="false" />
+                <element signature="e#34532#35503#0" expanded="false" />
+                <element signature="e#35556#37523#0" expanded="false" />
+                <element signature="e#37563#37649#0" expanded="false" />
+                <element signature="e#37706#37792#0" expanded="false" />
+                <element signature="e#37838#37924#0" expanded="false" />
+                <element signature="e#37972#39761#0" expanded="false" />
+                <element signature="e#39807#40288#0" expanded="false" />
+                <element signature="e#40329#40945#0" expanded="false" />
+                <element signature="e#40988#41595#0" expanded="false" />
+                <element signature="e#41642#42293#0" expanded="false" />
+                <element signature="e#42331#42495#0" expanded="false" />
+                <element signature="e#42544#43008#0" expanded="false" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="users.html" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/veoc/templates/veoc/users.html">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="-10.923077" vertical-offset="4493" max-vertical-offset="5729">
+              <caret line="442" column="40" selection-start-line="442" selection-start-column="34" selection-end-line="442" selection-end-column="40" />
+              <folding>
+                <element signature="e#12469#13371#0#HTML" expanded="false" />
+                <element signature="e#13431#14099#0#HTML" expanded="false" />
+                <element signature="e#14188#15308#0#HTML" expanded="false" />
+                <element signature="e#15339#17336#0#HTML" expanded="false" />
+                <element signature="e#20325#21502#0#HTML" expanded="false" />
+                <element signature="e#21531#22341#0#HTML" expanded="false" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -111,7 +254,6 @@
         <option value="$USER_HOME$/Desktop/DHIS/dhis2_script/dhis_script.py" />
         <option value="$USER_HOME$/Desktop/DHIS/dhis_weekly_national_report/dhis_national_script.py" />
         <option value="$PROJECT_DIR$/veoc/static/css/receipt.css" />
-        <option value="$PROJECT_DIR$/veoc/templates/veoc/users.html" />
         <option value="$PROJECT_DIR$/veoc/static/css/bootstrap-multiselect.css" />
         <option value="$PROJECT_DIR$/veoc/static/js/bootstrap-multiselect.js" />
         <option value="$PROJECT_DIR$/veoc/static/js/bootstrap-multiselect.min.js" />
@@ -135,9 +277,11 @@
         <option value="$PROJECT_DIR$/veoc/templates/veoc/case_defination.html" />
         <option value="$PROJECT_DIR$/veoc/templates/veoc/call_report.html" />
         <option value="$PROJECT_DIR$/veoc/templates/veoc/call_register_form.html" />
-        <option value="$PROJECT_DIR$/veoc/views.py" />
-        <option value="$PROJECT_DIR$/veoc/urls.py" />
         <option value="$PROJECT_DIR$/virtual_eoc/settings.py" />
+        <option value="$PROJECT_DIR$/veoc/templates/veoc/users.html" />
+        <option value="$PROJECT_DIR$/veoc/templates/veoc/facility_dashboard.html" />
+        <option value="$PROJECT_DIR$/veoc/urls.py" />
+        <option value="$PROJECT_DIR$/veoc/views.py" />
       </list>
     </option>
   </component>
@@ -201,20 +345,6 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="virtual_eoc" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="virtual_eoc" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="ears_system" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
               <option name="myItemId" value="veoc" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
@@ -234,6 +364,28 @@
             </PATH_ELEMENT>
             <PATH_ELEMENT>
               <option name="myItemId" value="templates" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="virtual_eoc" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="ears_system" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="veoc" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="templates" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="veoc" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -592,50 +744,40 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="python-line">
           <url>file://$PROJECT_DIR$/veoc/views.py</url>
-          <line>2170</line>
+          <line>2480</line>
           <option name="timeStamp" value="8" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="python-line">
           <url>file://$PROJECT_DIR$/veoc/views.py</url>
-          <line>2114</line>
+          <line>2424</line>
           <option name="timeStamp" value="12" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="python-line">
           <url>file://$PROJECT_DIR$/veoc/views.py</url>
-          <line>4261</line>
+          <line>4582</line>
           <option name="timeStamp" value="14" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="python-line">
           <url>file://$PROJECT_DIR$/veoc/views.py</url>
-          <line>4260</line>
+          <line>4581</line>
           <option name="timeStamp" value="15" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="python-line">
+          <url>file://$PROJECT_DIR$/veoc/views.py</url>
+          <line>3077</line>
+          <option name="timeStamp" value="17" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="javascript">
           <url>file://$PROJECT_DIR$/veoc/templates/veoc/users.html</url>
-          <line>272</line>
+          <line>273</line>
           <option name="timeStamp" value="6" />
         </line-breakpoint>
       </breakpoints>
-      <option name="time" value="17" />
+      <option name="time" value="18" />
     </breakpoint-manager>
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/veoc/templates/veoc/ongoing_tasks.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.83838385" vertical-offset="5142" max-vertical-offset="7191">
-          <caret line="322" column="62" selection-start-line="322" selection-start-column="62" selection-end-line="322" selection-end-column="62" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/veoc/templates/veoc/disease_mappings.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="510" max-vertical-offset="4437">
-          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/veoc/templates/veoc/sitrep_report.html">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="425" max-vertical-offset="12665">
@@ -791,14 +933,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/veoc/templates/veoc/users.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="2720" max-vertical-offset="9299">
-          <caret line="160" column="138" selection-start-line="160" selection-start-column="125" selection-end-line="160" selection-end-column="138" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/virtual_eoc/urls.py">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="493">
@@ -886,53 +1020,6 @@
             <element signature="n#div#2;n#!!top" expanded="false" />
             <element signature="n#div#3;n#!!top" expanded="false" />
             <element signature="n#div#4;n#!!top" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/veoc/models.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-5.08" vertical-offset="6078" max-vertical-offset="8415">
-          <caret line="645" column="19" selection-start-line="645" selection-start-column="4" selection-end-line="645" selection-end-column="19" />
-          <folding>
-            <element signature="e#0#28#0" expanded="false" />
-            <element signature="e#8597#10437#0" expanded="false" />
-            <element signature="e#10470#12162#0" expanded="false" />
-            <element signature="e#12197#13870#0" expanded="false" />
-            <element signature="e#13917#14845#0" expanded="false" />
-            <element signature="e#14883#15418#0" expanded="false" />
-            <element signature="e#15459#15608#0" expanded="false" />
-            <element signature="e#15659#15824#0" expanded="false" />
-            <element signature="e#15879#16398#0" expanded="false" />
-            <element signature="e#16452#16601#0" expanded="false" />
-            <element signature="e#16651#17248#0" expanded="false" />
-            <element signature="e#17300#17710#0" expanded="false" />
-            <element signature="e#17762#17911#0" expanded="false" />
-            <element signature="e#17959#18533#0" expanded="false" />
-            <element signature="e#18583#18966#0" expanded="false" />
-            <element signature="e#19021#19527#0" expanded="false" />
-            <element signature="e#19580#19988#0" expanded="false" />
-            <element signature="e#20048#20506#0" expanded="false" />
-            <element signature="e#20559#21434#0" expanded="false" />
-            <element signature="e#22769#23864#0" expanded="false" />
-            <element signature="e#23905#25001#0" expanded="false" />
-            <element signature="e#25040#25486#0" expanded="false" />
-            <element signature="e#25526#26104#0" expanded="false" />
-            <element signature="e#26139#26312#0" expanded="false" />
-            <element signature="e#26347#27583#0" expanded="false" />
-            <element signature="e#33488#34491#0" expanded="false" />
-            <element signature="e#34532#35503#0" expanded="false" />
-            <element signature="e#35556#37523#0" expanded="false" />
-            <element signature="e#37563#37649#0" expanded="false" />
-            <element signature="e#37706#37792#0" expanded="false" />
-            <element signature="e#37838#37924#0" expanded="false" />
-            <element signature="e#37972#39761#0" expanded="false" />
-            <element signature="e#39807#40288#0" expanded="false" />
-            <element signature="e#40329#40945#0" expanded="false" />
-            <element signature="e#40988#41595#0" expanded="false" />
-            <element signature="e#41642#42293#0" expanded="false" />
-            <element signature="e#42331#42495#0" expanded="false" />
-            <element signature="e#42544#43008#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -1033,37 +1120,182 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/veoc/views.py">
+    <entry file="file://$PROJECT_DIR$/veoc/templates/veoc/users.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-7.16" vertical-offset="2915" max-vertical-offset="66912">
-          <caret line="234" column="0" selection-start-line="234" selection-start-column="0" selection-end-line="234" selection-end-column="0" />
+        <state vertical-scroll-proportion="-10.923077" vertical-offset="4493" max-vertical-offset="5729">
+          <caret line="442" column="40" selection-start-line="442" selection-start-column="34" selection-end-line="442" selection-end-column="40" />
           <folding>
-            <element signature="e#0#64#0" expanded="true" />
-            <element signature="e#5092#5139#0" expanded="false" />
-            <element signature="e#6151#8308#0" expanded="false" />
-            <element signature="e#8352#24986#0" expanded="false" />
-            <element signature="e#25040#41936#0" expanded="false" />
-            <element signature="e#41993#58967#0" expanded="false" />
-            <element signature="e#59021#75992#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/veoc/urls.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-6.24" vertical-offset="286" max-vertical-offset="3417">
-          <caret line="26" column="69" selection-start-line="26" selection-start-column="69" selection-end-line="26" selection-end-column="69" />
-          <folding>
-            <element signature="e#0#41#0" expanded="true" />
+            <element signature="e#12469#13371#0#HTML" expanded="false" />
+            <element signature="e#13431#14099#0#HTML" expanded="false" />
+            <element signature="e#14188#15308#0#HTML" expanded="false" />
+            <element signature="e#15339#17336#0#HTML" expanded="false" />
+            <element signature="e#20325#21502#0#HTML" expanded="false" />
+            <element signature="e#21531#22341#0#HTML" expanded="false" />
           </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/virtual_eoc/settings.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.21658987" vertical-offset="1810" max-vertical-offset="2890">
-          <caret line="112" column="74" selection-start-line="112" selection-start-column="74" selection-end-line="112" selection-end-column="74" />
+        <state vertical-scroll-proportion="-3.76" vertical-offset="1810" max-vertical-offset="2890">
+          <caret line="112" column="50" selection-start-line="112" selection-start-column="46" selection-end-line="112" selection-end-column="50" />
           <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/veoc/templates/veoc/border_dashboard.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.11778291" vertical-offset="0" max-vertical-offset="23885">
+          <caret line="3" column="30" selection-start-line="3" selection-start-column="30" selection-end-line="3" selection-end-column="30" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/veoc/models.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-32.48" vertical-offset="4662" max-vertical-offset="8024">
+          <caret line="625" column="19" selection-start-line="625" selection-start-column="4" selection-end-line="625" selection-end-column="19" />
+          <folding>
+            <element signature="e#8597#10437#0" expanded="false" />
+            <element signature="e#10470#12162#0" expanded="false" />
+            <element signature="e#12197#13870#0" expanded="false" />
+            <element signature="e#13917#14845#0" expanded="false" />
+            <element signature="e#14883#15418#0" expanded="false" />
+            <element signature="e#15459#15608#0" expanded="false" />
+            <element signature="e#15659#15824#0" expanded="false" />
+            <element signature="e#15879#16398#0" expanded="false" />
+            <element signature="e#16452#16601#0" expanded="false" />
+            <element signature="e#16651#17248#0" expanded="false" />
+            <element signature="e#17300#17710#0" expanded="false" />
+            <element signature="e#17762#17911#0" expanded="false" />
+            <element signature="e#17959#18533#0" expanded="false" />
+            <element signature="e#18583#18966#0" expanded="false" />
+            <element signature="e#19021#19527#0" expanded="false" />
+            <element signature="e#19580#19988#0" expanded="false" />
+            <element signature="e#20048#20506#0" expanded="false" />
+            <element signature="e#20559#21434#0" expanded="false" />
+            <element signature="e#22769#23864#0" expanded="false" />
+            <element signature="e#23905#25001#0" expanded="false" />
+            <element signature="e#25040#25486#0" expanded="false" />
+            <element signature="e#25526#26104#0" expanded="false" />
+            <element signature="e#26139#26312#0" expanded="false" />
+            <element signature="e#26347#27583#0" expanded="false" />
+            <element signature="e#27632#28051#0" expanded="false" />
+            <element signature="e#28099#28664#0" expanded="false" />
+            <element signature="e#33488#34491#0" expanded="false" />
+            <element signature="e#34532#35503#0" expanded="false" />
+            <element signature="e#35556#37523#0" expanded="false" />
+            <element signature="e#37563#37649#0" expanded="false" />
+            <element signature="e#37706#37792#0" expanded="false" />
+            <element signature="e#37838#37924#0" expanded="false" />
+            <element signature="e#37972#39761#0" expanded="false" />
+            <element signature="e#39807#40288#0" expanded="false" />
+            <element signature="e#40329#40945#0" expanded="false" />
+            <element signature="e#40988#41595#0" expanded="false" />
+            <element signature="e#41642#42293#0" expanded="false" />
+            <element signature="e#42331#42495#0" expanded="false" />
+            <element signature="e#42544#43008#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/veoc/urls.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-9.64" vertical-offset="286" max-vertical-offset="3417">
+          <caret line="31" column="84" selection-start-line="31" selection-start-column="84" selection-end-line="31" selection-end-column="84" />
+          <folding>
+            <element signature="e#0#41#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/veoc/templates/veoc/facility_dashboard.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-9.807693" vertical-offset="510" max-vertical-offset="23885">
+          <caret line="45" column="68" selection-start-line="45" selection-start-column="48" selection-end-line="45" selection-end-column="68" />
+          <folding>
+            <element signature="n#style#0;n#div#0;n#div#0;n#div#1;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#div#0;n#div#0;n#div#0;n#div#0;n#div#1;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#div#0;n#div#1;n#div#1;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#div#0;n#div#0;n#div#0;n#div#1;n#div#1;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#div#0;n#div#2;n#div#1;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#div#0;n#div#0;n#div#0;n#div#2;n#div#1;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#div#0;n#div#3;n#div#1;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#div#0;n#div#0;n#div#0;n#div#3;n#div#1;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#div#0;n#div#0;n#div#2;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#div#0;n#div#0;n#div#0;n#div#2;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#div#0;n#div#1;n#div#2;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#div#0;n#div#0;n#div#1;n#div#2;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#div#0;n#div#0;n#div#0;n#div#3;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#h2#0;n#div#0;n#div#0;n#div#0;n#div#3;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#div#1;n#div#0;n#div#0;n#div#3;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#div#0;n#div#0;n#div#1;n#div#3;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#h2#0;n#div#0;n#div#0;n#div#1;n#div#3;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#div#1;n#div#0;n#div#1;n#div#3;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#div#0;n#div#0;n#div#2;n#div#3;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#h2#0;n#div#0;n#div#0;n#div#2;n#div#3;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#div#1;n#div#0;n#div#2;n#div#3;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#div#0;n#div#0;n#div#0;n#div#4;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#h2#0;n#div#0;n#div#0;n#div#0;n#div#4;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#div#1;n#div#0;n#div#0;n#div#4;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#div#0;n#div#0;n#div#1;n#div#4;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#label#0;n#div#0;n#div#0;n#div#0;n#div#1;n#div#4;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#div#1;n#div#0;n#div#1;n#div#4;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#div#0;n#div#0;n#div#0;n#div#0;n#div#5;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#div#0;n#div#0;n#div#0;n#div#0;n#div#0;n#div#5;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#label#0;n#div#0;n#div#0;n#div#0;n#div#0;n#div#0;n#div#0;n#div#5;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#div#1;n#div#0;n#div#0;n#div#0;n#div#0;n#div#5;n#!!top" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/veoc/views.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.41728395" vertical-offset="16219" max-vertical-offset="55437">
+          <caret line="2558" column="12" selection-start-line="2558" selection-start-column="12" selection-end-line="2558" selection-end-column="12" />
+          <folding>
+            <element signature="e#0#64#0" expanded="true" />
+            <element signature="e#5282#5329#0" expanded="false" />
+            <element signature="e#6483#8640#0" expanded="false" />
+            <element signature="e#8684#25318#0" expanded="false" />
+            <element signature="e#25372#42268#0" expanded="false" />
+            <element signature="e#42325#59299#0" expanded="false" />
+            <element signature="e#93707#102006#0" expanded="false" />
+            <element signature="e#102037#102371#0" expanded="false" />
+            <element signature="e#102405#102865#0" expanded="false" />
+            <element signature="e#102899#103367#0" expanded="false" />
+            <element signature="e#103397#103850#0" expanded="false" />
+            <element signature="e#103879#104297#0" expanded="false" />
+            <element signature="e#104329#106542#0" expanded="false" />
+            <element signature="e#106581#108220#0" expanded="false" />
+            <element signature="e#108274#114857#0" expanded="false" />
+            <element signature="e#114913#122851#0" expanded="false" />
+            <element signature="e#122920#126581#0" expanded="false" />
+            <element signature="e#126635#128210#0" expanded="false" />
+            <element signature="e#128263#128675#0" expanded="false" />
+            <element signature="e#141778#144604#0" expanded="false" />
+            <element signature="e#144664#144831#0" expanded="false" />
+            <element signature="e#144889#145050#0" expanded="false" />
+            <element signature="e#145111#145281#0" expanded="false" />
+            <element signature="e#145333#150327#0" expanded="false" />
+            <element signature="e#150380#151228#0" expanded="false" />
+            <element signature="e#151280#151331#0" expanded="false" />
+            <element signature="e#151373#153079#0" expanded="false" />
+            <element signature="e#153144#154622#0" expanded="false" />
+            <element signature="e#154673#155711#0" expanded="false" />
+            <element signature="e#155773#156094#0" expanded="false" />
+            <element signature="e#156152#156932#0" expanded="false" />
+            <element signature="e#156983#157969#0" expanded="false" />
+            <element signature="e#158011#158725#0" expanded="false" />
+            <element signature="e#158776#162184#0" expanded="false" />
+            <element signature="e#162241#163673#0" expanded="false" />
+            <element signature="e#163725#168760#0" expanded="false" />
+            <element signature="e#169533#170369#0" expanded="false" />
+            <element signature="e#170410#172636#0" expanded="false" />
+            <element signature="e#190342#192330#0" expanded="false" />
+            <element signature="e#192392#192941#0" expanded="false" />
+            <element signature="e#193004#193556#0" expanded="false" />
+          </folding>
         </state>
       </provider>
     </entry>

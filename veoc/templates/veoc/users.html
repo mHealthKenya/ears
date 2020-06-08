@@ -180,49 +180,50 @@
 								<label>Email</label>
 								<input type="email" class="form-control input-sm" name="email" id="email" placeholder="example@example.org">
 							</div><!-- /form-group -->
-              <div class="form-group">
+                            <div class="form-group">
 								<label>Access Level</label>
 								<select class="form-control access_level" data-width="100%" id="access_level" name="access_level" onchange="filterAccess()" >
-                  <option value="" disabled selected>Select Access Level</option>
-                      <option value="National">National User</option>
-                      <option value="County">County User</option>
-                      <option value="SubCounty">Sub-County User</option>
-                      <option value="Border">Border Point User</option>
+                                  <option value="" disabled selected>Select Access Level</option>
+                                      <option value="National">National User</option>
+                                      <option value="County">County User</option>
+                                      <option value="SubCounty">Sub-County User</option>
+                                      <option value="Border">Border Point User</option>
+                                      <option value="Facility">Facility User</option>
 							   </select>
 							</div><!-- /form-group -->
 							<div class="form-group" id="org_unit_div" style="display: none;">
 								<label>County</label>
-                <select class="form-control" id="org_unit" name="org_unit" onchange="getsubcounty()">
-                    <option value="" disabled selected>Select County</option>
-                    {% for org_unit in org_units %}
-                        <option value="{{org_unit.organisationunitid}}">{{org_unit.name}}</option>
-                    {% endfor %}
-                </select>
+                                <select class="form-control" id="org_unit" name="org_unit" onchange="getsubcounty()">
+                                    <option value="" disabled selected>Select County</option>
+                                    {% for org_unit in org_units %}
+                                        <option value="{{org_unit.organisationunitid}}">{{org_unit.name}}</option>
+                                    {% endfor %}
+                                </select>
 							</div><!-- /form-group -->
-              <div class="form-group" id="sub_county_div" style="display: none;">
-                <label for="subcounty">Subcounty</label>
-                <select class="form-control" name="subcounty" id="subcounty">
-                     <option value="" disabled selected>Select sub-county</option>
-                 </select>
+                          <div class="form-group" id="sub_county_div" style="display: none;">
+                            <label for="subcounty">Subcounty</label>
+                            <select class="form-control" name="subcounty" id="subcounty">
+                                 <option value="" disabled selected>Select sub-county</option>
+                             </select>
 							</div><!-- /form-group -->
 							<div class="form-group">
 								<label>User Group</label>
-                <select class="form-control usergroup" name="usergroup" id="usergroup">
-                     <option value="" disabled selected>Select Group</option>
-                 </select>
-								<!-- <select class="form-control input-sm usergroup" data-width="100%" id="user_group" name="user_group_id" >
-                  <option value="" disabled selected>Select Group</option>
-                  {% for user_group in user_groups %}
-                      <option value="{{user_group.id}}">{{user_group.name}}</option>
-                  {% endfor %}
+                                <select class="form-control usergroup" name="usergroup" id="usergroup">
+                                     <option value="" disabled selected>Select Group</option>
+                                 </select>
+                                                <!-- <select class="form-control input-sm usergroup" data-width="100%" id="user_group" name="user_group_id" >
+                                  <option value="" disabled selected>Select Group</option>
+                                  {% for user_group in user_groups %}
+                                      <option value="{{user_group.id}}">{{user_group.name}}</option>
+                                  {% endfor %}
 							   </select> -->
 							</div><!-- /form-group -->
-              <div class="form-group" id="super_user_div" style="display: none;">
+                            <div class="form-group" id="super_user_div" style="display: none;">
 								<label>Is SuperUser?</label>
 								<select class="form-control input-sm user_status" data-width="100%" id="user_status" name="user_status" >
-                  <option value="" disabled selected>Select Status</option>
-                      <option value="t">Yes</option>
-                      <option value="f">No</option>
+                                  <option value="" disabled selected>Select Status</option>
+                                      <option value="t">Yes</option>
+                                      <option value="f">No</option>
 							   </select>
 							</div><!-- /form-group -->
 
@@ -419,6 +420,7 @@
        var _access_county_div = document.getElementById('sub_county_div');
        var _super_user_div = document.getElementById('super_user_div');
 
+
        // console.log(_access_level);
        if(_access_level == "National"){
          _access_level_div.style.display = 'none';
@@ -438,12 +440,20 @@
          _super_user_div.style.display = 'block';
          // create ajax to pull user populate group where name contains Sub-County
          group_select("Sub-County");
-       }else{
+       }else if(_access_level == "Border"){
          _access_level_div.style.display = 'none';
          _access_county_div.style.display = 'none';
-         _super_user_div.style.display = 'block';
+           _super_user_div.style.display = 'none';
+           $('#user_status').val("f");
          // create ajax to pull user populate group where name contains Sub-County
          group_select("Border");
+       }else{
+           _access_level_div.style.display = 'block';
+           _access_county_div.style.display = 'block';
+            _super_user_div.style.display = 'none';
+            $('#user_status').val("f");
+            // create ajax to pull user populate group where name contains Sub-County
+           group_select("Facility");
        }
     }
 

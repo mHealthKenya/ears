@@ -126,9 +126,14 @@ def login(request):
                     next = '/subcounty_dashboard/'
                     print(next)
 
-                else:
+                elif user_access_level == 'Border':
                     print('inside border dashboard')
                     next = '/border_dashboard/'
+                    print(next)
+
+                else:
+                    print('inside Facility dashboard')
+                    next = '/facility_dashboard/'
                     print(next)
 
                 return HttpResponse(next)
@@ -173,9 +178,14 @@ def access_dashboard(request):
         next = '/subcounty_dashboard/'
         print(next)
 
-    else:
+    elif user_access_level == 'Border':
         print('inside border dashboard')
         next = '/border_dashboard/'
+        print(next)
+
+    else:
+        print('inside Facility dashboard')
+        next = '/facility_dashboard/'
         print(next)
 
     # messages.info(request, 'Your password was updated successfully!')
@@ -1419,6 +1429,306 @@ def border_dashboard(request):
     return HttpResponse(template.render(context.flatten()))
 
 @login_required
+def facility_dashboard(request):
+
+    #get the person org unit to dislay subcounty on the Dashboard
+    current_user = request.user
+    u = User.objects.get(username=current_user.username)
+    user_county_id = u.persons.sub_county_id
+    user_id = u.persons.user_id
+
+    #get county names
+    county_object = organizational_units.objects.get(pk = user_county_id)
+    sub_county_name = county_object.name
+
+    #check quarantine facilty user is assigned to
+    # facility_access = quarantine_sites.objects.filter(team_lead = user_id)
+    # facilty_name
+    # if facility_access :
+    #     facilty_name = facility_access.site_name
+    #
+    # else:
+    #     facilty_name = "No Facility Allocated to User"
+    #
+    # print(facilty_name)
+
+    # print(user_county_id)
+    # print(sub_county_name)
+
+    _dcall_logs = disease.objects.all().filter(subcounty = user_county_id).filter(data_source = 1).filter(incident_status = 2).filter(date_reported__gte = date.today()- timedelta(days=30)).order_by("-date_reported")
+    _ecall_logs = event.objects.all().filter(subcounty = user_county_id).filter(data_source = 1).filter(incident_status = 2).filter(date_reported__gte = date.today()- timedelta(days=7)).order_by("-date_reported")
+    _events = event.objects.all().filter(subcounty = user_county_id).filter(incident_status = 2).filter(date_reported__gte = date.today()- timedelta(days=7)).order_by("-date_reported")
+    _disease = disease.objects.all().filter(subcounty = user_county_id).filter(incident_status = 2).filter(date_reported__gte = date.today()- timedelta(days=7)).order_by("-date_reported")
+    marquee_call_log = []#an array that collects all confirmed diseases and maps them to the marquee
+    marquee_disease = []#an array that collects all confirmed diseases and maps them to the marquee
+    marquee_events = []#an array that collects all confirmed diseases and maps them to the marquee
+
+    #checks if dictionary has values for the past 7 days
+    if len(_dcall_logs) == 0:
+        marquee_call_log.append("None reported")
+    else:
+        for _dlogs in _dcall_logs:
+            marquee_call_log.append(_dlogs)
+
+    if len(_ecall_logs) == 0:
+        marquee_call_log.append("")
+    else:
+        for _elogs in _ecall_logs:
+            marquee_call_log.append(_elogs)
+
+    if len(_events) == 0:
+        marquee_events.append("None reported")
+    else:
+        for _eve in _events:
+            marquee_events.append(_eve)
+
+    if len(_disease) == 0:
+        marquee_disease.append("None reported")
+    else:
+        for _dis in _disease:
+            marquee_disease.append(_dis)
+
+    #Diseases reported - confirmed diseases cases
+    conf_disease_count = disease.objects.all().filter(subcounty = user_county_id).filter(incident_status = 2).filter(date_reported__gte = date.today()- timedelta(days=30)).order_by("-date_reported").count()
+    rum_disease_count = disease.objects.all().filter(subcounty = user_county_id).filter(incident_status = 1).filter(date_reported__gte = date.today()- timedelta(days=30)).order_by("-date_reported").count()
+    conf_disease_call_log_count = call_log.objects.all().filter(subcounty = user_county_id).filter(call_category=1).filter(incident_status=2).filter(date_reported__gte = date.today()- timedelta(days=1)).order_by("-date_reported").count()
+    rum_disease_call_log_count = call_log.objects.all().filter(subcounty = user_county_id).filter(call_category=1).filter(incident_status=1).order_by("-date_reported").count()
+    # print(rum_disease_call_log_count)
+
+    #Events reported - confirmed cases
+    conf_event_count = event.objects.all().filter(subcounty = user_county_id).filter(incident_status = 2).filter(date_reported__gte = date.today()- timedelta(days=30)).order_by("-date_reported").count()
+    rum_event_count = event.objects.all().filter(subcounty = user_county_id).filter(incident_status = 1).filter(date_reported__gte = date.today()- timedelta(days=30)).order_by("-date_reported").count()
+    susp_event_count = event.objects.all().filter(subcounty = user_county_id).filter(incident_status = 3).filter(date_reported__gte = date.today()- timedelta(days=30)).order_by("-date_reported").count()
+    conf_event_call_log_count = call_log.objects.all().filter(subcounty = user_county_id).filter(call_category=2).filter(incident_status=2).filter(date_reported__gte = date.today()- timedelta(days=30)).order_by("-date_reported").count()
+    rum_event_call_log_count = call_log.objects.all().filter(subcounty = user_county_id).filter(call_category=2).filter(incident_status=1).filter(date_reported__gte = date.today()- timedelta(days=30)).order_by("-date_reported").count()
+    # print(rum_event_call_log_count)
+
+    e_conf_count=conf_event_count+conf_event_call_log_count
+    conf_call_count = conf_disease_call_log_count
+    rum_call_count = rum_disease_call_log_count
+    total_call_count = call_log.objects.filter(subcounty = user_county_id).filter(date_reported__gte = date.today()- timedelta(days=30)).order_by("-date_reported").count()
+
+    #changed call logs button
+    disease_related_calls = call_log.objects.filter(subcounty = user_county_id).filter(call_category=1).filter(date_reported__gte = date.today()- timedelta(days=30)).order_by("-date_reported").count()
+    event_related_calls = call_log.objects.filter(subcounty = user_county_id).filter(call_category=2).filter(date_reported__gte = date.today()- timedelta(days=30)).order_by("-date_reported").count()
+    tot_urelated = call_log.objects.filter(subcounty = user_county_id).filter(date_reported__gte = date.today()- timedelta(days=30)).filter(call_category=3).order_by("-date_reported").count()
+    tot_flashes = call_log.objects.filter(subcounty = user_county_id).filter(date_reported__gte = date.today()- timedelta(days=30)).filter(call_category=3).order_by("-date_reported").count()
+    total_unrelated_calls = tot_urelated + tot_flashes
+
+    #Populating the pie_chart
+    counties = organizational_units.objects.all().filter(hierarchylevel = 2).order_by('name')
+    disease_types = dhis_disease_type.objects.all().filter(priority_disease = True)
+    disease_report_stat= {}
+    thirty_days_stat= {}
+    for d_type in disease_types:
+       diseases_count = disease.objects.all().filter(subcounty = user_county_id).filter(disease_type_id=d_type.id).count()
+       thirty_days_disease_count = disease.objects.all().filter(subcounty = user_county_id).filter(disease_type_id=d_type.id).filter(date_reported__gte = date.today()- timedelta(days=30)).count()
+       if thirty_days_disease_count > 0:
+        disease_report_stat[d_type.name] = diseases_count
+        thirty_days_stat[d_type.name] = thirty_days_disease_count
+
+    #picking the highest disease numbers for dashboard diseases
+    disease_reported_dash_vals = dict(Counter(thirty_days_stat).most_common(3))
+
+    #ph events bar graph
+    event_types = dhis_event_type.objects.all()
+    events_report_stat= {}
+    events_thirty_days_stat= {}
+    for e_type in event_types:
+       events_count = event.objects.all().filter(subcounty = user_county_id).filter(event_type_id=e_type.id).count()
+       events_thirty_days_disease_count = event.objects.all().filter(subcounty = user_county_id).filter(event_type_id=e_type.id).filter(date_reported__gte = date.today()- timedelta(days=30)).count()
+       if events_thirty_days_disease_count > 0:
+        events_report_stat[e_type.name] = events_count
+        events_thirty_days_stat[e_type.name] = events_thirty_days_disease_count
+
+    #picking the highest disease numbers for dashboard diseases
+    events_reported_dash_vals = dict(Counter(events_thirty_days_stat).most_common(3))
+
+    #Populating the bargraph
+    # counties = organizational_units.objects.all().filter(hierarchylevel = 2).order_by('name')
+    # sub_counties = sub_county.objects.all()
+    call_stats = {}#variable that collects county descriptions from their id's (to be used as an index)
+    sub_call_stat = {}
+
+    series_data = {}
+    series = []
+    data_val = []
+    data_record = []
+
+    for cnty in counties:
+        call_count = call_log.objects.all().filter(subcounty = user_county_id).filter(county_id = cnty.id).filter(date_reported__gte = date.today()- timedelta(days=1)).count()
+        sub_counties = organizational_units.objects.all().filter(parentid = cnty.organisationunitid).order_by('name')
+        if call_count > 0:
+            # print(call_count)
+            call_stats[cnty.name] = call_count
+        for subcnty in sub_counties:
+            call_subcny = call_log.objects.all().filter(subcounty = user_county_id).filter(subcounty_id = subcnty.id).filter(county_id = cnty.id).count()
+            if call_subcny > 0:
+                sub_call_stat[subcnty.name, cnty.name] = call_subcny
+
+                val = {'name':cnty.name, 'id':cnty.name}
+                data_record = [subcnty.name, call_subcny]
+                # print(data_record)
+        data_val.append(data_record)
+    series.append(series_data)
+
+    #pie_chart disease data
+    chart_d_type = dhis_disease_type.objects.all().order_by('name')
+    cases = []
+    disease_status = []
+    for crt_tpye in chart_d_type:
+        disease_descriptions = disease.objects.filter(subcounty = user_county_id).filter(disease_type_id = crt_tpye.id).filter(date_reported__gte = date.today()- timedelta(days=30)).values('disease_type__name', 'county__name', 'subcounty__name', 'cases', 'deaths').distinct()
+        cases.append(disease_descriptions)
+
+    #pie_chart events data
+    chart_e_type = dhis_event_type.objects.all().order_by('name')
+    event_cases = []
+    event_status = []
+    for crt_tpye in chart_e_type:
+        event_descriptions = event.objects.filter(subcounty = user_county_id).filter(event_type_id = crt_tpye.id).filter(date_reported__gte = date.today()- timedelta(days=30)).values('event_type__name', 'county__name', 'subcounty__name', 'cases', 'deaths').distinct()
+        event_cases.append(event_descriptions)
+
+    #line graph dhis2 diseases data
+    chart_dhis_type = idsr_diseases.objects.all().order_by('name')
+    dhis_cases = []
+    dhis_status = []
+    for crt_tpye in chart_dhis_type:
+        dhis_descriptions = idsr_weekly_national_report.objects.filter(idsr_disease_id_id = crt_tpye.id).values('idsr_disease_id__name', 'org_unit_id_id__name', 'idsr_incident_id_id__name', 'period', 'data_value').distinct()
+        dhis_cases.append(dhis_descriptions)
+
+    #pulling all eoc status for the drop down for change
+    eoc_Status = eoc_status.objects.all()
+
+    #covid-19 line graph quarantine sites_count
+    qua_sites = quarantine_sites.objects.filter(subcounty = user_county_id).order_by('site_name')
+    # qua_sites = quarantine_sites.objects.filter(team_lead = user_id).order_by('site_name')
+    ongoing_cases = {}
+    completed_cases = {}
+    site_id = 0
+    for qua_site in qua_sites:
+        ongoing_array = myDict()
+        completed_array = myDict()
+        site_id = qua_site.id
+
+        qua_completed_contacts = quarantine_contacts.objects.all().filter(subcounty = user_county_id).filter(quarantine_site_id = qua_site.id).filter(created_at__gte = date.today()- timedelta(days=14)).count()
+        qua_ongoing_contacts = quarantine_contacts.objects.all().filter(subcounty = user_county_id).filter(quarantine_site_id = qua_site.id).filter(created_at__lte = date.today()- timedelta(days=14)).count()
+        qua_total_contacts = quarantine_contacts.objects.all().filter(subcounty = user_county_id).filter(quarantine_site_id = qua_site.id).count()
+
+        if qua_completed_contacts > 0 or qua_ongoing_contacts > 0:
+
+            ongoing_array.add('ongoing', qua_ongoing_contacts)
+            completed_array.add("completed",qua_completed_contacts)
+
+            ongoing_cases[qua_site.site_name + " - "+ str(qua_total_contacts) +" Cases"] = qua_ongoing_contacts
+            completed_cases[qua_site.site_name] = qua_completed_contacts
+
+    print(ongoing_cases)
+    print(completed_cases)
+
+    #populating the total quarantine respondents
+    print(site_id)
+    _total_cor_quarantine = quarantine_contacts.objects.filter(quarantine_site__id = site_id).count()
+    _total_ongoing_quarantine = quarantine_contacts.objects.all().filter(quarantine_site__id = site_id).filter(created_at__gte = date.today()- timedelta(days=14)).order_by("-created_at").count()
+    _total_completed_quarantine = quarantine_contacts.objects.all().filter(quarantine_site__id = site_id).filter(created_at__lte = date.today()- timedelta(days=14)).order_by("-created_at").count()
+
+    qua_contacts = quarantine_contacts.objects.all().filter(quarantine_site__id = site_id)
+    qua_contacts_comp = quarantine_contacts.objects.filter(quarantine_site__id = site_id).filter(created_at__gte = date.today()- timedelta(days=14)).order_by("-created_at")
+    qua_contacts_ong = quarantine_contacts.objects.filter(quarantine_site__id = site_id).filter(created_at__lte = date.today()- timedelta(days=14)).order_by("-created_at")
+    total_follow_up_stat= 0
+    today_follow_up_stat= 0
+    total_male = 0
+    total_female = 0
+    ongoing_male = 0
+    ongoing_female = 0
+    completed_male = 0
+    completed_female = 0
+
+    current_date = date.today().strftime('%Y-%m-%d')
+    c_date = date.today()
+    today_time = datetime.combine(c_date, datetime.min.time())
+    midnight = today_time.strftime('%Y-%m-%d %H:%M:%S')
+    midnight_time = midnight+"+03"
+    # print(midnight)
+    # print(midnight_time)
+
+    for qua_contact in qua_contacts:
+        followup = quarantine_follow_up.objects.all().filter(patient_contacts = qua_contact.id).count()
+        if followup > 0:
+            total_follow_up_stat += 1
+
+    #populating the todays quarantine respondents
+    for today_qua_contact in qua_contacts:
+        current_date = date.today().strftime('%Y-%m-%d')
+        today_followup = quarantine_follow_up.objects.all().filter(patient_contacts = today_qua_contact.id).filter(patient_contacts = today_qua_contact.id).filter(Q(created_at__gte = midnight) | Q(created_at__gte = midnight_time)).count()
+        if today_followup > 0:
+            today_follow_up_stat += 1
+
+    #Getting gender totals, ongoing, completed
+    for gender in qua_contacts:
+        if gender.sex == "Male":
+            total_male += 1
+        else:
+            total_female += 1
+    for gender in qua_contacts_comp:
+        if gender.sex == "Male":
+            ongoing_male += 1
+        else:
+            ongoing_female += 1
+    for gender in qua_contacts_ong:
+        if gender.sex == "Male":
+            completed_male += 1
+        else:
+            completed_female += 1
+
+    # print(total_follow_up_stat)
+    # print(today_follow_up_stat)
+
+    #pulling eoc status as set by only the eoc manager
+    set_eoc_status = eoc_status.objects.all().exclude(active = False)
+
+    template = loader.get_template('veoc/facility_dashboard.html')
+    context = RequestContext(request,{
+        'marquee_call_log': marquee_call_log,
+        'marquee_disease': marquee_disease,
+        'marquee_events': marquee_events,
+        'total_cor_quarantine': _total_cor_quarantine,
+        'total_ongoing_quarantine': _total_ongoing_quarantine,
+        'total_completed_quarantine': _total_completed_quarantine,
+        'total_follow_up_stat': total_follow_up_stat,
+        'today_follow_up_stat': today_follow_up_stat,
+        'total_pie_male': total_male, 'total_pie_female': total_female,
+        'total_pie_comp_male': completed_male, 'total_pie_comp_female': completed_female,
+        'total_pie_ong_male': ongoing_male, 'total_pie_ong_female': ongoing_female,
+        'd_count': disease.objects.filter(date_reported__gte = date.today()- timedelta(days=30)).order_by("-date_reported").count(),
+        'conf_disease_count': conf_disease_count,
+        'rum_disease_count': rum_disease_count,
+        'e_count': event.objects.all().filter(date_reported__gte = date.today()- timedelta(days=30)).order_by("-date_reported").count(),
+        'conf_event_count': conf_event_count,
+        'rum_event_count': rum_event_count,
+        'susp_event_count': susp_event_count,
+        'conf_call_count': conf_call_count,
+        'rum_call_count': rum_call_count,
+        'total_call_count': total_call_count,
+        'disease_related_calls' : disease_related_calls,
+        'event_related_calls': event_related_calls,
+        'total_unrelated_calls': total_unrelated_calls,
+        'vals': call_log.objects.all().filter(date_reported__gte = date.today()- timedelta(days=30)).order_by("-date_reported"),
+        'disease_vals':disease.objects.all().filter(date_reported__gte = date.today()- timedelta(days=30)).order_by("-date_reported")[:5],
+        'event_vals': event.objects.all().filter(date_reported__gte = date.today()- timedelta(days=30)).order_by("-date_reported")[:5],
+        'contact_type_vals': contacts,
+        'thirty_days_stat': thirty_days_stat,
+        'events_thirty_days_stat': events_thirty_days_stat,
+        'elements': call_stats,
+        'sub_elements': sub_call_stat,
+        'sub_county_name':sub_county_name, 'quarantine_completed_cases':completed_cases,
+        'disease_reported_dash_vals':disease_reported_dash_vals, 'quarantine_ongoing_cases': ongoing_cases,
+        'pie_diseases': cases, 'pie_events': event_cases, 'dhis_graph_data': dhis_cases,
+        'eoc_status': eoc_Status, 'set_eoc_status': set_eoc_status
+    })
+
+    return HttpResponse(template.render(context.flatten()))
+
+@login_required
 def call_register(request):
 
     if request.method == 'POST':
@@ -2244,8 +2554,8 @@ def truck_driver_register(request):
         #check if details have been saved
         if contact_save:
             # send sms to the patient for successful registration_form
-            url = "https://mlab.mhealthkenya.co.ke/api/sms/gateway"
-            # url = "http://mlab.localhost/api/sms/gateway"
+            # url = "https://mlab.mhealthkenya.co.ke/api/sms/gateway"
+            url = "http://mlab.localhost/api/sms/gateway"
             msg = ''
             msg2 = ''
             print(language)
@@ -2828,10 +3138,14 @@ def quarantine_list(request):
             q_data = quarantine_contacts.objects.filter(quarantine_site=q_site).filter(subcounty_id = user_sub_county_id)
             q_data_count = quarantine_contacts.objects.filter(quarantine_site=q_site).filter(subcounty_id = user_sub_county_id).count()
             quar_sites = quarantine_sites.objects.all().filter(subcounty_id = user_sub_county_id).order_by('site_name')
-        else:
+        elif (user_access_level == "Border"):
             q_data = quarantine_contacts.objects.filter(quarantine_site=q_site).filter(cormobidity = "1")
             q_data_count = quarantine_contacts.objects.filter(quarantine_site=q_site).filter(cormobidity = "1").count()
             quar_sites = quarantine_sites.objects.all().filter(active = False).order_by('site_name')
+        else:
+            q_data = quarantine_contacts.objects.filter(quarantine_site=q_site)
+            q_data_count = quarantine_contacts.objects.filter(quarantine_site=q_site).count()
+            quar_sites = quarantine_sites.objects.filter(subcounty = user_county_id).order_by('site_name')
 
         data = {'quarantine_data': q_data, 'quarantine_data_count': q_data_count, 'quar_sites':quar_sites}
     else:
@@ -2852,15 +3166,22 @@ def quarantine_list(request):
             user_sub_county_id = u.persons.sub_county
             print(user_sub_county_id)
             q_data = quarantine_contacts.objects.all().filter(subcounty_id = user_sub_county_id)
-            q_data_count = quarantine_contacts.objects.all().filter(subcounty_id = user_sub_county_id).count()
-            quar_sites = quarantine_sites.objects.all().filter(subcounty_id = user_sub_county_id).order_by('site_name')
-        else:
+            q_data_count = quarantine_contacts.objects.filter(subcounty_id = user_sub_county_id).count()
+            quar_sites = quarantine_sites.objects.filter(subcounty_id = user_sub_county_id).order_by('site_name')
+        elif(user_access_level == "Border"):
             print("inside Border")
             user_sub_county_id = u.persons.sub_county
             print(user_sub_county_id)
             q_data = quarantine_contacts.objects.all().filter(cormobidity = "1")
             q_data_count = quarantine_contacts.objects.all().filter(cormobidity = "1").count()
             quar_sites = quarantine_sites.objects.all().filter(active = False).order_by('site_name')
+        else:
+            print("inside Facility")
+            user_sub_county_id = u.persons.sub_county
+            print(user_sub_county_id)
+            q_data = quarantine_contacts.objects.all().filter(subcounty_id = user_sub_county_id)
+            q_data_count = quarantine_contacts.objects.filter(subcounty_id = user_sub_county_id).count()
+            quar_sites = quarantine_sites.objects.filter(subcounty_id = user_sub_county_id).order_by('site_name')
 
         data = {'quarantine_data': q_data, 'quarantine_data_count': q_data_count, 'quar_sites':quar_sites}
 
