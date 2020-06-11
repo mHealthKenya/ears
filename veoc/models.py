@@ -111,10 +111,10 @@ class persons(models.Model):
 
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     org_unit = models.ForeignKey(organizational_units, on_delete=models.CASCADE, blank=True, related_name='persons_org_uit', default='2620')
-    access_level = models.CharField(max_length=10, default='National')
+    access_level = models.CharField(max_length=255, default='National')
     county = models.ForeignKey(organizational_units, on_delete=models.CASCADE, related_name='persons_county', default='2620')
     sub_county = models.ForeignKey(organizational_units, on_delete=models.CASCADE, blank=True, related_name='persons_subcounty', default='2620')
-    phone_number = models.CharField(validators=[phone_regex], max_length=12, blank=False, default='0700000000')
+    phone_number = models.CharField(validators=[phone_regex], max_length=15, blank=False, default='0700000000')
 
     class Meta:
         ordering = ['user']
@@ -765,6 +765,7 @@ class truck_quarantine_lab(models.Model):
     processed = models.IntegerField(blank=True, default=0)
     received = models.IntegerField(null=True)
     lab_sample_id = models.IntegerField(null=True)
+    sample_identifier = models.CharField(max_length=255, blank=True)
     created_at = models.DateTimeField(default=datetime.now())
     updated_at = models.DateTimeField(default=datetime.now())
     created_by = models.ForeignKey(User, on_delete=models.DO_NOTHING, related_name='truck_lab_updated_by')

@@ -149,91 +149,109 @@
 
     <!-- Add user modal -->
 	   <div class="modal fade" id="addUserModal" tabindex="-1" role="dialog" aria-hidden="true">
-				<div class="modal-dialog" role="document">
-					<div class="modal-content">
-					<div class="modal-header">
-						<h5 class="modal-title" id="exampleModalLongTitle">Add User</h5>
-						<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-						<span aria-hidden="true">&times;</span>
-						</button>
-					</div>
-					<div class="modal-body">
-						<form class="user_register_form" onsubmit="return validateform()" method="POST" action="{% url 'veoc:user_register' %}" >
-							{% csrf_token %}
-							<div class="form-group">
-								<label>First Name</label>
-								<input type="text" class="form-control input-sm" name="first_name" id="first_name" placeholder="First Name">
-							</div><!-- /form-group -->
-							<div class="form-group">
-								<label>Last Name</label>
-								<input type="text" class="form-control input-sm" name="last_name" id="last_name" placeholder="Last Name">
-							</div><!-- /form-group -->
-							<div class="form-group">
-								<label>Username</label>
-							<input type="text" class="form-control input-sm"  name="user_name" id="user_name">
-							</div>
-							<div class="form-group">
-								<label>Phone Number</label>
-								<input type="text" class="form-control input-sm" name="phone_no" id="phone_no" placeholder="0700000000">
-							</div><!-- /form-group -->
-							<div class="form-group">
-								<label>Email</label>
-								<input type="email" class="form-control input-sm" name="email" id="email" placeholder="example@example.org">
-							</div><!-- /form-group -->
+           <div class="modal-dialog" role="document">
+               <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLongTitle">Add User</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <form class="user_register_form" onsubmit="return validateform()" method="POST" action="{% url 'veoc:user_register' %}" >
+                            {% csrf_token %}
                             <div class="form-group">
-								<label>Access Level</label>
-								<select class="form-control access_level" data-width="100%" id="access_level" name="access_level" onchange="filterAccess()" >
+                                <label>First Name</label>
+                                <input type="text" class="form-control input-sm" name="first_name" id="first_name" placeholder="First Name" required>
+                            </div><!-- /form-group -->
+                            <div class="form-group">
+                                <label>Last Name</label>
+                                <input type="text" class="form-control input-sm" name="last_name" id="last_name" placeholder="Last Name" required>
+                            </div><!-- /form-group -->
+                            <div class="form-group">
+                                <label>Username</label>
+                                <input type="text" class="form-control input-sm"  name="user_name" id="user_name" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Phone Number</label>
+                                <input type="text" class="form-control input-sm" name="phone_no" id="phone_no" placeholder="0700000000" required>
+                            </div><!-- /form-group -->
+                            <div class="form-group">
+                                <label>Email</label>
+                                <input type="email" class="form-control input-sm" name="email" id="email" placeholder="example@example.org" required>
+                            </div><!-- /form-group -->
+                            <div class="form-group">
+                                <label>Access Level</label>
+                                <select class="form-control access_level" data-width="100%" id="access_level" name="access_level" onchange="filterAccess()" required>
                                   <option value="" disabled selected>Select Access Level</option>
                                       <option value="National">National User</option>
                                       <option value="County">County User</option>
                                       <option value="SubCounty">Sub-County User</option>
                                       <option value="Border">Border Point User</option>
                                       <option value="Facility">Facility User</option>
-							   </select>
-							</div><!-- /form-group -->
-							<div class="form-group" id="org_unit_div" style="display: none;">
-								<label>County</label>
+                               </select>
+                            </div><!-- /form-group -->
+                            <div class="form-group" id="org_unit_div" style="display: none;">
+                                <label>County</label>
                                 <select class="form-control" id="org_unit" name="org_unit" onchange="getsubcounty()">
                                     <option value="" disabled selected>Select County</option>
                                     {% for org_unit in org_units %}
                                         <option value="{{org_unit.organisationunitid}}">{{org_unit.name}}</option>
                                     {% endfor %}
                                 </select>
-							</div><!-- /form-group -->
-                          <div class="form-group" id="sub_county_div" style="display: none;">
-                            <label for="subcounty">Subcounty</label>
-                            <select class="form-control" name="subcounty" id="subcounty">
-                                 <option value="" disabled selected>Select sub-county</option>
-                             </select>
-							</div><!-- /form-group -->
-							<div class="form-group">
-								<label>User Group</label>
-                                <select class="form-control usergroup" name="usergroup" id="usergroup">
-                                     <option value="" disabled selected>Select Group</option>
-                                 </select>
-                                                <!-- <select class="form-control input-sm usergroup" data-width="100%" id="user_group" name="user_group_id" >
-                                  <option value="" disabled selected>Select Group</option>
+                            </div><!-- /form-group -->
+                            <div class="form-group" id="sub_county_div" style="display: none;">
+                                <label for="subcounty">Subcounty</label>
+                                <select class="form-control" name="subcounty" id="subcounty">
+                                    <option value="" disabled selected>Select sub-county</option>
+                                </select>
+                            </div><!-- /form-group -->
+
+                            <div class="form-group">
+                                <label>User Group</label>
+                                <select class="form-control usergroup" name="usergroup" id="usergroup" required>
+                                 <option value="" disabled selected>Select Group</option>
                                   {% for user_group in user_groups %}
                                       <option value="{{user_group.id}}">{{user_group.name}}</option>
                                   {% endfor %}
-							   </select> -->
-							</div><!-- /form-group -->
+                               </select>
+                            </div><!-- /form-group -->
+
+                            <div class="form-group" id="quar_site_div" style="display: none;">
+                                <label for="quar_site">Quarantine Facility</label>
+                                <select class="form-control" name="qua_site" id="qua_site">
+                                    <option value="" disabled selected>Select Quarantine Facility</option>
+                                    {% for q_site in quar_sites %}
+                                        <option value="{{q_site.site_name}}">{{q_site.site_name}}</option>
+                                    {% endfor %}
+                                </select>
+                            </div><!-- /form-group -->
+                            <div class="form-group" id="border_div" style="display: none;">
+                                <label for="border_pnt">Designated Border Point</label>
+                                <select class="form-control" name="border_pnt" id="border_pnt">
+                                    <option value="" disabled selected>Select Border Point</option>
+                                    {% for b_point in border_points %}
+                                        <option value="{{b_point.border_name}}">{{b_point.border_name}}</option>
+                                    {% endfor %}
+                                </select>
+                            </div><!-- /form-group -->
+
                             <div class="form-group" id="super_user_div" style="display: none;">
-								<label>Is SuperUser?</label>
-								<select class="form-control input-sm user_status" data-width="100%" id="user_status" name="user_status" >
+                                <label>Is SuperUser?</label>
+                                <select class="form-control input-sm user_status" data-width="100%" id="user_status" name="user_status" >
                                   <option value="" disabled selected>Select Status</option>
                                       <option value="t">Yes</option>
                                       <option value="f">No</option>
-							   </select>
-							</div><!-- /form-group -->
+                               </select>
+                            </div><!-- /form-group -->
 
-							<button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
-							<button type="submit" id="adduserbtn" class="btn btn-success btn-sm pull-right"> <i class="fa fa-plus" aria-hidden="true"></i> Add User</button>
-						</form>
-					</div>
-					</div>
-				</div>
-      </div>
+                            <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                            <button type="submit" id="adduserbtn" class="btn btn-success btn-sm pull-right"> <i class="fa fa-plus" aria-hidden="true"></i> Add User</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+       </div>
   {% csrf_token %}
 {% endblock %}
 
@@ -350,6 +368,7 @@
     var user_group = document.getElementById('usergroup').value;
 
 
+
       if(first_name == "" || first_name==null || last_name == "" || last_name== null){
         bootbox.alert({
            size: "small",
@@ -419,38 +438,51 @@
        var _access_level_div = document.getElementById('org_unit_div');
        var _access_county_div = document.getElementById('sub_county_div');
        var _super_user_div = document.getElementById('super_user_div');
-
+       var _quarantine_div = document.getElementById('quar_site_div');
+       var _border_div = document.getElementById('border_div');
 
        // console.log(_access_level);
        if(_access_level == "National"){
-         _access_level_div.style.display = 'none';
-         _access_county_div.style.display = 'none';
-         _super_user_div.style.display = 'block';
+           _access_level_div.style.display = 'none';
+           _access_county_div.style.display = 'none';
+           _super_user_div.style.display = 'block';
+           _quarantine_div.style.display = 'none';
+           _border_div.style.display = 'none';
          // create ajax to pull and populate user group where name contains National
          group_select(_access_level);
        }else if(_access_level == "County"){
-         _access_level_div.style.display = 'block';
-         _access_county_div.style.display = 'none';
-         _super_user_div.style.display = 'block';
+           _access_level_div.style.display = 'block';
+           _access_county_div.style.display = 'none';
+           _super_user_div.style.display = 'none';
+           _quarantine_div.style.display = 'none';
+           _border_div.style.display = 'none';
+           $('#user_status').val("f");
          // create ajax to pull user populate group where name contains County
          group_select(_access_level);
        }else if(_access_level == "SubCounty"){
-         _access_level_div.style.display = 'block';
-         _access_county_div.style.display = 'block';
-         _super_user_div.style.display = 'block';
+           _access_level_div.style.display = 'block';
+           _access_county_div.style.display = 'block';
+           _super_user_div.style.display = 'none';
+           _quarantine_div.style.display = 'none';
+           _border_div.style.display = 'none';
+           $('#user_status').val("f");
          // create ajax to pull user populate group where name contains Sub-County
          group_select("Sub-County");
        }else if(_access_level == "Border"){
-         _access_level_div.style.display = 'none';
-         _access_county_div.style.display = 'none';
+           _access_level_div.style.display = 'none';
+           _access_county_div.style.display = 'none';
            _super_user_div.style.display = 'none';
+           _quarantine_div.style.display = 'none';
+           _border_div.style.display = 'block';
            $('#user_status').val("f");
          // create ajax to pull user populate group where name contains Sub-County
          group_select("Border");
        }else{
            _access_level_div.style.display = 'block';
            _access_county_div.style.display = 'block';
-            _super_user_div.style.display = 'none';
+           _super_user_div.style.display = 'none';
+           _quarantine_div.style.display = 'block';
+           _border_div.style.display = 'none';
             $('#user_status').val("f");
             // create ajax to pull user populate group where name contains Sub-County
            group_select("Facility");

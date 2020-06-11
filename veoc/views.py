@@ -105,28 +105,30 @@ def login(request):
                 # request.session.set_expiry(60)
                 login_auth(request, user)
                 #get the person org unit to redirect to the correct Dashboard
-                u = User.objects.get(username=user_name)
-                user_access_level = u.persons.access_level
-
-                print(user_access_level)
+                user_access_level = ""
+                user_group = request.user.groups.values_list('id', flat=True)
+                print(user_group)
+                for grp in user_group:
+                    user_access_level = grp
+                    print(user_access_level)
 
                 #Get access level to determine what dashboard to loads
-                if user_access_level == 'National' :
+                if user_access_level == 1 or user_access_level == 2:
                     print('inside National dashboard')
                     next = '/dashboard/'
                     print(next)
 
-                elif user_access_level == 'County':
+                elif user_access_level == 3 or user_access_level == 5:
                     print('inside county dashboard')
                     next = '/county_dashboard/'
                     print(next)
 
-                elif user_access_level == 'SubCounty':
+                elif user_access_level == 4 or user_access_level == 6:
                     print('inside subcounty dashboard')
                     next = '/subcounty_dashboard/'
                     print(next)
 
-                elif user_access_level == 'Border':
+                elif user_access_level == 7:
                     print('inside border dashboard')
                     next = '/border_dashboard/'
                     print(next)
@@ -156,29 +158,36 @@ def logout(request):
 @login_required
 def access_dashboard(request):
     #get the person org unit to redirect to the correct Dashboard
-    current_user = request.user
-    u = User.objects.get(username=current_user.username)
-    user_access_level = u.persons.access_level
+    # current_user = request.user
+    # u = User.objects.get(username=current_user.username)
+    # user_access_level = u.persons.access_level
+    #
+    # print(user_access_level)
 
+    user_access_level = ""
+    user_group = request.user.groups.values_list('id', flat=True)
+    print(user_group)
+    for grp in user_group:
+        user_access_level = grp
     print(user_access_level)
 
     #Get access level to determine what dashboard to loads
-    if user_access_level == 'National' :
+    if user_access_level == 1 or user_access_level == 2:
         print('inside National dashboard')
         next = '/dashboard/'
         print(next)
 
-    elif user_access_level == 'County':
+    elif user_access_level == 3 or user_access_level == 5:
         print('inside county dashboard')
         next = '/county_dashboard/'
         print(next)
 
-    elif user_access_level == 'SubCounty':
+    elif user_access_level == 4 or user_access_level == 6:
         print('inside subcounty dashboard')
         next = '/subcounty_dashboard/'
         print(next)
 
-    elif user_access_level == 'Border':
+    elif user_access_level == 7:
         print('inside border dashboard')
         next = '/border_dashboard/'
         print(next)
@@ -204,10 +213,8 @@ def user_register(request):
         sub_cnty = request.POST.get('subcounty','')
         user_group = request.POST.get('usergroup','')
         super_user = request.POST.get('user_status','')
-
-        # Getting users group id
-        # group_name = Group.objects.get(name=user_group)
-        # print(group_name.id)
+        qua_site = request.POST.get('qua_site','')
+        border_pnt = request.POST.get('border_pnt','')
 
         # if user is National user, default county and subcounty id to the
         # national id (Kenya id)
@@ -215,6 +222,13 @@ def user_register(request):
             org_unit = 18
         if sub_cnty == '':
             sub_cnty = 18
+
+        acc_level = access_level
+        #check to populate persons table
+        if access_level == 'Border':
+            acc_level = border_pnt
+        elif access_level == 'Facility':
+            acc_level = qua_site
 
         user = User.objects.create_user(username= user_name, email=email, password=email, first_name=first_name,
                 last_name=last_name, is_superuser=super_user, is_staff="t", is_active="t")
@@ -232,7 +246,7 @@ def user_register(request):
 
         #save the user in persons tables
         user_person = persons.objects.create(user=userObject, org_unit=orgunitObject, phone_number=phone_no,
-            access_level=access_level, county=orgunitObject, sub_county=subcntyObject)
+            access_level=acc_level, county=orgunitObject, sub_county=subcntyObject)
 
     users_count = User.objects.all().count()
     users = User.objects.all()
@@ -2684,11 +2698,31 @@ def truck_driver_lab_test(request):
                                                        specimen_type=samp_typesObjects, other_specimen_type=other_specimen, viral_respiratory_illness=respiratory_illness,
                                                        respiratory_illness_results=respiratory_illness_results, date_specimen_taken_lab=date_taken_lab, lab=labsObjects,
                                                        lab_results=lab_res_typesObjects, date_lab_confirmation=current_date, created_at=current_date,
-                                                       updated_at=current_date, created_by=userObject, updated_by=userObject, processed=0)
+                                                       updated_at=current_date, created_by=userObject, updated_by=userObject, processed=0, sample_identifier="T00000")
+
+        lab_id = save_lab.pk
+        print(lab_id)
+        sam_identifier = 'T'
+
+        if len(str(lab_id)) == 1:
+            sam_identifier = "T000"+str(lab_id)
+        elif len(str(lab_id)) == 2:
+            sam_identifier = "T00"+str(lab_id)
+        elif len(str(lab_id)) == 3:
+            sam_identifier = "T0"+str(lab_id)
+        elif len(str(lab_id)) == 4:
+            sam_identifier = "T"+str(lab_id)
+        else :
+            sam_identifier = sam_identifier+str(lab_id)
+
+        print(sam_identifier)
+
+        # update the sample identifier
+        truck_quarantine_lab.objects.filter(pk=lab_id).update(sample_identifier=sam_identifier)
 
         if save_lab:
             print("Saving success")
-            return JsonResponse({'success':True})
+            return JsonResponse({'success':True, 'sample_identifier': sam_identifier})
 
         else:
             print("Saving error")
@@ -3115,60 +3149,67 @@ def quarantine_list(request):
     print("Access Level---")
     print(user_access_level)
 
+    user_level = ""
+    user_group = request.user.groups.values_list('id', flat=True)
+    print(user_group)
+    for grp in user_group:
+        user_level = grp
+    print(user_level)
+
     if request.method == 'POST':
         q_site = request.POST.get('quarantine_site','')
 
-        if(user_access_level == 'National'):
+        if(user_level == 1 or user_level == 2):
             #pull data whose quarantine site id is equal to q_site_name
             print("inside National")
             q_data = quarantine_contacts.objects.filter(quarantine_site=q_site)
             q_data_count = quarantine_contacts.objects.filter(quarantine_site=q_site).count()
             quar_sites = quarantine_sites.objects.all()
-        elif(user_access_level == "County"):
+        elif(user_level == 3 or user_level == 5):
             user_county_id = u.persons.county_id
             print(user_county_id)
             #pull data whose quarantine site id is equal to q_site_name
             q_data = quarantine_contacts.objects.filter(quarantine_site=q_site).filter(county_id = user_county_id)
             q_data_count = quarantine_contacts.objects.filter(quarantine_site=q_site).filter(county = user_county_id).count()
             quar_sites = quarantine_sites.objects.all().filter(county = user_county_id).order_by('site_name')
-        elif (user_access_level == "SubCounty"):
+        elif(user_level == 4 or user_level == 6):
             user_sub_county_id = u.persons.sub_county_id
             print(user_sub_county_id)
             #pull data whose quarantine site id is equal to q_site_name
             q_data = quarantine_contacts.objects.filter(quarantine_site=q_site).filter(subcounty_id = user_sub_county_id)
             q_data_count = quarantine_contacts.objects.filter(quarantine_site=q_site).filter(subcounty_id = user_sub_county_id).count()
             quar_sites = quarantine_sites.objects.all().filter(subcounty_id = user_sub_county_id).order_by('site_name')
-        elif (user_access_level == "Border"):
+        elif(user_level == 7):
             q_data = quarantine_contacts.objects.filter(quarantine_site=q_site).filter(cormobidity = "1")
             q_data_count = quarantine_contacts.objects.filter(quarantine_site=q_site).filter(cormobidity = "1").count()
             quar_sites = quarantine_sites.objects.all().filter(active = False).order_by('site_name')
         else:
             q_data = quarantine_contacts.objects.filter(quarantine_site=q_site)
             q_data_count = quarantine_contacts.objects.filter(quarantine_site=q_site).count()
-            quar_sites = quarantine_sites.objects.filter(subcounty = user_county_id).order_by('site_name')
+            quar_sites = quarantine_sites.objects.filter(site_name = user_access_level).order_by('site_name')
 
         data = {'quarantine_data': q_data, 'quarantine_data_count': q_data_count, 'quar_sites':quar_sites}
     else:
-        if(user_access_level == "National"):
+        if(user_level == 1 or user_level == 2):
             print("inside National")
             q_data = quarantine_contacts.objects.all()
             q_data_count = quarantine_contacts.objects.all().count()
             quar_sites = quarantine_sites.objects.all().order_by('site_name')
-        elif(user_access_level == "County"):
+        elif(user_level == 3 or user_level == 5):
             print("inside County")
             user_county_id = u.persons.county_id
             print(user_county_id)
             q_data = quarantine_contacts.objects.all().filter(county_id = user_county_id)
             q_data_count = quarantine_contacts.objects.all().filter(county_id = user_county_id).count()
             quar_sites = quarantine_sites.objects.all().filter(county_id = user_county_id).order_by('site_name')
-        elif(user_access_level == "SubCounty"):
+        elif(user_level == 4 or user_level == 6):
             print("inside SubCounty")
             user_sub_county_id = u.persons.sub_county
             print(user_sub_county_id)
             q_data = quarantine_contacts.objects.all().filter(subcounty_id = user_sub_county_id)
             q_data_count = quarantine_contacts.objects.filter(subcounty_id = user_sub_county_id).count()
             quar_sites = quarantine_sites.objects.filter(subcounty_id = user_sub_county_id).order_by('site_name')
-        elif(user_access_level == "Border"):
+        elif(user_level == 7):
             print("inside Border")
             user_sub_county_id = u.persons.sub_county
             print(user_sub_county_id)
@@ -3181,7 +3222,7 @@ def quarantine_list(request):
             print(user_sub_county_id)
             q_data = quarantine_contacts.objects.all().filter(subcounty_id = user_sub_county_id)
             q_data_count = quarantine_contacts.objects.filter(subcounty_id = user_sub_county_id).count()
-            quar_sites = quarantine_sites.objects.filter(subcounty_id = user_sub_county_id).order_by('site_name')
+            quar_sites = quarantine_sites.objects.filter(site_name = user_access_level).order_by('site_name')
 
         data = {'quarantine_data': q_data, 'quarantine_data_count': q_data_count, 'quar_sites':quar_sites}
 
@@ -3193,7 +3234,7 @@ def truck_quarantine_list(request):
     q_data_count = quarantine_contacts.objects.all().filter(source = 'Truck Registration').count()
     quar_sites = weighbridge_sites.objects.all().order_by('weighbridge_name')
 
-    q_data = quarantine_contacts.objects.all().filter(source = 'Truck Registration')
+    q_data = quarantine_contacts.objects.filter(source = 'Truck Registration')
     truck_cont_details = []
     for d in q_data:
         t_details = truck_quarantine_contacts.objects.filter(patient_contacts=d.id)
@@ -3301,27 +3342,40 @@ def follow_up(request):
     print("Access Level---")
     print(user_access_level)
 
-    if(user_access_level == 'National'):
-            #pull data whose quarantine site id is equal to q_site_name
-            print("inside National")
-            follow_data = quarantine_follow_up.objects.all()
-            follow_data_count = quarantine_follow_up.objects.all().count()
+    user_level = ""
+    user_group = request.user.groups.values_list('id', flat=True)
+    print(user_group)
+    for grp in user_group:
+        user_level = grp
+    print(user_level)
 
-    elif(user_access_level == "County"):
+    if(user_level == 1 or user_level == 2):
+        #pull data whose quarantine site id is equal to q_site_name
+        print("inside National")
+        follow_data = quarantine_follow_up.objects.all()
+        follow_data_count = quarantine_follow_up.objects.all().count()
+
+    elif(user_level == 3 or user_level == 5):
         user_county_id = u.persons.county_id
         print(user_county_id)
         follow_data = quarantine_follow_up.objects.filter(patient_contacts__county_id = user_county_id)
         follow_data_count = quarantine_follow_up.objects.filter(patient_contacts__county_id = user_county_id).count()
 
-    elif (user_access_level == "SubCounty"):
+    elif (user_level == 4 or user_level == 6):
         user_sub_county_id = u.persons.sub_county_id
         print(user_sub_county_id)
         follow_data = quarantine_follow_up.objects.filter(patient_contacts__subcounty_id = user_sub_county_id)
         follow_data_count = quarantine_follow_up.objects.filter(patient_contacts__subcounty_id = user_sub_county_id).count()
 
-    else:
+    elif (user_level == 7):
+        user_sub_county_id = u.persons.sub_county_id
+        print(user_sub_county_id)
         follow_data = quarantine_follow_up.objects.filter(self_quarantine = False)
         follow_data_count = quarantine_follow_up.objects.filter(self_quarantine = False).count()
+
+    else:
+        follow_data = quarantine_follow_up.objects.filter(patient_contacts__quarantine_site = user_access_level)
+        follow_data_count = quarantine_follow_up.objects.filter(patient_contacts__quarantine_site = user_access_level).count()
 
     #check if temperature is higher than 38.0 to send sms
     #if temperature is higher and sms_status = No send an sms
@@ -3359,7 +3413,9 @@ def follow_up(request):
                 # print(phone)
 
             #check if the leading character is 0
-            if str(phone[0]) == "0":
+            if str(phone[0] == ""):
+                user_phone = "+254720000000"
+            elif str(phone[0]) == "0":
                 user_phone = user_phone + str(phone[1:])
                 # print("number leading with 0")
             else:
@@ -4181,11 +4237,13 @@ def weekly_report_submit(request):
 def users_list(request):
     users_count = User.objects.all().count()
     users = User.objects.all()
-    # org_units = organizational_units.objects.all().filter(hierarchylevel__lt=3).order_by('name')
     org_units = organizational_units.objects.all().filter(hierarchylevel=2).order_by('name')
     user_groups = Group.objects.all()
+    border_pnts = border_points.objects.all()
+    quar_sites = quarantine_sites.objects.all()
 
-    values = {'users_count': users_count, 'users':users, 'org_units': org_units, 'user_groups':user_groups}
+    values = {'users_count': users_count, 'users':users, 'org_units': org_units, 'user_groups':user_groups,
+              'border_points':border_pnts, 'quar_sites':quar_sites}
 
     return render(request, 'veoc/users.html', values)
 
