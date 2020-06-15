@@ -2565,11 +2565,7 @@ def truck_driver_register(request):
         #check if details have been saved
         if contact_save:
             # send sms to the patient for successful registration_form
-<<<<<<< HEAD
-            #url = "https://mlab.mhealthkenya.co.ke/api/sms/gateway"
-=======
             # url = "https://mlab.mhealthkenya.co.ke/api/sms/gateway"
->>>>>>> 42b478ab0903da32c33bf5d847dda19896e2234c
             url = "http://mlab.localhost/api/sms/gateway"
             msg = ''
             msg2 = ''
@@ -3226,12 +3222,12 @@ def quarantine_list(request):
             quar_sites = quarantine_sites.objects.filter(site_name = user_access_level).order_by('site_name')
 
 
-        paginator = Paginator(q_data, q_data_count)
+        # paginator = Paginator(q_data, q_data_count)
+        #
+        # page = request.GET.get('page')
+        # quarantine_data = paginator.get_page(page)
 
-        page = request.GET.get('page')
-        quarantine_data = paginator.get_page(page)
-
-        data = {'quarantine_data': quarantine_data, 'quarantine_data_count': q_data_count, 'quar_sites':quar_sites}
+        data = {'quarantine_data': q_data, 'quarantine_data_count': q_data_count, 'quar_sites':quar_sites}
 
     return render(request, 'veoc/quarantine_list.html', data)
 
