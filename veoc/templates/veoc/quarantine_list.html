@@ -55,7 +55,7 @@
                             <th>Nationality</th>
                             <th>Origin Country</th>
                             <th>Quarantine Site</th>
-                            <th>date of contact</th>
+                            <th>Enrollment date</th>
                             <th>Registered by</th>
                             <th>Map View</th>
                             <!-- <th>Edit</th> -->
@@ -73,8 +73,7 @@
                             <td>{{ follow.nationality }}</td>
                             <td>{{ follow.origin_country }}</td>
                             <td>{{ follow.quarantine_site.site_name }}</td>
-                            <!-- <td>{{ follow.place_of_diagnosis }}</td> -->
-                            <td>{{ follow.date_of_contact }}</td>
+                            <td>{{ follow.date_of_contact|date:'d-m-Y' }}</td>
                             <td>{{ follow.created_by.username }}</td>
                             <td>
                              <button type="button" id="map_view" class="btn btn-info btn-sm pull-left map_view"

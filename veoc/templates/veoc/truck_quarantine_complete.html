@@ -45,7 +45,11 @@
                           <tr>
                             <td>{{ q_data.last_name }}</td>
                             <td>{{ q_data.first_name }}</td>
-                            <td>{{ q_data.age}}</td>
+                            {% if q_data.age == 0 %}
+                              <td>Unknown</td>
+                          {% else %}
+                              <td>{{ q_data.age }}</td>
+                          {% endif %}
                             <td>{{ q_data.sex }}</td>
                             <td>{{ q_data.phone_number }}</td>
                             <td>{{ q_data.passport_number }}</td>
