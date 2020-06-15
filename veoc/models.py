@@ -727,7 +727,7 @@ class truck_quarantine_contacts(models.Model):
     date_check_out = models.DateField(default=date.today)
 
     def __str__(self):
-        return self.patient_contacts.first_name + ' - ' + self.vehicle_registration + ' - ' + self.weighbridge_facility.weighbridge_name
+        return self.patient_contacts.first_name + ' - ' + self.vehicle_registration + ' - ' + self.border_point.border_name
 
 class testing_labs(models.Model):
     name=models.CharField(max_length=200)

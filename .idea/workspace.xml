@@ -2,13 +2,13 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="72072e3c-6f4f-4b4b-8a7f-afe45125924a" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/veoc/static/css/custom-navbar.css" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/veoc/static/js/sidebar_menu.old.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/veoc/static/css/simple-sidebar.old.css" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/virtual_eoc/settings.py" afterPath="$PROJECT_DIR$/virtual_eoc/settings.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/veoc/templates/veoc/truck_ongoing_complete.html" afterPath="$PROJECT_DIR$/veoc/templates/veoc/truck_ongoing_complete.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/veoc/templates/veoc/truck_quarantine_complete.html" afterPath="$PROJECT_DIR$/veoc/templates/veoc/truck_quarantine_complete.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/veoc/templates/veoc/county_dashboard.html" afterPath="$PROJECT_DIR$/veoc/templates/veoc/county_dashboard.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/veoc/templates/veoc/login.html" afterPath="$PROJECT_DIR$/veoc/templates/veoc/login.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/veoc/models.py" afterPath="$PROJECT_DIR$/veoc/models.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/veoc/templates/veoc/quarantine_list.html" afterPath="$PROJECT_DIR$/veoc/templates/veoc/quarantine_list.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/veoc/templates/veoc/truck_driver_profile.html" afterPath="$PROJECT_DIR$/veoc/templates/veoc/truck_driver_profile.html" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/veoc/templates/veoc/truck_quarantine_list.html" afterPath="$PROJECT_DIR$/veoc/templates/veoc/truck_quarantine_list.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/veoc/views.py" afterPath="$PROJECT_DIR$/veoc/views.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="virtual_eoc.iws" />
@@ -43,8 +43,8 @@
       <file leaf-file-name="urls.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/veoc/urls.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="1085" max-vertical-offset="3417">
-              <caret line="90" column="36" selection-start-line="90" selection-start-column="36" selection-end-line="90" selection-end-column="36" />
+            <state vertical-scroll-proportion="0.0" vertical-offset="140" max-vertical-offset="3417">
+              <caret line="32" column="43" selection-start-line="32" selection-start-column="43" selection-end-line="32" selection-end-column="43" />
               <folding>
                 <element signature="e#0#41#0" expanded="true" />
               </folding>
@@ -55,64 +55,87 @@
       <file leaf-file-name="views.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/veoc/views.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-7.462963" vertical-offset="9899" max-vertical-offset="36397">
-              <caret line="3246" column="40" selection-start-line="3246" selection-start-column="40" selection-end-line="3246" selection-end-column="40" />
+            <state vertical-scroll-proportion="-9.759259" vertical-offset="2907" max-vertical-offset="37264">
+              <caret line="2666" column="16" selection-start-line="2666" selection-start-column="16" selection-end-line="2666" selection-end-column="16" />
               <folding>
                 <element signature="e#0#64#0" expanded="true" />
-                <element signature="e#5447#5494#0" expanded="false" />
-                <element signature="e#6909#9267#0" expanded="false" />
-                <element signature="e#9311#25945#0" expanded="false" />
-                <element signature="e#25999#42895#0" expanded="false" />
-                <element signature="e#42952#59926#0" expanded="false" />
-                <element signature="e#59980#76951#0" expanded="false" />
-                <element signature="e#77007#94283#0" expanded="false" />
-                <element signature="e#94334#102633#0" expanded="false" />
-                <element signature="e#102664#102998#0" expanded="false" />
-                <element signature="e#103032#103492#0" expanded="false" />
-                <element signature="e#103526#103994#0" expanded="false" />
-                <element signature="e#104024#104477#0" expanded="false" />
-                <element signature="e#104506#104924#0" expanded="false" />
-                <element signature="e#104956#107169#0" expanded="false" />
-                <element signature="e#107208#108847#0" expanded="false" />
-                <element signature="e#108901#115484#0" expanded="false" />
-                <element signature="e#115540#123478#0" expanded="false" />
-                <element signature="e#123547#127208#0" expanded="false" />
-                <element signature="e#127262#128837#0" expanded="false" />
-                <element signature="e#128890#129302#0" expanded="false" />
-                <element signature="e#129361#142346#0" expanded="false" />
-                <element signature="e#146004#146171#0" expanded="false" />
-                <element signature="e#146229#146390#0" expanded="false" />
-                <element signature="e#146451#146621#0" expanded="false" />
-                <element signature="e#151720#152568#0" expanded="false" />
-                <element signature="e#152620#152671#0" expanded="false" />
-                <element signature="e#154484#155962#0" expanded="false" />
-                <element signature="e#156013#157051#0" expanded="false" />
-                <element signature="e#157113#157434#0" expanded="false" />
-                <element signature="e#157492#158272#0" expanded="false" />
-                <element signature="e#158323#159309#0" expanded="false" />
-                <element signature="e#159351#160065#0" expanded="false" />
-                <element signature="e#160116#163524#0" expanded="false" />
-                <element signature="e#163581#165013#0" expanded="false" />
-                <element signature="e#171039#171875#0" expanded="false" />
-                <element signature="e#171916#174142#0" expanded="false" />
-                <element signature="e#180636#192408#0" expanded="false" />
-                <element signature="e#195126#195678#0" expanded="false" />
-                <element signature="e#195728#197479#0" expanded="false" />
-                <element signature="e#197536#199047#0" expanded="false" />
-                <element signature="e#199100#200595#0" expanded="false" />
-                <element signature="e#200749#200935#0" expanded="false" />
-                <element signature="e#200995#201331#0" expanded="false" />
-                <element signature="e#201391#201527#0" expanded="false" />
-                <element signature="e#201587#202445#0" expanded="false" />
-                <element signature="e#202492#203444#0" expanded="false" />
-                <element signature="e#203501#204808#0" expanded="false" />
-                <element signature="e#204872#208305#0" expanded="false" />
-                <element signature="e#208359#209333#0" expanded="false" />
-                <element signature="e#209361#210762#0" expanded="false" />
-                <element signature="e#210818#214968#0" expanded="false" />
-                <element signature="e#215019#215399#0" expanded="false" />
-                <element signature="e#215457#222010#0" expanded="false" />
+                <element signature="e#2546#2645#0" expanded="false" />
+                <element signature="e#2751#2802#0" expanded="false" />
+                <element signature="e#2840#2938#0" expanded="false" />
+                <element signature="e#2964#5290#0" expanded="false" />
+                <element signature="e#5318#5365#0" expanded="false" />
+                <element signature="e#5418#6745#0" expanded="false" />
+                <element signature="e#6780#9138#0" expanded="false" />
+                <element signature="e#9182#25816#0" expanded="false" />
+                <element signature="e#25870#42766#0" expanded="false" />
+                <element signature="e#42823#59797#0" expanded="false" />
+                <element signature="e#59851#76822#0" expanded="false" />
+                <element signature="e#76878#94154#0" expanded="false" />
+                <element signature="e#94205#102504#0" expanded="false" />
+                <element signature="e#102535#102869#0" expanded="false" />
+                <element signature="e#102903#103363#0" expanded="false" />
+                <element signature="e#103397#103865#0" expanded="false" />
+                <element signature="e#103895#104348#0" expanded="false" />
+                <element signature="e#104377#104795#0" expanded="false" />
+                <element signature="e#107079#108718#0" expanded="false" />
+                <element signature="e#108772#115355#0" expanded="false" />
+                <element signature="e#115411#123349#0" expanded="false" />
+                <element signature="e#123418#127079#0" expanded="false" />
+                <element signature="e#127133#128708#0" expanded="false" />
+                <element signature="e#128761#129173#0" expanded="false" />
+                <element signature="e#129232#142217#0" expanded="false" />
+                <element signature="e#145875#146042#0" expanded="false" />
+                <element signature="e#146100#146261#0" expanded="false" />
+                <element signature="e#146322#146492#0" expanded="false" />
+                <element signature="e#151591#152439#0" expanded="false" />
+                <element signature="e#152491#152542#0" expanded="false" />
+                <element signature="e#154355#155833#0" expanded="false" />
+                <element signature="e#155884#156922#0" expanded="false" />
+                <element signature="e#156984#157305#0" expanded="false" />
+                <element signature="e#157363#158143#0" expanded="false" />
+                <element signature="e#158194#159180#0" expanded="false" />
+                <element signature="e#159222#159936#0" expanded="false" />
+                <element signature="e#159987#163395#0" expanded="false" />
+                <element signature="e#163452#164884#0" expanded="false" />
+                <element signature="e#173207#174043#0" expanded="false" />
+                <element signature="e#174084#176310#0" expanded="false" />
+                <element signature="e#182804#194576#0" expanded="false" />
+                <element signature="e#197294#197846#0" expanded="false" />
+                <element signature="e#197896#199647#0" expanded="false" />
+                <element signature="e#199704#201215#0" expanded="false" />
+                <element signature="e#201268#202763#0" expanded="false" />
+                <element signature="e#202917#203103#0" expanded="false" />
+                <element signature="e#203163#203499#0" expanded="false" />
+                <element signature="e#203559#203695#0" expanded="false" />
+                <element signature="e#203755#204613#0" expanded="false" />
+                <element signature="e#204660#205612#0" expanded="false" />
+                <element signature="e#205669#206976#0" expanded="false" />
+                <element signature="e#207040#210473#0" expanded="false" />
+                <element signature="e#210527#211501#0" expanded="false" />
+                <element signature="e#211529#212930#0" expanded="false" />
+                <element signature="e#217187#217567#0" expanded="false" />
+                <element signature="e#217625#224178#0" expanded="false" />
               </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="truck_quarantine_list.html" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/veoc/templates/veoc/truck_quarantine_list.html">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="4.576923" vertical-offset="1258" max-vertical-offset="10778">
+              <caret line="67" column="29" selection-start-line="67" selection-start-column="29" selection-end-line="67" selection-end-column="29" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="call_report.html" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/veoc/templates/veoc/call_report.html">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.0" vertical-offset="1020" max-vertical-offset="6834">
+              <caret line="66" column="62" selection-start-line="66" selection-start-column="45" selection-end-line="66" selection-end-column="62" />
+              <folding />
             </state>
           </provider>
         </entry>
@@ -120,8 +143,8 @@
       <file leaf-file-name="truck_driver_profile.html" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/veoc/templates/veoc/truck_driver_profile.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-145.3077" vertical-offset="5266" max-vertical-offset="14586">
-              <caret line="532" column="35" selection-start-line="532" selection-start-column="35" selection-end-line="532" selection-end-column="35" />
+            <state vertical-scroll-proportion="-5.3846154" vertical-offset="4892" max-vertical-offset="14586">
+              <caret line="296" column="111" selection-start-line="296" selection-start-column="90" selection-end-line="296" selection-end-column="111" />
               <folding />
             </state>
           </provider>
@@ -131,7 +154,7 @@
         <entry file="file://$PROJECT_DIR$/virtual_eoc/settings.py">
           <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="0.092672415" vertical-offset="1861" max-vertical-offset="2890">
-              <caret line="112" column="46" selection-start-line="112" selection-start-column="46" selection-end-line="112" selection-end-column="74" />
+              <caret line="112" column="74" selection-start-line="112" selection-start-column="74" selection-end-line="112" selection-end-column="74" />
               <folding />
             </state>
           </provider>
@@ -140,8 +163,8 @@
       <file leaf-file-name="models.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/veoc/models.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-6.36" vertical-offset="5621" max-vertical-offset="9248">
-              <caret line="643" column="6" selection-start-line="643" selection-start-column="6" selection-end-line="643" selection-end-column="6" />
+            <state vertical-scroll-proportion="0.0" vertical-offset="6488" max-vertical-offset="9248">
+              <caret line="729" column="123" selection-start-line="729" selection-start-column="99" selection-end-line="729" selection-end-column="123" />
               <folding>
                 <element signature="e#8598#10438#0" expanded="false" />
                 <element signature="e#10471#12163#0" expanded="false" />
@@ -170,15 +193,15 @@
                 <element signature="e#27633#28052#0" expanded="false" />
                 <element signature="e#28100#28665#0" expanded="false" />
                 <element signature="e#33489#34492#0" expanded="false" />
-                <element signature="e#37564#37650#0" expanded="false" />
-                <element signature="e#37707#37793#0" expanded="false" />
-                <element signature="e#37839#37925#0" expanded="false" />
-                <element signature="e#39877#40358#0" expanded="false" />
-                <element signature="e#40399#41015#0" expanded="false" />
-                <element signature="e#41058#41665#0" expanded="false" />
-                <element signature="e#41712#42363#0" expanded="false" />
-                <element signature="e#42401#42565#0" expanded="false" />
-                <element signature="e#42614#43078#0" expanded="false" />
+                <element signature="e#37551#37637#0" expanded="false" />
+                <element signature="e#37694#37780#0" expanded="false" />
+                <element signature="e#37826#37912#0" expanded="false" />
+                <element signature="e#39864#40345#0" expanded="false" />
+                <element signature="e#40386#41002#0" expanded="false" />
+                <element signature="e#41045#41652#0" expanded="false" />
+                <element signature="e#41699#42350#0" expanded="false" />
+                <element signature="e#42388#42552#0" expanded="false" />
+                <element signature="e#42601#43065#0" expanded="false" />
               </folding>
             </state>
           </provider>
@@ -187,38 +210,8 @@
       <file leaf-file-name="main_template.html" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/veoc/templates/veoc/main_template.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-12.076923" vertical-offset="3919" max-vertical-offset="8075">
-              <caret line="249" column="104" selection-start-line="249" selection-start-column="104" selection-end-line="249" selection-end-column="104" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="truck_quarantine_list.html" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/veoc/templates/veoc/truck_quarantine_list.html">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-13.076923" vertical-offset="918" max-vertical-offset="10744">
-              <caret line="74" column="37" selection-start-line="70" selection-start-column="26" selection-end-line="74" selection-end-column="37" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="truck_ongoing_complete.html" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/veoc/templates/veoc/truck_ongoing_complete.html">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-9.807693" vertical-offset="612" max-vertical-offset="1955">
-              <caret line="51" column="37" selection-start-line="51" selection-start-column="37" selection-end-line="51" selection-end-column="37" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="truck_quarantine_complete.html" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/veoc/templates/veoc/truck_quarantine_complete.html">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-17.653847" vertical-offset="408" max-vertical-offset="1955">
-              <caret line="51" column="37" selection-start-line="51" selection-start-column="37" selection-end-line="51" selection-end-column="37" />
+            <state vertical-scroll-proportion="0.0" vertical-offset="2525" max-vertical-offset="8075">
+              <caret line="161" column="62" selection-start-line="161" selection-start-column="62" selection-end-line="161" selection-end-column="62" />
               <folding />
             </state>
           </provider>
@@ -233,7 +226,6 @@
     <option name="CHANGED_PATHS">
       <list>
         <option value="$PROJECT_DIR$/veoc/templates/veoc/ongoing_tasks.html" />
-        <option value="$PROJECT_DIR$/veoc/templates/veoc/login.html" />
         <option value="$USER_HOME$/Desktop/DHIS/dhis2_script/dhis_script.py" />
         <option value="$USER_HOME$/Desktop/DHIS/dhis_weekly_national_report/dhis_national_script.py" />
         <option value="$PROJECT_DIR$/veoc/static/css/receipt.css" />
@@ -248,7 +240,6 @@
         <option value="$PROJECT_DIR$/veoc/qrcode/utils.py" />
         <option value="$PROJECT_DIR$/veoc/templates/veoc/quarantine_sites.html" />
         <option value="$PROJECT_DIR$/veoc/templates/veoc/quarantine_registration_form.html" />
-        <option value="$PROJECT_DIR$/veoc/templates/veoc/quarantine_list.html" />
         <option value="$PROJECT_DIR$/veoc/templates/veoc/quarantine_follow_up.html" />
         <option value="$PROJECT_DIR$/veoc/templates/veoc/quarantine_complete.html" />
         <option value="$PROJECT_DIR$/veoc/templates/veoc/case_defination.html" />
@@ -257,13 +248,16 @@
         <option value="$PROJECT_DIR$/veoc/templates/veoc/facility_dashboard.html" />
         <option value="$PROJECT_DIR$/veoc/urls.py" />
         <option value="$PROJECT_DIR$/veoc/templates/veoc/users.html" />
-        <option value="$PROJECT_DIR$/veoc/models.py" />
-        <option value="$PROJECT_DIR$/veoc/templates/veoc/truck_driver_profile.html" />
-        <option value="$PROJECT_DIR$/veoc/templates/veoc/main_template.html" />
-        <option value="$PROJECT_DIR$/veoc/views.py" />
-        <option value="$PROJECT_DIR$/veoc/templates/veoc/truck_quarantine_list.html" />
         <option value="$PROJECT_DIR$/veoc/templates/veoc/truck_ongoing_complete.html" />
         <option value="$PROJECT_DIR$/veoc/templates/veoc/truck_quarantine_complete.html" />
+        <option value="$PROJECT_DIR$/veoc/templates/veoc/main_template.html" />
+        <option value="$PROJECT_DIR$/veoc/templates/veoc/county_dashboard.html" />
+        <option value="$PROJECT_DIR$/veoc/templates/veoc/login.html" />
+        <option value="$PROJECT_DIR$/veoc/templates/veoc/quarantine_list.html" />
+        <option value="$PROJECT_DIR$/veoc/models.py" />
+        <option value="$PROJECT_DIR$/veoc/templates/veoc/truck_driver_profile.html" />
+        <option value="$PROJECT_DIR$/veoc/views.py" />
+        <option value="$PROJECT_DIR$/veoc/templates/veoc/truck_quarantine_list.html" />
         <option value="$PROJECT_DIR$/virtual_eoc/settings.py" />
       </list>
     </option>
@@ -384,6 +378,9 @@
     <property name="FullScreen" value="false" />
     <property name="DefaultHtmlFileTemplate" value="Html5" />
     <property name="list.type.of.created.stylesheet" value="CSS" />
+    <property name="options.lastSelected" value="preferences.pluginManager" />
+    <property name="options.splitter.main.proportions" value="0.3" />
+    <property name="options.splitter.details.proportions" value="0.2" />
   </component>
   <component name="PyConsoleOptionsProvider">
     <option name="myPythonConsoleState">
@@ -681,7 +678,7 @@
     <editor active="true" />
     <layout>
       <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32909605" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.17869183" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.1827377" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="12" side_tool="true" content_ui="tabs" />
       <window_info id="Application Servers" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
@@ -727,32 +724,32 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="python-line">
           <url>file://$PROJECT_DIR$/veoc/views.py</url>
-          <line>2494</line>
+          <line>2491</line>
           <option name="timeStamp" value="8" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="python-line">
           <url>file://$PROJECT_DIR$/veoc/views.py</url>
-          <line>2438</line>
+          <line>2435</line>
           <option name="timeStamp" value="12" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="python-line">
           <url>file://$PROJECT_DIR$/veoc/views.py</url>
-          <line>4640</line>
+          <line>4681</line>
           <option name="timeStamp" value="14" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="python-line">
           <url>file://$PROJECT_DIR$/veoc/views.py</url>
-          <line>4639</line>
+          <line>4680</line>
           <option name="timeStamp" value="15" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="python-line">
           <url>file://$PROJECT_DIR$/veoc/views.py</url>
-          <line>3111</line>
+          <line>3108</line>
           <option name="timeStamp" value="17" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="python-line">
           <url>file://$PROJECT_DIR$/veoc/views.py</url>
-          <line>3231</line>
+          <line>3234</line>
           <option name="timeStamp" value="21" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="javascript">
@@ -776,26 +773,11 @@
           <option name="timeStamp" value="20" />
         </line-breakpoint>
       </breakpoints>
-      <option name="time" value="22" />
+      <option name="time" value="23" />
     </breakpoint-manager>
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/veoc/templates/veoc/sitrep_report.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="425" max-vertical-offset="12665">
-          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="jar://$APPLICATION_HOME_DIR$/lib/pycharm.jar!/resources/html5-schema/html5/common.rnc">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.33333334" vertical-offset="1945" max-vertical-offset="8721">
-          <caret line="126" column="18" selection-start-line="126" selection-start-column="18" selection-end-line="126" selection-end-column="18" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/veoc/static/css/animate.css">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.8038462" vertical-offset="55206" max-vertical-offset="55726">
@@ -1012,14 +994,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/veoc/templates/veoc/call_report.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-6.5384617" vertical-offset="0" max-vertical-offset="6834">
-          <caret line="10" column="97" selection-start-line="10" selection-start-column="97" selection-end-line="10" selection-end-column="97" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/veoc/templates/veoc/call_register_form.html">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.23556583" vertical-offset="0" max-vertical-offset="10693">
@@ -1038,14 +1012,6 @@
     <entry file="file://$PROJECT_DIR$/veoc/templates/veoc/quarantine_follow_up.html">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.3926097" vertical-offset="0" max-vertical-offset="2261">
-          <caret line="10" column="97" selection-start-line="10" selection-start-column="97" selection-end-line="10" selection-end-column="97" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/veoc/templates/veoc/quarantine_list.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.3926097" vertical-offset="0" max-vertical-offset="7004">
           <caret line="10" column="97" selection-start-line="10" selection-start-column="97" selection-end-line="10" selection-end-column="97" />
           <folding />
         </state>
@@ -1091,27 +1057,79 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/veoc/templates/veoc/truck_ongoing_complete.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-9.807693" vertical-offset="612" max-vertical-offset="1955">
+          <caret line="51" column="37" selection-start-line="51" selection-start-column="37" selection-end-line="51" selection-end-column="37" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/veoc/templates/veoc/truck_quarantine_complete.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-17.653847" vertical-offset="408" max-vertical-offset="1955">
+          <caret line="51" column="37" selection-start-line="51" selection-start-column="37" selection-end-line="51" selection-end-column="37" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/veoc/urls.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="1085" max-vertical-offset="3417">
-          <caret line="90" column="36" selection-start-line="90" selection-start-column="36" selection-end-line="90" selection-end-column="36" />
+        <state vertical-scroll-proportion="0.0" vertical-offset="140" max-vertical-offset="3417">
+          <caret line="32" column="43" selection-start-line="32" selection-start-column="43" selection-end-line="32" selection-end-column="43" />
           <folding>
             <element signature="e#0#41#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/veoc/templates/veoc/main_template.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="2525" max-vertical-offset="8075">
+          <caret line="161" column="62" selection-start-line="161" selection-start-column="62" selection-end-line="161" selection-end-column="62" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/veoc/templates/veoc/disease_form.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-14.384615" vertical-offset="1683" max-vertical-offset="5848">
+          <caret line="121" column="27" selection-start-line="112" selection-start-column="21" selection-end-line="121" selection-end-column="27" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/veoc/templates/veoc/login.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-0.7710583" vertical-offset="357" max-vertical-offset="2805">
-          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+        <state vertical-scroll-proportion="0.44924405" vertical-offset="625" max-vertical-offset="3009">
+          <caret line="49" column="30" selection-start-line="49" selection-start-column="30" selection-end-line="49" selection-end-column="30" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/veoc/templates/veoc/county_dashboard.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="4662" max-vertical-offset="24633">
+          <caret line="282" column="20" selection-start-line="282" selection-start-column="20" selection-end-line="282" selection-end-column="20" />
+          <folding>
+            <element signature="n#if#2;n#!!top" expanded="false" />
+            <element signature="n#if#3;n#!!top" expanded="false" />
+            <element signature="n#for#13;n#!!top" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/veoc/templates/veoc/quarantine_list.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-13.730769" vertical-offset="918" max-vertical-offset="6987">
+          <caret line="75" column="0" selection-start-line="75" selection-start-column="0" selection-end-line="75" selection-end-column="0" />
+          <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/veoc/models.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-6.36" vertical-offset="5621" max-vertical-offset="9248">
-          <caret line="643" column="6" selection-start-line="643" selection-start-column="6" selection-end-line="643" selection-end-column="6" />
+        <state vertical-scroll-proportion="0.0" vertical-offset="6488" max-vertical-offset="9248">
+          <caret line="729" column="123" selection-start-line="729" selection-start-column="99" selection-end-line="729" selection-end-column="123" />
           <folding>
             <element signature="e#8598#10438#0" expanded="false" />
             <element signature="e#10471#12163#0" expanded="false" />
@@ -1140,118 +1158,105 @@
             <element signature="e#27633#28052#0" expanded="false" />
             <element signature="e#28100#28665#0" expanded="false" />
             <element signature="e#33489#34492#0" expanded="false" />
-            <element signature="e#37564#37650#0" expanded="false" />
-            <element signature="e#37707#37793#0" expanded="false" />
-            <element signature="e#37839#37925#0" expanded="false" />
-            <element signature="e#39877#40358#0" expanded="false" />
-            <element signature="e#40399#41015#0" expanded="false" />
-            <element signature="e#41058#41665#0" expanded="false" />
-            <element signature="e#41712#42363#0" expanded="false" />
-            <element signature="e#42401#42565#0" expanded="false" />
-            <element signature="e#42614#43078#0" expanded="false" />
+            <element signature="e#37551#37637#0" expanded="false" />
+            <element signature="e#37694#37780#0" expanded="false" />
+            <element signature="e#37826#37912#0" expanded="false" />
+            <element signature="e#39864#40345#0" expanded="false" />
+            <element signature="e#40386#41002#0" expanded="false" />
+            <element signature="e#41045#41652#0" expanded="false" />
+            <element signature="e#41699#42350#0" expanded="false" />
+            <element signature="e#42388#42552#0" expanded="false" />
+            <element signature="e#42601#43065#0" expanded="false" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/veoc/views.py">
+    <entry file="file://$PROJECT_DIR$/veoc/templates/veoc/call_report.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-7.462963" vertical-offset="9899" max-vertical-offset="36397">
-          <caret line="3246" column="40" selection-start-line="3246" selection-start-column="40" selection-end-line="3246" selection-end-column="40" />
-          <folding>
-            <element signature="e#0#64#0" expanded="true" />
-            <element signature="e#5447#5494#0" expanded="false" />
-            <element signature="e#6909#9267#0" expanded="false" />
-            <element signature="e#9311#25945#0" expanded="false" />
-            <element signature="e#25999#42895#0" expanded="false" />
-            <element signature="e#42952#59926#0" expanded="false" />
-            <element signature="e#59980#76951#0" expanded="false" />
-            <element signature="e#77007#94283#0" expanded="false" />
-            <element signature="e#94334#102633#0" expanded="false" />
-            <element signature="e#102664#102998#0" expanded="false" />
-            <element signature="e#103032#103492#0" expanded="false" />
-            <element signature="e#103526#103994#0" expanded="false" />
-            <element signature="e#104024#104477#0" expanded="false" />
-            <element signature="e#104506#104924#0" expanded="false" />
-            <element signature="e#104956#107169#0" expanded="false" />
-            <element signature="e#107208#108847#0" expanded="false" />
-            <element signature="e#108901#115484#0" expanded="false" />
-            <element signature="e#115540#123478#0" expanded="false" />
-            <element signature="e#123547#127208#0" expanded="false" />
-            <element signature="e#127262#128837#0" expanded="false" />
-            <element signature="e#128890#129302#0" expanded="false" />
-            <element signature="e#129361#142346#0" expanded="false" />
-            <element signature="e#146004#146171#0" expanded="false" />
-            <element signature="e#146229#146390#0" expanded="false" />
-            <element signature="e#146451#146621#0" expanded="false" />
-            <element signature="e#151720#152568#0" expanded="false" />
-            <element signature="e#152620#152671#0" expanded="false" />
-            <element signature="e#154484#155962#0" expanded="false" />
-            <element signature="e#156013#157051#0" expanded="false" />
-            <element signature="e#157113#157434#0" expanded="false" />
-            <element signature="e#157492#158272#0" expanded="false" />
-            <element signature="e#158323#159309#0" expanded="false" />
-            <element signature="e#159351#160065#0" expanded="false" />
-            <element signature="e#160116#163524#0" expanded="false" />
-            <element signature="e#163581#165013#0" expanded="false" />
-            <element signature="e#171039#171875#0" expanded="false" />
-            <element signature="e#171916#174142#0" expanded="false" />
-            <element signature="e#180636#192408#0" expanded="false" />
-            <element signature="e#195126#195678#0" expanded="false" />
-            <element signature="e#195728#197479#0" expanded="false" />
-            <element signature="e#197536#199047#0" expanded="false" />
-            <element signature="e#199100#200595#0" expanded="false" />
-            <element signature="e#200749#200935#0" expanded="false" />
-            <element signature="e#200995#201331#0" expanded="false" />
-            <element signature="e#201391#201527#0" expanded="false" />
-            <element signature="e#201587#202445#0" expanded="false" />
-            <element signature="e#202492#203444#0" expanded="false" />
-            <element signature="e#203501#204808#0" expanded="false" />
-            <element signature="e#204872#208305#0" expanded="false" />
-            <element signature="e#208359#209333#0" expanded="false" />
-            <element signature="e#209361#210762#0" expanded="false" />
-            <element signature="e#210818#214968#0" expanded="false" />
-            <element signature="e#215019#215399#0" expanded="false" />
-            <element signature="e#215457#222010#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/veoc/templates/veoc/main_template.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-12.076923" vertical-offset="3919" max-vertical-offset="8075">
-          <caret line="249" column="104" selection-start-line="249" selection-start-column="104" selection-end-line="249" selection-end-column="104" />
+        <state vertical-scroll-proportion="0.0" vertical-offset="1020" max-vertical-offset="6834">
+          <caret line="66" column="62" selection-start-line="66" selection-start-column="45" selection-end-line="66" selection-end-column="62" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/veoc/templates/veoc/truck_driver_profile.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-145.3077" vertical-offset="5266" max-vertical-offset="14586">
-          <caret line="532" column="35" selection-start-line="532" selection-start-column="35" selection-end-line="532" selection-end-column="35" />
+        <state vertical-scroll-proportion="-5.3846154" vertical-offset="4892" max-vertical-offset="14586">
+          <caret line="296" column="111" selection-start-line="296" selection-start-column="90" selection-end-line="296" selection-end-column="111" />
           <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/veoc/views.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-9.759259" vertical-offset="2907" max-vertical-offset="37264">
+          <caret line="2666" column="16" selection-start-line="2666" selection-start-column="16" selection-end-line="2666" selection-end-column="16" />
+          <folding>
+            <element signature="e#0#64#0" expanded="true" />
+            <element signature="e#2546#2645#0" expanded="false" />
+            <element signature="e#2751#2802#0" expanded="false" />
+            <element signature="e#2840#2938#0" expanded="false" />
+            <element signature="e#2964#5290#0" expanded="false" />
+            <element signature="e#5318#5365#0" expanded="false" />
+            <element signature="e#5418#6745#0" expanded="false" />
+            <element signature="e#6780#9138#0" expanded="false" />
+            <element signature="e#9182#25816#0" expanded="false" />
+            <element signature="e#25870#42766#0" expanded="false" />
+            <element signature="e#42823#59797#0" expanded="false" />
+            <element signature="e#59851#76822#0" expanded="false" />
+            <element signature="e#76878#94154#0" expanded="false" />
+            <element signature="e#94205#102504#0" expanded="false" />
+            <element signature="e#102535#102869#0" expanded="false" />
+            <element signature="e#102903#103363#0" expanded="false" />
+            <element signature="e#103397#103865#0" expanded="false" />
+            <element signature="e#103895#104348#0" expanded="false" />
+            <element signature="e#104377#104795#0" expanded="false" />
+            <element signature="e#107079#108718#0" expanded="false" />
+            <element signature="e#108772#115355#0" expanded="false" />
+            <element signature="e#115411#123349#0" expanded="false" />
+            <element signature="e#123418#127079#0" expanded="false" />
+            <element signature="e#127133#128708#0" expanded="false" />
+            <element signature="e#128761#129173#0" expanded="false" />
+            <element signature="e#129232#142217#0" expanded="false" />
+            <element signature="e#145875#146042#0" expanded="false" />
+            <element signature="e#146100#146261#0" expanded="false" />
+            <element signature="e#146322#146492#0" expanded="false" />
+            <element signature="e#151591#152439#0" expanded="false" />
+            <element signature="e#152491#152542#0" expanded="false" />
+            <element signature="e#154355#155833#0" expanded="false" />
+            <element signature="e#155884#156922#0" expanded="false" />
+            <element signature="e#156984#157305#0" expanded="false" />
+            <element signature="e#157363#158143#0" expanded="false" />
+            <element signature="e#158194#159180#0" expanded="false" />
+            <element signature="e#159222#159936#0" expanded="false" />
+            <element signature="e#159987#163395#0" expanded="false" />
+            <element signature="e#163452#164884#0" expanded="false" />
+            <element signature="e#173207#174043#0" expanded="false" />
+            <element signature="e#174084#176310#0" expanded="false" />
+            <element signature="e#182804#194576#0" expanded="false" />
+            <element signature="e#197294#197846#0" expanded="false" />
+            <element signature="e#197896#199647#0" expanded="false" />
+            <element signature="e#199704#201215#0" expanded="false" />
+            <element signature="e#201268#202763#0" expanded="false" />
+            <element signature="e#202917#203103#0" expanded="false" />
+            <element signature="e#203163#203499#0" expanded="false" />
+            <element signature="e#203559#203695#0" expanded="false" />
+            <element signature="e#203755#204613#0" expanded="false" />
+            <element signature="e#204660#205612#0" expanded="false" />
+            <element signature="e#205669#206976#0" expanded="false" />
+            <element signature="e#207040#210473#0" expanded="false" />
+            <element signature="e#210527#211501#0" expanded="false" />
+            <element signature="e#211529#212930#0" expanded="false" />
+            <element signature="e#217187#217567#0" expanded="false" />
+            <element signature="e#217625#224178#0" expanded="false" />
+          </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/veoc/templates/veoc/truck_quarantine_list.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-13.076923" vertical-offset="918" max-vertical-offset="10744">
-          <caret line="74" column="37" selection-start-line="70" selection-start-column="26" selection-end-line="74" selection-end-column="37" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/veoc/templates/veoc/truck_ongoing_complete.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-9.807693" vertical-offset="612" max-vertical-offset="1955">
-          <caret line="51" column="37" selection-start-line="51" selection-start-column="37" selection-end-line="51" selection-end-column="37" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/veoc/templates/veoc/truck_quarantine_complete.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-17.653847" vertical-offset="408" max-vertical-offset="1955">
-          <caret line="51" column="37" selection-start-line="51" selection-start-column="37" selection-end-line="51" selection-end-column="37" />
+        <state vertical-scroll-proportion="4.576923" vertical-offset="1258" max-vertical-offset="10778">
+          <caret line="67" column="29" selection-start-line="67" selection-start-column="29" selection-end-line="67" selection-end-column="29" />
           <folding />
         </state>
       </provider>
@@ -1259,7 +1264,7 @@
     <entry file="file://$PROJECT_DIR$/virtual_eoc/settings.py">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.092672415" vertical-offset="1861" max-vertical-offset="2890">
-          <caret line="112" column="46" selection-start-line="112" selection-start-column="46" selection-end-line="112" selection-end-column="74" />
+          <caret line="112" column="74" selection-start-line="112" selection-start-column="74" selection-end-line="112" selection-end-column="74" />
           <folding />
         </state>
       </provider>

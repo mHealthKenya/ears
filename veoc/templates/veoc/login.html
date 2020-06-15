@@ -43,7 +43,10 @@
                             <input type="text" name="username" class="form-control input-lg" placeholder="Username" required>
                         </div>
                         <div class="input-group">
-                            <input type="password" name="password" class="form-control input-lg" placeholder="Password" required>
+                            <input type="password" name="password" class="form-control input-lg" id="myInput" placeholder="Password" required>
+                        </div>
+                        <div class="row align-items-left remember">
+                            <input type="checkbox" onclick="myFunction()">Show Password
                         </div>
                         <div class="p-t-20">
                             <button class="btn btn--radius btn--green" type="submit">Login</button>
@@ -150,6 +153,15 @@
         });
 
       });
+
+    function myFunction() {
+      var x = document.getElementById("myInput");
+      if (x.type === "password") {
+        x.type = "text";
+      } else {
+        x.type = "password";
+      }
+    }
 
     </script>
 

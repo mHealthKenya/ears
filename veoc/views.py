@@ -14,10 +14,7 @@ from django.conf import settings
 from django.core.serializers import serialize
 from django.db import IntegrityError, transaction
 from django.db.models import *
-# from reportlab.graphics.barcode import code128
-# from reportlab.lib.units import mm
-# from reportlab.pdfgen import canvas
-# from qr_code.qrcode.utils import ContactDetail
+from django.core.paginator import Paginator
 from django.http import FileResponse
 from veoc.models import *
 from veoc.forms import *
@@ -3162,29 +3159,29 @@ def quarantine_list(request):
         if(user_level == 1 or user_level == 2):
             #pull data whose quarantine site id is equal to q_site_name
             print("inside National")
-            q_data = quarantine_contacts.objects.filter(quarantine_site=q_site)
+            q_data = quarantine_contacts.objects.filter(quarantine_site=q_site).order_by('-date_of_contact')
             q_data_count = quarantine_contacts.objects.filter(quarantine_site=q_site).count()
             quar_sites = quarantine_sites.objects.all()
         elif(user_level == 3 or user_level == 5):
             user_county_id = u.persons.county_id
             print(user_county_id)
             #pull data whose quarantine site id is equal to q_site_name
-            q_data = quarantine_contacts.objects.filter(quarantine_site=q_site).filter(county_id = user_county_id)
+            q_data = quarantine_contacts.objects.filter(quarantine_site=q_site).filter(county_id = user_county_id).order_by('-date_of_contact')
             q_data_count = quarantine_contacts.objects.filter(quarantine_site=q_site).filter(county = user_county_id).count()
             quar_sites = quarantine_sites.objects.all().filter(county = user_county_id).order_by('site_name')
         elif(user_level == 4 or user_level == 6):
             user_sub_county_id = u.persons.sub_county_id
             print(user_sub_county_id)
             #pull data whose quarantine site id is equal to q_site_name
-            q_data = quarantine_contacts.objects.filter(quarantine_site=q_site).filter(subcounty_id = user_sub_county_id)
+            q_data = quarantine_contacts.objects.filter(quarantine_site=q_site).filter(subcounty_id = user_sub_county_id).order_by('-date_of_contact')
             q_data_count = quarantine_contacts.objects.filter(quarantine_site=q_site).filter(subcounty_id = user_sub_county_id).count()
             quar_sites = quarantine_sites.objects.all().filter(subcounty_id = user_sub_county_id).order_by('site_name')
         elif(user_level == 7):
-            q_data = quarantine_contacts.objects.filter(quarantine_site=q_site).filter(cormobidity = "1")
+            q_data = quarantine_contacts.objects.filter(quarantine_site=q_site).filter(cormobidity = "1").order_by('-date_of_contact')
             q_data_count = quarantine_contacts.objects.filter(quarantine_site=q_site).filter(cormobidity = "1").count()
             quar_sites = quarantine_sites.objects.all().filter(active = False).order_by('site_name')
         else:
-            q_data = quarantine_contacts.objects.filter(quarantine_site=q_site)
+            q_data = quarantine_contacts.objects.filter(quarantine_site=q_site).order_by('-date_of_contact')
             q_data_count = quarantine_contacts.objects.filter(quarantine_site=q_site).count()
             quar_sites = quarantine_sites.objects.filter(site_name = user_access_level).order_by('site_name')
 
@@ -3192,53 +3189,97 @@ def quarantine_list(request):
     else:
         if(user_level == 1 or user_level == 2):
             print("inside National")
-            q_data = quarantine_contacts.objects.all()
+            q_data = quarantine_contacts.objects.all().order_by('-date_of_contact')
             q_data_count = quarantine_contacts.objects.all().count()
             quar_sites = quarantine_sites.objects.all().order_by('site_name')
         elif(user_level == 3 or user_level == 5):
             print("inside County")
             user_county_id = u.persons.county_id
             print(user_county_id)
-            q_data = quarantine_contacts.objects.all().filter(county_id = user_county_id)
+            q_data = quarantine_contacts.objects.all().filter(county_id = user_county_id).order_by('-date_of_contact')
             q_data_count = quarantine_contacts.objects.all().filter(county_id = user_county_id).count()
             quar_sites = quarantine_sites.objects.all().filter(county_id = user_county_id).order_by('site_name')
         elif(user_level == 4 or user_level == 6):
             print("inside SubCounty")
             user_sub_county_id = u.persons.sub_county
             print(user_sub_county_id)
-            q_data = quarantine_contacts.objects.all().filter(subcounty_id = user_sub_county_id)
+            q_data = quarantine_contacts.objects.all().filter(subcounty_id = user_sub_county_id).order_by('-date_of_contact')
             q_data_count = quarantine_contacts.objects.filter(subcounty_id = user_sub_county_id).count()
             quar_sites = quarantine_sites.objects.filter(subcounty_id = user_sub_county_id).order_by('site_name')
         elif(user_level == 7):
             print("inside Border")
             user_sub_county_id = u.persons.sub_county
             print(user_sub_county_id)
-            q_data = quarantine_contacts.objects.all().filter(cormobidity = "1")
+            q_data = quarantine_contacts.objects.all().filter(cormobidity = "1").order_by('-date_of_contact')
             q_data_count = quarantine_contacts.objects.all().filter(cormobidity = "1").count()
             quar_sites = quarantine_sites.objects.all().filter(active = False).order_by('site_name')
         else:
             print("inside Facility")
             user_sub_county_id = u.persons.sub_county
             print(user_sub_county_id)
-            q_data = quarantine_contacts.objects.all().filter(subcounty_id = user_sub_county_id)
+            q_data = quarantine_contacts.objects.all().filter(subcounty_id = user_sub_county_id).order_by('-date_of_contact')
             q_data_count = quarantine_contacts.objects.filter(subcounty_id = user_sub_county_id).count()
             quar_sites = quarantine_sites.objects.filter(site_name = user_access_level).order_by('site_name')
 
-        data = {'quarantine_data': q_data, 'quarantine_data_count': q_data_count, 'quar_sites':quar_sites}
+
+        paginator = Paginator(q_data, q_data_count)
+
+        page = request.GET.get('page')
+        quarantine_data = paginator.get_page(page)
+
+        data = {'quarantine_data': quarantine_data, 'quarantine_data_count': q_data_count, 'quar_sites':quar_sites}
 
     return render(request, 'veoc/quarantine_list.html', data)
 
 @login_required
 def truck_quarantine_list(request):
 
-    q_data_count = quarantine_contacts.objects.all().filter(source = 'Truck Registration').count()
-    quar_sites = weighbridge_sites.objects.all().order_by('weighbridge_name')
+    global data
 
-    q_data = quarantine_contacts.objects.filter(source = 'Truck Registration')
+    #check logged users access level to display relevant records -- national, county, SubCounty
+    current_user = request.user
+    u = User.objects.get(username=current_user.username)
+    user_access_level = u.persons.access_level
+    print("Access Level---")
+    print(user_access_level)
+
+    user_level = ""
+    user_group = request.user.groups.values_list('id', flat=True)
+    print(user_group)
+    for grp in user_group:
+        user_level = grp
+    print(user_level)
+
+    quar_sites = weighbridge_sites.objects.all().order_by('weighbridge_name')
     truck_cont_details = []
-    for d in q_data:
-        t_details = truck_quarantine_contacts.objects.filter(patient_contacts=d.id)
-        truck_cont_details.append(t_details)
+
+    if(user_level == 1 or user_level == 2):
+        print("inside National")
+        #add a border point filter to enable filtering specific border point--------
+        q_data_count = quarantine_contacts.objects.all().filter(source = 'Truck Registration').count()
+        q_data = quarantine_contacts.objects.filter(source = 'Truck Registration').order_by('-date_of_contact')
+        for d in q_data:
+            t_details = truck_quarantine_contacts.objects.filter(patient_contacts=d.id).values_list('border_point__border_name', flat=True).first()
+            print(t_details)
+            truck_cont_details.append(t_details)
+
+    elif(user_level == 7):
+        print("inside Border")
+        #find ways of filtering data based on the border point-------
+        q_data_count = quarantine_contacts.objects.all().filter(source = 'Truck Registration').count()
+        q_data = quarantine_contacts.objects.filter(source = 'Truck Registration').order_by('-date_of_contact')
+        for d in q_data:
+            t_details = truck_quarantine_contacts.objects.filter(patient_contacts=d.id).filter(border_point__border_name=user_access_level).values_list('border_point__border_name', flat=True).first()
+            print(t_details)
+            truck_cont_details.append(t_details)
+
+    else:
+        print("inside non border users")
+        q_data_count = quarantine_contacts.objects.all().filter(source = 'Kitu hakuna').count()
+        q_data = quarantine_contacts.objects.filter(source = 'Kitu hakuna').order_by('-date_of_contact')
+        for d in q_data:
+            t_details = truck_quarantine_contacts.objects.filter(patient_contacts=d.id)
+            truck_cont_details.append(t_details)
 
     my_list_data = zip(q_data, truck_cont_details)
 
