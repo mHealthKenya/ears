@@ -2,7 +2,6 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="72072e3c-6f4f-4b4b-8a7f-afe45125924a" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/virtual_eoc/settings.py" afterPath="$PROJECT_DIR$/virtual_eoc/settings.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="virtual_eoc.iws" />
@@ -49,7 +48,7 @@
       <file leaf-file-name="views.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/veoc/views.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-6.611111" vertical-offset="12308" max-vertical-offset="40953">
+            <state vertical-scroll-proportion="0.0" vertical-offset="12308" max-vertical-offset="40953">
               <caret line="3229" column="41" selection-start-line="3229" selection-start-column="41" selection-end-line="3229" selection-end-column="41" />
               <folding>
                 <element signature="e#0#64#0" expanded="true" />
@@ -116,7 +115,7 @@
       <file leaf-file-name="truck_quarantine_list.html" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/veoc/templates/veoc/truck_quarantine_list.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="4.576923" vertical-offset="1258" max-vertical-offset="10778">
+            <state vertical-scroll-proportion="0.0" vertical-offset="1258" max-vertical-offset="10778">
               <caret line="67" column="29" selection-start-line="67" selection-start-column="29" selection-end-line="67" selection-end-column="29" />
               <folding />
             </state>
@@ -136,7 +135,7 @@
       <file leaf-file-name="truck_driver_profile.html" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/veoc/templates/veoc/truck_driver_profile.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-13.230769" vertical-offset="6830" max-vertical-offset="14620">
+            <state vertical-scroll-proportion="0.0" vertical-offset="6830" max-vertical-offset="14620">
               <caret line="422" column="68" selection-start-line="422" selection-start-column="68" selection-end-line="422" selection-end-column="68" />
               <folding />
             </state>
@@ -156,7 +155,7 @@
       <file leaf-file-name="models.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/veoc/models.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-9.56" vertical-offset="7054" max-vertical-offset="9112">
+            <state vertical-scroll-proportion="0.0" vertical-offset="7054" max-vertical-offset="9112">
               <caret line="784" column="132" selection-start-line="784" selection-start-column="132" selection-end-line="784" selection-end-column="132" />
               <folding>
                 <element signature="e#8598#10438#0" expanded="false" />
@@ -288,6 +287,7 @@
       <sortByType />
     </navigator>
     <panes>
+      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <PATH>
@@ -306,63 +306,8 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="virtual_eoc" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="ears_system" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="veoc" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="virtual_eoc" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="ears_system" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="veoc" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="templates" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="virtual_eoc" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="ears_system" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="veoc" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="templates" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="veoc" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
         </subPane>
       </pane>
-      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -672,7 +617,7 @@
     <editor active="true" />
     <layout>
       <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32909605" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.1827377" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.18543492" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="12" side_tool="true" content_ui="tabs" />
       <window_info id="Application Servers" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
@@ -772,13 +717,6 @@
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/veoc/static/css/animate.css">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.8038462" vertical-offset="55206" max-vertical-offset="55726">
-          <caret line="3272" column="1" selection-start-line="3272" selection-start-column="1" selection-end-line="3272" selection-end-column="1" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/veoc/static/css/bootstrap-multiselect.css">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="503">
@@ -832,7 +770,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="2465">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -840,7 +777,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="-3.1485412" vertical-offset="1187" max-vertical-offset="3757">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -848,7 +784,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="-5.275862" vertical-offset="1989" max-vertical-offset="5389">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -856,7 +791,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="-0.54111403" vertical-offset="204" max-vertical-offset="2193">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -864,7 +798,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="-36.96154" vertical-offset="4802" max-vertical-offset="7038">
           <caret line="339" column="14" selection-start-line="339" selection-start-column="12" selection-end-line="339" selection-end-column="14" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -877,7 +810,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="-8.115385" vertical-offset="860" max-vertical-offset="2261">
           <caret line="63" column="39" selection-start-line="63" selection-start-column="39" selection-end-line="63" selection-end-column="39" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -892,7 +824,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="493">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -914,7 +845,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="355.03845" vertical-offset="9231" max-vertical-offset="22712">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -922,7 +852,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="3.9230769" vertical-offset="102" max-vertical-offset="14161">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -930,7 +859,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="-12.072464" vertical-offset="4998" max-vertical-offset="13107">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -938,7 +866,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="6196" max-vertical-offset="7769">
           <caret line="369" column="35" selection-start-line="369" selection-start-column="23" selection-end-line="369" selection-end-column="35" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -953,7 +880,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="-7.1923075" vertical-offset="2193" max-vertical-offset="8296">
           <caret line="140" column="119" selection-start-line="140" selection-start-column="104" selection-end-line="140" selection-end-column="119" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -968,7 +894,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.3926097" vertical-offset="0" max-vertical-offset="1700">
           <caret line="10" column="97" selection-start-line="10" selection-start-column="81" selection-end-line="10" selection-end-column="97" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -976,7 +901,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.3926097" vertical-offset="0" max-vertical-offset="6936">
           <caret line="10" column="97" selection-start-line="10" selection-start-column="97" selection-end-line="10" selection-end-column="97" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -984,7 +908,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="-6.5384617" vertical-offset="0" max-vertical-offset="5491">
           <caret line="10" column="97" selection-start-line="10" selection-start-column="97" selection-end-line="10" selection-end-column="97" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -992,7 +915,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.23556583" vertical-offset="0" max-vertical-offset="10693">
           <caret line="6" column="81" selection-start-line="6" selection-start-column="81" selection-end-line="6" selection-end-column="81" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1007,7 +929,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.3926097" vertical-offset="0" max-vertical-offset="2261">
           <caret line="10" column="97" selection-start-line="10" selection-start-column="97" selection-end-line="10" selection-end-column="97" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1015,7 +936,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.47113165" vertical-offset="0" max-vertical-offset="4080">
           <caret line="12" column="97" selection-start-line="12" selection-start-column="81" selection-end-line="12" selection-end-column="97" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1023,7 +943,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.23556583" vertical-offset="0" max-vertical-offset="5321">
           <caret line="6" column="81" selection-start-line="6" selection-start-column="81" selection-end-line="6" selection-end-column="81" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1031,7 +950,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.11778291" vertical-offset="0" max-vertical-offset="23885">
           <caret line="3" column="30" selection-start-line="3" selection-start-column="30" selection-end-line="3" selection-end-column="30" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1039,7 +957,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="510" max-vertical-offset="23885">
           <caret line="45" column="68" selection-start-line="45" selection-start-column="48" selection-end-line="45" selection-end-column="68" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1055,7 +972,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="-9.807693" vertical-offset="612" max-vertical-offset="1955">
           <caret line="51" column="37" selection-start-line="51" selection-start-column="37" selection-end-line="51" selection-end-column="37" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1063,7 +979,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="-17.653847" vertical-offset="408" max-vertical-offset="1955">
           <caret line="51" column="37" selection-start-line="51" selection-start-column="37" selection-end-line="51" selection-end-column="37" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1089,7 +1004,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="-14.384615" vertical-offset="1683" max-vertical-offset="5848">
           <caret line="121" column="27" selection-start-line="112" selection-start-column="21" selection-end-line="121" selection-end-column="27" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1104,11 +1018,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="4662" max-vertical-offset="24633">
           <caret line="282" column="20" selection-start-line="282" selection-start-column="20" selection-end-line="282" selection-end-column="20" />
-          <folding>
-            <element signature="n#if#2;n#!!top" expanded="false" />
-            <element signature="n#if#3;n#!!top" expanded="false" />
-            <element signature="n#for#13;n#!!top" expanded="false" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -1116,7 +1025,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="-13.730769" vertical-offset="918" max-vertical-offset="6987">
           <caret line="75" column="0" selection-start-line="75" selection-start-column="0" selection-end-line="75" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1130,7 +1038,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/veoc/templates/veoc/truck_quarantine_list.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="4.576923" vertical-offset="1258" max-vertical-offset="10778">
+        <state vertical-scroll-proportion="0.0" vertical-offset="1258" max-vertical-offset="10778">
           <caret line="67" column="29" selection-start-line="67" selection-start-column="29" selection-end-line="67" selection-end-column="29" />
           <folding />
         </state>
@@ -1138,7 +1046,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/veoc/templates/veoc/truck_driver_profile.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-13.230769" vertical-offset="6830" max-vertical-offset="14620">
+        <state vertical-scroll-proportion="0.0" vertical-offset="6830" max-vertical-offset="14620">
           <caret line="422" column="68" selection-start-line="422" selection-start-column="68" selection-end-line="422" selection-end-column="68" />
           <folding />
         </state>
@@ -1146,7 +1054,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/veoc/models.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-9.56" vertical-offset="7054" max-vertical-offset="9112">
+        <state vertical-scroll-proportion="0.0" vertical-offset="7054" max-vertical-offset="9112">
           <caret line="784" column="132" selection-start-line="784" selection-start-column="132" selection-end-line="784" selection-end-column="132" />
           <folding>
             <element signature="e#8598#10438#0" expanded="false" />
@@ -1192,7 +1100,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/veoc/views.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-6.611111" vertical-offset="12308" max-vertical-offset="40953">
+        <state vertical-scroll-proportion="0.0" vertical-offset="12308" max-vertical-offset="40953">
           <caret line="3229" column="41" selection-start-line="3229" selection-start-column="41" selection-end-line="3229" selection-end-column="41" />
           <folding>
             <element signature="e#0#64#0" expanded="true" />
@@ -1252,6 +1160,13 @@
             <element signature="e#217193#217573#0" expanded="false" />
             <element signature="e#217631#224184#0" expanded="false" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/.gitignore">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="1.4402391" vertical-offset="1113" max-vertical-offset="2176">
+          <caret line="108" column="13" selection-start-line="108" selection-start-column="13" selection-end-line="108" selection-end-column="13" />
         </state>
       </provider>
     </entry>
