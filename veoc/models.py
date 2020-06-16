@@ -727,7 +727,7 @@ class truck_quarantine_contacts(models.Model):
     date_check_out = models.DateField(default=date.today)
 
     def __str__(self):
-        return self.patient_contacts.first_name + ' - ' + self.vehicle_registration + ' - ' + self.weighbridge_facility.weighbridge_name
+        return self.patient_contacts.first_name + ' - ' + self.vehicle_registration + ' - ' + self.border_point.border_name
 
 class testing_labs(models.Model):
     name=models.CharField(max_length=200)
@@ -773,6 +773,18 @@ class truck_quarantine_lab(models.Model):
 
     def __str__(self):
         return self.patient_contacts.first_name + ' - ' + self.specimen_type.name
+
+class home_based_care(models.Model):
+    patient_contacts = models.ForeignKey(quarantine_contacts, on_delete=models.DO_NOTHING, related_name='home_care_contact')
+    health_care_worker = models.ForeignKey(User, on_delete=models.DO_NOTHING, related_name='health_care_worker_contact')
+    source = models.CharField(max_length=255, blank=True)
+    date_created = models.DateTimeField(default=datetime.now())
+
+class discharged_quarantine(models.Model):
+    patient_contacts = models.ForeignKey(quarantine_contacts, on_delete=models.DO_NOTHING, related_name='discharged_quarantine_contact')
+    health_care_worker = models.ForeignKey(User, on_delete=models.DO_NOTHING, related_name='health_care_worker_discharged_quarantine')
+    source = models.CharField(max_length=255, blank=True)
+    date_created = models.DateTimeField(default=datetime.now())
 
 class watcher_team_leads(models.Model):
     team_lead=models.ForeignKey(contact, on_delete=models.CASCADE, blank=False)
