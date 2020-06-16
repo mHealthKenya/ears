@@ -408,6 +408,7 @@
                                     <th>Name of lab</th>
                                     <th>Lab Results</th>
                                     <th>Date Lab Confirmed</th>
+                                    <th>Sample Identifier</th>
                                 </tr>
                                 </thead>
                                 <tbody>
@@ -419,6 +420,7 @@
                                         <td>{{ lab.lab.name }}</td>
                                         <td>{{ lab.lab_results }}</td>
                                         <td>{{ lab.date_lab_confirmation|date:'d-m-Y' }}</td>
+                                        <td>{{ lab.sample_identifier }}</td>
                                     </tr>
                                 {% endfor %}
                                 </tbody>
