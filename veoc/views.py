@@ -1152,6 +1152,7 @@ def border_dashboard(request):
     #get the person org unit to dislay subcounty on the Dashboard
     current_user = request.user
     u = User.objects.get(username=current_user.username)
+    user_level = u.persons.access_level
     user_county_id = u.persons.sub_county_id
 
     #get county names
@@ -1399,6 +1400,7 @@ def border_dashboard(request):
 
     template = loader.get_template('veoc/border_dashboard.html')
     context = RequestContext(request,{
+        'user_level': user_level,
         'marquee_call_log': marquee_call_log,
         'marquee_disease': marquee_disease,
         'marquee_events': marquee_events,
@@ -4430,6 +4432,113 @@ def site_list(request):
     values = {'sites_count':sites_count, 'site_vals': site_vals, 'county':county}
 
     return render(request, 'veoc/quarantine_sites.html', values)
+
+@login_required
+def border_point(request):
+    if request.method == "POST":
+        border_name = request.POST.get('border_name','')
+        border_location = request.POST.get('border_location', '')
+        lead_name = request.POST.get('lead_names','')
+        lead_phone = request.POST.get('lead_number','')
+        active = True
+
+        #get todays date
+        current_date = date.today().strftime('%Y-%m-%d')
+
+        #get current user
+        current_user = request.user
+        userObject = User.objects.get(pk = current_user.id)
+
+        #saving values to databse
+        border_points.objects.create(border_name=border_name, border_location=border_location, team_lead_names=lead_name, active=active,
+            team_lead_phone=lead_phone, created_at=current_date, updated_at=current_date,
+            created_by=userObject, updated_by=userObject)
+
+    borders_count = border_points.objects.all().count
+    borders_vals = border_points.objects.all()
+    values = {'borders_count':borders_count, 'borders_vals': borders_vals}
+
+    return render(request, 'veoc/border_list.html', values)
+
+@login_required
+def weigh_site(request):
+    if request.method == "POST":
+        weighbridge_name = request.POST.get('weighbridge_name','')
+        weighbridge_location = request.POST.get('weighbridge_location', '')
+        lead_name = request.POST.get('lead_names','')
+        lead_phone = request.POST.get('lead_number','')
+        active = True
+
+        #get todays date
+        current_date = date.today().strftime('%Y-%m-%d')
+
+        #get current user
+        current_user = request.user
+        userObject = User.objects.get(pk = current_user.id)
+
+        #saving values to databse
+        weighbridge_sites.objects.create(weighbridge_name=weighbridge_name, weighbridge_location=weighbridge_location, team_lead_names=lead_name, active=active,
+            team_lead_phone=lead_phone, created_at=current_date, updated_at=current_date,
+            created_by=userObject, updated_by=userObject)
+
+    weigh_site_count = weighbridge_sites.objects.all().count
+    weigh_site_vals = weighbridge_sites.objects.all()
+    values = {'weigh_site_count':weigh_site_count, 'weigh_site_vals': weigh_site_vals}
+
+    return render(request, 'veoc/weighbridge_list.html', values)
+
+@login_required
+def edit_border_point(request):
+    if request.method == "POST":
+        myid = request.POST.get('id','')
+        border_name = request.POST.get('border_name','')
+        lead_name = request.POST.get('lead_names','')
+        lead_phone = request.POST.get('lead_number','')
+        active = request.POST.get('active','')
+
+        #get todays date
+        current_date = date.today().strftime('%Y-%m-%d')
+
+        #get current user
+        current_user = request.user
+        userObject = User.objects.get(pk = current_user.id)
+
+        #updating values to database
+        border_points.objects.filter(pk=myid).update(border_name=border_name, team_lead_names=lead_name, team_lead_phone=lead_phone, active=active, updated_at=current_date,
+                                                        updated_by=userObject)
+
+    border_count = border_points.objects.all().count
+    border_vals = border_points.objects.all()
+    values = {'border_count':border_count, 'border_vals': border_vals}
+
+    return render(request, 'veoc/border_list.html', values)
+
+@login_required
+def edit_weigh_site(request):
+    if request.method == "POST":
+        myid = request.POST.get('id','')
+        weighbridge_name = request.POST.get('weighbridge_name','')
+        lead_name = request.POST.get('lead_names','')
+        lead_phone = request.POST.get('lead_number','')
+        active = request.POST.get('active','')
+
+        #get todays date
+        current_date = date.today().strftime('%Y-%m-%d')
+
+        #get current user
+        current_user = request.user
+        userObject = User.objects.get(pk = current_user.id)
+
+        #updating values to database
+        weighbridge_sites.objects.filter(pk=myid).update(border_name=border_name, team_lead_names=lead_name, team_lead_phone=lead_phone, active=active, updated_at=current_date,
+                                                        updated_by=userObject)
+
+    weighbridge_count = weighbridge_sites.objects.all().count
+    weighbridge_vals = weighbridge_sites.objects.all()
+    values = {'weighbridge_count':weighbridge_count, 'weighbridge_vals': weighbridge_vals}
+
+    return render(request, 'veoc/weighbridge_list.html', values)
+
 
 @login_required
 def edit_events_list(request):

@@ -7,7 +7,7 @@
 
     <div class="panel panel-default">
       <div class="panel-body" align="center">
-          <h3 align="center">COUNTRY BORDER DASHBOARD</h3>
+          <h3 align="center">BORDER DASHBOARD</h3>
         </div>
     </div><!-- /div panel-default -->
 
@@ -50,7 +50,7 @@
                   <div class="icon">
                       <i class="ion ion-bag"></i>
                   </div>
-                  <a href="/quarantine_list/" class="btn btn-primary">More infor</a>
+                  <a href="/quarantine_list/" class="btn btn-primary">More information</a>
               </div>
           </div>
       </div>
@@ -58,13 +58,13 @@
             <div class="well" style="border-color: #a94442">
                 <div class="small-box bg-aqua">
                     <div class="inner" style="height: 100px; width: 100%; ">
-                        <h4><b> Diseases Reported</b></h4>
+                        <h4><b> Diseases Reported </b></h4>
                         {% if disease_reported_dash_vals %}
                           {% for key, value in disease_reported_dash_vals.items %}
                               <h6>{{ key }} : {{ value }} Cases</h6>
                           {% endfor %}
                         {% else %}
-                          <h6>No Recent Cases </h6>
+                          <h6>No Recent Cases{{ status }} </h6>
                         {% endif %}
 
                     </div>

@@ -93,7 +93,7 @@
 
             <li>
                 <a href="#" data-toggle="dropdown" role="button"
-                   style="color: #ffffff">Welcome {{ request.user.first_name }}</a>
+                   style="color: #ffffff">Welcome {{ request.user }}</a>
             </li>
 
             <li>
@@ -199,7 +199,8 @@
                       class="fa fa-window-close fa-stack-1x "></i></span>Completed Quarantine</a></li>
               </ul>
           </li>
-          <li>
+          {% if user_level == 'National'%}
+            <li>
               <a href="#"><span class="fa-stack fa-lg pull-left"><i class="fa fa-cloud-download fa-stack-1x "></i></span>
                   DHIS2 DATA</a>
               <ul class="nav-pills nav-stacked" style="list-style-type:none;">
@@ -225,6 +226,7 @@
                           <!-- generate_pdf</a></li> -->
               </ul>
           </li>
+         {% endif %}
           <li>
               <a href="#"><span class="fa-stack fa-lg pull-left">
                 <i class="fa fa-clipboard fa-stack-1x "></i>
@@ -363,6 +365,12 @@
             <ul class="nav-pills nav-stacked" style="list-style-type:none;">
                 <li>
                     <a href="/users_list">Users</a>
+                </li>
+                <li>
+                    <a href="/border_point">Border Points</a>
+                </li>
+                <li>
+                    <a href="/weigh_site">Weighbridge Sites</a>
                 </li>
                 <li>
                     <a href="/site_list">Quarantine Sites</a>
