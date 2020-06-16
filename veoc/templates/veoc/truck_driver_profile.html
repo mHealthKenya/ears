@@ -1,7 +1,9 @@
 {% extends "veoc/main_template.html" %}
 
 {% block main %}
-
+ <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
     <script type="text/javascript"
         src="https://cdn.datatables.net/v/dt/jqc-1.12.3/jszip-2.5.0/pdfmake-0.1.18/dt-1.10.12/b-1.2.2/b-flash-1.2.2/b-html5-1.2.2/b-print-1.2.2/datatables.min.js"></script>
 
@@ -61,7 +63,7 @@
                 <li><a data-toggle="tab" href="#attestation">Attestation</a></li>
             </ul>
             <div class="tab-content">
-                <div class="tab-pane active" id="home">
+                <div class="tab-pane fade in  active" id="home">
                 <hr>
                   <form class="track_edit_form"  method="POST" action="{% url 'veoc:truck_driver_edit' %}">
                     {% csrf_token %}
@@ -153,7 +155,7 @@
                   </form>
                     <hr>
                 </div><!--/tab-pane-->
-                <div class="tab-pane" id="company">
+                <div class="tab-pane fade" id="company">
                     <hr>
                   <form class="form" action="##" method="post" id="companyForm">
                       {% for company_detail in patient_details %}
@@ -240,7 +242,7 @@
                   </form>
                     <hr>
                 </div><!--/tab-pane-->
-                <div class="tab-pane" id="follow_up">
+                <div class="tab-pane fade" id="follow_up">
                     <hr>
                     <div class="panel panel-default table-responsive">
                         <div class="panel-heading">
@@ -292,7 +294,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="tab-pane" id="lab_test">
+                <div class="tab-pane fade" id="lab_test">
                     <hr>
                     <form class="track_driver_profile" method="POST" action="{% url 'veoc:truck_driver_lab_test' %}">
                         {% csrf_token %}
@@ -391,7 +393,7 @@
                         </div>
                     </form>
                 </div><!--/tab-pane-->
-                <div class="tab-pane" id="lab_results">
+                <div class="tab-pane fade" id="lab_results">
                     <hr>
                     <div class="panel panel-default table-responsive">
                         <div class="panel-heading">
@@ -426,7 +428,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="tab-pane" id="certificate">
+                <div class="tab-pane fade" id="certificate">
                     <hr>
                     <div class="panel panel-default table-responsive">
                         <div class="panel-heading">
@@ -539,7 +541,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="tab-pane" id="attestation">
+                <div class="tab-pane fade" id="attestation">
                     <hr>
                     <div class="panel panel-default table-responsive">
                         <div class="panel-heading">

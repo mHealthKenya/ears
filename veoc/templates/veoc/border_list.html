@@ -1,0 +1,321 @@
+{% extends "veoc/main_template.html" %}
+
+{% block main %}
+
+    <script type="text/javascript"
+        src="https://cdn.datatables.net/v/dt/jqc-1.12.3/jszip-2.5.0/pdfmake-0.1.18/dt-1.10.12/b-1.2.2/b-flash-1.2.2/b-html5-1.2.2/b-print-1.2.2/datatables.min.js"></script>
+
+            <div id="main-container">
+        			<div id="breadcrumb">
+        				<ul class="breadcrumb">
+        					 <li><i class="fa fa-home"></i><a href="{% url 'veoc:access_dashboard' %}"> Dashboard</a></li>
+        					 <li class="active">Border Points</li>
+        				</ul>
+        			</div><!-- /breadcrumb-->
+
+        			<div class="padding-md">
+                <div class="row">
+        					<div class="col-sm-12 col-md-12">
+        						<div class="col-md-12" style="padding-bottom:10px">
+        							<button type="button" id="modalbtn" class="btn btn-info btn-sm pull-left" data-toggle="modal" data-target="#addQuarantineModal"> <i class="fa fa-plus" aria-hidden="true"></i> Add Border Point</button>
+        						</div>
+
+        					</div><!-- /.col -->
+        				</div>
+        				<div class="row">
+        					<div class="col-md-12">
+        						<div class="panel panel-default table-responsive">
+        							<div class="panel-heading">
+        								Border Points
+        								<span class="label label-info pull-right" id="totalspan">{{borders_count}} Border Points</span>
+        							</div>
+        							<div class="padding-md clearfix">
+        							<table class="table table-hover" id="site_table">
+        								<thead class="thead-dark">
+                                          <tr>
+                                              <th>Border Point Name</th>
+                                              <th>Team Lead Names</th>
+                                              <th>Team Lead Contacts</th>
+                                              <th>Active Border Point</th>
+                                              <th>Created By</th>
+                                              <th>Action</th>
+                                          </tr>
+                                          </thead>
+                                          <tbody>
+                                            {% for site in borders_vals %}
+                                            <tr>
+                                            <td>{{ site.border_name }}</td>
+                                            <td>{{ site.team_lead_names }}</td>
+                                            <td>{{ site.team_lead_phone }}</td>
+                                            <td>{{ site.active }}</td>
+                                            <td>{{ site.created_by.username }}</td>
+                                            <td>
+                                                <button type="button" class="btn btn-primary btn-xs view_button"
+                                                  data-toggle="modal" data-target="#view_site_modal"
+                                                  data-id="{{ site.pk }}"
+                                                  data-border-name="{{ site.border_name }}"
+                                                  data-lead-name="{{ site.team_lead_names }}"
+                                                  data-lead-phone="{{ site.team_lead_phone }}"
+                                                  data-active="{{ site.active }}"
+                                                  title="View">
+                                                  <i class="fa fa-eye">
+                                                  </i>
+                                              </button>
+                                              <button type="button" class="btn btn-primary btn-xs edit_button"
+                                                data-toggle="modal" data-target="#edit_site_modal"
+                                                data-id="{{ site.pk }}"
+                                                data-border-name="{{ site.border_name }}"
+                                                data-lead-name="{{ site.team_lead_names }}"
+                                                data-lead-phone="{{ site.team_lead_phone }}"
+                                                data-active="{{ site.active }}"
+                                                title="Edit">
+                                                <i class="fa fa-edit">
+                                                </i>
+                                              </button>
+                                            </td>
+                                          </tr>
+                                          {% endfor %}
+                                      </tbody>
+    							    </table>
+                                </div>
+                            </div>
+    				    </div>
+                    </div>
+    			</div><!-- /row-->
+            </div><!-- /.padding-md -->
+        </div><!-- /main-container -->
+
+      <!-- Add Quarantine modal -->
+		   <div class="modal fade" id="addQuarantineModal" tabindex="-1" role="dialog" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLongTitle">Add Border Point</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form class="quarantine_register_form" method="POST" action="{% url 'veoc:border_point' %}" >
+                        {% csrf_token %}
+                          <div class="form-group">
+                            <label>Border Point Name :</label>
+                          <input type="text" class="form-control input-sm"  name="border_name" id="border_name" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Team Lead Names :</label>
+                          <input type="text" class="form-control input-sm" name="lead_names" id="lead_names" >
+                        </div>
+                        <div class="form-group">
+                            <label>Team Leam Phone Number :</label>
+                          <input type="number" class="form-control input-sm" name="lead_number" id="lead_number">
+                        </div>
+
+                        <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                        <button type="submit" id="addsitebtn" class="btn btn-success btn-sm pull-right"> <i class="fa fa-plus" aria-hidden="true"></i> Add Quarantine Site</button>
+                    </form>
+                </div>
+                </div>
+            </div>
+        </div>
+
+      <!-- View Quarantine modal -->
+      <div class="modal fade" id="view_site_modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="exampleModalLabel">Border Point View</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+              <form method="post" action="#">
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label>Border Point Name :</label>
+                      <input type="text" class="form-control view_border_name"  name="border_name" readonly>
+                    </div>
+                    <div class="form-group">
+                        <label>Team Lead Names :</label>
+                      <input type="text" class="form-control view_lead_names" name="lead_names" readonly >
+                    </div>
+                    <div class="form-group">
+                        <label>Team Leam Phone Number :</label>
+                      <input type="number" class="form-control view_lead_number" name="lead_number" readonly>
+                    </div>
+                    <div class="form-group">
+                        <label>Active Status :</label>
+                      <input type="text" class="form-control view_active" name="active" readonly>
+                    </div>
+                </div>
+            </form>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Edit Quarantine modal -->
+      <div class="modal fade" id="edit_site_modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="exampleModalLabel">Border Point Edit</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+              <form method="post" action="{% url 'veoc:edit_border_point' %}">
+                {% csrf_token %}
+                  <div class="modal-body">
+                    <div class="form-group" style="display: none;">
+                        <input class="form-control edit_id" name="id" style="display: none;">
+                    </div>
+                      <div class="form-group">
+                            <label>Border Point Name :</label>
+                          <input type="text" class="form-control edit_border_name"  name="border_name" >
+                        </div>
+                      <div class="form-group">
+                            <label>Team Lead Names :</label>
+                          <input type="text" class="form-control edit_lead_names" name="lead_names" >
+                        </div>
+                      <div class="form-group">
+                            <label>Team Leam Phone Number :</label>
+                          <input type="number" class="form-control edit_lead_number" name="lead_number">
+                        </div>
+                      <div class="form-group">
+                        <label>Active Status :</label>
+                        <select class="form-control input-sm active" data-width="100%" id="active" name="active" >
+                        <option value="" disabled selected>Select Status</option>
+                            <option value="True">Active</option>
+                            <option value="False">Inactive</option>
+      							   </select>
+      								</div>
+                        </div>
+                    <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                    <button type="submit" id="addeditsitebtn" class="btn btn-success btn-sm pull-right">Save Changes</button>
+                </form>
+            </div>
+          </div>
+        </div>
+      </div>
+
+{% endblock %}
+
+{% block script %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootbox.js/4.4.0/bootbox.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
+<script src="https://cdn.jsdelivr.net/npm/promise-polyfill"></script>
+  <script>
+    $(document).ready(function () {
+          $('#site_table').DataTable({
+              "order": [],
+              dom: 'Bfrtip',
+              buttons: [
+                  'copy', 'csv', 'excel', 'pdf', 'print'
+              ]
+          });
+
+          // Setup - add a text input to each footer cell
+          $('#site_table thead td').each(function () {
+              var title = $(this).text();
+              $(this).html('<input type="text" placeholder="Search ' + title + '" />');
+          });
+
+          // DataTable
+          var table = $('#site_table').DataTable();
+
+          // Apply the search
+          table.columns().every(function () {
+              var that = this;
+
+              $('input', this.header()).on('keyup change', function () {
+                  if (that.search() !== this.value) {
+                      that
+                              .search(this.value)
+                              .draw();
+                  }
+              });
+          });
+
+    });
+
+    $(document).on( "click", '.view_button',function(e) {
+      var id = $(this).data('id');
+      var border_name = $(this).data('border-name');
+      var lead_name = $(this).data('lead-name');
+      var lead_num = $(this).data('lead-phone');
+      var act = $(this).data('active');
+
+      console.log(border_name);
+
+      $(".view_border_name").val(border_name);
+      $(".view_lead_names").val(lead_name);
+      $(".view_lead_number").val(lead_num);
+      $(".view_active").val(act);
+  });
+
+    $(document).on( "click", '.edit_button',function(e) {
+      var id = $(this).data('id');
+      var border_name = $(this).data('border-name');
+      var lead_name = $(this).data('lead-name');
+      var lead_num = $(this).data('lead-phone');
+
+      console.log(id);
+
+      $(".edit_id").val(id);
+      $(".edit_border_name").val(border_name);
+      $(".edit_lead_names").val(lead_name);
+      $(".edit_lead_number").val(lead_num);
+  });
+
+  var quarantineForm = $(".quarantine_register_form")
+
+  quarantineForm.submit(function(e){
+    e.preventDefault();
+    console.log("inside quarantineForm");
+    var thisForm = $(this);
+    var endPoint = thisForm.attr("action") || window.location.href;
+    var method = thisForm.attr("method");
+    var formData = thisForm.serialize();
+
+    Swal.fire({
+      title: "Please wait!, Saving Details!",
+      imageUrl: "/static/images/ajax-loader.gif",
+      showConfirmButton: false,
+      allowOutsideClick: false
+    });
+    $.ajax({
+      type:method,
+      url:endPoint,
+      data: formData,
+      success:function(){
+        Swal.fire({
+          title: 'Success!',
+          text: 'Border Point Saved',
+          icon: 'success'
+        });
+        quarantineForm[0].reset();
+      },
+      error:function(er){
+        console.log("Border Point saving error");
+        console.log(er.responseText);
+        Swal.fire({
+          title: 'Error!',
+          text: 'Border Point Details Cannot be Saved',
+          icon: 'error'
+        });
+      }
+    });
+
+  });
+
+
+  </script>
+{% endblock %}
