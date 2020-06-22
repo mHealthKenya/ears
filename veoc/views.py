@@ -414,6 +414,8 @@ def dashboard(request):
     print(completed_female)
 
     current_user = request.user
+    u = User.objects.get(username=current_user.username)
+    user_level = u.persons.access_level
     print(current_user)
     # userObject = User.objects.get(pk = current_user.id)
     grp = User.objects.filter(pk=current_user.id, groups__name='National Managers').exists()
@@ -522,6 +524,7 @@ def dashboard(request):
 
     template = loader.get_template('veoc/dashboard.html')
     context = RequestContext(request,{
+        'user_level': user_level,
         'marquee_call_log': marquee_call_log,
         'marquee_disease': marquee_disease,
         'marquee_events': marquee_events,

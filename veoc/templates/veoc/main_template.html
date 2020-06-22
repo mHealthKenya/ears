@@ -69,26 +69,26 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 </head>
 <body>
-<nav class="navbar navbar-default no-margin">
+<nav class="navbar navbar-default no-margin" style="background-color:#3c8dbc">
+<div style="display: flex">
     <!-- Brand and toggle get grouped for better mobile display -->
-    <div class="navbar-header fixed-brand" style="background-color:#3c8dbc">
+    <div class="navbar-header fixed-brand">
         <!-- <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" id="menu-toggle">
             <span class="glyphicon glyphicon-th-large" aria-hidden="true"></span>
         </button> -->
         <a href="/dashboard">
-          <img src="{% static "images/header.jpg" %}">
+            <img src="{% static "images/header.jpg" %}">
         </a>
+
     </div>
-    <!-- navbar-header-->
-
-    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1" style="background-color:#3c8dbc">
-
-        <ul class="nav navbar-nav">
-            <li class="active">
+<div>
                 <button class="navbar-toggle collapse in" data-toggle="collapse" id="menu-toggle-2"><span
                         class="glyphicon glyphicon-th-large" aria-hidden="true"></span></button>
-            </li>
-        </ul>
+</div>
+
+    <!-- navbar-header-->
+
+    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1" >
         <ul class="nav navbar-nav navbar-right">
 
             <li>
@@ -139,36 +139,18 @@
         </div>
         <!-- /.modal-dialog -->
     </div>
-    <!-- /.modal -->
+    <!-- /.modal --></div>
 </nav>
 <div id="wrapper">
     <!-- Sidebar -->
     <div id="sidebar-wrapper">
         <ul class="sidebar-nav nav-pills nav-stacked" id="menu">
-        <script>
-            {% if user.groups.all.0.name == "National Managers" %}
-                console.log("User belongs to National Managers");
-            {% elif request.user|has_group:"National Watchers" %}
-                console.log("User belong to National Watchers");
-            {% elif request.user|has_group:"County Managers" %}
-                console.log("User belong to County Managers");
-            {% elif request.user|has_group:"Sub-County Managers" %}
-                console.log("User belong to Sub-County Managers");
-            {% elif request.user|has_group:"County Watchers" %}
-                console.log("User belong to County Watchers");
-            {% elif request.user|has_group:"Sub-County Watchers" %}
-                console.log("User belong to Sub-County Watchers");
-            {% elif request.user|has_group:"Border Watchers" %}
-                console.log("User belong to Border Watchers");
-            {% else %}
-              console.log("User doesn't belong to any group");
-            {% endif %}
 
-          </script>
           <li>
               <a href="/access_dashboard"><span class="fa-stack fa-lg pull-left"><i
                       class="fa fa-dashboard fa-stack-1x "></i></span> DASHBOARD</a>
           </li>
+        {% if user_level == 'National' or user_level == 'County'%}
           <li>
               <a href="#"><span class="fa-stack fa-lg pull-left"><i class="fa fa-edit fa-stack-1x "></i></span>
                   DATA REGISTER</a>
@@ -183,6 +165,8 @@
                       class="fa fa-address-card fa-stack-1x"></i></span>COVID-19 Quarantine</a></li>
               </ul>
           </li>
+        {% endif %}
+        {% if user_level == 'National' or user_level == 'Border' %}
           <li>
               <a href="#"><span class="fa-stack fa-lg pull-left"><i class="fa fa-edit fa-stack-1x "></i></span>
                   POINTS OF ENTRY</a>
@@ -199,7 +183,8 @@
                       class="fa fa-window-close fa-stack-1x "></i></span>Completed Quarantine</a></li>
               </ul>
           </li>
-          {% if user_level == 'National'%}
+        {% endif %}
+        {% if user_level == 'National' %}
             <li>
               <a href="#"><span class="fa-stack fa-lg pull-left"><i class="fa fa-cloud-download fa-stack-1x "></i></span>
                   DHIS2 DATA</a>
@@ -226,7 +211,6 @@
                           <!-- generate_pdf</a></li> -->
               </ul>
           </li>
-         {% endif %}
           <li>
               <a href="#"><span class="fa-stack fa-lg pull-left">
                 <i class="fa fa-clipboard fa-stack-1x "></i>
@@ -304,15 +288,7 @@
               </ul>
           </li>
           {% endif %}
-          <li>
-              <a href="#"><span class="fa-stack fa-lg pull-left"><i class="fa fa-address-book fa-stack-1x "></i></span>EMERGENCY
-                  CONTACTS</a>
-              <ul class="nav-pills nav-stacked" style="list-style-type:none;">
-                  <li>
-                      <a href="/all_contact">All Contacts</a>
-                  </li>
-              </ul>
-          </li>
+
           <li>
               <a href="#"><span class="fa-stack fa-lg pull-left"><i
                       class="fa fa-book fa-stack-1x "></i></span>DOCUMENT MANAGER</a>
@@ -346,7 +322,16 @@
                   </li>
               </ul>
           </li>
-
+                {% endif %}
+            <li>
+              <a href="#"><span class="fa-stack fa-lg pull-left"><i class="fa fa-address-book fa-stack-1x "></i></span>EMERGENCY
+                  CONTACTS</a>
+              <ul class="nav-pills nav-stacked" style="list-style-type:none;">
+                  <li>
+                      <a href="/all_contact">All Contacts</a>
+                  </li>
+              </ul>
+          </li>
           <li>
               <a href="#"><span class="fa-stack fa-lg pull-left"><i
                 class="fa fa-leanpub fa-stack-1x "></i></span>SYSTEM FEEDBACK</a>
@@ -363,14 +348,16 @@
             <a href="#"><span class="fa-stack fa-lg pull-left"><i
             class="fa fa-cogs fa-stack-1x "></i></span>SETTINGS</a>
             <ul class="nav-pills nav-stacked" style="list-style-type:none;">
-                <li>
-                    <a href="/users_list">Users</a>
-                </li>
+
                 <li>
                     <a href="/border_point">Border Points</a>
                 </li>
                 <li>
                     <a href="/weigh_site">Weighbridge Sites</a>
+                </li>
+                    {% if user_level == 'National' %}
+                <li>
+                    <a href="/users_list">Users</a>
                 </li>
                 <li>
                     <a href="/site_list">Quarantine Sites</a>
@@ -390,6 +377,7 @@
                 <li>
                   <a href="/contact_list">Contact Type</a>
                 </li>
+                                {% endif %}
             </ul>
           </li>
         </ul>
