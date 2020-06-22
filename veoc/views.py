@@ -3163,7 +3163,7 @@ def quarantine_list(request):
             print("inside National")
             q_data = quarantine_contacts.objects.filter(quarantine_site=q_site).order_by('-date_of_contact')
             q_data_count = quarantine_contacts.objects.filter(quarantine_site=q_site).count()
-            quar_sites = quarantine_sites.objects.all()
+            quar_sites = quarantine_sites.objects.exclude(site_name = 'Country Border')
         elif(user_level == 3 or user_level == 5):
             user_county_id = u.persons.county_id
             print(user_county_id)
@@ -3191,36 +3191,36 @@ def quarantine_list(request):
     else:
         if(user_level == 1 or user_level == 2):
             print("inside National")
-            q_data = quarantine_contacts.objects.all().order_by('-date_of_contact')
-            q_data_count = quarantine_contacts.objects.all().count()
-            quar_sites = quarantine_sites.objects.all().order_by('site_name')
+            q_data = quarantine_contacts.objects.exclude(source = 'Truck Registration').order_by('-date_of_contact')
+            q_data_count = quarantine_contacts.objects.exclude(source = 'Truck Registration').count()
+            quar_sites = quarantine_sites.objects.exclude(site_name = 'Country Border').order_by('site_name')
         elif(user_level == 3 or user_level == 5):
             print("inside County")
             user_county_id = u.persons.county_id
             print(user_county_id)
-            q_data = quarantine_contacts.objects.all().filter(county_id = user_county_id).order_by('-date_of_contact')
-            q_data_count = quarantine_contacts.objects.all().filter(county_id = user_county_id).count()
-            quar_sites = quarantine_sites.objects.all().filter(county_id = user_county_id).order_by('site_name')
+            q_data = quarantine_contacts.objects.exclude(source = 'Truck Registration').filter(county_id = user_county_id).order_by('-date_of_contact')
+            q_data_count = quarantine_contacts.objects.exclude(source = 'Truck Registration').filter(county_id = user_county_id).count()
+            quar_sites = quarantine_sites.objects.exclude(site_name = 'Country Border').filter(county_id = user_county_id).order_by('site_name')
         elif(user_level == 4 or user_level == 6):
             print("inside SubCounty")
             user_sub_county_id = u.persons.sub_county
             print(user_sub_county_id)
-            q_data = quarantine_contacts.objects.all().filter(subcounty_id = user_sub_county_id).order_by('-date_of_contact')
-            q_data_count = quarantine_contacts.objects.filter(subcounty_id = user_sub_county_id).count()
-            quar_sites = quarantine_sites.objects.filter(subcounty_id = user_sub_county_id).order_by('site_name')
+            q_data = quarantine_contacts.objects.exclude(source = 'Truck Registration').filter(subcounty_id = user_sub_county_id).order_by('-date_of_contact')
+            q_data_count = quarantine_contacts.objects.exclude(source = 'Truck Registration').filter(subcounty_id = user_sub_county_id).count()
+            quar_sites = quarantine_sites.objects.exclude(site_name = 'Country Border').filter(subcounty_id = user_sub_county_id).order_by('site_name')
         elif(user_level == 7):
             print("inside Border")
             user_sub_county_id = u.persons.sub_county
             print(user_sub_county_id)
-            q_data = quarantine_contacts.objects.all().filter(cormobidity = "1").order_by('-date_of_contact')
-            q_data_count = quarantine_contacts.objects.all().filter(cormobidity = "1").count()
+            q_data = quarantine_contacts.objects.exclude(source = 'Truck Registration').filter(cormobidity = "1").order_by('-date_of_contact')
+            q_data_count = quarantine_contacts.objects.exclude(source = 'Truck Registration').filter(cormobidity = "1").count()
             quar_sites = quarantine_sites.objects.all().filter(active = False).order_by('site_name')
         else:
             print("inside Facility")
             user_sub_county_id = u.persons.sub_county
             print(user_sub_county_id)
-            q_data = quarantine_contacts.objects.all().filter(subcounty_id = user_sub_county_id).order_by('-date_of_contact')
-            q_data_count = quarantine_contacts.objects.filter(subcounty_id = user_sub_county_id).count()
+            q_data = quarantine_contacts.objects.exclude(source = 'Truck Registration').filter(subcounty_id = user_sub_county_id).order_by('-date_of_contact')
+            q_data_count = quarantine_contacts.objects.exclude(source = 'Truck Registration').filter(subcounty_id = user_sub_county_id).count()
             quar_sites = quarantine_sites.objects.filter(site_name = user_access_level).order_by('site_name')
 
 
@@ -3232,6 +3232,157 @@ def quarantine_list(request):
         data = {'quarantine_data': q_data, 'quarantine_data_count': q_data_count, 'quar_sites':quar_sites}
 
     return render(request, 'veoc/quarantine_list.html', data)
+
+@login_required
+def home_care_list(request):
+    global data
+
+    #check logged users access level to display relevant records -- national, county, SubCounty
+    current_user = request.user
+    u = User.objects.get(username=current_user.username)
+    user_access_level = u.persons.access_level
+    print("Access Level---")
+    print(user_access_level)
+
+    user_level = ""
+    user_group = request.user.groups.values_list('id', flat=True)
+    print(user_group)
+    for grp in user_group:
+        user_level = grp
+    print(user_level)
+
+    if request.method == 'POST':
+        q_site = request.POST.get('quarantine_site','')
+
+        if(user_level == 1 or user_level == 2):
+            #pull data whose quarantine site id is equal to q_site_name
+            print("inside National")
+
+            q_data = quarantine_contacts.objects.filter(quarantine_site=q_site).order_by('-date_of_contact')
+            q_data_count = quarantine_contacts.objects.filter(quarantine_site=q_site).count()
+            quar_sites = quarantine_sites.objects.exclude(site_name = 'Country Border')
+        elif(user_level == 3 or user_level == 5):
+            user_county_id = u.persons.county_id
+            print(user_county_id)
+            #pull data whose quarantine site id is equal to q_site_name
+            q_data = quarantine_contacts.objects.filter(quarantine_site=q_site).filter(county_id = user_county_id).order_by('-date_of_contact')
+            q_data_count = quarantine_contacts.objects.filter(quarantine_site=q_site).filter(county = user_county_id).count()
+            quar_sites = quarantine_sites.objects.all().filter(county = user_county_id).order_by('site_name')
+        elif(user_level == 4 or user_level == 6):
+            user_sub_county_id = u.persons.sub_county_id
+            print(user_sub_county_id)
+            #pull data whose quarantine site id is equal to q_site_name
+            q_data = quarantine_contacts.objects.filter(quarantine_site=q_site).filter(subcounty_id = user_sub_county_id).order_by('-date_of_contact')
+            q_data_count = quarantine_contacts.objects.filter(quarantine_site=q_site).filter(subcounty_id = user_sub_county_id).count()
+            quar_sites = quarantine_sites.objects.all().filter(subcounty_id = user_sub_county_id).order_by('site_name')
+        elif(user_level == 7):
+            q_data = quarantine_contacts.objects.filter(quarantine_site=q_site).filter(cormobidity = "1").order_by('-date_of_contact')
+            q_data_count = quarantine_contacts.objects.filter(quarantine_site=q_site).filter(cormobidity = "1").count()
+            quar_sites = quarantine_sites.objects.all().filter(active = False).order_by('site_name')
+        else:
+            q_data = quarantine_contacts.objects.filter(quarantine_site=q_site).order_by('-date_of_contact')
+            q_data_count = quarantine_contacts.objects.filter(quarantine_site=q_site).count()
+            quar_sites = quarantine_sites.objects.filter(site_name = user_access_level).order_by('site_name')
+
+        data = {'quarantine_data': q_data, 'quarantine_data_count': q_data_count, 'quar_sites':quar_sites}
+    else:
+        if(user_level == 1 or user_level == 2):
+            print("inside National")
+            q_data = home_based_care.objects.all().annotate(
+                first_name=F("patient_contacts__first_name"),
+                last_name=F("patient_contacts__last_name"),
+                sex=F("patient_contacts__sex"),
+                age=F("patient_contacts__dob"),
+                passport_number=F("patient_contacts__passport_number"),
+                phone_number=F("patient_contacts__phone_number"),
+                nationality=F("patient_contacts__nationality"),
+                origin_country=F("patient_contacts__origin_country"),
+                quarantine_site=F("patient_contacts__quarantine_site_id__site_name"),
+                source=F("patient_contacts__source"),
+                date_of_contact=F("patient_contacts__date_of_contact"),
+                created_by=F("patient_contacts__created_by_id__username"),
+            )
+            q_data_count = home_based_care.objects.all().count()
+        elif(user_level == 3 or user_level == 5):
+            print("inside County")
+            user_county_id = u.persons.county_id
+            print(user_county_id)
+            q_data = home_based_care.objects.all().annotate(
+                first_name=F("patient_contacts__first_name"),
+                last_name=F("patient_contacts__last_name"),
+                sex=F("patient_contacts__sex"),
+                age=F("patient_contacts__dob"),
+                passport_number=F("patient_contacts__passport_number"),
+                phone_number=F("patient_contacts__phone_number"),
+                nationality=F("patient_contacts__nationality"),
+                origin_country=F("patient_contacts__origin_country"),
+                quarantine_site=F("patient_contacts__quarantine_site_id__site_name"),
+                source=F("patient_contacts__source"),
+                date_of_contact=F("patient_contacts__date_of_contact"),
+                created_by=F("patient_contacts__created_by_id__username"),
+            )
+            q_data_count = home_based_care.objects.filter(county_id = user_county_id).count()
+        elif(user_level == 4 or user_level == 6):
+            print("inside SubCounty")
+            user_sub_county_id = u.persons.sub_county
+            print(user_sub_county_id)
+            q_data = home_based_care.objects.all().annotate(
+                first_name=F("patient_contacts__first_name"),
+                last_name=F("patient_contacts__last_name"),
+                sex=F("patient_contacts__sex"),
+                age=F("patient_contacts__dob"),
+                passport_number=F("patient_contacts__passport_number"),
+                phone_number=F("patient_contacts__phone_number"),
+                nationality=F("patient_contacts__nationality"),
+                origin_country=F("patient_contacts__origin_country"),
+                quarantine_site=F("patient_contacts__quarantine_site_id__site_name"),
+                source=F("patient_contacts__source"),
+                date_of_contact=F("patient_contacts__date_of_contact"),
+                created_by=F("patient_contacts__created_by_id__username"),
+            )
+            q_data_count = home_based_care.objects.filter(subcounty_id = user_sub_county_id).count()
+        elif(user_level == 7):
+            print("inside Border")
+            user_sub_county_id = u.persons.sub_county
+            print(user_sub_county_id)
+            q_data = home_based_care.objects.all().annotate(
+                first_name=F("patient_contacts__first_name"),
+                last_name=F("patient_contacts__last_name"),
+                sex=F("patient_contacts__sex"),
+                age=F("patient_contacts__dob"),
+                passport_number=F("patient_contacts__passport_number"),
+                phone_number=F("patient_contacts__phone_number"),
+                nationality=F("patient_contacts__nationality"),
+                origin_country=F("patient_contacts__origin_country"),
+                quarantine_site=F("patient_contacts__quarantine_site_id__site_name"),
+                source=F("patient_contacts__source"),
+                date_of_contact=F("patient_contacts__date_of_contact"),
+                created_by=F("patient_contacts__created_by_id__username"),
+            )
+            q_data_count = home_based_care.objects.filter(cormobidity = "1").count()
+        else:
+            print("inside Facility")
+            user_sub_county_id = u.persons.sub_county
+            print(user_sub_county_id)
+            q_data = home_based_care.objects.all().annotate(
+                first_name=F("patient_contacts__first_name"),
+                last_name=F("patient_contacts__last_name"),
+                sex=F("patient_contacts__sex"),
+                age=F("patient_contacts__dob"),
+                passport_number=F("patient_contacts__passport_number"),
+                phone_number=F("patient_contacts__phone_number"),
+                nationality=F("patient_contacts__nationality"),
+                origin_country=F("patient_contacts__origin_country"),
+                quarantine_site=F("patient_contacts__quarantine_site_id__site_name"),
+                source=F("patient_contacts__source"),
+                date_of_contact=F("patient_contacts__date_of_contact"),
+                created_by=F("patient_contacts__created_by_id__username"),
+            )
+            q_data_count = home_based_care.objects.filter(subcounty_id = user_sub_county_id).count()
+
+        data = {'home_care_data': q_data, 'home_care_data_count': q_data_count }
+
+    return render(request, 'veoc/home_care_list.html', data)
 
 @login_required
 def truck_quarantine_list(request):
@@ -4378,6 +4529,12 @@ def edit_diseases_list(request):
 def edit_quarantine_list(request):
 
     return render(request, 'veoc/quarantinelist.html', values)
+
+@login_required
+def edit_home_care_list(request):
+
+    return render(request, 'veoc/quarantinelist.html', values)
+
 
 @login_required
 def events_list(request):

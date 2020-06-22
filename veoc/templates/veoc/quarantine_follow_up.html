@@ -47,6 +47,9 @@
                           <tbody>
                           {% for follow in follow_data %}
                           <tr>
+                          {#                                  Check user permission to view names#}
+{#                            <td>*********</td>#}
+{#                            <td>*********</td>#}
                             <td>{{ follow.patient_contacts.last_name }}</td>
                             <td>{{ follow.patient_contacts.first_name }}</td>
                             <td>{{ follow.patient_contacts.age }}</td>

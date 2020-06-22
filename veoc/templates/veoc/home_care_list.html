@@ -1,0 +1,408 @@
+{% extends "veoc/main_template.html" %}
+
+{% block main %}
+
+    <script type="text/javascript"
+        src="https://cdn.datatables.net/v/dt/jqc-1.12.3/jszip-2.5.0/pdfmake-0.1.18/dt-1.10.12/b-1.2.2/b-flash-1.2.2/b-html5-1.2.2/b-print-1.2.2/datatables.min.js"></script>
+
+            <div id="main-container">
+        			<div id="breadcrumb">
+        				<ul class="breadcrumb">
+        					 <li><i class="fa fa-home"></i><a href="{% url 'veoc:access_dashboard' %}"> Dashboard</a></li>
+        					 <li class="active">Home Care Cases</li>
+        				</ul>
+        			</div><!-- /breadcrumb-->
+
+              <div class="panel-heading">HOME CARE CASES DATA FILTERS</div>
+              <div class="panel-body" align="left">
+                  <form class="form-inline" method="post" action="{% url 'veoc:home_care_list' %}">
+                    {% csrf_token %}
+                      <div class="form-group">
+                          <label for="site"><b>Filter by health care worker :&nbsp; &nbsp; </b></label>
+                          <select class="form-control" id="quarantine_site" name="quarantine_site">
+                             <option value="" disabled selected>Select home care worker</option>
+                             {% for quar_site in quar_sites %}
+                                 <option value="{{ quar_site.id }}">{{ quar_site.site_name}}</option>
+                             {% endfor %}
+                         </select>
+                      </div>
+
+                      <button type="submit" class="btn btn-primary" align="right">Update</button>
+                  </form>
+                  <!-- <button type="submit" class="btn btn-primary" align="right">Update</button> -->
+              </div>
+
+              <div class="panel-heading"><b>COVID19 Home Care Isolation Cases Report</b></div>
+
+        			<div class="padding-md">
+        				<div class="row">
+        					<div class="col-md-12">
+        						<div class="panel panel-default table-responsive">
+        							<div class="panel-heading">
+        								Home care isolation Cases
+        								<span class="label label-info pull-right" id="totalspan">{{home_care_data_count}} Reported cases </span>
+        							</div>
+        							<div class="padding-md clearfix">
+        							<table class="table table-hover" id="home_care_report">
+        								<thead class="thead-dark">
+                          <tr>
+                            <th>Last Name</th>
+                            <th>First Name</th>
+                            <th>DOB</th>
+                            <th>Gender</th>
+                            <th>Contact</th>
+                            <th>Passport No</th>
+                            <th>Nationality</th>
+                            <th>Origin Country</th>
+                            <th>Enrolled by</th>
+                            <th>Enrollment date</th>
+                            <th>Registered by</th>
+                            <th>Map View</th>
+                            <!-- <th>Edit</th> -->
+                          </tr>
+                          </thead>
+                          <tbody>
+                          {% for follow in home_care_data %}
+                          <tr>
+                          {#                                  Check user permission to view names#}
+{#                            <td>*********</td>#}
+{#                            <td>*********</td>#}
+                            <td>{{ follow.last_name }}</td>
+                            <td>{{ follow.first_name }}</td>
+                            <td>{{ follow.age }}</td>
+                            <td>{{ follow.sex }}</td>
+                            <td>{{ follow.phone_number }}</td>
+                            <td>{{ follow.passport_number }}</td>
+                            <td>{{ follow.nationality }}</td>
+                            <td>{{ follow.origin_country }}</td>
+                            <td>{{ follow.health_care_worker.username }}</td>
+                            <td>{{ follow.date_created|date:'d-m-Y' }}</td>
+                            <td>{{ follow.created_by }}</td>
+                            <td>
+                             <button type="button" id="map_view" class="btn btn-info btn-sm pull-left map_view"
+                               data-toggle="modal" data-target="#mapViewModal"
+                               data-id="{{ follow.pk }}"
+                               data-names="{{ follow.first_name }} {{ follow.last_name }}"
+                               data-last_contact="{{ follow.date_of_contact|date:'d-m-Y' }}"
+                               data-phone_number="{{ follow.phone_number }}"
+                               title="Open Map View">
+                               <i class="fa fa-map-marker">
+                               </i>
+                             </button>
+                           </td>
+                           <!-- <td>
+                             <button type="button" class="btn btn-primary btn-xs edit_button"
+                               data-toggle="modal" data-target="#edit_quarantine_modal"
+                               data-id="{{ follow.pk }}"
+                               data-last_name="{{ follow.last_name }}"
+                               data-first_name="{{ follow.first_name }}"
+                               data-phone_number="{{ follow.phone_number }}"
+                               data-nationality="{{ follow.nationality }}"
+                               data-origin_country="{{ follow.origin_country }}"
+                               data-place_of_diagnosis="{{ follow.place_of_diagnosis }}"
+                               data-quarantine_site="{{ follow.quarantine_site.site_name }}"
+                               data-nok="{{ follow.nok }}"
+                               data-nok_phone_num="{{ follow.nok_phone_num }}"
+                               data-cormobidity="{{ follow.cormobidity }}"
+                               data-drugs="{{ follow.drugs }}"
+                               title="Edit">
+                               <i class="fa fa-edit">
+                               </i>
+                             </button>
+                           </td> -->
+                          </tr>
+                        {% endfor %}
+                      </tbody>
+    							</table>
+                </div>
+              </div>
+    				</div>
+    			</div><!-- /row-->
+        </div><!-- /.padding-md -->
+      </div><!-- /main-container -->
+
+      <!-- Map View modal -->
+      <div class="modal fade" id="mapViewModal" tabindex="-1" role="dialog" aria-hidden="true">
+      		<div class="modal-dialog" role="document">
+      			<div class="modal-content">
+        			<div class="modal-header">
+        				<h5 class="modal-title" id="exampleModalLongTitle"><b>HOME CARE ISOLATION PATIENT FOLLOW UP DETAILS</b></h5>
+        				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        				<span aria-hidden="true">&times;</span>
+        				</button>
+        			</div>
+        			<div class="modal-body">
+              <div class="padding-md">
+                <div class="row">
+                  <div class="col-md-12">
+                    <div class="panel panel-default">
+                      <div class="panel-heading"><b>Home Care Isolation Patient Details</b></div>
+                      <div class="panel-body" align="center">
+                        <form method="post" action="#">
+                          <div class="form-group" style="display: none;">
+                              <input class="form-control id" name="id" style="display: none;">
+                          </div>
+                          <div class="form-row">
+                              <div class="form-group col-md-4">
+                                <label for="county">Names :</label>
+                                <input class="form-control first_name" name="first_name" readonly>
+                              </div>
+                              <div class="form-group col-md-4">
+                                <label for="county">Mobile No :</label>
+                                <input class="form-control phone_number" name="phone_number" readonly>
+                              </div>
+                              <div class="form-group col-md-4">
+                                <label for="county">Date last contacted :</label>
+                                <input class="form-control date_of_contact" name="date_of_contact" readonly>
+                              </div>
+                          </div>
+                        </form>
+                        <button type="submit" onClick="openMap()" class="btn btn-success btn-sm pull-right">View Map</button>
+                    </div>
+                  </div><!-- /div panel-default -->
+                  <div class="panel panel-default">
+                    <div class="panel-heading"><b>Patient Self Reporting Locations</b></div>
+                    <div class="panel-body">
+                      <div id="map_div">
+                      </div><!-- div to hold map -->
+                    </div><!-- panel-body -->
+                  </div><!-- /div panel-default -->
+                </div>
+              </div>
+            </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Edit Disease modal -->
+      <div class="modal fade" id="edit_quarantine_modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="exampleModalLabel">Home Care Patient Edit</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+              <form method="post" action="{% url 'veoc:edit_home_care_list' %}">
+                {% csrf_token %}
+                <div class="modal-body">
+                  <div class="form-group" style="display: none;">
+                      <input class="form-control id" name="id" style="display: none;">
+                  </div>
+                  <div class="form-group">
+                    <label for="callername">First Name : *</label>
+                    <input class="form-control f_name" type="text" id="f_name" name="first_name" size="45" placeholder="first name" required/>
+                  </div>
+                  <div class="form-group">
+                    <label for="callernumber">Last Name : *</label>
+                    <input class="form-control l_name" type="text" id="l_name" name="last_name" maxlength="10" size="45" placeholder="last name" required/>
+                  </div>
+                  <div class="form-group">
+                    <label for="callernumber">ID / Passport Number : *</label>
+                    <input class="form-control passport_num" type="text" id="passport_num" name="passport_number" maxlength="10" size="45" placeholder="passport number" required/>
+                  </div>
+                  <div>
+                    <label for="callername">Phone Number : *</label>
+                    <input class="form-control phone_num" type="number" id="phone_num" name="phone_number" minlength="10" placeholder="phone number" required/>
+                  </div>
+                  <div class="form-group">
+                    <label for="country">Country of Origin : *</label>
+                    <select class="form-control cntry" name="country" id="cntry">
+                         <option value="" disabled selected>Select Country</option>
+                         {% for cntry in country %}
+                             <option value="{{cntry.name}}">{{cntry.name}}</option>
+                         {% endfor %}
+                     </select>
+                  </div>
+                  <div class="form-group">
+                    <label for="nationality">Nationality : *</label>
+                    <select class="form-control natnality" name="natnality" id="nationality">
+                         <option value="" disabled selected>Select Nationality</option>
+                         {% for cntry in country %}
+                             <option value="{{cntry.name}}">{{cntry.name}}</option>
+                         {% endfor %}
+                     </select>
+                  </div>
+                  <div class="form-group">
+                    <label for="comorbidity">Comorbidity : </label>
+                    <input class="form-control comorbidity" type="text" id="comorbidity" name="comorbidity" placeholder="comorbidity"/>
+                  </div>
+                  <div class="form-group">
+                    <label for="drugs">Any drugs on? : </label>
+                    <input class="form-control drugs" type="text" id="drugs" name="drugs" placeholder="Drugs"/>
+                  </div>
+                </div>
+                <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                <button type="submit" id="adddescriptionbtn" class="btn btn-success btn-sm pull-right">Save Changes</button>
+            </form>
+            </div>
+          </div>
+        </div>
+      </div>
+
+{% endblock %}
+
+{% block script %}
+  <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.0.0-alpha/js/bootstrap.min.js"></script> -->
+  <script>
+    $(document).ready(function () {
+          $('#home_care_report').DataTable({
+              "order": [],
+              dom: 'Bfrtip',
+              buttons: [
+                  'copy', 'csv', 'excel', 'pdf', 'print'
+              ]
+          });
+
+          // Setup - add a text input to each footer cell
+          $('#home_care_report thead td').each(function () {
+              var title = $(this).text();
+              $(this).html('<input type="text" placeholder="Search ' + title + '" />');
+          });
+
+          // DataTable
+          var table = $('#home_care_report').DataTable();
+
+          // Apply the search
+          table.columns().every(function () {
+              var that = this;
+
+              $('input', this.header()).on('keyup change', function () {
+                  if (that.search() !== this.value) {
+                      that
+                              .search(this.value)
+                              .draw();
+                  }
+              });
+          });
+
+      });
+
+    $(document).on( "click", '.map_view',function(e) {
+      var id = $(this).data('id');
+      var names = $(this).data('names');
+      var contact = $(this).data('last_contact');
+      var phone = $(this).data('phone_number');
+
+      // console.log(names);
+
+      $(".id").val(id);
+      $(".first_name").val(names);
+      $(".date_of_contact").val(contact);
+      $(".phone_number").val(phone);
+    });
+
+    $(document).on( "click", '.edit_button',function(e) {
+      var id = $(this).data('id');
+      var first_name = $(this).data('first_name');
+      var last_name = $(this).data('last_name');
+      var country = $(this).data('country');
+      var nationality = $(this).data('nationality');
+      var phone_number = $(this).data('phone_number');
+      var country = $(this).data('country');
+      var comorbidity = $(this).data('cormobidity');
+      var drugs = $(this).data('drugs');
+
+      console.log(id);
+      console.log(first_name);
+
+      $(".id").val(id);
+      $(".f_name").val(first_name);
+      $(".l_name").val(last_name);
+      $(".cntry").val(country);
+      $(".natnality").val(nationality);
+      $(".phone_num").val(phone_number);
+      $(".comorbidity").val(comorbidity);
+      $(".drugs").val(drugs);
+  });
+
+    function openMap(){
+      google.charts.load('current', {'packages': ['map']});
+      google.charts.setOnLoadCallback(drawCountyChart);
+    }    
+
+    function drawCountyChart() {
+      // console.log("inside drawCountyChart");
+
+      item_id = $(".id").val();
+      // console.log(item_id)
+      $.ajax({
+          url: '/get_quarantine_coordinates/',
+          type: 'POST',
+          datatype: 'json',
+          data: {item_id:item_id,csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val()},
+          success: function (data) {
+              // console.log(JSON.stringify(data));
+              var mydata = new google.visualization.DataTable();
+              mydata.addColumn('number', 'LATITUDE');
+              mydata.addColumn('number', 'LONGITUDE');
+              mydata.addColumn('string', 'NAME');
+
+              for (var i = 0; i < data.length; i++) {
+                  x = data[i].lat;//get the longitude from models
+                  y = data[i].lng;//get latitude from models
+                  z = "Day "+ data[i].follow_up_day.toString();//get the position from models
+                  x = parseFloat(x);//convert the longitude to float from string
+                  y = parseFloat(y);//convert the latitude to float from string
+                  mydata.addRow([x, y, z]);//add the coordinates to the map
+
+              }
+
+              var options = {
+                  icons: {
+                      default: {
+                          normal: 'https://img.icons8.com/color/48/000000/google-maps-new.png',
+                          selected: 'https://img.icons8.com/color/48/000000/google-maps-new.png'
+                      }
+                  },
+                  showTip: true,
+                  useMapTypeControl: true,
+                  zoomLevel: 9,
+                  enableScrollWheel: true,
+                  mapType: 'styledMap',
+                  center: {lat: -33.8688, lng: 151.2195},
+                  maps: {
+                      // Your custom mapTypeId holding custom map styles.
+                      styledMap: {
+                          name: 'Styled Map', // This name will be displayed in the map type control.
+                          styles: [
+                              {
+                                  featureType: 'poi.attraction',
+                                  stylers: [{color: '#fce8b2'}]
+                              },
+                              {
+                                  featureType: 'road.highway',
+                                  stylers: [{hue: '#0277bd'}, {saturation: -50}]
+                              },
+                              {
+                                  featureType: 'road.highway',
+                                  elementType: 'labels.icon',
+                                  stylers: [{hue: '#000'}, {saturation: 100}, {lightness: 50}]
+                              },
+                              {
+                                  featureType: 'landscape',
+                                  stylers: [{hue: '#259b24'}, {saturation: 10}, {lightness: -22}]
+                              }
+                          ]
+                      }
+                  }
+              };
+
+              var map = new google.visualization.Map(document.getElementById('map_div'));
+              // map.controls[google.maps.ControlPosition.TOP_LEFT].push(input);
+              map.draw(mydata, options);
+          },
+          error: function () {
+              // alert("error in getting coordinates, try again");
+          }
+      });
+
+    }
+
+  </script>
+{% endblock %}

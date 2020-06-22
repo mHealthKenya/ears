@@ -2,6 +2,7 @@
 
 {% block main %}
  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+ <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
     <script type="text/javascript"
@@ -305,18 +306,8 @@
                         </div>
                         <div class="form-group">
                             <div class="col-xs-6">
-                                <label for="covid_test"><h4>Ever tested for COVID-19 ?</h4></label>
+                                <label for="covid_test"><h4>Tested for COVID-19 ?</h4></label>
                                 <select class="form-control" id="covid_test" name="covid_test" required>
-                                    <option value="" disabled selected>Select Option</option>
-                                    <option value="t">Yes</option>
-                                    <option value="f">No</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <div class="col-xs-6">
-                                <label for="specimen_taken"><h4>Was specimen collected ?</h4></label>
-                                <select class="form-control" id="specimen_taken" name="specimen_taken" required>
                                     <option value="" disabled selected>Select Option</option>
                                     <option value="t">Yes</option>
                                     <option value="f">No</option>
@@ -327,6 +318,16 @@
                             <div class="col-xs-6">
                                 <label for="date_specimen_collected"><h4>Date specimen collected</h4></label>
                                 <input class="form-control" type="date" value="{{ day }}" max="{{ day }}" id="date_specimen_collected" name="date_specimen_collected">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-xs-6">
+                                <label for="specimen_taken"><h4>Was specimen collected ?</h4></label>
+                                <select class="form-control" id="specimen_taken" name="specimen_taken" required>
+                                    <option value="" disabled selected>Select Option</option>
+                                    <option value="t">Yes</option>
+                                    <option value="f">No</option>
+                                </select>
                             </div>
                         </div>
                         <div class="form-group">
@@ -434,23 +435,23 @@
                     <hr>
                     <div class="panel panel-default table-responsive">
                         <div class="panel-heading">
-                            Laboratory Certificate (Latest Test Done)
+                            Laboratory Certificate
                         </div>
-{#                        <div class="panel-body" align="center">#}
-{#                            <form class="form-inline" method="post" action="{% url 'veoc:lab_certificate' %}">#}
-{#                                {% csrf_token %}#}
-{#                                <div class="form-group">#}
-{#                                    <label for="site"><b>Show Certificate by Test Date :&nbsp; &nbsp; </b></label>#}
-{#                                    <select class="form-control" id="lab_id" name="lab_id">#}
-{#                                        <option value="" disabled selected>Select testing date</option>#}
-{#                                        {% for lab in lab_res %}#}
-{#                                            <option value="{{ lab.id }}">{{ lab.date_specimen_collected|date:'d-m-Y' }}</option>#}
-{#                                        {% endfor %}#}
-{#                                    </select>#}
-{#                                </div>#}
-{#                                <button type="submit" class="btn btn-primary" align="right">Update</button>#}
-{#                            </form>#}
-{#                        </div>#}
+                        <div class="panel-body" align="center">
+                            <form class="form-inline" method="post" action="{% url 'veoc:lab_certificate' %}">
+                                {% csrf_token %}
+                                <div class="form-group">
+                                    <label for="site"><b>Show Certificate by Test Date :&nbsp; &nbsp; </b></label>
+                                    <select class="form-control" id="lab_id" name="lab_id">
+                                        <option value="" disabled selected>Select testing date</option>
+                                        {% for lab in lab_res %}
+                                            <option value="{{ lab.id }}">{{ lab.date_specimen_collected|date:'d-m-Y' }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                                <button type="submit" class="btn btn-primary" align="right">Update</button>
+                            </form>
+                        </div>
                         <hr>
                         <div class="invoice-box" id="dvContainer">
                             {% for lab in lab_res %}
@@ -547,7 +548,7 @@
                     <hr>
                     <div class="panel panel-default table-responsive">
                         <div class="panel-heading">
-                            Attestation (Latest Test Done)
+                            Attestation
                         </div>
                         <hr>
                         <div class="invoice-box" id="dvAttestation">
@@ -555,48 +556,49 @@
                                 {% if forloop.last %}
                                     <table cellpadding="0" cellspacing="0">
                                         <tr class="heading">
-                                            <td colspan="2">
-                                                <table>
-                                                    <tr>
-                                                        <td>CAP 242</td>
-                                                        <td>Public Health Revised  2012</td>
-                                                    </tr>
-                                                </table>
-                                            </td>
+                                            <div colspan="2">
+                                                <div>
+                                                    <div style="overflow: hidden;">
+                                                        <p style="float: left;">CAP 242</p>
+                                                        <p style="float: right;">Public Health Revised  2012</p>
+                                                    </div>
+                                                </div>
+                                            </div>
                                         </tr>
-                                        <tr class="information">
+                                        <div class="information">
+                                            <div colspan="2">
+                                                <div>
+                                                    <div style="overflow: hidden;">
+                                                        <p id="qr-td" style="float: left;"></p>
+                                                        <p style="float: right;">Certificate No. <br><i style="color:#1034A6;"></i> MOH/cap 242/2020</i></p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="top">
                                             <td colspan="2">
-                                                <table>
-                                                    <tr>
-                                                        <td id="qr-td" align="left"></td>
-                                                        <td>Certificate No. <br><i style="color:#1034A6;"></i> MOH/cap 242/2020</i></td>
-                                                    </tr>
-                                                </table>
-                                            </td>
-                                        </tr>
-                                        <tr class="top">
-                                            <td colspan="2">
-                                                <table>
-                                                    <tr>
-                                                        <td class="title" align="center" style="color:#1034A6;">
+                                                <div>
+                                                    <div>
+                                                        <p class="title" style="color:#1034A6; text-align: center">
                                                             <img src="/static/images/emblem.png" style="width:40%; max-width:100px;">
-                                                            <br>REPUBLIC OF KENYA <br><h3>MINISTRY OF HEALTH</h3>
-                                                        </td>
-                                                    </tr>
-                                                </table>
+                                                            <br>REPUBLIC OF KENYA <br>
+                                                        <h3 style="text-align: center">MINISTRY OF HEALTH</h3>
+                                                        </p>
+                                                    </div>
+                                                </div>
                                             </td>
-                                        </tr>
-                                        <tr class="information">
-                                            <td colspan="2">
-                                                <table>
-                                                    <tr>
-                                                        <td class="title" align="center">
-                                                            <br><h2>ATTESTATION OF COVID-19 TESTING</h2>
-                                                        </td>
-                                                    </tr>
-                                                </table>
-                                            </td>
-                                        </tr>
+                                        </div>
+                                        <div class="information">
+                                            <div colspan="2">
+                                                <div>
+                                                    <div>
+                                                        <h4 >
+                                                            <br><h2 style="text-align: center"s>ATTESTATION OF COVID-19 TESTING</h2>
+                                                        </h4>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
                                         <tr class="information">
                                             <td colspan="2">
                                                 <table>
@@ -667,12 +669,13 @@
                                             <td>Date:....<i><b>{{ lab.updated_at|date:'d-m-Y' }}</b></i>........</td>
                                         </tr>
                                     </table>
-                                        </div>
-                                    <div>
-                                    <hr>
-                                        <button class="btn btn-lg btn-success pull-right" onclick="javascript:PrintElem();" type="submit" id="btnAttPrint"><i class="glyphicon glyphicon-print"></i> Print Result</button>
-                                    </div>
-                            {% endif %}
+                                </div>
+
+                            <div>
+                            <hr>
+                                <button class="btn btn-lg btn-success pull-right" onclick="javascript:PrintElem();" type="submit" id="btnAttPrint"><i class="glyphicon glyphicon-print"></i> Print Result</button>
+                            </div>
+                        {% endif %}
                         {% endfor %}
                     </div>
                 </div>
@@ -838,16 +841,16 @@
     });
 
   function PrintElem() {
-    var mywindow = window.open('', 'PRINT', 'height=400,width=600');
-      var divContents = $("#dvAttestation").html();
-
-    mywindow.document.write(divContents);
+    var prtContent = document.getElementById("dvAttestation");
+    var mywindow = window.open('', '', 'left=0,top=0,width=800,height=900,toolbar=0,scrollbars=0,status=0');
+    mywindow.document.write(prtContent.innerHTML);
 
     mywindow.document.close(); // necessary for IE >= 10
-    mywindow.focus(); // necessary for IE >= 10*/
-
-    mywindow.print();
-    mywindow.close();
+    mywindow.setTimeout(function(){
+      mywindow.focus();
+      mywindow.print();
+      mywindow.close();
+    }, 1000);
 
     return true;
 }

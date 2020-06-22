@@ -627,7 +627,7 @@ class quarantine_contacts(models.Model):
     date_of_contact = models.DateField(default=date.today)
     contact_state = models.CharField(max_length=50, blank=True)
     physical_address = models.CharField(max_length=50, blank=True)
-    source = models.CharField(max_length=50, blank=True)
+    source = models.CharField(max_length=50, default="Web Registration")
     communication_language = models.ForeignKey(translation_languages, on_delete=models.DO_NOTHING, related_name='quarantine_language', default='1')
     created_at = models.DateTimeField(default=datetime.now())
     updated_at = models.DateTimeField(default=datetime.now())
@@ -777,7 +777,7 @@ class truck_quarantine_lab(models.Model):
 class home_based_care(models.Model):
     patient_contacts = models.ForeignKey(quarantine_contacts, on_delete=models.DO_NOTHING, related_name='home_care_contact')
     health_care_worker = models.ForeignKey(User, on_delete=models.DO_NOTHING, related_name='health_care_worker_contact')
-    source = models.CharField(max_length=255, blank=True)
+    data_source = models.CharField(max_length=255, blank=True)
     date_created = models.DateTimeField(default=datetime.now())
 
 class discharged_quarantine(models.Model):
