@@ -371,8 +371,8 @@ def dashboard(request):
     # midnight = today_time.strftime('%Y-%m-%d')
     midnight = today_time.strftime('%Y-%m-%d %H:%M:%S')
     midnight_time = midnight+"+03"
-    print(midnight)
-    print(midnight_time)
+    # print(midnight)
+    # print(midnight_time)
 
     for qua_contact in qua_contacts:
         followup = quarantine_follow_up.objects.all().filter(patient_contacts = qua_contact.id).count()
@@ -403,24 +403,22 @@ def dashboard(request):
         else:
             completed_female += 1
 
-    print("gender numbers....")
-    print(total_male)
-    print(total_female)
-    print("ongoing gender numbers....")
-    print(ongoing_male)
-    print(ongoing_female)
-    print("completed gender numbers....")
-    print(completed_male)
-    print(completed_female)
+    # print("gender numbers....")
+    # print(total_male)
+    # print(total_female)
+    # print("ongoing gender numbers....")
+    # print(ongoing_male)
+    # print(ongoing_female)
+    # print("completed gender numbers....")
+    # print(completed_male)
+    # print(completed_female)
 
-    current_user = request.user
-    u = User.objects.get(username=current_user.username)
-    user_level = u.persons.access_level
-    print(current_user)
-    # userObject = User.objects.get(pk = current_user.id)
-    grp = User.objects.filter(pk=current_user.id, groups__name='National Managers').exists()
-    print("User group....")
-    print(grp)
+    user_access_level = ""
+    user_group = request.user.groups.values_list('name', flat=True)
+    print(user_group)
+    for grp in user_group:
+        user_access_level = grp
+    print(user_access_level)
 
     #Populating the bargraph
     # counties = organizational_units.objects.all().filter(hierarchylevel = 2).order_by('name')
@@ -524,7 +522,7 @@ def dashboard(request):
 
     template = loader.get_template('veoc/dashboard.html')
     context = RequestContext(request,{
-        'user_level': user_level,
+        'user_level': user_access_level,
         'marquee_call_log': marquee_call_log,
         'marquee_disease': marquee_disease,
         'marquee_events': marquee_events,
@@ -566,6 +564,13 @@ def dashboard(request):
 
 @login_required
 def county_dashboard(request):
+
+    user_access_level = ""
+    user_group = request.user.groups.values_list('name', flat=True)
+    print(user_group)
+    for grp in user_group:
+        user_access_level = grp
+    print(user_access_level)
 
     #get the person org unit to dislay county on the Dashboard
     current_user = request.user
@@ -764,8 +769,8 @@ def county_dashboard(request):
     today_time = datetime.combine(c_date, datetime.min.time())
     midnight = today_time.strftime('%Y-%m-%d %H:%M:%S')
     midnight_time = midnight+"+03"
-    print(midnight)
-    print(midnight_time)
+    # print(midnight)
+    # print(midnight_time)
 
     for qua_contact in qua_contacts:
         followup = quarantine_follow_up.objects.all().filter(patient_contacts = qua_contact.id).count()
@@ -796,15 +801,15 @@ def county_dashboard(request):
         else:
             completed_female += 1
 
-    print("gender numbers....")
-    print(total_male)
-    print(total_female)
-    print("ongoing gender numbers....")
-    print(ongoing_male)
-    print(ongoing_female)
-    print("completed gender numbers....")
-    print(completed_male)
-    print(completed_female)
+    # print("gender numbers....")
+    # print(total_male)
+    # print(total_female)
+    # print("ongoing gender numbers....")
+    # print(ongoing_male)
+    # print(ongoing_female)
+    # print("completed gender numbers....")
+    # print(completed_male)
+    # print(completed_female)
 
     # print(total_follow_up_stat)
     # print(today_follow_up_stat)
@@ -814,6 +819,7 @@ def county_dashboard(request):
 
     template = loader.get_template('veoc/county_dashboard.html')
     context = RequestContext(request,{
+        'user_level': user_access_level,
         'marquee_call_log': marquee_call_log,
         'marquee_disease': marquee_disease,
         'marquee_events': marquee_events,
@@ -859,7 +865,14 @@ def county_dashboard(request):
 @login_required
 def subcounty_dashboard(request):
 
-    #get the person org unit to dislay subcounty on the Dashboard
+    user_access_level = ""
+    user_group = request.user.groups.values_list('name', flat=True)
+    print(user_group)
+    for grp in user_group:
+        user_access_level = grp
+    print(user_access_level)
+
+    #get the person org unit to display subcounty on the Dashboard
     current_user = request.user
     u = User.objects.get(username=current_user.username)
     user_county_id = u.persons.sub_county_id
@@ -1038,8 +1051,8 @@ def subcounty_dashboard(request):
             ongoing_cases[qua_site.site_name + " - "+ str(qua_total_contacts) +" Cases"] = qua_ongoing_contacts
             completed_cases[qua_site.site_name] = qua_completed_contacts
 
-    print(ongoing_cases)
-    print(completed_cases)
+    # print(ongoing_cases)
+    # print(completed_cases)
 
     #populating the total quarantine respondents
     qua_contacts = quarantine_contacts.objects.all().filter(subcounty = user_county_id)
@@ -1059,8 +1072,8 @@ def subcounty_dashboard(request):
     today_time = datetime.combine(c_date, datetime.min.time())
     midnight = today_time.strftime('%Y-%m-%d %H:%M:%S')
     midnight_time = midnight+"+03"
-    print(midnight)
-    print(midnight_time)
+    # print(midnight)
+    # print(midnight_time)
 
     for qua_contact in qua_contacts:
         followup = quarantine_follow_up.objects.all().filter(patient_contacts = qua_contact.id).count()
@@ -1091,15 +1104,15 @@ def subcounty_dashboard(request):
         else:
             completed_female += 1
 
-    print("gender numbers....")
-    print(total_male)
-    print(total_female)
-    print("ongoing gender numbers....")
-    print(ongoing_male)
-    print(ongoing_female)
-    print("completed gender numbers....")
-    print(completed_male)
-    print(completed_female)
+    # print("gender numbers....")
+    # print(total_male)
+    # print(total_female)
+    # print("ongoing gender numbers....")
+    # print(ongoing_male)
+    # print(ongoing_female)
+    # print("completed gender numbers....")
+    # print(completed_male)
+    # print(completed_female)
 
     # print(total_follow_up_stat)
     # print(today_follow_up_stat)
@@ -1109,6 +1122,7 @@ def subcounty_dashboard(request):
 
     template = loader.get_template('veoc/subcounty_dashboard.html')
     context = RequestContext(request,{
+        'user_level': user_access_level,
         'marquee_call_log': marquee_call_log,
         'marquee_disease': marquee_disease,
         'marquee_events': marquee_events,
@@ -1152,10 +1166,16 @@ def subcounty_dashboard(request):
 @login_required
 def border_dashboard(request):
 
-    #get the person org unit to dislay subcounty on the Dashboard
+    user_access_level = ""
+    user_group = request.user.groups.values_list('name', flat=True)
+    print(user_group)
+    for grp in user_group:
+        user_access_level = grp
+    print(user_access_level)
+
+    #get the person org unit to display subcounty on the Dashboard
     current_user = request.user
     u = User.objects.get(username=current_user.username)
-    user_level = u.persons.access_level
     user_county_id = u.persons.sub_county_id
 
     #get county names
@@ -1332,8 +1352,8 @@ def border_dashboard(request):
             ongoing_cases[qua_site.site_name + " - "+ str(qua_total_contacts) +" Cases"] = qua_ongoing_contacts
             completed_cases[qua_site.site_name] = qua_completed_contacts
 
-    print(ongoing_cases)
-    print(completed_cases)
+    # print(ongoing_cases)
+    # print(completed_cases)
 
     #populating the total quarantine respondents
     qua_contacts = quarantine_contacts.objects.all().filter(subcounty = user_county_id)
@@ -1353,8 +1373,8 @@ def border_dashboard(request):
     today_time = datetime.combine(c_date, datetime.min.time())
     midnight = today_time.strftime('%Y-%m-%d %H:%M:%S')
     midnight_time = midnight+"+03"
-    print(midnight)
-    print(midnight_time)
+    # print(midnight)
+    # print(midnight_time)
 
     for qua_contact in qua_contacts:
         followup = quarantine_follow_up.objects.all().filter(patient_contacts = qua_contact.id).count()
@@ -1385,15 +1405,15 @@ def border_dashboard(request):
         else:
             completed_female += 1
 
-    print("gender numbers....")
-    print(total_male)
-    print(total_female)
-    print("ongoing gender numbers....")
-    print(ongoing_male)
-    print(ongoing_female)
-    print("completed gender numbers....")
-    print(completed_male)
-    print(completed_female)
+    # print("gender numbers....")
+    # print(total_male)
+    # print(total_female)
+    # print("ongoing gender numbers....")
+    # print(ongoing_male)
+    # print(ongoing_female)
+    # print("completed gender numbers....")
+    # print(completed_male)
+    # print(completed_female)
 
     # print(total_follow_up_stat)
     # print(today_follow_up_stat)
@@ -1403,7 +1423,7 @@ def border_dashboard(request):
 
     template = loader.get_template('veoc/border_dashboard.html')
     context = RequestContext(request,{
-        'user_level': user_level,
+        'user_level': user_access_level,
         'marquee_call_log': marquee_call_log,
         'marquee_disease': marquee_disease,
         'marquee_events': marquee_events,
@@ -1447,11 +1467,17 @@ def border_dashboard(request):
 @login_required
 def facility_dashboard(request):
 
-    #get the person org unit to dislay subcounty on the Dashboard
+    user_access_level = ""
+    user_group = request.user.groups.values_list('name', flat=True)
+    print(user_group)
+    for grp in user_group:
+        user_access_level = grp
+    print(user_access_level)
+
+    #get the person org unit to display subcounty on the Dashboard
     current_user = request.user
     u = User.objects.get(username=current_user.username)
     user_county_id = u.persons.sub_county_id
-    user_id = u.persons.user_id
 
     #get county names
     county_object = organizational_units.objects.get(pk = user_county_id)
@@ -1704,6 +1730,7 @@ def facility_dashboard(request):
 
     template = loader.get_template('veoc/facility_dashboard.html')
     context = RequestContext(request,{
+        'user_level': user_access_level,
         'marquee_call_log': marquee_call_log,
         'marquee_disease': marquee_disease,
         'marquee_events': marquee_events,
@@ -3310,7 +3337,7 @@ def home_care_list(request):
             print("inside County")
             user_county_id = u.persons.county_id
             print(user_county_id)
-            q_data = home_based_care.objects.all().annotate(
+            q_data = home_based_care.objects.filter(patient_contacts__county_id = user_county_id).annotate(
                 first_name=F("patient_contacts__first_name"),
                 last_name=F("patient_contacts__last_name"),
                 sex=F("patient_contacts__sex"),
@@ -3324,12 +3351,12 @@ def home_care_list(request):
                 date_of_contact=F("patient_contacts__date_of_contact"),
                 created_by=F("patient_contacts__created_by_id__username"),
             )
-            q_data_count = home_based_care.objects.filter(county_id = user_county_id).count()
+            q_data_count = home_based_care.objects.filter(patient_contacts__county_id = user_county_id).count()
         elif(user_level == 4 or user_level == 6):
             print("inside SubCounty")
             user_sub_county_id = u.persons.sub_county
             print(user_sub_county_id)
-            q_data = home_based_care.objects.all().annotate(
+            q_data = home_based_care.objects.filter(patient_contacts__subcounty_id = user_sub_county_id).annotate(
                 first_name=F("patient_contacts__first_name"),
                 last_name=F("patient_contacts__last_name"),
                 sex=F("patient_contacts__sex"),
@@ -3343,7 +3370,7 @@ def home_care_list(request):
                 date_of_contact=F("patient_contacts__date_of_contact"),
                 created_by=F("patient_contacts__created_by_id__username"),
             )
-            q_data_count = home_based_care.objects.filter(subcounty_id = user_sub_county_id).count()
+            q_data_count = home_based_care.objects.filter(patient_contacts__subcounty_id = user_sub_county_id).count()
         elif(user_level == 7):
             print("inside Border")
             user_sub_county_id = u.persons.sub_county
@@ -3362,12 +3389,12 @@ def home_care_list(request):
                 date_of_contact=F("patient_contacts__date_of_contact"),
                 created_by=F("patient_contacts__created_by_id__username"),
             )
-            q_data_count = home_based_care.objects.filter(cormobidity = "1").count()
+            q_data_count = home_based_care.objects.filter(patient_contacts__cormobidity = "1").count()
         else:
             print("inside Facility")
             user_sub_county_id = u.persons.sub_county
             print(user_sub_county_id)
-            q_data = home_based_care.objects.all().annotate(
+            q_data = home_based_care.objects.filter(patient_contacts__subcounty_id = user_sub_county_id).annotate(
                 first_name=F("patient_contacts__first_name"),
                 last_name=F("patient_contacts__last_name"),
                 sex=F("patient_contacts__sex"),
@@ -3381,7 +3408,7 @@ def home_care_list(request):
                 date_of_contact=F("patient_contacts__date_of_contact"),
                 created_by=F("patient_contacts__created_by_id__username"),
             )
-            q_data_count = home_based_care.objects.filter(subcounty_id = user_sub_county_id).count()
+            q_data_count = home_based_care.objects.filter(patient_contacts__subcounty_id = user_sub_county_id).count()
 
         data = {'home_care_data': q_data, 'home_care_data_count': q_data_count }
 
