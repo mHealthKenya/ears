@@ -67,6 +67,9 @@
                           {% for q_data, truck_cont_details in my_list_data %}
                               {% if truck_cont_details != "None" %}
                                   <tr>
+{#                                  Check user permission to view names#}
+{#                                    <td>*********</td>#}
+{#                                    <td>*********</td>#}
                                     <td>{{ q_data.last_name }}</td>
                                     <td>{{ q_data.first_name }}</td>
                                   {% if q_data.age == 0 %}

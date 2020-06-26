@@ -441,32 +441,31 @@ class standard_case_definitions(models.Model):
     def __str__(self):
         return str(self.condition)
 
-# class moh_linelisting(models.Model):
-#     names = models.CharField(max_length=100)
-#     patient_statud = models.CharField(max_length=20)
-#     county = models.CharField(max_length=20)
-#     subcounty = models.CharField(max_length=20)
-#     location = models.CharField(max_length=20)
-#     sublocation = models.CharField(max_length=20)
-#     village = models.CharField(max_length=20)
-#     ward = models.CharField(max_length=20)
-#     facility = models.CharField(max_length=20)
-#     sex = models.CharField(max_length=20)
-#     age = models.IntegerField(max_length=20)
-#     date_seen = models.DateField(max_length=20)
-#     date_onset = models.CharField(max_length=20)
-#     epi_week = models.CharField(max_length=20)
-#     doses_of_vaccine = models.IntegerField(max_length=20)
-#     lab_test = models.CharField(max_length=20)
-#     speciment_taken = models.CharField(max_length=20)
-#     speciment_date = models.IntegerField(max_length=20)
-#     speciment_type = models.CharField(max_length=20)
-#     lab_results = models.CharField(max_length=20)
-#     rdt = models.CharField(max_length=20)
-#     culture = models.CharField(max_length=20)
-#     outcome = models.CharField(max_length=20)
-#     comments = models.CharField(max_length=100)
-#     next_of_kin = models.IntegerField(max_length=20)
+class moh_line_listing(models.Model):
+    date = models.DateField(max_length=20)
+    facility_name = models.CharField(max_length=200)
+    county = models.CharField(max_length=50)
+    sub_county = models.CharField(max_length=50)
+    ward = models.CharField(max_length=50)
+    patient_names = models.CharField(max_length=200)
+    patient_status = models.CharField(max_length=200)
+    contact_number = models.CharField(max_length=50)
+    age = models.IntegerField(default=0)
+    sex = models.CharField(max_length=20)
+    village = models.CharField(max_length=50)
+    disease_condition = models.CharField(max_length=50)
+    date_seen_at_facility = models.DateField(max_length=20)
+    date_onset_disease = models.CharField(max_length=20)
+    no_doses_of_vaccine = models.IntegerField(default=0)
+    lab_test = models.CharField(max_length=50)
+    outcome = models.CharField(max_length=50)
+    epi_week = models.CharField(max_length=20)
+    comments = models.CharField(max_length=200)
+
+    class Meta:
+       ordering = ['-date']
+    def __str__(self):
+        return str(self.disease_condition)
 
 class police_post(models.Model):
     police_phone_regex = RegexValidator(regex=r'^\+?1?\d{10,12}$', message="Phone number must be entered in the format: '+999999999'. Up to 15 digits allowed.")
@@ -628,7 +627,7 @@ class quarantine_contacts(models.Model):
     date_of_contact = models.DateField(default=date.today)
     contact_state = models.CharField(max_length=50, blank=True)
     physical_address = models.CharField(max_length=50, blank=True)
-    source = models.CharField(max_length=50, blank=True)
+    source = models.CharField(max_length=50, default="Web Registration")
     communication_language = models.ForeignKey(translation_languages, on_delete=models.DO_NOTHING, related_name='quarantine_language', default='1')
     created_at = models.DateTimeField(default=datetime.now())
     updated_at = models.DateTimeField(default=datetime.now())
@@ -778,7 +777,7 @@ class truck_quarantine_lab(models.Model):
 class home_based_care(models.Model):
     patient_contacts = models.ForeignKey(quarantine_contacts, on_delete=models.DO_NOTHING, related_name='home_care_contact')
     health_care_worker = models.ForeignKey(User, on_delete=models.DO_NOTHING, related_name='health_care_worker_contact')
-    source = models.CharField(max_length=255, blank=True)
+    data_source = models.CharField(max_length=255, blank=True)
     date_created = models.DateTimeField(default=datetime.now())
 
 class discharged_quarantine(models.Model):

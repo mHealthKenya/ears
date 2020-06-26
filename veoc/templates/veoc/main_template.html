@@ -8,13 +8,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="">
     <meta name="author" content="">
-    <!-- <link rel="icon" type="image/gif/png" href="/static/images/ears_logo.png"> -->
     <title>Emergency Alert Reporting System</title>
-    <!-- <link rel="shortcut icon" href="/favicon.png" type="image/png"> -->
     <link href="/static/css/bootstrap.min.css" rel="stylesheet">
     <link href="/static/css/simple-sidebar.css" rel="stylesheet">
-    <!-- <link href="/static/css/myangular.css" rel="stylesheet"> -->
-    <!-- <link href="/static//css/font-awesome.min.css" rel="stylesheet"> -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link href="/static/css/heatmap.css" rel="stylesheet">
     <!--//full callender-->
@@ -22,13 +18,11 @@
     <!-- Numeric JS -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/numeric/1.2.6/numeric.min.js"></script>
     <script src="/static/js/plotly-latest.min.js"></script>
-    <!--<link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">-->
 
     <link rel="stylesheet" href="/static/css/dataTables.bootstrap.min.css" type="text/css"/>
     <link rel="stylesheet" type="text/css"
           href="https://cdn.datatables.net/v/dt/jqc-1.12.3/jszip-2.5.0/pdfmake-0.1.18/dt-1.10.12/b-1.2.2/b-flash-1.2.2/b-html5-1.2.2/b-print-1.2.2/datatables.min.css"/>
     <link rel="stylesheet" type="text/css" href="/static/css/multi-select.css">
-    <!-- <link rel="stylesheet" href="static/css/common.css" type="text/css"/> -->
     <link type="text/css" rel="stylesheet"
           href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.10/themes/ui-lightness/jquery-ui.css"/>
     <link href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/base/jquery-ui.css" rel="Stylesheet"
@@ -45,11 +39,6 @@
     <!-- Bootstrap JavaScript -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.0.0-alpha/js/bootstrap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-multiselect/0.9.15/js/bootstrap-multiselect.js"></script>
-
-{#    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-3-typeahead/4.0.2/bootstrap3-typeahead.min.js"></script>#}
-{#    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-multiselect/0.9.13/js/bootstrap-multiselect.js"></script>#}
-{#    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-multiselect/0.9.15/css/bootstrap-multiselect.css" rel="stylesheet">#}
-
     <script src="/static/js/jquery.multi-select.js"></script>
 
     <!--highcharts library-->
@@ -61,34 +50,29 @@
     <script src="https://code.highcharts.com/modules/drilldown.js"></script>
     <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
 
-    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.5.3/jspdf.debug.js" integrity="sha384-NaWTHo/8YCBYJ59830LTz/P4aQZK1sS0SneOgAvhsIl3zBu8r9RevNg5lHCHAuQ/" crossorigin="anonymous"></script> -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.3.2/jspdf.min.js"></script>
-    <!-- // <script src="/static/jsPDF-1.3.2/jspdf.js"></script> -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/0.4.1/html2canvas.min.js" integrity="sha256-c3RzsUWg+y2XljunEQS0LqWdQ04X1D3j22fd/8JCAKw=" crossorigin="anonymous"></script>
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 </head>
 <body>
-<nav class="navbar navbar-default no-margin">
+<nav class="navbar navbar-default no-margin" style="background-color:#3c8dbc">
+<div style="display: flex">
     <!-- Brand and toggle get grouped for better mobile display -->
-    <div class="navbar-header fixed-brand" style="background-color:#3c8dbc">
-        <!-- <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" id="menu-toggle">
-            <span class="glyphicon glyphicon-th-large" aria-hidden="true"></span>
-        </button> -->
+    <div class="navbar-header fixed-brand">
         <a href="/dashboard">
-          <img src="{% static "images/header.jpg" %}">
+            <img src="{% static "images/header.jpg" %}">
         </a>
+
     </div>
-    <!-- navbar-header-->
-
-    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1" style="background-color:#3c8dbc">
-
-        <ul class="nav navbar-nav">
-            <li class="active">
+<div>
                 <button class="navbar-toggle collapse in" data-toggle="collapse" id="menu-toggle-2"><span
                         class="glyphicon glyphicon-th-large" aria-hidden="true"></span></button>
-            </li>
-        </ul>
+</div>
+
+    <!-- navbar-header-->
+
+    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1" >
         <ul class="nav navbar-nav navbar-right">
 
             <li>
@@ -139,100 +123,64 @@
         </div>
         <!-- /.modal-dialog -->
     </div>
-    <!-- /.modal -->
+    <!-- /.modal --></div>
 </nav>
 <div id="wrapper">
     <!-- Sidebar -->
     <div id="sidebar-wrapper">
         <ul class="sidebar-nav nav-pills nav-stacked" id="menu">
-        <script>
-            {% if user.groups.all.0.name == "National Managers" %}
-                console.log("User belongs to National Managers");
-            {% elif request.user|has_group:"National Watchers" %}
-                console.log("User belong to National Watchers");
-            {% elif request.user|has_group:"County Managers" %}
-                console.log("User belong to County Managers");
-            {% elif request.user|has_group:"Sub-County Managers" %}
-                console.log("User belong to Sub-County Managers");
-            {% elif request.user|has_group:"County Watchers" %}
-                console.log("User belong to County Watchers");
-            {% elif request.user|has_group:"Sub-County Watchers" %}
-                console.log("User belong to Sub-County Watchers");
-            {% elif request.user|has_group:"Border Watchers" %}
-                console.log("User belong to Border Watchers");
+		<script>
+			console.log("{{user_level}}");
+            {% if user_level == "National Managers" or user_level == "National Watchers" %}
+                console.log("User belongs to First National");
+			{% elif request.user|has_group:"National Managers" or request.user|has_group:"National Watchers" %}
+                console.log("User belongs to Second National");
+            {% elif user_level == 'County Managers' or user_level == 'County Watchers' or request.user|has_group:"County Managers" or request.user|has_group:"County Watchers" %}
+                console.log("User belong to County");
+            {% elif user_level == 'Sub-County Managers' or user_level == 'Sub-County Watchers' or request.user|has_group:"Sub-County Managers" or request.user|has_group:"Sub-County Watchers" %}
+                console.log("User belong to sub County");
+            {% elif user_level == 'Border Watchers' or request.user|has_group:"Border Watchers" %}
+                console.log("User belong to Borders");
+            {% elif user_level == 'Facility Watcher' or request.user|has_group:"Facility Watcher" %}
+                console.log("User belong to Facility");
             {% else %}
               console.log("User doesn't belong to any group");
             {% endif %}
 
           </script>
           <li>
-              <a href="/access_dashboard"><span class="fa-stack fa-lg pull-left"><i
-                      class="fa fa-dashboard fa-stack-1x "></i></span> DASHBOARD</a>
+              <a href="/access_dashboard"><span class="fa-stack fa-lg pull-left"><i class="fa fa-dashboard fa-stack-1x "></i></span> DASHBOARD</a>
           </li>
+        {% if user_level == 'National Managers' or user_level == 'National Watchers' or request.user|has_group:"National Managers" or request.user|has_group:"National Watchers"%}
           <li>
-              <a href="#"><span class="fa-stack fa-lg pull-left"><i class="fa fa-edit fa-stack-1x "></i></span>
-                  DATA REGISTER</a>
+              <a href="#"><span class="fa-stack fa-lg pull-left"><i class="fa fa-edit fa-stack-1x "></i></span>DATA REGISTER</a>
               <ul class="nav-pills nav-stacked" style="list-style-type:none;">
-                  <li><a href="/call_register"><span class="fa-stack fa-lg pull-left"><i
-                          class="fa fa-phone fa-stack-1x "></i></span>Calls Register</a></li>
-                  <li><a href="/disease_register"><span class="fa-stack fa-lg pull-left"><i
-                          class="fa fa-code-fork fa-stack-1x "></i></span>Diseases Register</a></li>
-                  <li><a href="/event_register"><span class="fa-stack fa-lg pull-left"><i
-                          class="fa fa-handshake-o fa-stack-1x "></i></span>Events Register</a></li>
-                  <li><a href="/quarantine_register"><span class="fa-stack fa-lg pull-left"><i
-                      class="fa fa-address-card fa-stack-1x"></i></span>COVID-19 Quarantine</a></li>
-                  <li><a href="/quarantine_file_register"><span class="fa-stack fa-lg pull-left"><i
-                      class="fa fa-file fa-stack-1x"></i></span>Quaranitine File Upload</a></li>
+                  <li><a href="/call_register"><span class="fa-stack fa-lg pull-left"><i class="fa fa-phone fa-stack-1x "></i></span>Calls Register</a></li>
+                  <li><a href="/disease_register"><span class="fa-stack fa-lg pull-left"><i class="fa fa-code-fork fa-stack-1x "></i></span>Diseases Register</a></li>
+                  <li><a href="/event_register"><span class="fa-stack fa-lg pull-left"><i class="fa fa-handshake-o fa-stack-1x "></i></span>Events Register</a></li>
+                  <li><a href="/quarantine_register"><span class="fa-stack fa-lg pull-left"><i class="fa fa-address-card fa-stack-1x"></i></span>COVID-19 Quarantine</a></li>
+                  <li><a href="/quarantine_file_register"><span class="fa-stack fa-lg pull-left"><i class="fa fa-file fa-stack-1x"></i></span>Quaranitine File Upload</a></li>
+              </ul>
+          </li>
+		  <li>
+              <a href="#"><span class="fa-stack fa-lg pull-left"><i class="fa fa-edit fa-stack-1x "></i></span>POINTS OF ENTRY</a>
+              <ul class="nav-pills nav-stacked" style="list-style-type:none;">
+                  <li><a href="/truck_driver_register"><span class="fa-stack fa-lg pull-left"><i class="fa fa-address-card fa-stack-1x "></i></span>Truck Driver Register</a></li>
+                  <li><a href="/truck_quarantine_list"><span class="fa-stack fa-lg pull-left"><i class="fa fa-list fa-stack-1x "></i></span>Drivers Quarantine List</a></li>
+                  <li><a href="/truck_follow_up"><span class="fa-stack fa-lg pull-left"><i class="fa fa-handshake-o fa-stack-1x "></i></span>Quarantine Follow Up</a></li>
+                  <li><a href="/truck_ongoing_quarantine"><span class="fa-stack fa-lg pull-left"><i class="fa fa-tasks fa-stack-1x "></i></span>Ongoing Quarantine</a></li>
+                  <li><a href="/truck_complete_quarantine"><span class="fa-stack fa-lg pull-left"><i class="fa fa-window-close fa-stack-1x "></i></span>Completed Quarantine</a></li>
+              </ul>
+          </li>
+		  <li>
+              <a href="#"><span class="fa-stack fa-lg pull-left"><i class="fa fa-cloud-download fa-stack-1x "></i></span> DHIS2 DATA</a>
+              <ul class="nav-pills nav-stacked" style="list-style-type:none;">
+                  <li><a href="/reportable_diseases">Reportable Diseases</a></li>
+                  <li><a href="/reportable_event">Reportable Events</a></li>
               </ul>
           </li>
           <li>
-              <a href="#"><span class="fa-stack fa-lg pull-left"><i class="fa fa-edit fa-stack-1x "></i></span>
-                  POINTS OF ENTRY</a>
-              <ul class="nav-pills nav-stacked" style="list-style-type:none;">
-                  <li><a href="/truck_driver_register"><span class="fa-stack fa-lg pull-left"><i
-                          class="fa fa-address-card fa-stack-1x "></i></span>Truck Driver Register</a></li>
-                  <li><a href="/truck_quarantine_list"><span class="fa-stack fa-lg pull-left"><i
-                          class="fa fa-list fa-stack-1x "></i></span>Drivers Quarantine List</a></li>
-                  <li><a href="/truck_follow_up"><span class="fa-stack fa-lg pull-left"><i
-                          class="fa fa-handshake-o fa-stack-1x "></i></span>Quarantine Follow Up</a></li>
-                  <li><a href="/truck_ongoing_quarantine"><span class="fa-stack fa-lg pull-left"><i
-                      class="fa fa-tasks fa-stack-1x "></i></span>Ongoing Quarantine</a></li>
-                  <li><a href="/truck_complete_quarantine"><span class="fa-stack fa-lg pull-left"><i
-                      class="fa fa-window-close fa-stack-1x "></i></span>Completed Quarantine</a></li>
-              </ul>
-          </li>
-          {% if user_level == 'National'%}
-            <li>
-              <a href="#"><span class="fa-stack fa-lg pull-left"><i class="fa fa-cloud-download fa-stack-1x "></i></span>
-                  DHIS2 DATA</a>
-              <ul class="nav-pills nav-stacked" style="list-style-type:none;">
-                  <!-- <li><a href="/idsr_data"> -->
-                    <!-- <span class="fa-stack fa-lg pull-left"><i
-                          class="fa fa-phone fa-stack-1x "></i></span> -->
-                          <!-- IDSR MOH 505 Data</a></li> -->
-                  <li><a href="/reportable_diseases">
-                    <!-- <span class="fa-stack fa-lg pull-left"><i
-                          class="fa fa-code-fork fa-stack-1x "></i></span> -->
-                          Reportable Diseases</a></li>
-                  <li><a href="/reportable_event">
-                    <!-- <span class="fa-stack fa-lg pull-left"><i
-                          class="fa fa-child fa-stack-1x "></i></span>-->
-                          Reportable Events</a></li>
-                  <!-- <li><a href="/upload_csv"> -->
-                    <!-- <span class="fa-stack fa-lg pull-left"><i
-                          class="fa fa-file-text-o fa-stack-1x "></i></span> -->
-                          <!-- Upload MOH 503</a></li> -->
-                  <!-- <li><a href="/generate_pdf"> -->
-                    <!-- <span class="fa-stack fa-lg pull-left"><i
-                          class="fa fa-file-text-o fa-stack-1x "></i></span> -->
-                          <!-- generate_pdf</a></li> -->
-              </ul>
-          </li>
-         {% endif %}
-          <li>
-              <a href="#"><span class="fa-stack fa-lg pull-left">
-                <i class="fa fa-clipboard fa-stack-1x "></i>
-              </span>TABULAR REPORTS</a>
+              <a href="#"><span class="fa-stack fa-lg pull-left"><i class="fa fa-clipboard fa-stack-1x "></i></span>TABULAR REPORTS</a>
               <ul class="nav-pills nav-stacked" style="list-style-type:none;">
                   <li><a href="/call_report">EOC Call report</a></li>
                   <li><a href="/unrelated_call_report">Unrelated Calls report</a></li>
@@ -244,33 +192,31 @@
               </ul>
           </li>
           <li>
-              <a href="#"><span class="fa-stack fa-lg pull-left">
-                <i class="fa fa-clipboard fa-stack-1x "></i>
-              </span>JITENGE REPORTS</a>
+              <a href="#"><span class="fa-stack fa-lg pull-left"><i class="fa fa-clipboard fa-stack-1x "></i></span>JITENGE REPORTS</a>
               <ul class="nav-pills nav-stacked" style="list-style-type:none;">
-                  <li><a href="/quarantine_list"><span class="fa-stack fa-lg pull-left"><i
-                          class="fa fa-medkit fa-stack-1x "></i></span>Self Quarantine List</a></li>
-                  <li><a href="/follow_up"><span class="fa-stack fa-lg pull-left"><i
-                          class="fa fa fa-ambulance fa-stack-1x "></i></span>Ongoing Quarantine</a></li>
-                  <li><a href="/complete_quarantine"><span class="fa-stack fa-lg pull-left"><i
-                          class="fa fa-handshake-o fa-stack-1x "></i></span>Completed Quarantine</a></li>
+                  <li><a href="/quarantine_list"><span class="fa-stack fa-lg pull-left"><i class="fa fa-medkit fa-stack-1x "></i></span>Self Quarantine List</a></li>
+                  <li><a href="/follow_up"><span class="fa-stack fa-lg pull-left"><i class="fa fa fa-ambulance fa-stack-1x "></i></span>Ongoing Quarantine</a></li>
+                  <li><a href="/complete_quarantine"><span class="fa-stack fa-lg pull-left"><i class="fa fa-handshake-o fa-stack-1x "></i></span>Completed Quarantine</a></li>
               </ul>
           </li>
           <li>
-              <a href="#"><span class="fa-stack fa-lg pull-left">
-                  <i class="fa fa-credit-card fa-stack-1x"></i>
-                    </span>TEMPLATE REPORTS</a>
+              <a href="#"><span class="fa-stack fa-lg pull-left"><i class="fa fa-home fa-stack-1x "></i></span>HOME CARE REPORTS</a>
+              <ul class="nav-pills nav-stacked" style="list-style-type:none;">
+                  <li><a href="/home_care_list"><span class="fa-stack fa-lg pull-left"><i class="fa fa-medkit fa-stack-1x "></i></span>Home Care List</a></li>
+                  <li><a href="/follow_up"><span class="fa-stack fa-lg pull-left"><i class="fa fa fa-ambulance fa-stack-1x "></i></span>Ongoing Home Care</a></li>
+                  <li><a href="/complete_quarantine"><span class="fa-stack fa-lg pull-left"><i class="fa fa-handshake-o fa-stack-1x "></i></span>Completed Home Care</a></li>
+              </ul>
+          </li>
+          <li>
+              <a href="#"><span class="fa-stack fa-lg pull-left"><i class="fa fa-credit-card fa-stack-1x"></i></span>TEMPLATE REPORTS</a>
               <ul class="nav-pills nav-stacked" style="list-style-type:none;">
                   <li><a href="/daily_reports">Daily report</a></li>
                   <li><a href="/weekly_reports">Weekly report</a></li>
                   <li><a href="/periodic_reports">Periodic report</a></li>
-                 <!-- <li><a href="/sitrep_reports">SITREP</a></li> -->
-                 <!-- <li><a href="/agg_reports">Charts</a></li> -->
               </ul>
           </li>
           <li>
-              <a href="#"> <span class="fa-stack fa-lg pull-left"><i class="fa fa-bar-chart fa-stack-1x ">
-              </i></span>GIS & MAPS</a>
+              <a href="#"> <span class="fa-stack fa-lg pull-left"><i class="fa fa-bar-chart fa-stack-1x "></i></span>GIS & MAPS</a>
               <ul class="nav-pills nav-stacked" style="list-style-type:none;">
                   <li><a href="/disease_mappings">Disease mappings</a></li>
                   <li><a href="/facilities_mappings">Health facility mappings</a></li>
@@ -279,131 +225,270 @@
                   <li><a href="/heat_maps">Disease heat maps</a></li>
               </ul>
           </li>
-          {% if request.user|has_group:"National Managers" %}
-          <li>
-              <a href="#"><span class="fa-stack fa-lg pull-left"><i
-                      class="fa fa-calendar fa-stack-1x "></i></span>EOC STAFF</a>
+		  {% if request.user|has_group:"National Managers" %}
+		  <li>
+              <a href="#"><span class="fa-stack fa-lg pull-left"><i class="fa fa-calendar fa-stack-1x "></i></span>EOC STAFF</a>
               <ul class="nav-pills nav-stacked" style="list-style-type:none;">
-                  <!-- <a href="#"><span class="fa-stack fa-lg pull-left"><i class="fa fa-youtube-play fa-stack-1x "></i></span>EOC DUTY REGISTER</a> -->
-                  <!-- <ul > -->
                   <li><a href="/week_shift">EOC events</a></li>
                   <li><a href="/eoc_cont">EOC Personnel Contacts</a></li>
-                  <!-- <li><a href="/rrt_shift">RRT shift</a></li> -->
                   <li><a href="/allocation_sheet">EOC watchers allocation</a></li>
-                  <!-- <li><a href="/managers">EOC Managers contacts</a></li> -->
                   <li><a href="/watchers_schedule">Watchers Schedule</a></li>
               </ul>
           </li>
-          {% else %}
+		  {% else %}
           <li>
               <a href="#"><span class="fa-stack fa-lg pull-left"><i
                       class="fa fa-calendar fa-stack-1x "></i></span>EOC STAFF</a>
               <ul class="nav-pills nav-stacked" style="list-style-type:none;">
-                  <!-- <a href="#"><span class="fa-stack fa-lg pull-left"><i class="fa fa-youtube-play fa-stack-1x "></i></span>EOC DUTY REGISTER</a> -->
-                  <!-- <ul > -->
                   <li><a href="/week_shift">EOC events</a></li>
                   <li><a href="/eoc_cont">EOC Personnel Contacts</a></li>
               </ul>
           </li>
           {% endif %}
-          <li>
-              <a href="#"><span class="fa-stack fa-lg pull-left"><i class="fa fa-address-book fa-stack-1x "></i></span>EMERGENCY
-                  CONTACTS</a>
+		  <li>
+              <a href="#"><span class="fa-stack fa-lg pull-left"><i class="fa fa-book fa-stack-1x "></i></span>DOCUMENT MANAGER</a>
               <ul class="nav-pills nav-stacked" style="list-style-type:none;">
-                  <li>
-                      <a href="/all_contact">All Contacts</a>
-                  </li>
+                  <li><a href="/minutes">Meeting Minutes</a></li>
+                  <li><a href="/sitreps">SITREPS</a></li>
+                  <li><a href="/sops">SOP's</a></li>
+                  <li><a href="/protocol">Outbreak Protocols</a></li>
+                  <li><a href="/out_report">Outbreak Reports</a></li>
+                  <li><a href="/bulletins">Weekly Bulletins</a></li>
+                  <li><a href="/publications">Publications</a></li>
+                  <li><a href="/case_documents">Case Definitions</a></li>
+                  <li><a href="/others">Other Documents</a></li>
+              </ul>
+          </li>
+		  <li>
+              <a href="#"><span class="fa-stack fa-lg pull-left"><i class="fa fa-address-book fa-stack-1x "></i></span>EMERGENCY CONTACTS</a>
+              <ul class="nav-pills nav-stacked" style="list-style-type:none;">
+                  <li><a href="/all_contact">All Contacts</a></li>
               </ul>
           </li>
           <li>
-              <a href="#"><span class="fa-stack fa-lg pull-left"><i
-                      class="fa fa-book fa-stack-1x "></i></span>DOCUMENT MANAGER</a>
-              <ul class="nav-pills nav-stacked" style="list-style-type:none;">
-                  <li>
-                      <a href="/minutes">Meeting Minutes</a>
-                  </li>
-                  <li>
-                      <a href="/sitreps">SITREPS</a>
-                  </li>
-                  <li>
-                      <a href="/sops">SOP's</a>
-                  </li>
-                  <li>
-                      <a href="/protocol">Outbreak Protocols</a>
-                  </li>
-                  <li>
-                      <a href="/out_report">Outbreak Reports</a>
-                  </li>
-                  <li>
-                      <a href="/bulletins">Weekly Bulletins</a>
-                  </li>
-                  <li>
-                      <a href="/publications">Publications</a>
-                  </li>
-                  <li>
-                      <a href="/case_documents">Case Definitions</a>
-                  </li>
-                  <li>
-                      <a href="/others">Other Documents</a>
-                  </li>
-              </ul>
-          </li>
-
-          <li>
-              <a href="#"><span class="fa-stack fa-lg pull-left"><i
-                class="fa fa-leanpub fa-stack-1x "></i></span>SYSTEM FEEDBACK</a>
+              <a href="#"><span class="fa-stack fa-lg pull-left"><i class="fa fa-leanpub fa-stack-1x "></i></span>SYSTEM FEEDBACK</a>
                 <ul class="nav-pills nav-stacked" style="list-style-type:none;">
-                    <li>
-                        <a href="/module_general_feedback">General Feedback Form</a>
-                    </li>
-                    <li>
-                        <a href="/module_feedback">Module Feedback Form</a>
-                    </li>
+                    <li><a href="/module_general_feedback">General Feedback Form</a></li>
+                    <li><a href="/module_feedback">Module Feedback Form</a></li>
                 </ul>
           </li>
           <li>
-            <a href="#"><span class="fa-stack fa-lg pull-left"><i
-            class="fa fa-cogs fa-stack-1x "></i></span>SETTINGS</a>
+            <a href="#"><span class="fa-stack fa-lg pull-left"><i class="fa fa-cogs fa-stack-1x "></i></span>SETTINGS</a>
             <ul class="nav-pills nav-stacked" style="list-style-type:none;">
-                <li>
-                    <a href="/users_list">Users</a>
-                </li>
-                <li>
-                    <a href="/border_point">Border Points</a>
-                </li>
-                <li>
-                    <a href="/weigh_site">Weighbridge Sites</a>
-                </li>
-                <li>
-                    <a href="/site_list">Quarantine Sites</a>
-                </li>
-                <li>
-                    <a href="/disgnation_list">Designation</a>
-                </li>
-                <li>
-                    <a href="/diseases_list">Diseases</a>
-                </li>
-                <li>
-                    <a href="/events_list">Events</a>
-                </li>
-                <li>
-                  <a href="/data_list">Data Source</a>
-                </li>
-                <li>
-                  <a href="/contact_list">Contact Type</a>
-                </li>
+				<li><a href="/users_list">Users</a></li>
+                <li><a href="/border_point">Border Points</a></li>
+                <li><a href="/weigh_site">Weighbridge Sites</a></li>                
+                <li><a href="/site_list">Quarantine Sites</a></li>
+                <li><a href="/disgnation_list">Designation</a></li>
+                <li><a href="/diseases_list">Diseases</a></li>
+                <li><a href="/events_list">Events</a></li>
+                <li><a href="/data_list">Data Source</a></li>
+                <li><a href="/contact_list">Contact Type</a></li>
             </ul>
           </li>
+        {% elif user_level == 'County Managers' or user_level == 'County Watchers' or request.user|has_group:"County Managers" or request.user|has_group:"County Watchers" %}
+          <li>
+              <a href="#"><span class="fa-stack fa-lg pull-left"><i class="fa fa-edit fa-stack-1x "></i></span>DATA REGISTER</a>
+              <ul class="nav-pills nav-stacked" style="list-style-type:none;">
+                  <li><a href="/call_register"><span class="fa-stack fa-lg pull-left"><i class="fa fa-phone fa-stack-1x "></i></span>Calls Register</a></li>
+                  <li><a href="/disease_register"><span class="fa-stack fa-lg pull-left"><i class="fa fa-code-fork fa-stack-1x "></i></span>Diseases Register</a></li>
+                  <li><a href="/event_register"><span class="fa-stack fa-lg pull-left"><i class="fa fa-handshake-o fa-stack-1x "></i></span>Events Register</a></li>
+                  <li><a href="/quarantine_register"><span class="fa-stack fa-lg pull-left"><i class="fa fa-address-card fa-stack-1x"></i></span>COVID-19 Quarantine</a></li>
+              </ul>
+          </li>
+		  <li>
+              <a href="#"><span class="fa-stack fa-lg pull-left"><i class="fa fa-cloud-download fa-stack-1x "></i></span> DHIS2 DATA</a>
+              <ul class="nav-pills nav-stacked" style="list-style-type:none;">
+                  <li><a href="/reportable_diseases">Reportable Diseases</a></li>
+                  <li><a href="/reportable_event">Reportable Events</a></li>
+              </ul>
+          </li>
+          <li>
+              <a href="#"><span class="fa-stack fa-lg pull-left"><i class="fa fa-clipboard fa-stack-1x "></i></span>TABULAR REPORTS</a>
+              <ul class="nav-pills nav-stacked" style="list-style-type:none;">
+                  <li><a href="/call_report">EOC Call report</a></li>
+                  <li><a href="/unrelated_call_report">Unrelated Calls report</a></li>
+                  <li><a href="/disease_report">Disease report</a></li>
+                  <li><a href="/events_report">Events report</a></li>
+                  <li><a href="/case_definition">Disease Case Definition</a></li>
+                  <li><a href="/infectious_disease_report">Infectious Disease report</a></li>
+                  <li><a href="/ongoing_tasks">Ongoing Incidents</a></li>
+              </ul>
+          </li>
+          <li>
+              <a href="#"><span class="fa-stack fa-lg pull-left"><i class="fa fa-clipboard fa-stack-1x "></i></span>JITENGE REPORTS</a>
+              <ul class="nav-pills nav-stacked" style="list-style-type:none;">
+                  <li><a href="/quarantine_list"><span class="fa-stack fa-lg pull-left"><i class="fa fa-medkit fa-stack-1x "></i></span>Self Quarantine List</a></li>
+                  <li><a href="/follow_up"><span class="fa-stack fa-lg pull-left"><i class="fa fa fa-ambulance fa-stack-1x "></i></span>Ongoing Quarantine</a></li>
+                  <li><a href="/complete_quarantine"><span class="fa-stack fa-lg pull-left"><i class="fa fa-handshake-o fa-stack-1x "></i></span>Completed Quarantine</a></li>
+              </ul>
+          </li>
+          <li>
+              <a href="#"><span class="fa-stack fa-lg pull-left"><i class="fa fa-home fa-stack-1x "></i></span>HOME CARE REPORTS</a>
+              <ul class="nav-pills nav-stacked" style="list-style-type:none;">
+                  <li><a href="/home_care_list"><span class="fa-stack fa-lg pull-left"><i class="fa fa-medkit fa-stack-1x "></i></span>Home Care List</a></li>
+                  <li><a href="/follow_up"><span class="fa-stack fa-lg pull-left"><i class="fa fa fa-ambulance fa-stack-1x "></i></span>Ongoing Home Care</a></li>
+                  <li><a href="/complete_quarantine"><span class="fa-stack fa-lg pull-left"><i class="fa fa-handshake-o fa-stack-1x "></i></span>Completed Home Care</a></li>
+              </ul>
+          </li>
+		  <li>
+              <a href="#"><span class="fa-stack fa-lg pull-left"><i class="fa fa-address-book fa-stack-1x "></i></span>EMERGENCY CONTACTS</a>
+              <ul class="nav-pills nav-stacked" style="list-style-type:none;">
+                  <li><a href="/all_contact">All Contacts</a></li>
+              </ul>
+          </li>
+          <li>
+              <a href="#"><span class="fa-stack fa-lg pull-left"><i class="fa fa-leanpub fa-stack-1x "></i></span>SYSTEM FEEDBACK</a>
+                <ul class="nav-pills nav-stacked" style="list-style-type:none;">
+                    <li><a href="/module_general_feedback">General Feedback Form</a></li>
+                    <li><a href="/module_feedback">Module Feedback Form</a></li>
+                </ul>
+          </li>
+          <li>
+            <a href="#"><span class="fa-stack fa-lg pull-left"><i class="fa fa-cogs fa-stack-1x "></i></span>SETTINGS</a>
+            <ul class="nav-pills nav-stacked" style="list-style-type:none;">
+                <li><a href="/users_list">Users</a></li>
+                <li><a href="/site_list">Quarantine Sites</a></li>
+                <li><a href="/disgnation_list">Designation</a></li>
+                <li><a href="/diseases_list">Diseases</a></li>
+                <li><a href="/events_list">Events</a></li>
+                <li><a href="/data_list">Data Source</a></li>
+                <li><a href="/contact_list">Contact Type</a></li>
+            </ul>
+          </li>
+        {% elif user_level == 'Sub-County Managers' or user_level == 'Sub-County Watchers' or request.user|has_group:"Sub-County Managers" or request.user|has_group:"Sub-County Watchers" %}
+		  <li>
+              <a href="#"><span class="fa-stack fa-lg pull-left"><i class="fa fa-edit fa-stack-1x "></i></span>DATA REGISTER</a>
+              <ul class="nav-pills nav-stacked" style="list-style-type:none;">
+                  <li><a href="/call_register"><span class="fa-stack fa-lg pull-left"><i class="fa fa-phone fa-stack-1x "></i></span>Calls Register</a></li>
+                  <li><a href="/disease_register"><span class="fa-stack fa-lg pull-left"><i class="fa fa-code-fork fa-stack-1x "></i></span>Diseases Register</a></li>
+                  <li><a href="/event_register"><span class="fa-stack fa-lg pull-left"><i class="fa fa-handshake-o fa-stack-1x "></i></span>Events Register</a></li>
+                  <li><a href="/quarantine_register"><span class="fa-stack fa-lg pull-left"><i class="fa fa-address-card fa-stack-1x"></i></span>COVID-19 Quarantine</a></li>
+              </ul>
+          </li>
+          <li>
+              <a href="#"><span class="fa-stack fa-lg pull-left"><i class="fa fa-clipboard fa-stack-1x "></i></span>TABULAR REPORTS</a>
+              <ul class="nav-pills nav-stacked" style="list-style-type:none;">
+                  <li><a href="/call_report">EOC Call report</a></li>
+                  <li><a href="/unrelated_call_report">Unrelated Calls report</a></li>
+                  <li><a href="/disease_report">Disease report</a></li>
+                  <li><a href="/events_report">Events report</a></li>
+                  <li><a href="/case_definition">Disease Case Definition</a></li>
+                  <li><a href="/infectious_disease_report">Infectious Disease report</a></li>
+                  <li><a href="/ongoing_tasks">Ongoing Incidents</a></li>
+              </ul>
+          </li>
+          <li>
+              <a href="#"><span class="fa-stack fa-lg pull-left"><i class="fa fa-clipboard fa-stack-1x "></i></span>JITENGE REPORTS</a>
+              <ul class="nav-pills nav-stacked" style="list-style-type:none;">
+                  <li><a href="/quarantine_list"><span class="fa-stack fa-lg pull-left"><i class="fa fa-medkit fa-stack-1x "></i></span>Self Quarantine List</a></li>
+                  <li><a href="/follow_up"><span class="fa-stack fa-lg pull-left"><i class="fa fa fa-ambulance fa-stack-1x "></i></span>Ongoing Quarantine</a></li>
+                  <li><a href="/complete_quarantine"><span class="fa-stack fa-lg pull-left"><i class="fa fa-handshake-o fa-stack-1x "></i></span>Completed Quarantine</a></li>
+              </ul>
+          </li>
+          <li>
+              <a href="#"><span class="fa-stack fa-lg pull-left"><i class="fa fa-home fa-stack-1x "></i></span>HOME CARE REPORTS</a>
+              <ul class="nav-pills nav-stacked" style="list-style-type:none;">
+                  <li><a href="/home_care_list"><span class="fa-stack fa-lg pull-left"><i class="fa fa-medkit fa-stack-1x "></i></span>Home Care List</a></li>
+                  <li><a href="/follow_up"><span class="fa-stack fa-lg pull-left"><i class="fa fa fa-ambulance fa-stack-1x "></i></span>Ongoing Home Care</a></li>
+                  <li><a href="/complete_quarantine"><span class="fa-stack fa-lg pull-left"><i class="fa fa-handshake-o fa-stack-1x "></i></span>Completed Home Care</a></li>
+              </ul>
+          </li>
+		  <li>
+              <a href="#"><span class="fa-stack fa-lg pull-left"><i class="fa fa-address-book fa-stack-1x "></i></span>EMERGENCY CONTACTS</a>
+              <ul class="nav-pills nav-stacked" style="list-style-type:none;">
+                  <li><a href="/all_contact">All Contacts</a></li>
+              </ul>
+          </li>
+          <li>
+              <a href="#"><span class="fa-stack fa-lg pull-left"><i class="fa fa-leanpub fa-stack-1x "></i></span>SYSTEM FEEDBACK</a>
+                <ul class="nav-pills nav-stacked" style="list-style-type:none;">
+                    <li><a href="/module_general_feedback">General Feedback Form</a></li>
+                    <li><a href="/module_feedback">Module Feedback Form</a></li>
+                </ul>
+          </li>
+          <li>
+            <a href="#"><span class="fa-stack fa-lg pull-left"><i class="fa fa-cogs fa-stack-1x "></i></span>SETTINGS</a>
+            <ul class="nav-pills nav-stacked" style="list-style-type:none;">
+                <li><a href="/users_list">Users</a></li>
+                <li><a href="/site_list">Quarantine Sites</a></li>
+                <li><a href="/disgnation_list">Designation</a></li>
+                <li><a href="/diseases_list">Diseases</a></li>
+                <li><a href="/events_list">Events</a></li>
+                <li><a href="/data_list">Data Source</a></li>
+                <li><a href="/contact_list">Contact Type</a></li>
+            </ul>
+          </li>
+		{% elif user_level == 'Border Watchers' or request.user|has_group:"Border Watchers" %}		
+          <li>
+              <a href="#"><span class="fa-stack fa-lg pull-left"><i class="fa fa-edit fa-stack-1x "></i></span>POINTS OF ENTRY</a>
+              <ul class="nav-pills nav-stacked" style="list-style-type:none;">
+                  <li><a href="/truck_driver_register"><span class="fa-stack fa-lg pull-left"><i class="fa fa-address-card fa-stack-1x "></i></span>Truck Driver Register</a></li>
+                  <li><a href="/truck_quarantine_list"><span class="fa-stack fa-lg pull-left"><i class="fa fa-list fa-stack-1x "></i></span>Drivers Quarantine List</a></li>
+                  <li><a href="/truck_follow_up"><span class="fa-stack fa-lg pull-left"><i class="fa fa-handshake-o fa-stack-1x "></i></span>Quarantine Follow Up</a></li>
+                  <li><a href="/truck_ongoing_quarantine"><span class="fa-stack fa-lg pull-left"><i class="fa fa-tasks fa-stack-1x "></i></span>Ongoing Quarantine</a></li>
+                  <li><a href="/truck_complete_quarantine"><span class="fa-stack fa-lg pull-left"><i class="fa fa-window-close fa-stack-1x "></i></span>Completed Quarantine</a></li>
+              </ul>
+          </li>          
+		  <li>
+              <a href="#"><span class="fa-stack fa-lg pull-left"><i class="fa fa-address-book fa-stack-1x "></i></span>EMERGENCY CONTACTS</a>
+              <ul class="nav-pills nav-stacked" style="list-style-type:none;">
+                  <li><a href="/all_contact">All Contacts</a></li>
+              </ul>
+          </li>
+          <li>
+              <a href="#"><span class="fa-stack fa-lg pull-left"><i class="fa fa-leanpub fa-stack-1x "></i></span>SYSTEM FEEDBACK</a>
+                <ul class="nav-pills nav-stacked" style="list-style-type:none;">
+                    <li><a href="/module_general_feedback">General Feedback Form</a></li>
+                    <li><a href="/module_feedback">Module Feedback Form</a></li>
+                </ul>
+          </li>
+          <li>
+            <a href="/border_point"><span class="fa-stack fa-lg pull-left"><i class="fa fa-list fa-stack-1x "></i></span>Border Points</a>            
+          </li>
+		  <li>
+            <a href="/weigh_site"><span class="fa-stack fa-lg pull-left"><i class="fa fa-wordpress fa-stack-1x "></i></span>Weighbridge Sites</a>            
+          </li>
+		{% elif user_level == 'Facility Watcher' or request.user|has_group:"Facility Watcher" %}		          
+          <li>
+              <a href="#"><span class="fa-stack fa-lg pull-left"><i class="fa fa-clipboard fa-stack-1x "></i></span>JITENGE REPORTS</a>
+              <ul class="nav-pills nav-stacked" style="list-style-type:none;">
+                  <li><a href="/quarantine_list"><span class="fa-stack fa-lg pull-left"><i class="fa fa-medkit fa-stack-1x "></i></span>Self Quarantine List</a></li>
+                  <li><a href="/follow_up"><span class="fa-stack fa-lg pull-left"><i class="fa fa fa-ambulance fa-stack-1x "></i></span>Ongoing Quarantine</a></li>
+                  <li><a href="/complete_quarantine"><span class="fa-stack fa-lg pull-left"><i class="fa fa-handshake-o fa-stack-1x "></i></span>Completed Quarantine</a></li>
+              </ul>
+          </li>
+          <li>
+              <a href="#"><span class="fa-stack fa-lg pull-left"><i class="fa fa-home fa-stack-1x "></i></span>HOME CARE REPORTS</a>
+              <ul class="nav-pills nav-stacked" style="list-style-type:none;">
+                  <li><a href="/home_care_list"><span class="fa-stack fa-lg pull-left"><i class="fa fa-medkit fa-stack-1x "></i></span>Home Care List</a></li>
+                  <li><a href="/follow_up"><span class="fa-stack fa-lg pull-left"><i class="fa fa fa-ambulance fa-stack-1x "></i></span>Ongoing Home Care</a></li>
+                  <li><a href="/complete_quarantine"><span class="fa-stack fa-lg pull-left"><i class="fa fa-handshake-o fa-stack-1x "></i></span>Completed Home Care</a></li>
+              </ul>
+          </li>
+		  <li>
+              <a href="#"><span class="fa-stack fa-lg pull-left"><i class="fa fa-address-book fa-stack-1x "></i></span>EMERGENCY CONTACTS</a>
+              <ul class="nav-pills nav-stacked" style="list-style-type:none;">
+                  <li><a href="/all_contact">All Contacts</a></li>
+              </ul>
+          </li>
+          <li>
+              <a href="#"><span class="fa-stack fa-lg pull-left"><i class="fa fa-leanpub fa-stack-1x "></i></span>SYSTEM FEEDBACK</a>
+                <ul class="nav-pills nav-stacked" style="list-style-type:none;">
+                    <li><a href="/module_general_feedback">General Feedback Form</a></li>
+                    <li><a href="/module_feedback">Module Feedback Form</a></li>
+                </ul>
+          </li>
+          <li>
+		  
+            <a href="/site_list"><span class="fa-stack fa-lg pull-left"><i class="fa fa-list fa-stack-1x "></i></span>Quarantine Sites</a>            
+          </li>
+         {% endif %}
         </ul>
       </div>
     <!-- /#sidebar-wrapper -->
     <!-- Page Content -->
     <div id="page-content-wrapper">
-      <!-- {% if messages %}
-        {% for message in messages %}
-          {{ message }}
-        {% endfor %}
-      {% endif %} -->
         <div class="container-fluid xyz">
             <div class="row">
                 {% block main %}
@@ -415,25 +500,10 @@
 </div>
 
 <!--<footer>-->
-<!--<div class="container-fluid" style='margin-left:15px'>-->
-<!--{#          <p><a href="#" target="blank">Contact</a> | <a href="#" target="blank">LinkedIn</a> | <a href="#" target="blank">Twitter</a> | <a href="#" target="blank">Google+</a></p>#}-->
-<!--</div>-->
-<!--</footer>-->
-<!-- /#wrapper -->
-<!-- jQuery -->
-<!--<script src="/static/js/jquery-1.11.1.min.js"></script>-->
-<!--<script src="/static/js/bootstrap.min.js"></script>-->
 <script src="/static/js/sidebar_menu.js"></script>
-<!--<script src="/static/js/jquery.min.js"></script>-->
-<!--<script src="/static/js/jquery.dataTables.min.js"></script>-->
-<!--<script src="/static/js/dataTables.bootstrap.min.js"></script>-->
-<!--<script src="/static/js/dataTables.responsive.min.js"></script>-->
-<!--<script src="/static/js/responsive.bootstrap.min.js"></script>-->
 <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js" type="text/javascript"></script>
-<!--<script type="text/javascript" src="https://cdn.datatables.net/v/dt/jqc-1.12.3/jszip-2.5.0/pdfmake-0.1.18/dt-1.10.12/b-1.2.2/b-flash-1.2.2/b-html5-1.2.2/b-print-1.2.2/datatables.min.js"></script>-->
 
 <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/2.6.0/fullcalendar.css'/>
-<!--<script src='http://code.jquery.com/jquery-1.11.3.min.js'></script>-->
 <script src='https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.11.1/moment.min.js'></script>
 <script src='https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/2.6.0/fullcalendar.min.js'></script>
 
@@ -461,9 +531,6 @@
     };
 
 </script>
-<!-- <script src="/static/jsPDF-1.3.2/jspdf.js"></script>
-<script src="/static/jsPDF-1.3.2/main.js"></script> -->
-<!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.5.3/jspdf.debug.js" integrity="sha384-NaWTHo/8YCBYJ59830LTz/P4aQZK1sS0SneOgAvhsIl3zBu8r9RevNg5lHCHAuQ/" crossorigin="anonymous"></script> -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.3.2/jspdf.min.js"></script>
 <link rel='stylesheet' href='/static/css/receipt.css'/>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/0.4.1/html2canvas.min.js" integrity="sha256-c3RzsUWg+y2XljunEQS0LqWdQ04X1D3j22fd/8JCAKw=" crossorigin="anonymous"></script>
@@ -473,7 +540,6 @@
 </body>
 <footer>
     <div class="container-fluid" style='margin-left:15px' align="center">
-        {#          <p><a href="#" target="blank">Contact</a> | <a href="#" target="blank">LinkedIn</a> | <a href="#" target="blank">Twitter</a> | <a href="#" target="blank">Google+</a></p>#}
     </div>
 </footer>
 </html>
