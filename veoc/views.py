@@ -1,14 +1,20 @@
+import os
+
+import xlrd
+from django.core.files.storage import default_storage
 from django.shortcuts import render, get_object_or_404, redirect
-from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
+from django.http import HttpResponse, HttpResponseRedirect, JsonResponse, Http404
 from django.contrib.auth import authenticate, login as login_auth, logout
 from django.contrib.auth.models import User, Group
 from django.contrib import messages
 from django.template import RequestContext, loader
 from django.template.loader import render_to_string
+from django.utils.datastructures import MultiValueDictKeyError
 from django.views.generic.base import TemplateView
 from django.contrib.auth.decorators import login_required, user_passes_test, permission_required
 import csv, io
 import requests
+from pytest import fail
 from requests.packages.urllib3.exceptions import InsecureRequestWarning
 from django.conf import settings
 from django.core.serializers import serialize
@@ -2163,6 +2169,171 @@ def disease_register(request):
 
     return render(request, 'veoc/disease_form.html', data)
 
+
+@login_required
+def quarantine_excel(request):
+    if request.method == "GET":
+        return render(request, 'veoc/quarantine_file_upload.html')
+    try:
+        csv_file = request.FILES['file']
+        print("in")
+        read_data(csv_file.file, request)
+        messages.success(request, 'DONE')
+        return render(request, 'veoc/quarantine_file_upload.html')
+
+    except MultiValueDictKeyError:
+        messages.warning(request, 'Select file before uploading', fail_silently=True)
+        return render(request, 'veoc/quarantine_file_upload.html')
+    except xlrd.XLRDError:
+        messages.warning(request, 'THIS IS NOT AN EXCEL FILE. Select an excel file', fail_silently=True)
+        return render(request, 'veoc/quarantine_file_upload.html')
+
+
+def read_data(f, r):
+    title = []
+    print(f)
+    wb = xlrd.open_workbook(f.name)
+    sheet = wb.sheet_by_index(0)
+    sheet.cell_value(0, 0)
+    for n in range(sheet.nrows):
+        if n == 0:
+            title = sheet.row_values(n)
+        else:
+            row = sheet.row_values(n)
+            ex_rows = {title[i]: row[i] for i in range(len(title))}
+            print(ex_rows)
+            save_data(ex_rows, r)
+
+
+def save_data(d, request):
+    first_name = d['first_name']
+    last_name = d['last_name']
+    sex = d['gender']
+    dob = datetime.fromordinal(datetime(1900, 1, 1).toordinal() + int(d['dob']) - 2)
+    passport_number = d['id_passport_number']
+    phone_number = d['phone_number']
+    email_address = d['email_address']
+    origin_country = d['country_of_origin']
+    cnty = d['county']
+    sub_cnty = d['subcounty']
+    ward = d['ward']
+    place_of_diagnosis = d['place_of_diagnosis']
+    site_name = d['quarantine_site']
+    date_of_contact = datetime.fromordinal(datetime(1900, 1, 1).toordinal() + int(d['date_of_arrival']) - 2)
+    nationality = d['nationality']
+    comorbidity = d['comorbidity']
+    drugs = d['any_drugs_on']
+    nextofkin = d['nextofkin']
+    nok_phone_number = d['nextofkin_phone_number']
+
+    if origin_country.lower() == "kenya":
+        countyObject = organizational_units.objects.get(name=cnty)
+        subcountyObject = organizational_units.objects.get(name=sub_cnty)
+        wardObject = organizational_units.objects.get(organisationunitid=ward)
+    else:
+        countyObject = organizational_units.objects.get(organisationunitid=18)
+        subcountyObject = organizational_units.objects.get(organisationunitid=18)
+        wardObject = organizational_units.objects.get(organisationunitid=18)
+
+    user_phone = "+254"
+    # check if the leading character is 0
+    if str(phone_number[0]) == "0":
+        user_phone = user_phone + str(phone_number[1:])
+        # print("number leading with 0")
+    else:
+        user_phone = user_phone + str(phone_number)
+
+    current_date = datetime.now()
+
+    # get current user
+    current_user = request.user
+    print(current_user)
+    userObject = User.objects.get(pk=current_user.id)
+    qua_site = quarantine_sites.objects.get(site_name=site_name)
+    contact_save = ''
+    source = "Web Registration"
+    contact_identifier = uuid.uuid4().hex
+    # Check if mobile number exists in the table
+    details_exist = quarantine_contacts.objects.filter(phone_number=user_phone, first_name=first_name,
+                                                       last_name=last_name)
+    if details_exist:
+        for mob_ex in details_exist:
+            messages.error(request, "Details already exist" + str(mob_ex.phone_number) + "Registered on :" + str(mob_ex.created_at), fail_silently=True)
+    else:
+        contact_save = quarantine_contacts.objects.create(first_name=first_name, last_name=last_name,
+                                                          county=countyObject, subcounty=subcountyObject,
+                                                          ward=wardObject, sex=sex, dob=dob,
+                                                          passport_number=passport_number,
+                                                          phone_number=user_phone, email_address=email_address,
+                                                          date_of_contact=date_of_contact, source=source,
+                                                          nationality=nationality, drugs=drugs, nok=nextofkin,
+                                                          nok_phone_num=nok_phone_number, cormobidity=comorbidity,
+                                                          origin_country=origin_country,
+                                                          place_of_diagnosis=place_of_diagnosis,
+                                                          quarantine_site=qua_site, contact_uuid=contact_identifier,
+                                                          updated_at=current_date, created_by=userObject,
+                                                          updated_by=userObject, created_at=current_date)
+
+        contact_save.save()
+
+    # check if details have been saved
+    if contact_save:
+        # send sms to the patient for successful registration_form
+        # url = "https://mlab.mhealthkenya.co.ke/api/sms/gateway"
+        url = "http://mlab.localhost/api/sms/gateway"
+        # msg = "Thank you " + first_name + " for registering. You will be required to send your temperature details during this quarantine period of 14 days. Please download the self reporting app on this link: https://cutt.ly/AtbvdxD"
+        msg = "Thank you " + first_name + " for registering on self quarantine. You will be required to send your daily temperature details during this quarantine period of 14 days. Ministry of Health"
+        msg2 = first_name + ", for self reporting iPhone users and non-smart phone users, dial *299# to send daily details, for Android phone users, download the self reporting app on this link: http://bit.ly/jitenge_moh . Ministry of Health"
+
+        # process first message
+        pp = {"phone_no": phone_number, "message": msg}
+        payload = json.dumps(pp)
+
+        # process second message
+        pp2 = {"phone_no": phone_number, "message": msg2}
+        payload2 = json.dumps(pp2)
+        # payload = "{\r\n   \"phone_no\": \"+254705255873\",\r\n   \"message\": \"TEST CORONA FROM EARS SYSTEM\"\r\n}"
+
+        headers = {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImp0aSI6IjE3MGExZGI0ZjFiYWE1ZWNkOGI4YTBiODNlNDc0MTA2NTJiNDg4Mzc4ZTQwNjExNDA0MGQwZmQ2NTEzNTM1NTg5MjFhYjBmNzI1ZDM3NzYwIn0.eyJhdWQiOiI0IiwianRpIjoiMTcwYTFkYjRmMWJhYTVlY2Q4YjhhMGI4M2U0NzQxMDY1MmI0ODgzNzhlNDA2MTE0MDQwZDBmZDY1MTM1MzU1ODkyMWFiMGY3MjVkMzc3NjAiLCJpYXQiOjE1ODQxODk0NTMsIm5iZiI6MTU4NDE4OTQ1MywiZXhwIjoxNjE1NzI1NDUzLCJzdWIiOiI2Iiwic2NvcGVzIjpbXX0.e2Pt76bE6IT7J0hSBpnc7tHShg9BKSXOMuwnQwqC3_xpJXUo2ez7sQPUa4uPp77XQ05xsumNbWapXkqxvVxp-3Gjn-o9UJ39AWHBFRJYqOXM_foZcxRBoXajUfJTTRS5BTMFEfMn2nMeLie9BH7mbgfKBpZXU_3_tClWGUcNbsibbhXgjSxskJoDls8XGVUdgc5pqMZBBBlR9cCrtK3H8PJf6XywMn9CYbw4KF8V1ADC9dYz-Iyhmwe2_LmU3ByTQMaVHCd3GVKWIvlGwNhm2_gRcEHjjZ8_PXR38itUT0M3NTmT6LBeeeb8IWV-3YFkhilbbjA03q9_6f2gjlOpChF4Ut2rC5pqTg7sW5A4PV8gepPnIBpJy5xKQzgf75zDUmuhKlYlirk8MKoRkiIUgWqOZSf49DUxbIaKIijjX3TYrwmBwZ0RTm2keSvk3bt4QutpLRxel6cajbI32rZLuDjs1_MCZNPKAK1ZgPvwt1OaHLM3om0TmSKyugPvhgNJ5fW_on_HLkTbQV6EPqN3Us7S5whFv1MQcwlgsxU9a4CJZa89elr1TaKvqbkaKqGjetwlCDf6AKQmThy5IqQ5zlIRNwlZDgz_DsGyeZUStQhc-HW65NsB_J_fe_jI5tMeRNCz4PE8T0Rghbs8xHLTFKuMGrJL0Rheq6kfEk4c0UM'
+        }
+
+        requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
+
+        # send first message
+        response = requests.request("POST", url, headers=headers, data=payload, verify=False)
+
+        print(response.text.encode('utf8'))
+        # convert string response to a dictionary
+        msg_resp = eval(response.text)
+        print(msg_resp)
+
+        # check if Success is in the Dictionary values
+        success = 'Success' in msg_resp.values()
+        print(success)
+
+        if success:
+            print("Successfully sent first sms")
+            # send Second message
+            response2 = requests.request("POST", url, headers=headers, data=payload2, verify=False)
+
+            print(response2.text.encode('utf8'))
+
+
+
+
+def download_template(request):
+    file_path = os.path.join(settings.MEDIA_ROOT, 'Documents\\new_exp.xlsx')
+    print(file_path)
+    if os.path.exists(file_path):
+        with open(file_path, 'rb') as fh:
+            response = HttpResponse(fh.read(), content_type="application/vnd.ms-excel")
+            response['Content-Disposition'] = 'inline; filename=' + os.path.basename(file_path)
+            return response
+    raise Http404
+
+
 @login_required
 def quarantine_register(request):
     if request.method == 'POST':
@@ -2206,7 +2377,6 @@ def quarantine_register(request):
             # print("number not leading with 0")
 
         #get todays date
-        # current_date = date.today().strftime('%Y-%m-%d')
         current_date = datetime.now()
 
         #get current user
@@ -2229,8 +2399,8 @@ def quarantine_register(request):
             contact_save = quarantine_contacts.objects.create(first_name=first_name, last_name=last_name, middle_name=middle_name,
             county=countyObject, subcounty=subcountyObject, ward=wardObject,sex=sex, dob=dob, passport_number=passport_number,
             phone_number=user_phone, email_address=email_address, date_of_contact=date_of_contact, source=source,
-            nationality=nationality, drugs=drugs, nok=nextofkin, nok_phone_num=nok_phone_number,cormobidity=comorbidity,
-            origin_country=origin_country, place_of_diagnosis=place_of_diagnosis, quarantine_site= qua_site,contact_uuid=contact_identifier,
+            nationality=nationality, drugs=drugs, nok=nextofkin, nok_phone_num=nok_phone_number, cormobidity=comorbidity,
+            origin_country=origin_country, place_of_diagnosis=place_of_diagnosis, quarantine_site=qua_site,contact_uuid=contact_identifier,
             updated_at=current_date, created_by=userObject, updated_by=userObject, created_at=current_date)
 
             contact_save.save()
@@ -2364,10 +2534,10 @@ def truck_driver_profile(request, profileid):
     lab_res_types = covid_results_classifications.objects.all().order_by('id')
     samp_types = covid_sample_types.objects.all().order_by('id')
     day = time.strftime("%Y-%m-%d")
-
+    print(quarantine_contacts.objects.get(id=profileid).driver_image)
     data = {'patient_contact_object': patient_contact_object, 'lab_data': lab_data, 'patient_details':patient_details, 'lab_res': lab_res,
             'lab_res_count':lab_res_count,  'labs': labs, 'lab_res_types':lab_res_types, 'samp_types':samp_types, 'day':day,
-            'follow_up_details':follow_up_details, 'follow_up_details_count':follow_up_details_count}
+            'follow_up_details':follow_up_details, 'follow_up_details_count':follow_up_details_count, "pic": quarantine_contacts.objects.get(id=profileid)}
 
     return render(request, 'veoc/truck_driver_profile.html', data)
 
@@ -2475,7 +2645,10 @@ def truck_driver_register(request):
         date_check_out = request.POST.get('date_check_out','')
         action_taken = request.POST.get('action_taken','')
         language = request.POST.get('communication_language','')
-
+        if request.FILES:
+            driver_image = request.FILES['photo']
+        else:
+            driver_image = ''
         if origin_country.lower() == "kenya" :
             countyObject = organizational_units.objects.get(name = cnty)
             subcountyObject = organizational_units.objects.get(name = sub_cnty)
@@ -2536,9 +2709,10 @@ def truck_driver_register(request):
             contact_save = quarantine_contacts.objects.create(first_name=first_name, last_name=last_name, middle_name=middle_name,
                 county=countyObject, subcounty=subcountyObject, ward=wardObject,sex=sex, dob=dob, passport_number=passport_number,
                 phone_number=user_phone, date_of_contact=date_of_contact,  communication_language=languageObject,
-                nationality=nationality, drugs=drugs, nok=nextofkin, nok_phone_num=nok_phone_number,cormobidity=comorbidity,
+                nationality=nationality, drugs=drugs, nok=nextofkin, nok_phone_num=nok_phone_number, cormobidity=comorbidity,
                 origin_country=origin_country, quarantine_site= quarantineObject, source=source, contact_uuid=contact_identifier,
-                updated_at=current_date, created_by=userObject, updated_by=userObject, created_at=current_date)
+                updated_at=current_date, created_by=userObject, updated_by=userObject, created_at=current_date,
+                driver_image=driver_image)
 
             contact_save.save()
             trans_one = transaction.savepoint()
@@ -2565,7 +2739,7 @@ def truck_driver_register(request):
 
 
         #check if details have been saved
-        if contact_save:
+        if not contact_save:
             # send sms to the patient for successful registration_form
             # url = "https://mlab.mhealthkenya.co.ke/api/sms/gateway"
             url = "http://mlab.localhost/api/sms/gateway"

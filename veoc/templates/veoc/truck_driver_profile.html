@@ -16,7 +16,7 @@
             </ul>
         </div><!-- /breadcrumb-->
 
-        <div class="row text-center"">
+        <div class="row text-center">
             <div class="col-sm-10">
                 <h3>
                     Truck Driver Details
@@ -36,7 +36,11 @@
     <div class="row">
         <div class="col-sm-3"><!--left col-->
             <div class="text-center">
-                <img src="http://ssl.gstatic.com/accounts/ui/avatar_2x.png" class="avatar img-circle img-thumbnail" alt="avatar">
+            {% if pic.driver_image %}
+                <img src="{{pic.driver_image.url}}" class="avatar img-circle img-thumbnail" alt="avatar" style="width: 250px; height: 250px;">
+            {% else %}
+                <img src="http://ssl.gstatic.com/accounts/ui/avatar_2x.png" class="avatar img-circle img-thumbnail" alt="avatar" style="width: 250px; height: 250px;">
+            {% endif %}
                 {% for patient_detail in patient_contact_object %}
                     <h3>Names: {{ patient_detail.first_name }} {{ patient_detail.last_name }}</h3>
                 {% endfor %}
@@ -522,7 +526,7 @@
                                         <tr class="item">
                                         <td>Results Received by</td>
                                         {% for pat in patient_details %}
-                                            <td><i>{{ pat.border_point.team_lead_names }}</i></i></td>
+                                            <td><i>{{ pat.border_point.team_lead_names }}</i></td>
                                         {% endfor %}
                                     </tr>
                                         <tr class="item last">

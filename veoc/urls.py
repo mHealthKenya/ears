@@ -1,3 +1,4 @@
+import django
 from django.conf.urls import url, include
 from rest_framework import routers
 from veoc import views
@@ -5,6 +6,7 @@ from django.conf import settings
 # from . import views, settings
 from django.contrib.staticfiles.urls import static
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns
+from django.conf.urls.static import static
 
 #TEMPLATE TAGGING
 app_name = 'veoc'
@@ -34,6 +36,8 @@ urlpatterns = [
     url(r'^disease_register/$', views.disease_register, name='disease_register'),
     url(r'^event_register/$', views.event_register, name='event_register'),
     url(r'^quarantine_register/$', views.quarantine_register, name='quarantine_register'),
+    url(r'^quarantine_file_register/$', views.quarantine_excel, name='exupload'),
+    url(r'^quarantine_template/$', views.download_template, name='quarantine_template'),
     url(r'^truck_driver_profile/(?P<profileid>[0-9]+)/$', views.truck_driver_profile, name='truck_driver_profile'),
     url(r'^truck_driver_register/$', views.truck_driver_register, name='truck_driver_register'),
     url(r'^truck_driver_edit/$', views.truck_driver_edit, name='truck_driver_edit'),
@@ -197,3 +201,5 @@ urlpatterns = [
 
 # urlpatterns += staticfiles_urlpatterns()
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
