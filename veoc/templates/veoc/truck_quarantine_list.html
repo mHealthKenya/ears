@@ -13,23 +13,22 @@
         				</ul>
         			</div><!-- /breadcrumb-->
 
-              <div class="panel-heading">QUARANTINE CASES DATA FILTERS</div>
-              <!-- <div class="panel-body" align="left">
-                  <form class="form-inline" method="post" action="{% url 'veoc:quarantine_list' %}">
-                    {% csrf_token %}
+              <div class="panel-heading">TRUCK DRIVERS DATE ENROLLED FILTER</div>
+              <div class="panel-body" align="left">
+                  <form class="form-inline" method="post" action="{% url 'veoc:truck_quarantine_list' %}">{% csrf_token %}
                       <div class="form-group">
-                          <label for="site"><b>Filter by Quarantine Site :&nbsp; &nbsp; </b></label>
-                          <select class="form-control" id="quarantine_site" name="quarantine_site">
-                             <option value="" disabled selected>Select Quarantine Site</option>
-                             {% for quar_site in quar_sites %}
-                                 <option value="{{ quar_site.id }}">{{ quar_site.site_name}}</option>
-                             {% endfor %}
-                         </select>
+                        <label for="email">From :</label>
+                        <input class="form-control" type="date" id="date_from" name="date_from" value="{{ start_day }}" required>
                       </div>
-
-                      <button type="submit" class="btn btn-primary" align="right">Update</button>
-                  </form>
-              </div> -->
+                        &nbsp; &nbsp;
+                      <div class="form-group">
+                        <label for="pwd">To :</label>
+                        <input class="form-control" type="date" id="date_to" name="date_to" value="{{ end_day }}" required>
+                      </div>
+                      <button type="submit" class="btn btn-primary" >UPDATE</button>
+                    </form>
+                  <!-- <button type="submit" class="btn btn-primary" align="right">Update</button> -->
+              </div>
 
               <div class="panel-heading"><b>COVID-19 Truck Driver Quarantine Cases Report</b></div>
 

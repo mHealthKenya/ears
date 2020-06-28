@@ -6,12 +6,28 @@
         src="https://cdn.datatables.net/v/dt/jqc-1.12.3/jszip-2.5.0/pdfmake-0.1.18/dt-1.10.12/b-1.2.2/b-flash-1.2.2/b-html5-1.2.2/b-print-1.2.2/datatables.min.js"></script>
 
             <div id="main-container">
-        			<div id="breadcrumb">
-        				<ul class="breadcrumb">
-        					 <li><i class="fa fa-home"></i><a href="{% url 'veoc:access_dashboard' %}"> Dashboard</a></li>
-        					 <li class="active">Home Care Cases</li>
-        				</ul>
-        			</div><!-- /breadcrumb-->
+                <div id="breadcrumb">
+                    <ul class="breadcrumb">
+                         <li><i class="fa fa-home"></i><a href="{% url 'veoc:access_dashboard' %}"> Dashboard</a></li>
+                         <li class="active">Home Care Cases</li>
+                    </ul>
+                </div><!-- /breadcrumb-->
+                <div class="panel-heading">HOME CARE ISOLATION CASES DATE ENROLLED FILTER</div>
+              <div class="panel-body" align="left">
+                  <form class="form-inline" method="post" action="{% url 'veoc:home_care_list' %}">{% csrf_token %}
+                      <div class="form-group">
+                        <label for="email">From :</label>
+                        <input class="form-control" type="date" id="date_from" name="date_from" value="{{ start_day }}" required>
+                      </div>
+                        &nbsp; &nbsp;
+                      <div class="form-group">
+                        <label for="pwd">To :</label>
+                        <input class="form-control" type="date" id="date_to" name="date_to" value="{{ end_day }}" required>
+                      </div>
+                      <button type="submit" class="btn btn-primary" >UPDATE</button>
+                    </form>
+                  <!-- <button type="submit" class="btn btn-primary" align="right">Update</button> -->
+              </div>
 
               <div class="panel-heading"><b>COVID19 Home Care Isolation Cases Report</b></div>
 
@@ -35,7 +51,7 @@
                             <th>Passport No</th>
                             <th>Nationality</th>
                             <th>Origin Country</th>
-                            <th>Enrolled by</th>
+                            <th>HCW Responsible</th>
                             <th>Enrollment date</th>
                             <th>Registered by</th>
                             <th>Map View</th>
@@ -50,7 +66,11 @@
 {#                            <td>*********</td>#}
                             <td>{{ follow.last_name }}</td>
                             <td>{{ follow.first_name }}</td>
-                            <td>{{ follow.age }}</td>
+                              {% if follow.age == 0 %}
+                                  <td>Unknown</td>
+                              {% else %}
+                                  <td>{{ follow.age }}</td>
+                              {% endif %}
                             <td>{{ follow.sex }}</td>
                             <td>{{ follow.phone_number }}</td>
                             <td>{{ follow.passport_number }}</td>
