@@ -629,6 +629,7 @@ class quarantine_contacts(models.Model):
     physical_address = models.CharField(max_length=50, blank=True)
     source = models.CharField(max_length=50, default="Web Registration")
     communication_language = models.ForeignKey(translation_languages, on_delete=models.DO_NOTHING, related_name='quarantine_language', default='1')
+    active_follow_up = models.BooleanField(default=True)
     created_at = models.DateTimeField(default=datetime.now())
     updated_at = models.DateTimeField(default=datetime.now())
     created_by = models.ForeignKey(User, on_delete=models.CASCADE, related_name='quarantine_updated_by')
