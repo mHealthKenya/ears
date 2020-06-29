@@ -2201,12 +2201,59 @@ def disease_register(request):
 
 
 @login_required
+def line_lising_excel(request):
+    if request.method == "GET":
+        return render(request, 'veoc/line_listing.html')
+    try:
+        csv_file = request.FILES['file']
+        print("in")
+        # read_data(csv_file.file, request)
+        title = []
+        print(csv_file.file)
+        wb = xlrd.open_workbook(csv_file.file.name)
+        sheet = wb.sheet_by_index(0)
+        sheet.cell_value(0, 0)
+        for n in range(sheet.nrows):
+            if n == 0:
+                title = sheet.row_values(n)
+            else:
+                row = sheet.row_values(n)
+                ex_rows = {title[i]: row[i] for i in range(len(title))}
+                excel_date = int(ex_rows['Date'])
+
+                print(xlrd.xldate.xldate_as_datetime(ex_rows['Date'], wb.datemode))
+                lst = moh_line_listing.objects.create(date=xlrd.xldate.xldate_as_datetime(ex_rows['Date'], wb.datemode),
+                                                      facility_name=ex_rows['Facility Name'],
+                                                      county=ex_rows['County'], sub_county=ex_rows['Sub County'],
+                                                      ward=ex_rows['Ward'], patient_names=ex_rows['Patient Name'],
+                                                      patient_status=ex_rows['Patient Status'],
+                                                      contact_number=ex_rows['Contact Number'],
+                                                      age=ex_rows['Age'], sex=ex_rows['Sex'], village=ex_rows['Village'],
+                                                      disease_condition=ex_rows['Disease/ Condition'],
+                                                      date_seen_at_facility=xlrd.xldate.xldate_as_datetime(ex_rows['Date Seen at Facility'], wb.datemode),
+                                                      date_onset_disease=ex_rows['Date onset of Disease'],
+                                                      no_doses_of_vaccine=ex_rows['Number of doses of vaccine'],
+                                                      lab_test=ex_rows['Lab Tests'], outcome=ex_rows['Outcome'],
+                                                      epi_week=ex_rows['EPI Week'], comments=ex_rows['Comments'])
+                print(lst)
+
+        messages.success(request, 'DONE')
+        return render(request, 'veoc/line_listing.html')
+
+    except MultiValueDictKeyError:
+        messages.warning(request, 'Select file before uploading', fail_silently=True)
+        return render(request, 'veoc/line_listing.html')
+    except xlrd.XLRDError:
+        messages.warning(request, 'THIS IS NOT AN EXCEL FILE. Select an excel file', fail_silently=True)
+        return render(request, 'veoc/line_listing.html')
+
+
+@login_required
 def quarantine_excel(request):
     if request.method == "GET":
         return render(request, 'veoc/quarantine_file_upload.html')
     try:
         csv_file = request.FILES['file']
-        print("in")
         read_data(csv_file.file, request)
         messages.success(request, 'DONE')
         return render(request, 'veoc/quarantine_file_upload.html')
@@ -2307,50 +2354,18 @@ def save_data(d, request):
         contact_save.save()
 
     # check if details have been saved
-    if contact_save:
-        # send sms to the patient for successful registration_form
-        # url = "https://mlab.mhealthkenya.co.ke/api/sms/gateway"
-        url = "http://mlab.localhost/api/sms/gateway"
-        # msg = "Thank you " + first_name + " for registering. You will be required to send your temperature details during this quarantine period of 14 days. Please download the self reporting app on this link: https://cutt.ly/AtbvdxD"
-        msg = "Thank you " + first_name + " for registering on self quarantine. You will be required to send your daily temperature details during this quarantine period of 14 days. Ministry of Health"
-        msg2 = first_name + ", for self reporting iPhone users and non-smart phone users, dial *299# to send daily details, for Android phone users, download the self reporting app on this link: http://bit.ly/jitenge_moh . Ministry of Health"
-
-        # process first message
-        pp = {"phone_no": phone_number, "message": msg}
-        payload = json.dumps(pp)
-
-        # process second message
-        pp2 = {"phone_no": phone_number, "message": msg2}
-        payload2 = json.dumps(pp2)
-        # payload = "{\r\n   \"phone_no\": \"+254705255873\",\r\n   \"message\": \"TEST CORONA FROM EARS SYSTEM\"\r\n}"
-
-        headers = {
-            'Content-Type': 'application/json',
-            'Authorization': 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImp0aSI6IjE3MGExZGI0ZjFiYWE1ZWNkOGI4YTBiODNlNDc0MTA2NTJiNDg4Mzc4ZTQwNjExNDA0MGQwZmQ2NTEzNTM1NTg5MjFhYjBmNzI1ZDM3NzYwIn0.eyJhdWQiOiI0IiwianRpIjoiMTcwYTFkYjRmMWJhYTVlY2Q4YjhhMGI4M2U0NzQxMDY1MmI0ODgzNzhlNDA2MTE0MDQwZDBmZDY1MTM1MzU1ODkyMWFiMGY3MjVkMzc3NjAiLCJpYXQiOjE1ODQxODk0NTMsIm5iZiI6MTU4NDE4OTQ1MywiZXhwIjoxNjE1NzI1NDUzLCJzdWIiOiI2Iiwic2NvcGVzIjpbXX0.e2Pt76bE6IT7J0hSBpnc7tHShg9BKSXOMuwnQwqC3_xpJXUo2ez7sQPUa4uPp77XQ05xsumNbWapXkqxvVxp-3Gjn-o9UJ39AWHBFRJYqOXM_foZcxRBoXajUfJTTRS5BTMFEfMn2nMeLie9BH7mbgfKBpZXU_3_tClWGUcNbsibbhXgjSxskJoDls8XGVUdgc5pqMZBBBlR9cCrtK3H8PJf6XywMn9CYbw4KF8V1ADC9dYz-Iyhmwe2_LmU3ByTQMaVHCd3GVKWIvlGwNhm2_gRcEHjjZ8_PXR38itUT0M3NTmT6LBeeeb8IWV-3YFkhilbbjA03q9_6f2gjlOpChF4Ut2rC5pqTg7sW5A4PV8gepPnIBpJy5xKQzgf75zDUmuhKlYlirk8MKoRkiIUgWqOZSf49DUxbIaKIijjX3TYrwmBwZ0RTm2keSvk3bt4QutpLRxel6cajbI32rZLuDjs1_MCZNPKAK1ZgPvwt1OaHLM3om0TmSKyugPvhgNJ5fW_on_HLkTbQV6EPqN3Us7S5whFv1MQcwlgsxU9a4CJZa89elr1TaKvqbkaKqGjetwlCDf6AKQmThy5IqQ5zlIRNwlZDgz_DsGyeZUStQhc-HW65NsB_J_fe_jI5tMeRNCz4PE8T0Rghbs8xHLTFKuMGrJL0Rheq6kfEk4c0UM'
-        }
-
-        requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
-
-        # send first message
-        response = requests.request("POST", url, headers=headers, data=payload, verify=False)
-
-        print(response.text.encode('utf8'))
-        # convert string response to a dictionary
-        msg_resp = eval(response.text)
-        print(msg_resp)
-
-        # check if Success is in the Dictionary values
-        success = 'Success' in msg_resp.values()
-        print(success)
-
-        if success:
-            print("Successfully sent first sms")
-            # send Second message
-            response2 = requests.request("POST", url, headers=headers, data=payload2, verify=False)
-
-            print(response2.text.encode('utf8'))
 
 
+
+def moh_line_listing_template(request):
+    file_path = os.path.join(settings.MEDIA_ROOT, 'Documents\\MOH 503 linelisting form.xlsx')
+    print(file_path)
+    if os.path.exists(file_path):
+        with open(file_path, 'rb') as fh:
+            response = HttpResponse(fh.read(), content_type="application/vnd.ms-excel")
+            response['Content-Disposition'] = 'inline; filename=' + os.path.basename(file_path)
+            return response
+    raise Http404
 
 
 def download_template(request):
