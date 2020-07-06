@@ -242,7 +242,7 @@ def user_register(request):
         email = request.POST.get('email','')
         phone_no = request.POST.get('phone_no','')
         access_level = request.POST.get('access_level','')
-        org_unit = "National Managers"
+        org_unit = org_unit = request.POST.get('org_unit','')
         sub_cnty = request.POST.get('subcounty','')
         user_group = request.POST.get('usergroup','')
         super_user = request.POST.get('user_status','')
