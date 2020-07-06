@@ -9,35 +9,18 @@
         			<div id="breadcrumb">
         				<ul class="breadcrumb">
         					 <li><i class="fa fa-home"></i><a href="{% url 'veoc:access_dashboard' %}"> Dashboard</a></li>
-        					 <li class="active">Home Care Follow Up</li>
+        					 <li class="active">Truck Drivers Quarantine Symptomatic Cases</li>
         				</ul>
         			</div><!-- /breadcrumb-->
 
-            <div class="panel-heading">HOME CARE FOLLOW UP DATE REPORTED FILTER</div>
-              <div class="panel-body" align="left">
-                  <form class="form-inline" method="post" action="{% url 'veoc:home_care_follow_up' %}">{% csrf_token %}
-                      <div class="form-group">
-                        <label for="email">From :</label>
-                        <input class="form-control" type="date" id="date_from" name="date_from" value="{{ start_day }}" required>
-                      </div>
-                        &nbsp; &nbsp;
-                      <div class="form-group">
-                        <label for="pwd">To :</label>
-                        <input class="form-control" type="date" id="date_to" name="date_to" value="{{ end_day }}" required>
-                      </div>
-                      <button type="submit" class="btn btn-primary" >UPDATE</button>
-                    </form>
-                  <!-- <button type="submit" class="btn btn-primary" align="right">Update</button> -->
-              </div>
-
-              <div class="panel-heading"><b>COVID19 Home Care Follow Up Report</b></div>
+              <div class="panel-heading"><b>COVID19 Truck Drivers Quarantine Symptomatic Cases Report</b></div>
 
         			<div class="padding-md">
         				<div class="row">
         					<div class="col-md-12">
         						<div class="panel panel-default table-responsive">
         							<div class="panel-heading">
-        								Home Care Follow Up Report
+        								Truck Drivers Quarantine Symptomatic Cases Report
         								<span class="label label-info pull-right" id="totalspan">{{follow_data_count}} Reported cases </span>
         							</div>
         							<div class="padding-md clearfix">
@@ -50,8 +33,7 @@
                             <th>Gender</th>
                             <th>Contact</th>
                             <th>Origin Country</th>
-                            <th>Enrollment Date</th>
-                            <th>Reporting Date</th>
+                            <th>Date of last contact</th>
                             <th>Follow up Day</th>
                             <th>Has Thermometer</th>
                             <th>Temperature</th>
@@ -59,26 +41,19 @@
                             <th>Has Cough?</th>
                             <th>Difficulty in breathing?</th>
                             <th>Comments</th>
+                            <th>Reported Date</th>
                           </tr>
                           </thead>
                           <tbody>
                           {% for follow in follow_data %}
                           <tr>
-                          {#                                  Check user permission to view names#}
-{#                            <td>*********</td>#}
-{#                            <td>*********</td>#}
                             <td>{{ follow.patient_contacts.last_name }}</td>
                             <td>{{ follow.patient_contacts.first_name }}</td>
-                          {% if follow.patient_contacts.age == 0 %}
-                              <td>Unknown</td>
-                          {% else %}
-                              <td>{{ follow.patient_contacts.age }}</td>
-                          {% endif %}
+                            <td>{{ follow.patient_contacts.age }}</td>
                             <td>{{ follow.patient_contacts.sex }}</td>
                             <td>{{ follow.patient_contacts.phone_number }}</td>
                             <td>{{ follow.patient_contacts.origin_country }}</td>
                             <td>{{ follow.patient_contacts.date_of_contact|date:'d-m-Y' }}</td>
-                            <td>{{ follow.created_at|date:'d-m-Y' }}</td>
                             <td>{{ follow.follow_up_day }}</td>
                             {% if follow.thermal_gun == "t" %}
                               <td>Yes</td>
@@ -99,6 +74,7 @@
                             {% else %}
                               <td>None</td>
                             {% endif %}
+                            <td>{{ follow.created_at|date:'d-m-Y' }}</td>
                           </tr>
                         {% endfor %}
                       </tbody>

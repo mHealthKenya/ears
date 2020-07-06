@@ -331,12 +331,15 @@
                       </div>
                   </form>
                 <button id="myBtn" class="btn btn-primary">Take Driver Picture</button>
+{#                <button type="button" class="btn btn-primary btn-xs view_button" data-toggle="modal" data-target="#profile_photo_modal" title="View">#}
+{#                <i class="fa fa-eye"></i></button>#}
                 </div>
         			</div><!-- /row-->
         		<div class="row">
         	</div><!-- /.row -->
         </div><!-- /.padding-md -->
       </div><!-- /main-container -->
+
 
 {% endblock %}
 
@@ -377,6 +380,11 @@
         }
         </script>
     <script>
+
+     $("#imgInp").change(function(){
+        readURL(this);
+    });
+
     function readURL(input) {
         if (input.files && input.files[0]) {
             var reader = new FileReader();
@@ -388,9 +396,7 @@
         }
     }
 
-    $("#imgInp").change(function(){
-        readURL(this);
-    });
+
     var today = new Date();
     var dd = today.getDate();
     var mm = today.getMonth()+1; //January is 0!
