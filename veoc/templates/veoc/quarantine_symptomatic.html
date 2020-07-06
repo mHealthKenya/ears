@@ -9,13 +9,13 @@
         			<div id="breadcrumb">
         				<ul class="breadcrumb">
         					 <li><i class="fa fa-home"></i><a href="{% url 'veoc:access_dashboard' %}"> Dashboard</a></li>
-        					 <li class="active">Quarantine Follow Up</li>
+        					 <li class="active">Quarantine Symptomatic Cases</li>
         				</ul>
         			</div><!-- /breadcrumb-->
 
-            <div class="panel-heading">FOLLOW UP DATE REPORTED FILTER</div>
+            <div class="panel-heading">SYMPTOMATIC CASES DATE REPORTED FILTER</div>
               <div class="panel-body" align="left">
-                  <form class="form-inline" method="post" action="{% url 'veoc:follow_up' %}">{% csrf_token %}
+                  <form class="form-inline" method="post" action="{% url 'veoc:symptomatic_cases' %}">{% csrf_token %}
                       <div class="form-group">
                         <label for="email">From :</label>
                         <input class="form-control" type="date" id="date_from" name="date_from" value="{{ start_day }}" required>
@@ -30,14 +30,14 @@
                   <!-- <button type="submit" class="btn btn-primary" align="right">Update</button> -->
               </div>
 
-              <div class="panel-heading"><b>COVID19 Quarantine Follow Up Report</b></div>
+              <div class="panel-heading"><b>COVID19 Quarantine Symptomatic Cases Report</b></div>
 
         			<div class="padding-md">
         				<div class="row">
         					<div class="col-md-12">
         						<div class="panel panel-default table-responsive">
         							<div class="panel-heading">
-        								Quarantine Follow Up Report
+        								Quarantine Symptomatic Cases Report
         								<span class="label label-info pull-right" id="totalspan">{{follow_data_count}} Reported cases </span>
         							</div>
         							<div class="padding-md clearfix">

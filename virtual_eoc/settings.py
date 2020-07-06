@@ -156,16 +156,22 @@ USE_TZ = True
 #STATIC_ROOT =os.path.join(BASE_DIR,'static')
 STATIC_URL = '/static/'
 
-MEDIA_ROOT =os.path.join(BASE_DIR,'media')
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
 # -- List to all static files in the system
 STATICFILES_DIR = [
     STATIC_DIR,
 ]
 
+<<<<<<< HEAD
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_USE_TLS = True
 EMAIL_PORT = 587
 EMAIL_HOST_USER = 'kenmusembi21@gmail.com'
 EMAIL_HOST_PASSWORD = 'Cullinana@23'
+=======
+FILE_UPLOAD_HANDLERS = [
+    'django.core.files.uploadhandler.TemporaryFileUploadHandler',
+]
+>>>>>>> f535c877c344e16ff26cb4dbb385dab0a1d51f16

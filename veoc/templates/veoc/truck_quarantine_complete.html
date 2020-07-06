@@ -38,6 +38,7 @@
 {#                            <th>Weighbridge Site</th>#}
                             <th>date of contact</th>
                             <th>Registered by</th>
+                            <th>Restart Quarantine</th>
                           </tr>
                           </thead>
                           <tbody>
@@ -58,6 +59,21 @@
 {#                            <td>{{ q_data.weighbridge_facility }}</td>#}
                             <td>{{ q_data.date_of_contact }}</td>
                             <td>{{ q_data.created_by }}</td>
+                            <td>
+                             <button type="button" id="revisit_view" class="btn btn-info btn-sm pull-left revisit_view"
+                               data-toggle="modal" data-target="#revisitViewModal"
+                               data-id="{{ q_data.pk }}"
+                               data-names="{{ q_data.first_name }} {{ q_data.last_name }}"
+                               data-phone_number="{{ q_data.phone_number }}"
+                               data-passport_number="{{ q_data.passport_number }}"
+                               title="Open Revisit View">
+                               <i class="fa fa-exchange">
+                               </i>
+                             </button>
+                           </td>
+{#                            <td>#}
+{#                               <a href="/truck_driver_revisit/{{q_data.pk}}" class="btn btn-info btn-sm pull-left" title="Restart Quarantine"><i class="fa fa-exchange"></i></a>#}
+{#                            </td>#}
                           </tr>
                         {% endfor %}
                       </tbody>
@@ -68,6 +84,70 @@
     			</div><!-- /row-->
         </div><!-- /.padding-md -->
       </div><!-- /main-container -->
+
+    <!-- Map View modal -->
+      <div class="modal fade" id="revisitViewModal" tabindex="-1" role="dialog" aria-hidden="true">
+      		<div class="modal-dialog" role="document">
+      			<div class="modal-content">
+        			<div class="modal-header">
+        				<h5 class="modal-title" id="exampleModalLongTitle"><b>REVISIT QUARANTINE DETAILS</b></h5>
+        				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        				<span aria-hidden="true">&times;</span>
+        				</button>
+        			</div>
+        			<div class="modal-body">
+                      <div class="padding-md">
+                        <div class="row">
+                          <div class="col-md-12">
+                            <div class="panel panel-default">
+                              <div class="panel-heading"><b>Quarantined Revisit Details</b></div>
+                              <div class="panel-body" align="center">
+                                <form method="post" action="#">
+                                  <div class="form-group" style="display: none;">
+                                      <input class="form-control id" name="id" style="display: none;">
+                                  </div>
+                                  <div class="form-row">
+                                      <div class="form-row" id="gender_details_div">
+                       <div class="form-group col-md-6">
+                         <label for="borderpoint">Border Point : *</label>
+                         <select class="form-control" name="border_name" id="border_name" >
+                              <option value="" disabled selected>Select Border Point</option>
+                              {% for b_point in border_points %}
+                                  <option value="{{b_point.border_name}}">{{b_point.border_name}}</option>
+                              {% endfor %}
+                          </select>
+                       </div>
+                       <div class="form-group col-md-6">
+                             <label for="weighbridgesite">Weighbridge Site : *</label>
+                             <select class="form-control" name="weighbridge_name" id="weighbridge_name" >
+                                  <option value="" disabled selected>Select Weighbridge Site</option>
+                                  {% for qty in weigh_site %}
+                                      <option value="{{qty.weighbridge_name}}">{{qty.weighbridge_name}}</option>
+                                  {% endfor %}
+                              </select>
+                            </div>
+                    </div>
+                                  
+
+                                  </div>
+                                </form>
+                                <button type="submit" onClick="openMap()" class="btn btn-success btn-sm pull-right">View Map</button>
+                            </div>
+                          </div><!-- /div panel-default -->
+                          <div class="panel panel-default">
+                            <div class="panel-heading"><b>Patient Self Reporting Locations</b></div>
+                            <div class="panel-body">
+                              <div id="map_div">
+                              </div><!-- div to hold map -->
+                            </div><!-- panel-body -->
+                          </div><!-- /div panel-default -->
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
 
 {% endblock %}
 

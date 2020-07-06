@@ -1,0 +1,110 @@
+{% extends "veoc/main_template.html" %}
+{% load static %}
+{% block main %}
+
+<style type="text/css">
+.area {
+    width: 98%;
+    height: 150px;
+    margin-top: 50px;
+    margin-bottom: 50px;
+    border: 4px dashed #000;
+    background-image: url("https://cdn2.iconfinder.com/data/icons/ios-7-icons/50/upload-512.png");
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: 64px 64px;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    filter: alpha(opacity=50);
+    -khtml-opacity: 0.5;
+    -moz-opacity: 0.5;
+    opacity: 0.5;
+    text-align: center;
+}
+
+.area .spinner {
+    display: none;
+    margin-top: 50%;
+}
+
+.area:hover,
+.area.dragging,
+.area.uploading {
+    filter: alpha(opacity=100);
+    -khtml-opacity: 1;
+    -moz-opacity: 1;
+    opacity: 1;
+}
+
+.area input {
+    width: 400%;
+    height: 100%;
+    margin-left: -300%;
+    border: none;
+    cursor: pointer;
+}
+
+.area input:focus {
+    outline: none;
+}
+</style>
+    <div>
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-{{ message.tags }}" style="text-align: center">
+                {{ message }}
+            </div>
+        {% endfor %}
+    {% endif %}
+    <div class="container">
+        <div style="text-align: center">
+            <form class="p-b-100" action="{% url 'veoc:line_listing_template' %}">
+                <button type="submit" class="btn btn--radius btn-primary">
+                    DOWNLOAD TEMPLATE
+                </button>
+            </form>
+
+            <form action="{% url 'veoc:moh_line_listing' %}" method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
+                <label for="upload" style="margin-bottom: 10px"> Upload a file</label>
+                <div class="area">
+                    click to upload
+                    <input type="file" id="upload" name="file"/>
+                </div>
+                <button type="submit" class="btn btn-info" name="load">Upload</button>
+            </form>
+
+        </div>
+        <br>
+    </div>
+{% endblock %}
+
+{% block script %}
+    <script>
+        var upload = document.getElementById('upload');
+
+        function onFile() {
+            var me = this,
+                file = upload.files[0],
+                name = file.name.replace(/.[^/.]+$/, '');
+            console.log('upload code goes here', file, name);
+        }
+
+        upload.addEventListener('dragenter', function (e) {
+            upload.parentNode.className = 'area dragging';
+        }, false);
+
+        upload.addEventListener('dragleave', function (e) {
+            upload.parentNode.className = 'area';
+        }, false);
+
+        upload.addEventListener('dragdrop', function (e) {
+            onFile();
+        }, false);
+
+        upload.addEventListener('change', function (e) {
+            onFile();
+        }, false);
+    </script>
+{% endblock %}

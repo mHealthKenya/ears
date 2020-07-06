@@ -17,7 +17,7 @@
             </ul>
         </div><!-- /breadcrumb-->
 
-        <div class="row text-center"">
+        <div class="row text-center">
             <div class="col-sm-10">
                 <h3>
                     Truck Driver Details
@@ -37,7 +37,11 @@
     <div class="row">
         <div class="col-sm-3"><!--left col-->
             <div class="text-center">
-                <img src="http://ssl.gstatic.com/accounts/ui/avatar_2x.png" class="avatar img-circle img-thumbnail" alt="avatar">
+            {% if pic.driver_image %}
+                <img src="{{pic.driver_image.url}}" class="avatar img-circle img-thumbnail" alt="avatar" style="width: 250px; height: 250px;">
+            {% else %}
+                <img src="http://ssl.gstatic.com/accounts/ui/avatar_2x.png" class="avatar img-circle img-thumbnail" alt="avatar" style="width: 250px; height: 250px;">
+            {% endif %}
                 {% for patient_detail in patient_contact_object %}
                     <h3>Names: {{ patient_detail.first_name }} {{ patient_detail.last_name }}</h3>
                 {% endfor %}
@@ -306,39 +310,88 @@
                         </div>
                         <div class="form-group">
                             <div class="col-xs-6">
-                                <label for="covid_test"><h4>Tested for COVID-19 ?</h4></label>
-                                <select class="form-control" id="covid_test" name="covid_test" required>
+                                <label for="investigation_form"><h4>Case ID (Case Investigation Form) :</h4></label>
+                                <input class="form-control" type="text" id="case_id" name="case_id" placeholder="Case investigation Form ID">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-xs-6">
+                                <label for="type_of_case"><h4>Type of Case :</h4></label>
+                                <select class="form-control" id="type_of_case" name="type_of_case" required>
                                     <option value="" disabled selected>Select Option</option>
-                                    <option value="t">Yes</option>
-                                    <option value="f">No</option>
+                                    <option value="Initial">Initial</option>
+                                    <option value="Repeat">Repeat</option>
                                 </select>
                             </div>
                         </div>
                         <div class="form-group">
                             <div class="col-xs-6">
-                                <label for="date_specimen_collected"><h4>Date specimen collected</h4></label>
+                                <label for="travel_history"><h4>Travel History (Last 14 days)? :</h4></label>
+                                <select class="form-control" id="travel_history" name="travel_history" onchange="activate_countries()" required>
+                                    <option value="" disabled selected>Select Option</option>
+                                    <option value="True">Yes</option>
+                                    <option value="False">No</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-xs-6">
+                                <label for="travel_from"><h4>Travel From : </h4></label>
+                                <select class="form-control" name="travel_from" id="travel_from">
+                                     <option value="" disabled selected>Select Country</option>
+                                     {% for cntry in country %}
+                                         <option value="{{cntry.name}}">{{cntry.name}}</option>
+                                     {% endfor %}
+                                 </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-xs-6">
+                                <label for="travel_history"><h4>Contact with case ? :</h4></label>
+                                <select class="form-control" id="contact_with_case" name="contact_with_case" required>
+                                    <option value="" disabled selected>Select Option</option>
+                                    <option value="True">Yes</option>
+                                    <option value="False">No</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-xs-6">
+                                <label for="confirmed_case"><h4>Confirmed Case Name :</h4></label>
+                                <input class="form-control" type="text" id="confirmed_case" name="confirmed_case" placeholder="Name of Confirmed case">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-xs-6">
+                                <label for="have_symptoms"><h4>Have symptoms ? :</h4></label>
+                                <select class="form-control" id="have_symptoms" name="have_symptoms" required>
+                                    <option value="" disabled selected>Select Option</option>
+                                    <option value="True">Yes</option>
+                                    <option value="False">No</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-xs-6">
+                                <label for="date_specimen_collected"><h4>Date onset of symptoms :</h4></label>
+                                <input class="form-control" type="date" value="{{ day }}" max="{{ day }}" id="onset_symptoms" name="onset_symptoms">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-xs-6">
+                                <label for="sample_not_taken"><h4>Symptoms shown :</h4></label>
+                                <input class="form-control" type="text" id="symptoms_shown" name="symptoms_shown" placeholder="Cough, Fever etc">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-xs-6">
+                                <label for="date_specimen_collected"><h4>Date Sample collected</h4></label>
                                 <input class="form-control" type="date" value="{{ day }}" max="{{ day }}" id="date_specimen_collected" name="date_specimen_collected">
                             </div>
                         </div>
                         <div class="form-group">
                             <div class="col-xs-6">
-                                <label for="specimen_taken"><h4>Was specimen collected ?</h4></label>
-                                <select class="form-control" id="specimen_taken" name="specimen_taken" required>
-                                    <option value="" disabled selected>Select Option</option>
-                                    <option value="t">Yes</option>
-                                    <option value="f">No</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <div class="col-xs-6">
-                                <label for="sample_not_taken"><h4>Reason sample not taken</h4></label>
-                                <input class="form-control" type="text" id="sample_not_taken" name="sample_not_taken">
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <div class="col-xs-6">
-                                <label for="specimen_taken"><h4>Speciment Type</h4></label>
+                                <label for="specimen_taken"><h4>Specimen Type :</h4></label>
                                 <select class="form-control" id="specimen_type" name="specimen_type" required>
                                     <option value="" disabled selected>Select specimen type</option>
                                     {% for samp in samp_types %}
@@ -349,37 +402,9 @@
                         </div>
                         <div class="form-group">
                             <div class="col-xs-6">
-                                <label for="other_specimen"><h4>Other specimen type</h4></label>
-                                <input type="text" class="form-control" id="other_specimen" name="other_specimen" title="enter other specimen type">
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <div class="col-xs-6">
-                                <label for="respiratory_illness"><h4>Any viral respiratory illness ?</h4></label>
-                                <select class="form-control" id="respiratory_illness" name="respiratory_illness" required>
-                                    <option value="" disabled selected>Select Option</option>
-                                    <option value="t">Yes</option>
-                                    <option value="f">No</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <div class="col-xs-6">
-                                <label for="respiratory_illness_results"><h4>If Yes, specify results</h4></label>
-                                <input type="text" class="form-control" name="respiratory_illness_results" id="respiratory_illness_results" >
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <div class="col-xs-6">
-                                <label for="date_specimen_taken_lab"><h4>Date specimen taken lab</h4></label>
-                                <input class="form-control" type="date" value="{{ day }}" max="{{ day }}" id="date_specimen_taken_lab" name="date_specimen_taken_lab">
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <div class="col-xs-6">
                                 <label for="lab_name"><h4>Labaratory Name</h4></label>
                                 <select class="form-control" id="lab_name" name="lab_name" required>
-                                    <option value="" disabled selected>Select specimen type</option>
+                                    <option value="" disabled selected>Select Laboratory</option>
                                     {% for lab in labs %}
                                         <option value="{{ lab.id }}">{{ lab.name }}</option>
                                     {% endfor %}
@@ -405,9 +430,10 @@
                             <table class="table table-hover" id="lab_report">
                                 <thead class="thead-dark">
                                 <tr>
+                                    <th>Case Investigation ID</th>
+                                    <th>Type of Case</th>
                                     <th>Date Collected</th>
                                     <th>Specimen type</th>
-                                    <th>Date taken lab</th>
                                     <th>Name of lab</th>
                                     <th>Lab Results</th>
                                     <th>Date Lab Confirmed</th>
@@ -417,9 +443,10 @@
                                 <tbody>
                                 {% for lab in lab_res %}
                                     <tr>
+                                        <td>{{ lab.case_identification_id }}</td>
+                                        <td>{{ lab.type_of_case }}</td>
                                         <td>{{ lab.date_specimen_collected|date:'d-m-Y' }}</td>
                                         <td>{{ lab.specimen_type }}</td>
-                                        <td>{{ lab.date_specimen_taken_lab|date:'d-m-Y' }}</td>
                                         <td>{{ lab.lab.name }}</td>
                                         <td>{{ lab.lab_results }}</td>
                                         <td>{{ lab.date_lab_confirmation|date:'d-m-Y' }}</td>
@@ -523,7 +550,7 @@
                                         <tr class="item">
                                         <td>Results Received by</td>
                                         {% for pat in patient_details %}
-                                            <td><i>{{ pat.border_point.team_lead_names }}</i></i></td>
+                                            <td><i>{{ pat.border_point.team_lead_names }}</i></td>
                                         {% endfor %}
                                     </tr>
                                         <tr class="item last">
@@ -569,7 +596,13 @@
                                             <div colspan="2">
                                                 <div>
                                                     <div style="overflow: hidden;">
-                                                        <p id="qr-td" style="float: left;"></p>
+{#                                                        <p id="qr-td" style="float: left;"></p>#}
+                                                        <p style="float: left;">
+                                                            {% if pic.driver_image %}
+                                                                <img src="{{pic.driver_image.url}}" class="avatar img-preview-custom img-thumbnail" alt="avatar" style="width: 150px; height: 150px;">
+                                                            {% else %}
+                                                                <img src="http://ssl.gstatic.com/accounts/ui/avatar_2x.png" class="avatar img-preview-custom img-thumbnail" alt="avatar" style="width: 150px; height: 150px;">
+                                                            {% endif %}</p>
                                                         <p style="float: right;">Certificate No. <br><i style="color:#1034A6;"></i> MOH/cap 242/2020</i></p>
                                                     </div>
                                                 </div>
@@ -637,8 +670,12 @@
                                             <td></td>
                                         </tr>
                                         <tr class="information">
+                                            <td></td>
+                                            <td></td>
+                                        </tr>
+                                        <tr class="information">
                                             <td><b>Issuing Officer </b></td>
-                                            <td><b>Official Stamp</b></td>
+                                            <td><b>Official QR Code</b></td>
                                         </tr>
                                         <tr class="information">
                                             <td></td>
@@ -650,15 +687,9 @@
                                         </tr>
                                         <tr class="information">
                                             {% for pat in patient_details %}
-                                                <td>Print Name:...<i><b>{{ pat.border_point.team_lead_names }}</b></i>......</td>
+                                                <td>Border Officer Name:.....<i><b>{{ pat.border_point.team_lead_names }}</b></i>....</td>
                                             {% endfor %}
-                                            <td></td>
-                                        </tr>
-                                        <tr class="information">
-                                            {% for pat in patient_details %}
-                                                <td>Designation:....<i><b>{{ pat.border_point.border_name }} Lead</b></i>...</td>
-                                            {% endfor %}
-                                            <td>Signature:........................</td>
+                                            <td><p id="qr-td" style="float: right;"></p></td>
                                         </tr>
                                         <tr class="information">
                                             <td></td>
@@ -666,14 +697,14 @@
                                         </tr>
                                         <tr class="information">
                                             <td></td>
-                                            <td>Date:....<i><b>{{ lab.updated_at|date:'d-m-Y' }}</b></i>........</td>
+                                            <td></td>
                                         </tr>
                                     </table>
                                 </div>
 
                             <div>
                             <hr>
-                                <button class="btn btn-lg btn-success pull-right" onclick="javascript:PrintElem();" type="submit" id="btnAttPrint"><i class="glyphicon glyphicon-print"></i> Print Result</button>
+                                <button class="btn btn-lg btn-success pull-right" onclick="javascript:PrintElem();" type="submit" id="btnAttPrint"><i class="glyphicon glyphicon-print"></i> Print Attestation</button>
                             </div>
                         {% endif %}
                         {% endfor %}
@@ -819,7 +850,6 @@
 
     });
 
-
     function editInputField(){
         document.getElementById("first_name").readOnly = false;
         document.getElementById("last_name").readOnly = false;
@@ -854,6 +884,16 @@
 
     return true;
 }
+
+  function activate_countries(){
+      var _county = document.getElementById('travel_history').value;
+      console.log(_county)
+      if(_county == "False"){
+          document.getElementById("travel_from").readOnly = false;
+      }else{
+          document.getElementById("travel_from").readOnly = true;
+      }
+    }
 
   </script>
 {% endblock %}

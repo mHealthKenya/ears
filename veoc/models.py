@@ -628,6 +628,7 @@ class quarantine_contacts(models.Model):
     physical_address = models.CharField(max_length=50, blank=True)
     source = models.CharField(max_length=50, default="Web Registration")
     communication_language = models.ForeignKey(translation_languages, on_delete=models.DO_NOTHING, related_name='quarantine_language', default='1')
+    active_follow_up = models.BooleanField(default=True)
     created_at = models.DateTimeField(default=datetime.now())
     updated_at = models.DateTimeField(default=datetime.now())
     created_by = models.ForeignKey(User, on_delete=models.CASCADE, related_name='quarantine_updated_by')
@@ -654,6 +655,9 @@ class quarantine_follow_up(models.Model):
     lat = models.FloatField(default=0.0000)
     lng = models.FloatField(default=0.0000)
     created_at = models.DateTimeField(default=datetime.now())
+
+    def __str__(self):
+        return self.patient_contacts.first_name + ' - ' + self.patient_contacts.phone_number
 
 class weighbridge_sites(models.Model):
     person_phone_regex = RegexValidator(regex=r'^\+?1?\d{10,15}$', message="Phone number must be entered in the format: '+999999999'. Up to 15 digits allowed.")
@@ -724,9 +728,28 @@ class truck_quarantine_contacts(models.Model):
     hotel_town = models.CharField(max_length=50, blank=True)
     date_check_in = models.DateField(default=date.today)
     date_check_out = models.DateField(default=date.today)
+    driver_image = models.ImageField(upload_to='Truker_Image/', null=True)
 
     def __str__(self):
         return self.patient_contacts.first_name + ' - ' + self.vehicle_registration + ' - ' + self.border_point.border_name
+
+
+class quarantine_revisit(models.Model):
+    patient_contacts = models.ForeignKey(quarantine_contacts, on_delete=models.DO_NOTHING, related_name='revisit_contact')
+    date_of_revisit = models.DateField(default=date.today)
+    quarantine_site = models.ForeignKey(quarantine_sites, on_delete=models.DO_NOTHING, related_name='quarantine_revisit_site', blank=True, default=1)
+    weighbridge_facility = models.ForeignKey(weighbridge_sites, on_delete=models.DO_NOTHING, related_name='revisit_weighbridge', blank=True, default=1)
+    border_point = models.ForeignKey(border_points, on_delete=models.DO_NOTHING, related_name='revisit_border_point', blank=True, default=1)
+    cough = models.BooleanField(default=False)
+    breathing_difficulty = models.BooleanField(default=False)
+    fever = models.BooleanField(default=False)
+    temperature = models.FloatField(max_length=50, blank=True, default='0.0')
+    sample_taken = models.BooleanField(default=False)
+    created_at = models.DateTimeField(default=datetime.now())
+
+    def __str__(self):
+        return self.patient_contacts.first_name + ' - ' + self.patient_contacts.phone_number
+
 
 class testing_labs(models.Model):
     name=models.CharField(max_length=200)
@@ -748,16 +771,19 @@ class covid_sample_types(models.Model):
 
 class truck_quarantine_lab(models.Model):
     patient_contacts = models.ForeignKey(quarantine_contacts, on_delete=models.DO_NOTHING, related_name='truck_lab_contact')
-    test_sample_uuid = models.CharField(max_length=50, blank=True)
-    covid_test_done = models.BooleanField(default=False)
-    specimen_taken = models.BooleanField(default=False)
-    reason_specimen_not_taken = models.CharField(max_length=255, blank=True)
+    test_sample_uuid = models.CharField(max_length=100, blank=True)
+    case_identification_id = models.CharField(max_length=200, blank=True)
+    type_of_case = models.CharField(max_length=200, blank=True)
+    sample_number = models.CharField(max_length=200, blank=True)
+    travel_history = models.BooleanField(default=True)
+    travel_from = models.CharField(max_length=50, blank=True)
+    contact_with_case = models.BooleanField(default=True)
+    confirmed_case_name = models.CharField(max_length=200, blank=True)
+    have_symptoms = models.BooleanField(default=True)
+    onset_of_symptoms = models.DateTimeField(default=datetime.now())
+    symptoms_shown = models.CharField(max_length=200, blank=True)
     date_specimen_collected = models.DateTimeField(default=datetime.now())
     specimen_type = models.ForeignKey(covid_sample_types, on_delete=models.DO_NOTHING, related_name='lab_specimen_type', default=1)
-    other_specimen_type = models.CharField(max_length=50, blank=True)
-    viral_respiratory_illness = models.BooleanField(default=False)
-    respiratory_illness_results = models.CharField(max_length=50, blank=True)
-    date_specimen_taken_lab = models.DateTimeField(default=datetime.now())
     lab = models.ForeignKey(testing_labs, on_delete=models.DO_NOTHING, related_name='lab_name', default=1)
     lab_results = models.ForeignKey(covid_results_classifications, on_delete=models.DO_NOTHING, related_name='lab_results', default=4)
     date_lab_confirmation = models.DateTimeField(default=datetime.now())
@@ -770,6 +796,7 @@ class truck_quarantine_lab(models.Model):
     created_by = models.ForeignKey(User, on_delete=models.DO_NOTHING, related_name='truck_lab_updated_by')
     updated_by = models.ForeignKey(User, on_delete=models.DO_NOTHING, related_name='truck_lab_created_by')
 
+
     def __str__(self):
         return self.patient_contacts.first_name + ' - ' + self.specimen_type.name
 
@@ -779,11 +806,18 @@ class home_based_care(models.Model):
     data_source = models.CharField(max_length=255, blank=True)
     date_created = models.DateTimeField(default=datetime.now())
 
+    def __str__(self):
+        return self.patient_contacts.first_name + ' - ' + self.patient_contacts.phone_number
+
+
 class discharged_quarantine(models.Model):
     patient_contacts = models.ForeignKey(quarantine_contacts, on_delete=models.DO_NOTHING, related_name='discharged_quarantine_contact')
     health_care_worker = models.ForeignKey(User, on_delete=models.DO_NOTHING, related_name='health_care_worker_discharged_quarantine')
     source = models.CharField(max_length=255, blank=True)
     date_created = models.DateTimeField(default=datetime.now())
+
+    def __str__(self):
+        return self.patient_contacts.first_name + ' - ' + self.patient_contacts.phone_number
 
 class watcher_team_leads(models.Model):
     team_lead=models.ForeignKey(contact, on_delete=models.CASCADE, blank=False)

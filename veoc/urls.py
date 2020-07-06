@@ -1,3 +1,4 @@
+import django
 from django.conf.urls import url, include
 from rest_framework import routers
 from veoc import views
@@ -5,6 +6,7 @@ from django.conf import settings
 # from . import views, settings
 from django.contrib.staticfiles.urls import static
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns
+from django.conf.urls.static import static
 
 #TEMPLATE TAGGING
 app_name = 'veoc'
@@ -35,7 +37,12 @@ urlpatterns = [
     url(r'^disease_register/$', views.disease_register, name='disease_register'),
     url(r'^event_register/$', views.event_register, name='event_register'),
     url(r'^quarantine_register/$', views.quarantine_register, name='quarantine_register'),
+    url(r'^quarantine_file_register/$', views.quarantine_excel, name='exupload'),
+    url(r'^line_listing/$', views.line_lising_excel, name='moh_line_listing'),
+    url(r'^quarantine_template/$', views.download_template, name='quarantine_template'),
+    url(r'^line_list_template/$', views.moh_line_listing_template, name='line_listing_template'),
     url(r'^truck_driver_profile/(?P<profileid>[0-9]+)/$', views.truck_driver_profile, name='truck_driver_profile'),
+    url(r'^truck_driver_revisit/(?P<profileid>[0-9]+)/$', views.truck_driver_revisit, name='truck_driver_revisit'),
     url(r'^truck_driver_register/$', views.truck_driver_register, name='truck_driver_register'),
     url(r'^truck_driver_edit/$', views.truck_driver_edit, name='truck_driver_edit'),
     url(r'^truck_driver_lab_test/$', views.truck_driver_lab_test, name='truck_driver_lab_test'),
@@ -60,9 +67,14 @@ urlpatterns = [
     url(r'^truck_quarantine_list/$', views.truck_quarantine_list, name='truck_quarantine_list'),
     url(r'^quarantine_site_report/$', views.quarantine_site_data, name='quarantine_site_data'),
     url(r'^follow_up/$', views.follow_up, name='follow_up'),
+    url(r'^symptomatic_cases/$', views.symptomatic_cases, name='symptomatic_cases'),
+    url(r'^home_care_follow_up/$', views.home_care_follow_up, name='home_care_follow_up'),
+    url(r'^home_care_symtomatic/$', views.home_care_symtomatic, name='home_care_symtomatic'),
     url(r'^truck_follow_up/$', views.truck_follow_up, name='truck_follow_up'),
+    url(r'^truck_symptomatic_cases/$', views.truck_symptomatic_cases, name='truck_symptomatic_cases'),
     # url(r'^follow_up/$', views.f_up, name='f_up'),
     url(r'^complete_quarantine/$', views.complete_quarantine, name='complete_quarantine'),
+    url(r'^complete_home_care/$', views.complete_home_care, name='complete_home_care'),
     url(r'^truck_ongoing_quarantine/$', views.truck_ongoing_quarantine, name='truck_ongoing_quarantine'),
     url(r'^truck_complete_quarantine/$', views.truck_complete_quarantine, name='truck_complete_quarantine'),
     url(r'^get_quarantine_coordinates/$', views.get_quarantine_coordinates, name='get_quarantine_coordinates'),
@@ -201,3 +213,5 @@ urlpatterns = [
 
 # urlpatterns += staticfiles_urlpatterns()
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
