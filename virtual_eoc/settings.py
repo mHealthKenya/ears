@@ -110,7 +110,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
         'NAME': os.environ.get('DB_NAME','virtual_eoc'),
         'USER': os.environ.get('DB_USER','postgres'),
-        'PASSWORD': os.environ.get('DB_PASS','*oA1)=QQM/2yKC*(MT3W8^[Zq6?C'),
+        'PASSWORD': os.environ.get('DB_PASS','12345678'),
         'HOST': 'localhost',
         'PORT': '5432',
     }
@@ -162,3 +162,10 @@ MEDIA_URL = '/media/'
 STATICFILES_DIR = [
     STATIC_DIR,
 ]
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_USE_TLS = True
+EMAIL_PORT = 587
+EMAIL_HOST_USER = 'kenmusembi21@gmail.com'
+EMAIL_HOST_PASSWORD = 'Cullinana@23'

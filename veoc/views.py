@@ -32,6 +32,8 @@ from itertools import chain
 from operator import attrgetter
 from time import gmtime, strftime
 import uuid
+from django.core.mail import send_mail
+from django.conf import settings
 
 # Create your views here.
 contacts = contact_type.objects.all()
@@ -99,6 +101,15 @@ def login(request):
 
         if user is not None:
             if user.is_active:
+                #check if user has logged in for the first time
+                if user.last_login == None:
+                    print('Not registered')
+                    next = '/change_password/'
+                    #login user before redirecting them to the change password page
+                    login_auth(request, user)
+                    return HttpResponse(next)
+                else:
+                    print('user already registered')
                 # request.session.set_expiry(60)
                 login_auth(request, user)
                 #get the person org unit to redirect to the correct Dashboard
@@ -147,6 +158,25 @@ def login(request):
             # return render(request, 'veoc/login.html', context)
     else:
         return render(request, 'veoc/login.html')
+
+#change password method: it allows a user to change their password and also sends an email with the details
+def change_password(request):
+    #setting the password to the entered password
+    if request.method == 'POST':
+        password = request.POST.get('newpassword_two','')
+        current_user = request.user
+        u = User.objects.get(username=current_user.username)
+        u.set_password(password)
+        u.save()
+        #send email informing user their password has been changed
+        subject = 'Jitenge Password Changed'
+        message = 'You have changed your password on the Jitenge System. Your new password is  ' + password + '\n' + 'Thank You. '
+        email_from = settings.EMAIL_HOST_USER
+        recipient_list = [u.email]
+        send_mail(subject, message, email_from, recipient_list)
+        return HttpResponseRedirect(settings.LOGIN_URL)
+
+    return render(request, 'veoc/change_password.html')
 
 def logout(request):
 
@@ -206,7 +236,7 @@ def user_register(request):
         email = request.POST.get('email','')
         phone_no = request.POST.get('phone_no','')
         access_level = request.POST.get('access_level','')
-        org_unit = request.POST.get('org_unit','')
+        org_unit = "National Managers"
         sub_cnty = request.POST.get('subcounty','')
         user_group = request.POST.get('usergroup','')
         super_user = request.POST.get('user_status','')
@@ -231,6 +261,13 @@ def user_register(request):
                 last_name=last_name, is_superuser=super_user, is_staff="t", is_active="t")
 
         user.save()
+
+        subject = 'Jitenge System Registration'
+        message = 'Dear ' + first_name + ',' + '\n' + '\n' + 'You have been registered on the Jitenge System (EARS - Emergency Alert Reporting System) under ' + org_unit + '\n' + 'Your username is '+ user_name +' and your password is  '  + email + '. You can use these for the initial login. Kindly change your password once you login for the first time.' + '\n' + 'You can access the system through this link https://ears.mhealthkenya.co.ke/.' + '\n'+'Thank You.'
+        email_from = settings.EMAIL_HOST_USER
+        recipient_list = [email]
+        send_mail(subject, message, email_from, recipient_list)
+
         user_id = user.pk
         userObject = User.objects.get(pk = user_id)
         userGroupObject = Group.objects.get(name = user_group)
@@ -244,6 +281,13 @@ def user_register(request):
         #save the user in persons tables
         user_person = persons.objects.create(user=userObject, org_unit=orgunitObject, phone_number=phone_no,
             access_level=acc_level, county=orgunitObject, sub_county=subcntyObject)
+
+        #send newly registered user an email telling them to change their password
+        subject = 'Jitenge System Reegistration'
+        message = 'You have been registered on the Jitenge System. '+ '\n' + 'Your username is '+ user_name +'   and your password is  ' + email + '\n' + 'Thank You. '
+        email_from = settings.EMAIL_HOST_USER
+        recipient_list = [email]
+        send_mail(subject, message, email_from, recipient_list)
 
     users_count = User.objects.all().count()
     users = User.objects.all()
@@ -5751,6 +5795,36 @@ def public_document(request):
     values = {'documents': documents}
 
     return render(request, 'veoc/public_documents.html', values)
+
+#forgot password function allowing user to change their password
+def forgot_password(request):
+    if request.method =="POST":
+        searched_email = request.POST.get('search_field', '')
+        #added a try and catch so if the email entered does not exist the user can be informed
+        try:
+            email_details = User.objects.get(email = searched_email)
+        except ObjectDoesNotExist:
+            return HttpResponse("That Email does not exist")
+        #an email is sent to inform the user of the password change
+        if email_details != '':
+            email_values = {'email_details': email_details}
+            subject = 'Jitenge Password Reset'
+            message = 'You have requested for a password reset on the Jitenge System. Your new password is  ' + email_details.email + '    Thank You. '
+            email_from = settings.EMAIL_HOST_USER
+            recipient_list = [email_details.email]
+            send_mail(subject, message, email_from, recipient_list)
+            #print(values);
+
+            #user = User.objects.set_password(email_details.email)
+            email_details.set_password(email_details.email)
+            email_details.save()
+
+            return HttpResponse("Kindly check your email for further instructions to recover your account")
+        elif email_details.count >1:
+            return HttpResponse("Two users exist with this email")
+        else:
+            return render(request, 'veoc/forgot_password.html')
+    return render(request, 'veoc/forgot_password.html')
 
 def module_feedback(request):
     if request.method == 'POST':

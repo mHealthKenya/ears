@@ -24,6 +24,7 @@ urlpatterns = [
     url(r'^$', views.login, name='login'),
     url(r'^login/$', views.login, name='login'),
     url(r'^logout/$', views.logout, name='logout'),
+    url(r'^change_password/$', views.change_password, name='change_password'),
     url(r'^access_dashboard/$', views.access_dashboard, name='access_dashboard'),
     url(r'^dashboard/$', views.dashboard, name='dashboard'),
     url(r'^county_dashboard/$', views.county_dashboard, name='county_dashboard'),
@@ -164,6 +165,7 @@ urlpatterns = [
     url(r'^add_document/$', views.add_document, name='add_document'),
     url(r'^edit_document/$', views.edit_document, name='edit_document'),
     url(r'^public_document/$', views.public_document, name='public_document'),
+    url(r'^forgot_password/$', views.forgot_password, name='forgot_password'),
 
     #Feedback section
     url(r'^module_feedback/$', views.module_feedback, name='module_feedback'),
