@@ -58,36 +58,24 @@
         {% endfor %}
     {% endif %}
     <div class="container">
-{#        <div style="text-align: center">#}
-{#            <form class="p-b-100" action="{% url 'veoc:line_listing_template' %}">#}
-{#                <button type="submit" class="btn btn--radius btn-primary">#}
-{#                    DOWNLOAD TEMPLATE#}
-{#                </button>#}
-{#            </form>#}
-{##}
-{#            <form action="{% url 'veoc:moh_line_listing' %}" method="POST" enctype="multipart/form-data">#}
-{#                {% csrf_token %}#}
-{#                <label for="upload" style="margin-bottom: 10px"> Upload a file</label>#}
-{#                <div class="area">#}
-{#                    click to upload#}
-{#                    <input type="file" id="upload" name="file"/>#}
-{#                </div>#}
-{#                <button type="submit" class="btn btn-info" name="load">Upload</button>#}
-{#            </form>#}
-{##}
-{#        </div>  #}
+        <div style="text-align: center">
+            <form class="p-b-100" action="{% url 'veoc:line_listing_template' %}">
+                <button type="submit" class="btn btn--radius btn-primary">
+                    DOWNLOAD TEMPLATE
+                </button>
+            </form>
 
-        <div class="input-group">
-          <div class="input-group-prepend">
-            <span class="input-group-text" id="inputGroupFileAddon01">Upload</span>
-          </div>
-          <div class="custom-file">
-            <input type="file" class="custom-file-input" id="inputGroupFile01"
-              aria-describedby="inputGroupFileAddon01">
-            <label class="custom-file-label" for="inputGroupFile01">Choose file</label>
-          </div>
+            <form action="{% url 'veoc:moh_line_listing' %}" method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
+                <label for="upload" style="margin-bottom: 10px"> Upload a file</label>
+                <div class="area">
+                    click to upload
+                    <input type="file" id="upload" name="file"/>
+                </div>
+                <button type="submit" class="btn btn-info" name="load">Upload</button>
+            </form>
+
         </div>
-
         <br>
     </div>
 {% endblock %}
