@@ -622,7 +622,6 @@ class quarantine_contacts(models.Model):
     nok_phone_num = models.CharField(validators=[person_phone_regex], max_length=255, blank=True)
     cormobidity = models.CharField(max_length=50, blank=True)
     place_of_diagnosis = models.CharField(max_length=50, blank=True)
-    driver_image = models.ImageField(upload_to='Truker_Image/', null=True)
     quarantine_site = models.ForeignKey(quarantine_sites, on_delete=models.DO_NOTHING, related_name='quarantine_site', default=1)
     date_of_contact = models.DateField(default=date.today)
     contact_state = models.CharField(max_length=50, blank=True)
@@ -729,6 +728,7 @@ class truck_quarantine_contacts(models.Model):
     hotel_town = models.CharField(max_length=50, blank=True)
     date_check_in = models.DateField(default=date.today)
     date_check_out = models.DateField(default=date.today)
+    driver_image = models.ImageField(upload_to='Truker_Image/', null=True)
 
     def __str__(self):
         return self.patient_contacts.first_name + ' - ' + self.vehicle_registration + ' - ' + self.border_point.border_name

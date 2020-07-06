@@ -2572,10 +2572,10 @@ def truck_driver_profile(request, profileid):
     lab_res_types = covid_results_classifications.objects.all().order_by('id')
     samp_types = covid_sample_types.objects.all().order_by('id')
     day = time.strftime("%Y-%m-%d")
-    print(quarantine_contacts.objects.get(id=profileid).driver_image)
     data = {'patient_contact_object': patient_contact_object, 'lab_data': lab_data, 'patient_details':patient_details, 'lab_res': lab_res,
             'lab_res_count':lab_res_count,  'labs': labs, 'lab_res_types':lab_res_types, 'samp_types':samp_types, 'day':day, 'country': cntry,
             'follow_up_details':follow_up_details, 'follow_up_details_count':follow_up_details_count, "pic": quarantine_contacts.objects.get(id=profileid)}
+
 
     return render(request, 'veoc/truck_driver_profile.html', data)
 
@@ -2762,8 +2762,7 @@ def truck_driver_register(request):
                 phone_number=user_phone, date_of_contact=date_of_contact,  communication_language=languageObject,
                 nationality=nationality, drugs=drugs, nok=nextofkin, nok_phone_num=nok_phone_number, cormobidity=comorbidity,
                 origin_country=origin_country, quarantine_site= quarantineObject, source=source, contact_uuid=contact_identifier,
-                updated_at=current_date, created_by=userObject, updated_by=userObject, created_at=current_date,
-                driver_image=driver_image)
+                updated_at=current_date, created_by=userObject, updated_by=userObject, created_at=current_date)
 
             contact_save.save()
             trans_one = transaction.savepoint()
@@ -2778,7 +2777,8 @@ def truck_driver_register(request):
                         vehicle_registration=vehicle_registration, company_name=company_name, company_phone=company_phone,border_point=bord_name,
                         company_physical_address=company_address, company_street=company_street,company_building=company_building, temperature=temp,
                         weighbridge_facility=weigh_site, cough=cough, breathing_difficulty=breathing_difficulty, fever=fever,sample_taken=sample_taken,
-                        action_taken=action_taken, hotel=hotel, hotel_phone=hotel_phone,hotel_town=hotel_town, date_check_in=date_check_in, date_check_out=date_check_out)
+                        action_taken=action_taken, hotel=hotel, hotel_phone=hotel_phone,hotel_town=hotel_town, date_check_in=date_check_in, date_check_out=date_check_out,
+                        driver_image=driver_image)
 
                     truck_save.save()
                 except IntegrityError:
