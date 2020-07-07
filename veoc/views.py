@@ -288,13 +288,6 @@ def user_register(request):
         user_person = persons.objects.create(user=userObject, org_unit=orgunitObject, phone_number=phone_no,
             access_level=acc_level, county=orgunitObject, sub_county=subcntyObject)
 
-        #send newly registered user an email telling them to change their password
-        subject = 'Jitenge System Reegistration'
-        message = 'You have been registered on the Jitenge System. '+ '\n' + 'Your username is '+ user_name +'   and your password is  ' + email + '\n' + 'Thank You. '
-        email_from = settings.EMAIL_HOST_USER
-        recipient_list = [email]
-        send_mail(subject, message, email_from, recipient_list)
-
     users_count = User.objects.all().count()
     users = User.objects.all()
     org_units = organizational_units.objects.all().filter(hierarchylevel=2).order_by('name')
