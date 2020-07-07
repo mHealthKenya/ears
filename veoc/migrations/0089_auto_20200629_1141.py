@@ -58,11 +58,6 @@ class Migration(migrations.Migration):
         ),
         migrations.AlterField(
             model_name='truck_quarantine_lab',
-            name='date_specimen_taken_lab',
-            field=models.DateTimeField(default=datetime.datetime(2020, 6, 29, 11, 41, 43, 510119)),
-        ),
-        migrations.AlterField(
-            model_name='truck_quarantine_lab',
             name='updated_at',
             field=models.DateTimeField(default=datetime.datetime(2020, 6, 29, 11, 41, 43, 511117)),
         ),

@@ -733,10 +733,10 @@ class truck_quarantine_contacts(models.Model):
     def __str__(self):
         return self.patient_contacts.first_name + ' - ' + self.vehicle_registration + ' - ' + self.border_point.border_name
 
-
 class quarantine_revisit(models.Model):
     patient_contacts = models.ForeignKey(quarantine_contacts, on_delete=models.DO_NOTHING, related_name='revisit_contact')
     date_of_revisit = models.DateField(default=date.today)
+    date_of_previous_visit = models.DateField(default=date.today)
     quarantine_site = models.ForeignKey(quarantine_sites, on_delete=models.DO_NOTHING, related_name='quarantine_revisit_site', blank=True, default=1)
     weighbridge_facility = models.ForeignKey(weighbridge_sites, on_delete=models.DO_NOTHING, related_name='revisit_weighbridge', blank=True, default=1)
     border_point = models.ForeignKey(border_points, on_delete=models.DO_NOTHING, related_name='revisit_border_point', blank=True, default=1)
@@ -746,10 +746,10 @@ class quarantine_revisit(models.Model):
     temperature = models.FloatField(max_length=50, blank=True, default='0.0')
     sample_taken = models.BooleanField(default=False)
     created_at = models.DateTimeField(default=datetime.now())
+    created_by = models.ForeignKey(User, on_delete=models.DO_NOTHING, related_name='quarantine_revisit_created_by')
 
     def __str__(self):
         return self.patient_contacts.first_name + ' - ' + self.patient_contacts.phone_number
-
 
 class testing_labs(models.Model):
     name=models.CharField(max_length=200)
@@ -808,7 +808,6 @@ class home_based_care(models.Model):
 
     def __str__(self):
         return self.patient_contacts.first_name + ' - ' + self.patient_contacts.phone_number
-
 
 class discharged_quarantine(models.Model):
     patient_contacts = models.ForeignKey(quarantine_contacts, on_delete=models.DO_NOTHING, related_name='discharged_quarantine_contact')

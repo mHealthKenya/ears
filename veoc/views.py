@@ -2617,18 +2617,6 @@ def truck_driver_profile(request, profileid):
     return render(request, 'veoc/truck_driver_profile.html', data)
 
 @login_required
-def truck_driver_revisit(request, profileid):
-
-    patient_contact_object = quarantine_contacts.objects.filter(id = profileid)
-    print(patient_contact_object)
-
-    for p_contacts in patient_contact_object:
-        #Get the details that should be updated, then insert the new details
-        print(p_contacts.phone_number)
-
-    return render(request, 'veoc/truck_quarantine_complete.html', data)
-
-@login_required
 def truck_driver_edit(request):
     if request.method=='POST':
 
@@ -2827,7 +2815,7 @@ def truck_driver_register(request):
 
 
         #check if details have been saved
-        if not contact_save:
+        if contact_save:
             # send sms to the patient for successful registration_form
             # url = "https://mlab.mhealthkenya.co.ke/api/sms/gateway"
             url = "http://mlab.localhost/api/sms/gateway"
@@ -2913,6 +2901,125 @@ def truck_driver_register(request):
         data = {'country':cntry,'county':county, 'day':day, 'weigh_site':weigh_site, 'border_points':b_points, 'language':language}
 
         return render(request, 'veoc/truck_driver_registration.html', data)
+
+@login_required
+def truck_driver_revisit(request):
+
+    if request.method == 'POST':
+        patient_id = request.POST.get('id','')
+        date_of_revisit = request.POST.get('date_of_arrival','')
+        weighbridge_name = request.POST.get('weighbridge_name','')
+        border_name = request.POST.get('border_name','')
+        cough = request.POST.get('cough','')
+        breathing_difficulty = request.POST.get('breathing_difficulty','')
+        fever = request.POST.get('fever','')
+        sample_taken = request.POST.get('sample_taken','')
+        temperature = request.POST.get('temperature','')
+
+        current_date = datetime.now()
+        current_user = request.user
+        userObject = User.objects.get(pk = current_user.id)
+        weigh_site = weighbridge_sites.objects.get(weighbridge_name = weighbridge_name)
+        bord_name = border_points.objects.get(border_name = border_name)
+        site_name = ''
+        quar_site = quarantine_sites.objects.filter(site_name = "Country Border")
+        for site in quar_site:
+            site_name = site.id
+
+        quarantineObject = quarantine_sites.objects.get(pk = site_name)
+        patientObject = quarantine_contacts.objects.get(pk = patient_id)
+
+        #get previous visit of driver
+        driver_qua_contacts = quarantine_contacts.objects.filter(pk = patient_id).values('date_of_contact')
+        qua_object = quarantine_contacts.objects.filter(pk = patient_id)
+        language = ''
+        name = ''
+        phone = ''
+        for qo in qua_object:
+            language = qo.communication_language
+            name = qo.first_name
+            phone = qo.phone_number
+
+        save_revisit = quarantine_revisit.objects.create(patient_contacts=patientObject, date_of_revisit=date_of_revisit, date_of_previous_visit=driver_qua_contacts, quarantine_site=quarantineObject,
+            weighbridge_facility=weigh_site, border_point=bord_name, cough=cough, breathing_difficulty=breathing_difficulty, fever=fever, temperature=temperature,
+            sample_taken=sample_taken, created_by=userObject, created_at=current_date)
+
+        save_revisit.save()
+        trans_one = transaction.savepoint()
+
+        if save_revisit:
+            try:
+                #update date_of_contact for restart of 14 days
+                quarantine_contacts.objects.filter(pk=patient_id).update(date_of_contact=date_of_revisit, updated_by=userObject, updated_at=current_date)
+
+                # send sms to the patient for successful revisit
+                # url = "https://mlab.mhealthkenya.co.ke/api/sms/gateway"
+                url = "http://mlab.localhost/api/sms/gateway"
+                msg = ''
+                msg2 = ''
+                # print(language)
+                if language == "1" :
+                    #Language is english
+                    print("inside english")
+                    msg = "Thank you " + name + " for re-registering on self quarantine. You will be required to send your daily temperature details during this quarantine period of 14 days. Ministry of Health"
+                    msg2 = name +", for self reporting iPhone users and non-smart phone users, dial *299# to send daily details, for Android phone users, download the self reporting app on this link: https://cutt.ly/jitenge_moh . Ministry of Health"
+                elif language == "2" :
+                    #language is Swahili
+                    msg = "Asante " + name + " kwa kujisajili tena. Unahitajika kuripoti dalili yako ya afya kila siku kwa siku 14. Wizara ya Afya."
+                    msg2 = name +", ikiwa huna simu ya kidigitali ama una iPhone, bonyeza *299# kuripoti dalili ya afya. Watumizi wa simu aina ya Android, wanaweza kupakua Jitenge App kupitia https://cutt.ly/jitenge_moh.  Wizara ya Afya."
+                elif language == "3" :
+                    #language is French
+                    msg = "Merci " + name + " de votre inscription. Vous devrez envoyer vos détails de température quotidiens pendant cette periode d'isolation de 14 jours. Ministre de la Santé"
+                    msg2 = name +", pour l'auto déclaration les utilisateurs de iphone et les utilisateurs de téléphone non intelligent, composent *299# d'envoyer détails du quotidien, pour les utilisateurs de téléphone intelligent telechargez l'application d'auto déclaration sur ce lien https://cutt.ly/jitenge_moh. Ministre de la santé."
+
+
+                #process first message
+                pp = {"phone_no": phone, "message": msg}
+                payload = json.dumps(pp)
+
+                #process second message
+                pp2 = {"phone_no": phone, "message": msg2}
+                payload2 = json.dumps(pp2)
+
+                headers = {
+                  'Content-Type': 'application/json',
+                  'Authorization': 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImp0aSI6IjE3MGExZGI0ZjFiYWE1ZWNkOGI4YTBiODNlNDc0MTA2NTJiNDg4Mzc4ZTQwNjExNDA0MGQwZmQ2NTEzNTM1NTg5MjFhYjBmNzI1ZDM3NzYwIn0.eyJhdWQiOiI0IiwianRpIjoiMTcwYTFkYjRmMWJhYTVlY2Q4YjhhMGI4M2U0NzQxMDY1MmI0ODgzNzhlNDA2MTE0MDQwZDBmZDY1MTM1MzU1ODkyMWFiMGY3MjVkMzc3NjAiLCJpYXQiOjE1ODQxODk0NTMsIm5iZiI6MTU4NDE4OTQ1MywiZXhwIjoxNjE1NzI1NDUzLCJzdWIiOiI2Iiwic2NvcGVzIjpbXX0.e2Pt76bE6IT7J0hSBpnc7tHShg9BKSXOMuwnQwqC3_xpJXUo2ez7sQPUa4uPp77XQ05xsumNbWapXkqxvVxp-3Gjn-o9UJ39AWHBFRJYqOXM_foZcxRBoXajUfJTTRS5BTMFEfMn2nMeLie9BH7mbgfKBpZXU_3_tClWGUcNbsibbhXgjSxskJoDls8XGVUdgc5pqMZBBBlR9cCrtK3H8PJf6XywMn9CYbw4KF8V1ADC9dYz-Iyhmwe2_LmU3ByTQMaVHCd3GVKWIvlGwNhm2_gRcEHjjZ8_PXR38itUT0M3NTmT6LBeeeb8IWV-3YFkhilbbjA03q9_6f2gjlOpChF4Ut2rC5pqTg7sW5A4PV8gepPnIBpJy5xKQzgf75zDUmuhKlYlirk8MKoRkiIUgWqOZSf49DUxbIaKIijjX3TYrwmBwZ0RTm2keSvk3bt4QutpLRxel6cajbI32rZLuDjs1_MCZNPKAK1ZgPvwt1OaHLM3om0TmSKyugPvhgNJ5fW_on_HLkTbQV6EPqN3Us7S5whFv1MQcwlgsxU9a4CJZa89elr1TaKvqbkaKqGjetwlCDf6AKQmThy5IqQ5zlIRNwlZDgz_DsGyeZUStQhc-HW65NsB_J_fe_jI5tMeRNCz4PE8T0Rghbs8xHLTFKuMGrJL0Rheq6kfEk4c0UM'
+                }
+
+                requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
+
+                #send first message
+                response = requests.request("POST", url, headers=headers, data = payload, verify=False)
+
+                # print(response.text.encode('utf8'))
+                #convert string response to a dictionary
+                msg_resp = eval(response.text)
+                # print(msg_resp)
+
+                #check if Success is in the Dictionary values
+                success = 'Success' in msg_resp.values()
+                # print(success)
+
+                if success:
+                    print("Successfully sent first sms")
+                    #send Second message
+                    response2 = requests.request("POST", url, headers=headers, data = payload2, verify=False)
+
+                    # print(response2.text.encode('utf8'))
+            except IntegrityError:
+                transaction.savepoint_rollback(trans_one)
+                return HttpResponse("error")
+
+        all_data = quarantine_contacts.objects.all().filter(source = 'Truck Registration').filter(date_of_contact__gte = date.today()- timedelta(days=14)).order_by('-date_of_contact')
+        q_data_count = quarantine_contacts.objects.all().filter(source = 'Truck Registration').filter(date_of_contact__gte = date.today()- timedelta(days=14)).count()
+        weigh_site = weighbridge_sites.objects.all().filter(active = True).order_by('weighbridge_name')
+        b_points = border_points.objects.all().filter(active = True).order_by('border_name')
+        day = time.strftime("%Y-%m-%d")
+
+        data = {'all_data': all_data, 'all_data_count': q_data_count, 'day':day, 'weigh_site':weigh_site, 'border_points':b_points}
+
+
+        return render(request, 'veoc/truck_quarantine_complete.html', data)
 
 @login_required
 def truck_driver_lab_test(request):
@@ -4813,12 +4920,11 @@ def complete_home_care(request):
 
     return render(request, 'veoc/quarantine_complete.html', data)
 
-
 @login_required
 def truck_ongoing_quarantine(request):
 
-    all_data = quarantine_contacts.objects.all().filter(source = 'Truck Registration').filter(date_of_contact__lte = date.today()- timedelta(days=14))
-    q_data_count = quarantine_contacts.objects.all().filter(source = 'Truck Registration').filter(date_of_contact__lte = date.today()- timedelta(days=14)).count()
+    all_data = quarantine_contacts.objects.all().filter(source = 'Truck Registration').filter(date_of_contact__gte = date.today()- timedelta(days=14)).order_by('-date_of_contact')
+    q_data_count = quarantine_contacts.objects.all().filter(source = 'Truck Registration').filter(date_of_contact__gte = date.today()- timedelta(days=14)).count()
     quar_sites = weighbridge_sites.objects.all().order_by('weighbridge_name')
 
     data = {'all_data': all_data, 'all_data_count': q_data_count, 'weigh_name':quar_sites}
@@ -4828,11 +4934,13 @@ def truck_ongoing_quarantine(request):
 @login_required
 def truck_complete_quarantine(request):
 
-    all_data = quarantine_contacts.objects.all().filter(source = 'Truck Registration').filter(date_of_contact__lte = date.today()- timedelta(days=14))
+    all_data = quarantine_contacts.objects.all().filter(source = 'Truck Registration').filter(date_of_contact__lte = date.today()- timedelta(days=14)).order_by('-date_of_contact')
     q_data_count = quarantine_contacts.objects.all().filter(source = 'Truck Registration').filter(date_of_contact__lte = date.today()- timedelta(days=14)).count()
-    quar_sites = weighbridge_sites.objects.all().order_by('weighbridge_name')
+    weigh_site = weighbridge_sites.objects.all().filter(active = True).order_by('weighbridge_name')
+    b_points = border_points.objects.all().filter(active = True).order_by('border_name')
+    day = time.strftime("%Y-%m-%d")
 
-    data = {'all_data': all_data, 'all_data_count': q_data_count, 'weigh_name':quar_sites}
+    data = {'all_data': all_data, 'all_data_count': q_data_count, 'day':day, 'weigh_site':weigh_site, 'border_points':b_points}
 
     return render(request, 'veoc/truck_quarantine_complete.html', data)
 
