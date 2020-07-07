@@ -54,7 +54,7 @@
         <div class="padding-md">
           <div class="row">
             <div class="col-md-12">
-                  <form method="POST" id="track_driver_form" action="{% url 'veoc:truck_driver_register' %}" enctype="multipart/form-data">
+                  <form method="POST" id="track_driver_form" class="track_driver_form" action="{% url 'veoc:truck_driver_register' %}" enctype="multipart/form-data">
                     {% csrf_token %}
                     <div class="form-group col-md-12">
                         <h5><font color="#FF0000"><b><u>NB</u> : Inputs with * must have values, Fill in all sections.</b></font></h5>
@@ -192,6 +192,7 @@
                             <label class="btn btn-primary">
                             <i class="fa fa-image"></i> Take photo <input type="file" name="photo" style="display: none;" accept="image/*" capture id="imgInp"></label><br><br>
                             <img id="blah" src="#" style="width: 300px; height: 300px;" onerror="this.onerror=null; this.src='http://ssl.gstatic.com/accounts/ui/avatar_2x.png'"/>
+                            <span class="btn btn-success" onclick="document.getElementById('myModal').style.display='none'">Upload &#10004;</span>
                         </div>
                     </div>
                       <div class="form-row col-md-12">
@@ -330,7 +331,7 @@
                           </div>
                       </div>
                   </form>
-                <button id="myBtn" class="btn btn-primary">Take Driver Picture</button>
+                <button id="myBtn" type="button" class="btn btn-primary">Take Driver Picture</button>
 {#                <button type="button" class="btn btn-primary btn-xs view_button" data-toggle="modal" data-target="#profile_photo_modal" title="View">#}
 {#                <i class="fa fa-eye"></i></button>#}
                 </div>
@@ -417,7 +418,9 @@
 
 
       var trucksForm = $(".track_driver_form")
-      console.log("ab", new FormData(track_driver_form));
+        var pic = $("#imgInp")
+        console.log(pic[0])
+      {#console.log("ab", trucksForm.submit);#}
 
       trucksForm.submit(function(e){
         e.preventDefault();
@@ -440,6 +443,7 @@
           data: formData,
           success:function(data){
             if(data == "error"){
+              console.log(trucksForm[0])
               Swal.fire({
                 title: 'Duplicate Data Entry!!',
                 text: 'Names and Phone number entered already exist in the system and still ongoing quarantine!!',
@@ -452,9 +456,11 @@
                 icon: 'success'
               });
               trucksForm[0].reset();
+              pic[0].reset();
             }
           },
           error:function(er){
+              console.log(er)
             console.log("Quarantine saving error");
             console.log(er.responseText);
             Swal.fire({
