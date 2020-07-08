@@ -268,11 +268,11 @@ def user_register(request):
 
         user.save()
 
-        subject = 'Jitenge System Registration'
-        message = 'Dear ' + first_name + ',' + '\n' + '\n' + 'You have been registered on the Jitenge System (EARS - Emergency Alert Reporting System) under ' + org_unit + '\n' + 'Your username is '+ user_name +' and your password is  '  + email + '. You can use these for the initial login. Kindly change your password once you login for the first time.' + '\n' + 'You can access the system through this link https://ears.mhealthkenya.co.ke/.' + '\n'+'Thank You.'
-        email_from = settings.EMAIL_HOST_USER
-        recipient_list = [email]
-        send_mail(subject, message, email_from, recipient_list)
+        # subject = 'Jitenge System Registration'
+        # message = 'Dear ' + first_name + ',' + '\n' + '\n' + 'You have been registered on the Jitenge System (EARS - Emergency Alert Reporting System) under ' + org_unit + '\n' + 'Your username is '+ user_name +' and your password is  '  + email + '. You can use these for the initial login. Kindly change your password once you login for the first time.' + '\n' + 'You can access the system through this link https://ears.mhealthkenya.co.ke/.' + '\n'+'Thank You.'
+        # email_from = settings.EMAIL_HOST_USER
+        # recipient_list = [email]
+        # send_mail(subject, message, email_from, recipient_list)
 
         user_id = user.pk
         userObject = User.objects.get(pk = user_id)
