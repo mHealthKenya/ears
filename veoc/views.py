@@ -166,23 +166,42 @@ def login(request):
         return render(request, 'veoc/login.html')
 
 #change password method: it allows a user to change their password and also sends an email with the details
+@login_required
 def change_password(request):
+    current_user = request.user
     #setting the password to the entered password
     if request.method == 'POST':
+        email = request.POST.get('email','')
+        phone_no = request.POST.get('phone_no','')
         password = request.POST.get('newpassword_two','')
-        current_user = request.user
-        u = User.objects.get(username=current_user.username)
-        u.set_password(password)
-        u.save()
-        #send email informing user their password has been changed
-        subject = 'Jitenge Password Changed'
-        message = 'You have changed your password on the Jitenge System. Your new password is  ' + password + '\n' + 'Thank You. '
-        email_from = settings.EMAIL_HOST_USER
-        recipient_list = [u.email]
-        send_mail(subject, message, email_from, recipient_list)
-        return HttpResponseRedirect(settings.LOGIN_URL)
+        password_one = request.POST.get('newpassword_one','')
+        if password == password_one:
+            #current_user = request.user
+            user = User.objects.get(username=current_user.username)
+            user.set_password(password)
+            persons.objects.filter(user_id = current_user.id).update(phone_number=phone_no)
+            user.email = email
+            user.save()
+            #send email informing user their password has been changed
+            subject = 'Jitenge Password Change'
+            message = 'Dear ' + current_user.username + ','+'\n' + 'You have changed your password on the Jitenge System. Your new password is ' + password + '. Please login with your new credentials here: https://ears.mhealthkenya.co.ke/login/' + '\n' + 'Thank You. ' + '\n' + 'Jitenge System.'
+            email_from = settings.EMAIL_HOST_USER
+            recipient_list = [user.email]
+            send_mail(subject, message, email_from, recipient_list)
+            messages.success(request, 'Password Changed successfully.')
+            return HttpResponseRedirect(settings.LOGIN_URL)
+        elif password != password_one and password_one == '':
+            messages.success(request, 'Kindly enter the new password on both fields.')
+        else:
+            messages.error(request, 'Passwords do not match. Please make sure they match.')
 
-    return render(request, 'veoc/change_password.html')
+    #u = User.objects.get(username=current_user.username)
+    #get user details from User and Persons gtables
+    u = User.objects.get(username=current_user.username)
+    person  = persons.objects.get(user_id = current_user.id)
+    values = {'u': u, 'person': person}
+
+    return render(request, 'veoc/change_password.html', values)
 
 def logout(request):
 
@@ -6699,27 +6718,29 @@ def forgot_password(request):
         #added a try and catch so if the email entered does not exist the user can be informed
         try:
             email_details = User.objects.get(email = searched_email)
-        except ObjectDoesNotExist:
-            return HttpResponse("That Email does not exist")
         #an email is sent to inform the user of the password change
-        if email_details != '':
-            email_values = {'email_details': email_details}
-            subject = 'Jitenge Password Reset'
-            message = 'You have requested for a password reset on the Jitenge System. Your new password is  ' + email_details.email + '    Thank You. '
-            email_from = settings.EMAIL_HOST_USER
-            recipient_list = [email_details.email]
-            send_mail(subject, message, email_from, recipient_list)
-            #print(values);
+            if email_details != '':
+                email_values = {'email_details': email_details}
+                subject = 'Jitenge Password Reset'
+                message = 'Dear ' + email_details.first_name + ','+'\n' +'You have requested for a password reset on the Jitenge System. Your new password is  ' + email_details.email + '. Please login with your new credentials here: https://ears.mhealthkenya.co.ke/login/' +'\n'+'Thank You. ' + '\n' + 'Jitenge System.'
+                email_from = settings.EMAIL_HOST_USER
+                recipient_list = [email_details.email]
+                send_mail(subject, message, email_from, recipient_list)
+                #print(values);
 
-            #user = User.objects.set_password(email_details.email)
-            email_details.set_password(email_details.email)
-            email_details.save()
+                #user = User.objects.set_password(email_details.email)
+                email_details.set_password(email_details.email)
+                email_details.save()
 
-            return HttpResponse("Kindly check your email for further instructions to recover your account")
-        elif email_details.count >1:
-            return HttpResponse("Two users exist with this email")
-        else:
-            return render(request, 'veoc/forgot_password.html')
+                #return HttpResponse("Kindly check your email for further instructions to recover your account")
+                messages.success(request, 'We have sent you recovery instructions to your email')
+            elif email_details.count >1:
+                messages.success(request, 'Multiple users with this email exist.')
+            else:
+                return render(request, 'veoc/forgot_password.html')
+        except ObjectDoesNotExist:
+            #return HttpResponse("That Email does not exist")
+            messages.error(request, 'Email does not exist')
     return render(request, 'veoc/forgot_password.html')
 
 def module_feedback(request):

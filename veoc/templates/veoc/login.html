@@ -24,6 +24,9 @@
 
     <!-- Main CSS-->
     <link href="/static/vendor/css/main.css" rel="stylesheet" media="all">
+
+    <!-- css for buttons -->
+
 </head>
 
 <body>
@@ -45,12 +48,13 @@
                         <div class="input-group">
                             <input type="password" name="password" class="form-control input-lg" id="myInput" placeholder="Password" required>
                         </div>
-                        <div class="row align-items-left remember">
-                            <input type="checkbox" onclick="myFunction()">Show Password
+                        <div>
+                            <label for="showpassword">Show Password</label>
+                            <input type="checkbox" onclick="myFunction()" name="showpassword">
                         </div>
                         <div class="p-t-20">
                             <button class="btn btn--radius btn--green" type="submit">  Login  </button>
-                              <button class="btn btn--radius btn--green" onClick="location.href='{% url 'veoc:forgot_password' %}'">Forgot Password</button>
+                              <button class="btn btn--radius btn--green" style="color: black" onClick="location.href='{% url 'veoc:forgot_password' %}'">Forgot Password</button>
                         </div>
                     </form>
                 </div>
@@ -118,7 +122,7 @@
         console.log(method);
 
         Swal.fire({
-          title: "Please wait!, Logging In!",
+          title: "Please wait, Logging In!",
           imageUrl: "/static/images/ajax-loader.gif",
           showConfirmButton: false,
           allowOutsideClick: false

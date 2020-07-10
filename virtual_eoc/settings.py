@@ -168,8 +168,8 @@ EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_USE_TLS = True
 EMAIL_PORT = 587
-EMAIL_HOST_USER = 'kenmusembi21@gmail.com'
-EMAIL_HOST_PASSWORD = 'Cullinana@23'
+EMAIL_HOST_USER = 'support.tech@mhealthkenya.org'
+EMAIL_HOST_PASSWORD = 'MHKSystems2020!@#'
 
 FILE_UPLOAD_HANDLERS = [
     'django.core.files.uploadhandler.TemporaryFileUploadHandler',

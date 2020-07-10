@@ -87,6 +87,7 @@
                     {% endfor %}
                 </a>
             </li>
+            <li><a href="/change_password/" style="color: #ffffff">Change Password</a></li>
             <li><a href="/logout/" style="color: #ffffff">Logout</a></li>
         </ul>
 
@@ -281,7 +282,7 @@
             <ul class="nav-pills nav-stacked" style="list-style-type:none;">
 				<li><a href="/users_list">Users</a></li>
                 <li><a href="/border_point">Border Points</a></li>
-                <li><a href="/weigh_site">Weighbridge Sites</a></li>                
+                <li><a href="/weigh_site">Weighbridge Sites</a></li>
                 <li><a href="/site_list">Quarantine Sites</a></li>
                 <li><a href="/disgnation_list">Designation</a></li>
                 <li><a href="/diseases_list">Diseases</a></li>
@@ -429,7 +430,7 @@
                 <li><a href="/contact_list">Contact Type</a></li>
             </ul>
           </li>
-		{% elif user_level == 'Border Watchers' or request.user|has_group:"Border Watchers" %}		
+		{% elif user_level == 'Border Watchers' or request.user|has_group:"Border Watchers" %}
           <li>
               <a href="#"><span class="fa-stack fa-lg pull-left"><i class="fa fa-edit fa-stack-1x "></i></span>POINTS OF ENTRY</a>
               <ul class="nav-pills nav-stacked" style="list-style-type:none;">
@@ -440,7 +441,7 @@
                   <li><a href="/truck_ongoing_quarantine"><span class="fa-stack fa-lg pull-left"><i class="fa fa-tasks fa-stack-1x "></i></span>Ongoing Quarantine</a></li>
                   <li><a href="/truck_complete_quarantine"><span class="fa-stack fa-lg pull-left"><i class="fa fa-window-close fa-stack-1x "></i></span>Completed Quarantine</a></li>
               </ul>
-          </li>          
+          </li>
 		  <li>
               <a href="#"><span class="fa-stack fa-lg pull-left"><i class="fa fa-address-book fa-stack-1x "></i></span>EMERGENCY CONTACTS</a>
               <ul class="nav-pills nav-stacked" style="list-style-type:none;">
@@ -455,12 +456,12 @@
                 </ul>
           </li>
           <li>
-            <a href="/border_point"><span class="fa-stack fa-lg pull-left"><i class="fa fa-list fa-stack-1x "></i></span>Border Points</a>            
+            <a href="/border_point"><span class="fa-stack fa-lg pull-left"><i class="fa fa-list fa-stack-1x "></i></span>Border Points</a>
           </li>
 		  <li>
-            <a href="/weigh_site"><span class="fa-stack fa-lg pull-left"><i class="fa fa-wordpress fa-stack-1x "></i></span>Weighbridge Sites</a>            
+            <a href="/weigh_site"><span class="fa-stack fa-lg pull-left"><i class="fa fa-wordpress fa-stack-1x "></i></span>Weighbridge Sites</a>
           </li>
-		{% elif user_level == 'Facility Watcher' or request.user|has_group:"Facility Watcher" %}		          
+		{% elif user_level == 'Facility Watcher' or request.user|has_group:"Facility Watcher" %}
           <li>
               <a href="#"><span class="fa-stack fa-lg pull-left"><i class="fa fa-clipboard fa-stack-1x "></i></span>JITENGE REPORTS</a>
               <ul class="nav-pills nav-stacked" style="list-style-type:none;">
@@ -493,8 +494,8 @@
                 </ul>
           </li>
           <li>
-		  
-            <a href="/site_list"><span class="fa-stack fa-lg pull-left"><i class="fa fa-list fa-stack-1x "></i></span>Quarantine Sites</a>            
+
+            <a href="/site_list"><span class="fa-stack fa-lg pull-left"><i class="fa fa-list fa-stack-1x "></i></span>Quarantine Sites</a>
           </li>
          {% endif %}
         </ul>
