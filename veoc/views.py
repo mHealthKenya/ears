@@ -110,7 +110,7 @@ def login(request):
                 #check if user has logged in for the first time
                 if user.last_login == None:
                     print('Not registered')
-                    next = '/change_password/'
+                    next = '/edit_profile/'
                     #login user before redirecting them to the change password page
                     login_auth(request, user)
                     return HttpResponse(next)
@@ -167,7 +167,7 @@ def login(request):
 
 #change password method: it allows a user to change their password and also sends an email with the details
 @login_required
-def change_password(request):
+def edit_profile(request):
     current_user = request.user
     #setting the password to the entered password
     if request.method == 'POST':
@@ -201,7 +201,7 @@ def change_password(request):
     person  = persons.objects.get(user_id = current_user.id)
     values = {'u': u, 'person': person}
 
-    return render(request, 'veoc/change_password.html', values)
+    return render(request, 'veoc/edit_profile.html', values)
 
 def logout(request):
 

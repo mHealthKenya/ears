@@ -40,6 +40,13 @@
                 <div class="card-body">
                     <h2 class="title">Please sign in</h2>
                     <!-- <form id="login_form"> -->
+                    {% if messages %}
+                    <div class="messages" style="color:red">
+                    {% for message in messages %}
+                    <p{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</p>
+                    {% endfor %}
+                    </div>
+                    {% endif %}
                     <form class="login_form" method="POST" action=".?next={{ redirect_to }}">
                         {% csrf_token %}
                         <div class="input-group">
@@ -54,11 +61,9 @@
                         </div>
                         <div class="p-t-20">
                             <button class="btn btn--radius btn--green" type="submit">  Login  </button>
-<<<<<<< HEAD
-                              <button class="btn btn--radius btn--green" style="color: black" onClick="location.href='{% url 'veoc:forgot_password' %}'">Forgot Password</button>
-=======
-{#                              <button class="btn btn--radius btn--green" onClick="location.href='{% url 'veoc:forgot_password' %}'">Forgot Password</button>#}
->>>>>>> 62eda95a3f1e2a15cba33c89a6025312022e7eca
+
+                              <button class="btn btn--radius btn--green" style="color: black" onClick="location.href='{% url 'veoc:forgot_password' %}'">Forgot Password</button>                  
+
                         </div>
                     </form>
                 </div>
