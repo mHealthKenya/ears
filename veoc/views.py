@@ -183,8 +183,8 @@ def change_password(request):
             user.email = email
             user.save()
             #send email informing user their password has been changed
-            subject = 'Jitenge Password Change'
-            message = 'Dear ' + current_user.username + ','+'\n' + 'You have changed your password on the Jitenge System. Your new password is ' + password + '. Please login with your new credentials here: https://ears.mhealthkenya.co.ke/login/' + '\n' + 'Thank You. ' + '\n' + 'Jitenge System.'
+            subject = 'Jitenge Profile Details Change'
+            message = 'Dear ' + current_user.username + ','+'\n' + 'You have changed your profile on the Jitenge System. Your new password is ' + password + ' and your email is' + email +'. Please login with your new credentials here: https://ears.mhealthkenya.co.ke/login/' + '\n' + 'Thank You. ' + '\n' + 'Jitenge System.'
             email_from = settings.EMAIL_HOST_USER
             recipient_list = [user.email]
             send_mail(subject, message, email_from, recipient_list)
