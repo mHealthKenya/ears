@@ -3444,6 +3444,7 @@ def quarantine_list(request):
         date_from = request.POST.get('date_from','')
         date_to = request.POST.get('date_to','')
 
+        cntry = country.objects.all()
         if q_site:
             day = time.strftime("%Y-%m-%d")
             date_to = day
@@ -3506,7 +3507,7 @@ def quarantine_list(request):
                 q_data_count = quarantine_contacts.objects.filter(date_created__gte = date_from, date_created__lte=date_to).exclude(source = 'HOMECARE').exclude(source = 'Truck Registration').count()
                 quar_sites = quarantine_sites.objects.filter(site_name = user_access_level).order_by('site_name')
 
-        data = {'quarantine_data': q_data, 'quarantine_data_count': q_data_count, 'quar_sites':quar_sites, 'start_day': date_from, 'end_day': date_to}
+        data = {'quarantine_data': q_data, 'quarantine_data_count': q_data_count, 'quar_sites':quar_sites, 'country': cntry, 'start_day': date_from, 'end_day': date_to}
     else:
         if(user_level == 1 or user_level == 2):
             print("inside National")
@@ -3547,8 +3548,9 @@ def quarantine_list(request):
         #
         # page = request.GET.get('page')
         # quarantine_data = paginator.get_page(page)
+        cntry = country.objects.all()
         day = time.strftime("%Y-%m-%d")
-        data = {'quarantine_data': q_data, 'quarantine_data_count': q_data_count, 'quar_sites':quar_sites, 'start_day': day, 'end_day': day}
+        data = {'quarantine_data': q_data, 'quarantine_data_count': q_data_count, 'quar_sites':quar_sites, 'country': cntry, 'start_day': day, 'end_day': day}
 
     return render(request, 'veoc/quarantine_list.html', data)
 
@@ -5517,7 +5519,79 @@ def edit_diseases_list(request):
 @login_required
 def edit_quarantine_list(request):
 
-    return render(request, 'veoc/quarantinelist.html', values)
+    global data
+    current_user = request.user
+    u = User.objects.get(username=current_user.username)
+    user_access_level = u.persons.access_level
+
+    user_level = ""
+    user_group = request.user.groups.values_list('id', flat=True)
+    print(user_group)
+    for grp in user_group:
+        user_level = grp
+
+    if request.method == "POST":
+        myid = request.POST.get('id','')
+        first_name = request.POST.get('first_name','')
+        last_name = request.POST.get('last_name','')
+        middle_name = request.POST.get('middle_name','')
+        passport_number = request.POST.get('passport_number','')
+        phone_number = request.POST.get('phone_number','')
+        origin_country = request.POST.get('country','')
+        nationality = request.POST.get('nationality','')
+        nok = request.POST.get('nok','')
+        nok_phone_num = request.POST.get('nok_phone_num','')
+
+        #get todays date
+        current_date = date.today().strftime('%Y-%m-%d')
+        current_user = request.user
+        userObject = User.objects.get(pk = current_user.id)
+
+        #updating values to database
+        update_record = quarantine_contacts.objects.filter(pk=myid).update(first_name=first_name, last_name=last_name, middle_name=middle_name, passport_number=passport_number,
+                                                           phone_number=phone_number, origin_country=origin_country, nationality=nationality, nok=nok, nok_phone_num=nok_phone_num,
+                                                           updated_by=userObject)
+
+        if update_record:
+            if(user_level == 1 or user_level == 2):
+                # print("inside National")
+                q_data = quarantine_contacts.objects.exclude(source = 'HOMECARE').exclude(source = 'Truck Registration').order_by('-date_of_contact')
+                q_data_count = quarantine_contacts.objects.exclude(source = 'HOMECARE').exclude(source = 'Truck Registration').count()
+                quar_sites = quarantine_sites.objects.exclude(site_name = 'Country Border').order_by('site_name')
+            elif(user_level == 3 or user_level == 5):
+                # print("inside County")
+                user_county_id = u.persons.county_id
+                print(user_county_id)
+                q_data = quarantine_contacts.objects.exclude(source = 'HOMECARE').exclude(source = 'Truck Registration').filter(county_id = user_county_id).order_by('-date_of_contact')
+                q_data_count = quarantine_contacts.objects.exclude(source = 'HOMECARE').exclude(source = 'Truck Registration').filter(county_id = user_county_id).count()
+                quar_sites = quarantine_sites.objects.exclude(site_name = 'Country Border').filter(county_id = user_county_id).order_by('site_name')
+            elif(user_level == 4 or user_level == 6):
+                print("inside SubCounty")
+                user_sub_county_id = u.persons.sub_county
+                print(user_sub_county_id)
+                q_data = quarantine_contacts.objects.exclude(source = 'HOMECARE').exclude(source = 'Truck Registration').filter(subcounty_id = user_sub_county_id).order_by('-date_of_contact')
+                q_data_count = quarantine_contacts.objects.exclude(source = 'HOMECARE').exclude(source = 'Truck Registration').filter(subcounty_id = user_sub_county_id).count()
+                quar_sites = quarantine_sites.objects.exclude(site_name = 'Country Border').filter(subcounty_id = user_sub_county_id).order_by('site_name')
+            elif(user_level == 7):
+                print("inside Border")
+                user_sub_county_id = u.persons.sub_county
+                print(user_sub_county_id)
+                q_data = quarantine_contacts.objects.exclude(source = 'HOMECARE').exclude(source = 'Truck Registration').filter(cormobidity = "1").order_by('-date_of_contact')
+                q_data_count = quarantine_contacts.objects.exclude(source = 'HOMECARE').exclude(source = 'Truck Registration').filter(cormobidity = "1").count()
+                quar_sites = quarantine_sites.objects.all().filter(active = False).order_by('site_name')
+            else:
+                print("inside Facility")
+                user_sub_county_id = u.persons.sub_county
+                print(user_sub_county_id)
+                q_data = quarantine_contacts.objects.exclude(source = 'HOMECARE').exclude(source = 'Truck Registration').filter(subcounty_id = user_sub_county_id).order_by('-date_of_contact')
+                q_data_count = quarantine_contacts.objects.exclude(source = 'HOMECARE').exclude(source = 'Truck Registration').filter(subcounty_id = user_sub_county_id).count()
+                quar_sites = quarantine_sites.objects.filter(site_name = user_access_level).order_by('site_name')
+
+            cntry = country.objects.all()
+            day = time.strftime("%Y-%m-%d")
+            data = {'quarantine_data': q_data, 'quarantine_data_count': q_data_count, 'quar_sites':quar_sites, 'country': cntry, 'start_day': day, 'end_day': day}
+
+        return render(request, 'veoc/quarantine_list.html', data)
 
 @login_required
 def edit_home_care_list(request):
