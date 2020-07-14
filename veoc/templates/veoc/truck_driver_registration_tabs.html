@@ -1,0 +1,725 @@
+{% extends "veoc/main_template.html" %}
+{% block main %}
+    <style>
+        body {font-family: Arial, Helvetica, sans-serif;}
+
+        /* The Modal (background) */
+        .modal {
+          display: none; /* Hidden by default */
+          position: fixed; /* Stay in place */
+          z-index: 1; /* Sit on top */
+          padding-top: 100px; /* Location of the box */
+          left: 0;
+          top: 0;
+          width: 100%; /* Full width */
+          height: 100%; /* Full height */
+          overflow: auto; /* Enable scroll if needed */
+          background-color: rgb(0,0,0); /* Fallback color */
+          background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+        }
+
+        /* Modal Content */
+        .modal-content {
+            background-color: #fefefe;
+            text-align: center;
+            margin: auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 40%;
+        }
+
+        /* The Close Button */
+        .close {
+          color: #aaaaaa;
+          float: right;
+          font-size: 28px;
+          font-weight: bold;
+        }
+
+        .close:hover,
+        .close:focus {
+          color: #000;
+          text-decoration: none;
+          cursor: pointer;
+        }
+    </style>
+    <div id="main-container">
+        <div id="breadcrumb">
+          <ul class="breadcrumb">
+             <li><i class="fa fa-home"></i><a href="{% url 'veoc:access_dashboard' %}"> Dashboard</a></li>
+             <li class="active">Truck Driver Quarantine Form</li>
+          </ul>
+        </div><!-- /breadcrumb-->
+
+        <div class="padding-md">
+          <div class="row">
+            <div class="col-md-12">
+                  <form method="POST" id="track_driver_form" class="track_driver_form" action="{% url 'veoc:truck_driver_register' %}" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <div class="container">
+  <h2>Truck Driver Register</h2>
+  <p>Kindly fill all 4 sections before submitting the form.</p>
+  <ul class="nav nav-pills">
+    <li class="active"><a data-toggle="pill" href="#home">Traveller/Driver Details</a></li>
+    <li><a data-toggle="pill" href="#menu1">Current Health Situation</a></li>
+    <li><a data-toggle="pill" href="#menu2">Company and Hotel Details</a></li>
+    <li><a data-toggle="pill" href="#menu3">Lab/Sample Collection Details</a></li>
+  </ul>
+</div>
+                    <div class="form-group col-md-12">
+                        <h5><font color="#FF0000"><b><u>NB</u> : Inputs with * must have values, Fill in all sections.</b></font></h5>
+                    </div>
+                    <div class="tab-content">
+                      <div id="home" class="tab-pane fade in active">
+                    <div class="form-group col-md-12">
+                      <h4 align="center"><b><u>SECTION A : TRAVELLER / TRUCK DRIVER DETAILS</u></b></h4>
+                    </div>
+                    <div class="form-row" id="caller_details_div">
+                       <div class="form-group col-md-4">
+                         <label for="firstname">First Name : *</label>
+                         <input class="form-control" type="text" id="first_name" name="first_name" size="45" placeholder="first name" placeholder=""/>
+                       </div>
+                       <div class="form-group col-md-4">
+                         <label for="middlename">Midle Name : </label>
+                         <input class="form-control" type="text" id="middle_name" name="middle_name" size="45" placeholder="middle name"/>
+                       </div>
+                       <div class="form-group col-md-4">
+                         <label for="callernumber">Last Name : *</label>
+                         <input class="form-control" type="text" id="last_name" name="last_name" maxlength="10" size="45" placeholder="last name" placeholder=""/>
+                       </div>
+                    </div>
+                    <div class="form-row" id="gender_details_div">
+                      <div class="form-group col-md-4">
+                        <label for="callername">Phone Number : *</label>
+                        <input class="form-control" type="tel" id="phone_number" name="phone_number" onchange="checkPhone()" minlength="10" placeholder="country code first e.g +254720000000" placeholder=""/>
+                      </div>
+                       <div class="form-group col-md-4">
+                         <label for="sex">Gender : *</label>
+                         <select class="form-control" id="sex" name="sex">
+                             <option value="Male">Male</option>
+                             <option value="Female">Female</option>
+                         </select>
+                       </div>
+                       <div class="form-group col-md-4">
+                         <label for="callernumber">Date of Birth : *</label>
+                         <input class="form-control" type="date" value="{{ day }}" id="dob" max='2000-13-13' name="dob" placeholder=""="">
+                       </div>
+                    </div>
+                    <div class="form-row" id="country_details_div">
+                      <div class="form-group col-md-4">
+                        <label for="country">Country of Origin : *</label>
+                        <select class="form-control" name="country" id="country" onchange="region_filter()">
+                             <option value="" disabled selected>Select Country</option>
+                             {% for cntry in country %}
+                                 <option value="{{cntry.name}}">{{cntry.name}}</option>
+                             {% endfor %}
+                         </select>
+                      </div>
+                      <div class="form-group col-md-4">
+                        <label for="nationality">Nationality : *</label>
+                        <select class="form-control" name="nationality" id="nationality">
+                             <option value="" disabled selected>Select Nationality</option>
+                             {% for cntry in country %}
+                                 <option value="{{cntry.name}}">{{cntry.name}}</option>
+                             {% endfor %}
+                         </select>
+                      </div>
+                       <div class="form-group col-md-4">
+                         <label for="callernumber">ID / Passport / Alien Number : *</label>
+                         <input class="form-control" type="text" id="passport_number" name="passport_number" maxlength="10" size="45" placeholder="passport number" placeholder=""/>
+                       </div>
+                    </div>
+                    <div class="form-row" id="county_div" style="display: none;">
+                      <div class="form-group col-md-4">
+                        <label for="county">County : *</label>
+                        <select class="form-control" name="county" id="county" onchange="getsubcounty()">
+                             <option value="" disabled selected>Select County</option>
+                             {% for cnty in county %}
+                                 <option value="{{cnty.name}}">{{cnty.name}}</option>
+                             {% endfor %}
+                         </select>
+                      </div>
+                      <div class="form-group col-md-4">
+                        <label for="subcounty">Subcounty : *</label>
+                        <select class="form-control" name="subcounty" id="subcounty" onchange="getward()">
+                             <option value="" disabled selected>Select sub-county</option>
+                         </select>
+                      </div>
+                      <div class="form-group col-md-4">
+                        <label for="ward">Ward : *</label>
+                        <select class="form-control" name="ward" id="ward">
+                             <option value="" disabled selected>Select ward</option>
+                         </select>
+                      </div>
+                    </div>
+                    <div class="form-row" id="gender_details_div">
+                       <div class="form-group col-md-6">
+                         <label for="borderpoint">Border Point : *</label>
+                         <select class="form-control" name="border_name" id="border_name" >
+                              <option value="" disabled selected>Select Border Point</option>
+                              {% for b_point in border_points %}
+                                  <option value="{{b_point.border_name}}">{{b_point.border_name}}</option>
+                              {% endfor %}
+                          </select>
+                       </div>
+                       <div class="form-group col-md-6">
+                         <label for="weighbridgesite">Weighbridge Site : *</label>
+                         <select class="form-control" name="weighbridge_name" id="weighbridge_name" >
+                              <option value="" disabled selected>Select Weighbridge Site</option>
+                              {% for qty in weigh_site %}
+                                  <option value="{{qty.weighbridge_name}}">{{qty.weighbridge_name}}</option>
+                              {% endfor %}
+                          </select>
+                        </div>
+                    </div>
+                    <div class="form-row" id="gender_details_div">
+                       <div class="form-group col-md-4">
+                         <label for="callername">Next of Kin : </label>
+                         <input class="form-control" type="text" id="nok" name="nok" placeholder="next of kin"/>
+                       </div>
+                       <div class="form-group col-md-4">
+                         <label for="callername">Next of Kin Phone No : </label>
+                         <input class="form-control" type="number" id="nok_phone_num" name="nok_phone_num" minlength="10" placeholder="Next of kin phone number"/>
+                       </div>
+                       <div class="form-group col-md-4">
+                         <label for="middlename">Village : </label>
+                         <input class="form-control" type="text" id="village" name="village" size="45" placeholder="village"/>
+                       </div>
+                    </div>
+                    <div class="form-row" id="country_details_div">
+                      <div class="form-group col-md-6">
+                        <label for="firstname">Street : </label>
+                        <input class="form-control" type="text" id="street" name="street" size="45" placeholder="Strees" />
+                      </div>
+                        <div class="form-group col-md-6">
+                             <label for="datereport">Date of Arrival : *</label>
+                             <input class="form-control" type="date" value="{{ day }}" id="date_of_arrival" max="{{ day }}" name="date_of_arrival">
+                        </div>
+                    </div>
+
+                    <div id="myModal" class="modal">
+                        <div class="modal-content">
+                            <span class="close" onclick="document.getElementById('myModal').style.display='none'">&times;</span>
+                            <label>Driver Image:</label><br><br>
+                            <label class="btn btn-primary">
+                            <i class="fa fa-image"></i> Take photo <input type="file" name="photo" style="display: none;" accept="image/*" capture id="imgInp"></label><br><br>
+                            <img id="blah" src="#" style="width: 300px; height: 300px;" onerror="this.onerror=null; this.src='http://ssl.gstatic.com/accounts/ui/avatar_2x.png'"/>
+                            <span class="btn btn-success" onclick="document.getElementById('myModal').style.display='none'">Upload &#10004;</span>
+                        </div>
+                    </div>
+                    </div>
+                      <div id="menu1" class="tab-pane fade">
+                      <div class="form-row col-md-12">
+                        <h4 align="center"><b><u>SECTION B : CURRENT HEALTH SITUATION</u></b></h4>
+                        <br>
+                      </div>
+                     <div class="form-row" id="symptoms_div">
+                       <div class="form-group col-md-3">
+                         <label for="cough">Cough : *</label>
+                         <select class="form-control" id="cough" name="cough" placeholder="">
+                           <option value="" disabled selected>Select Option</option>
+                           <option value="t">Yes</option>
+                           <option value="f">No</option>
+                         </select>
+                       </div>
+                       <div class="form-group col-md-3">
+                         <label for="breathing">Breathing Difficulty : *</label>
+                         <select class="form-control" id="breathing_difficulty" name="breathing_difficulty" placeholder="">
+                           <option value="" disabled selected>Select Option</option>
+                           <option value="t">Yes</option>
+                           <option value="f">No</option>
+                         </select>
+                       </div>
+                       <div class="form-group col-md-3">
+                         <label for="fever">Fever : *</label>
+                         <select class="form-control" id="fever" name="fever" placeholder="">
+                           <option value="" disabled selected>Select Option</option>
+                           <option value="t">Yes</option>
+                           <option value="f">No</option>
+                         </select>
+                       </div>
+                       <div class="form-group col-md-3">
+                         <label for="sample">Sample Taken : *</label>
+                         <select class="form-control" id="sample_taken" name="sample_taken" placeholder="">
+                           <option value="" disabled selected>Select Option</option>
+                           <option value="t">Yes</option>
+                           <option value="f">No</option>
+                         </select>
+                       </div>
+                     </div>
+                     <div class="form-row" id="comobidity_details_div">
+                       <div class="form-group col-md-3">
+                         <label for="temperature">Temperature : *</label>
+                         <input class="form-control" type=number step=0.01 id="temperature" name="temperature" onchange="checkTemp()" maxlength="5" placeholder="temperature"/>
+                       </div>
+                       <div class="form-group col-md-3">
+                         <label for="comorbidity">Comorbidity : </label>
+                         <input class="form-control" type="text" id="comorbidity" name="comorbidity" placeholder="comorbidity"/>
+                       </div>
+                       <div class="form-group col-md-3">
+                         <label for="drugs">Any drugs on? : </label>
+                         <input class="form-control" type="text" id="drugs" name="drugs" placeholder="Drugs"/>
+                       </div>
+                         <div class="form-group col-md-3">
+                         <label for="communication_language">Communication Language (SMS): </label>
+                         <select class="form-control" id="communication_language" name="communication_language">
+                              {% for lang in language %}
+                                  <option value="{{lang.id}}">{{lang.language_name}}</option>
+                              {% endfor %}
+                         </select>
+                       </div>
+                    </div>
+                    </div>
+                      <div id="menu2" class="tab-pane fade">
+                     <div class="form-row col-md-12">
+                       <h4 align="center"><b><u>SECTION C : COMPANY / ORGANIZATION  DETAILS</u></b></h4>
+                       <br>
+                     </div>
+                     <br><br>
+                     <div class="form-row" id="company_div">
+                       <div class="form-group col-md-4">
+                         <label for="c_name">Company Name : *</label>
+                         <input class="form-control" type="text" id="company_name" name="company_name" size="45" placeholder="company name" placeholder=""/>
+                       </div>
+                       <div class="form-group col-md-4">
+                         <label for="c_phone">Company Phone : *</label>
+                         <input class="form-control" type="tel" id="company_phone" name="company_phone" placeholder="company phone" placeholder="">
+                       </div>
+                       <div class="form-group col-md-4">
+                         <label for="c_address">Company Physical Address : </label>
+                         <input class="form-control" type="text" id="company_address" name="company_address" placeholder="company physical address">
+                       </div>
+                     </div>
+                     <div class="form-row" id="company2_div">
+                       <div class="form-group col-md-4">
+                         <label for="c_building">Company Building : </label>
+                         <input class="form-control" type="text" id="company_building" name="company_building" size="45" placeholder="company building"/>
+                       </div>
+                       <div class="form-group col-md-4">
+                         <label for="c_street">Company Street : </label>
+                         <input class="form-control" type="text" id="company_street" name="company_street" placeholder="company street">
+                       </div>
+                       <div class="form-group col-md-4">
+                         <label for="v_reg">Vehicle Registration : *</label>
+                         <input class="form-control" type="text" id="vehicle_registration" name="vehicle_registration" placeholder="vehicle registration" placeholder="">
+                       </div>
+                     </div>
+                     <div class="form-row col-md-12">
+                       <h4 align="center"><b><u>SECTION D : HOTEL / ACCOMODATION DETAILS</u></b></h4>
+                       <br>
+                     </div>
+                     <br><br>
+                     <div class="form-row" id="company_div">
+                       <div class="form-group col-md-4">
+                         <label for="h_name">Hotel Name : </label>
+                         <input class="form-control" type="text" id="hotel_name" name="hotel_name" size="45" placeholder="Hotel name"/>
+                       </div>
+                       <div class="form-group col-md-4">
+                         <label for="h_phone">Hotel Phone Number: </label>
+                         <input class="form-control" type="tel" id="hotel_phone" name="hotel_phone" placeholder="hotel phone">
+                       </div>
+                       <div class="form-group col-md-4">
+                         <label for="h_town">Hotel Town : </label>
+                         <input class="form-control" type="text" id="hotel_town" name="hotel_town" placeholder="hotel town">
+                       </div>
+                     </div>
+                     <div class="form-row" id="dates_div">
+                       <div class="form-group col-md-6">
+                         <label for="check_in">Date Check In : </label>
+                         <input class="form-control" type="date" value="{{ day }}" id="date_check_in" min='{{ day }}' name="date_check_in">
+                       </div>
+                       <div class="form-group col-md-6">
+                         <label for="check_out">Date Check Out : </label>
+                         <input class="form-control" type="date" value="{{ day }}" id="date_check_out" min='{{ day }}' name="date_check_out">
+                       </div>
+                     </div>
+                     <div class="form-row" id="action_div">
+                       <div class="form-group col-md-12">
+                         <label for="action">Action Taken :</label>
+                         <textarea class="form-control" id="action_taken" rows="3" name="action_taken" placeholder="Enter action taken"></textarea>
+                       </div>
+                     </div>
+                     </div>
+                     <div id="menu3" class="tab-pane fade">
+                     <div class="form-row col-md-12">
+
+                           <div class="form-group" style="display: none;">
+                               {% for patient_detail in patient_details %}
+                                   <input class="form-control id" name="id" value="{{ patient_detail.id }}" style="display: none;">
+                               {% endfor %}
+                           </div>
+                           <div class="form-group">
+                               <div class="col-xs-6">
+                                   <label for="investigation_form"><h4>Case ID (Case Investigation Form) :</h4></label>
+                                   <input class="form-control" type="text" id="case_id" name="case_id" placeholder="Case investigation Form ID">
+                               </div>
+                           </div>
+                           <div class="form-group">
+                               <div class="col-xs-6">
+                                   <label for="type_of_case"><h4>Type of Case :</h4></label>
+                                   <select class="form-control" id="type_of_case" name="type_of_case" placeholder="">
+                                       <option value="" disabled selected>Select Option</option>
+                                       <option value="Initial">Initial</option>
+                                       <option value="Repeat">Repeat</option>
+                                   </select>
+                               </div>
+                           </div>
+                           <div class="form-group">
+                               <div class="col-xs-6">
+                                   <label for="travel_history"><h4>Travel History (Last 14 days)? :</h4></label>
+                                   <select class="form-control" id="travel_history" name="travel_history" onchange="activate_countries()" placeholder="">
+                                       <option value="" disabled selected>Select Option</option>
+                                       <option value="True">Yes</option>
+                                       <option value="False">No</option>
+                                   </select>
+                               </div>
+                           </div>
+                           <div class="form-group">
+                               <div class="col-xs-6">
+                                   <label for="travel_from"><h4>Travel From : </h4></label>
+                                   <select class="form-control" name="travel_from" id="travel_from">
+                                        <option value="" disabled selected>Select Country</option>
+                                        {% for cntry in country %}
+                                            <option value="{{cntry.name}}">{{cntry.name}}</option>
+                                        {% endfor %}
+                                    </select>
+                               </div>
+                           </div>
+                           <div class="form-group">
+                               <div class="col-xs-6">
+                                   <label for="travel_history"><h4>Contact with case ? :</h4></label>
+                                   <select class="form-control" id="contact_with_case" name="contact_with_case" placeholder="">
+                                       <option value="" disabled selected>Select Option</option>
+                                       <option value="True">Yes</option>
+                                       <option value="False">No</option>
+                                   </select>
+                               </div>
+                           </div>
+                           <div class="form-group">
+                               <div class="col-xs-6">
+                                   <label for="confirmed_case"><h4>Confirmed Case Name :</h4></label>
+                                   <input class="form-control" type="text" id="confirmed_case" name="confirmed_case" placeholder="Name of Confirmed case">
+                               </div>
+                           </div>
+                           <div class="form-group">
+                               <div class="col-xs-6">
+                                   <label for="have_symptoms"><h4>Have symptoms ? :</h4></label>
+                                   <select class="form-control" id="have_symptoms" name="have_symptoms" placeholder="">
+                                       <option value="" disabled selected>Select Option</option>
+                                       <option value="True">Yes</option>
+                                       <option value="False">No</option>
+                                   </select>
+                               </div>
+                           </div>
+                           <div class="form-group">
+                               <div class="col-xs-6">
+                                   <label for="date_specimen_collected"><h4>Date onset of symptoms :</h4></label>
+                                   <input class="form-control" type="date" value="{{ day }}" max="{{ day }}" id="onset_symptoms" name="onset_symptoms">
+                               </div>
+                           </div>
+                           <div class="form-group">
+                               <div class="col-xs-6">
+                                   <label for="sample_not_taken"><h4>Symptoms shown :</h4></label>
+                                   <input class="form-control" type="text" id="symptoms_shown" name="symptoms_shown" placeholder="Cough, Fever etc">
+                               </div>
+                           </div>
+                           <div class="form-group">
+                               <div class="col-xs-6">
+                                   <label for="date_specimen_collected"><h4>Date Sample collected</h4></label>
+                                   <input class="form-control" type="date" value="{{ day }}" max="{{ day }}" id="date_specimen_collected" name="date_specimen_collected">
+                               </div>
+                           </div>
+                           <div class="form-group">
+                               <div class="col-xs-6">
+                                   <label for="specimen_taken"><h4>Specimen Type :</h4></label>
+                                   <select class="form-control" id="specimen_type" name="specimen_type" placeholder="">
+                                       <option value="" disabled selected>Select specimen type</option>
+                                       {% for samp in samp_types %}
+                                           <option value="{{ samp.id }}">{{ samp.name }}</option>
+                                       {% endfor %}
+                                   </select>
+                               </div>
+                           </div>
+                           <div class="form-group">
+                               <div class="col-xs-6">
+                                   <label for="lab_name"><h4>Labaratory Name</h4></label>
+                                   <select class="form-control" id="lab_name" name="lab_name" placeholder="">
+                                       <option value="" disabled selected>Select Laboratory</option>
+                                       {% for lab in labs %}
+                                           <option value="{{ lab.id }}">{{ lab.name }}</option>
+                                       {% endfor %}
+                                   </select>
+                               </div>
+                           </div>
+
+<br><br>
+                      <div class="form-row" id="save_div">
+                        <div class="form-group col-md-12">
+                            <button type="submit" id="save_button" class="btn btn-primary">Save</button>
+                        </div>
+                      </div>
+                        <button id="myBtn" type="button" class="btn btn-primary">Take Driver Picture</button>
+                      </div>
+                      </div>
+
+ </div>
+
+ </div>
+                  </form>
+
+{#                <button type="button" class="btn btn-primary btn-xs view_button" data-toggle="modal" data-target="#profile_photo_modal" title="View">#}
+{#                <i class="fa fa-eye"></i></button>#}
+                </div>
+        			</div><!-- /row-->
+        		<div class="row">
+        	</div><!-- /.row -->
+        </div><!-- /.padding-md -->
+      </div><!-- /main-container -->
+
+
+{% endblock %}
+
+{% block script %}
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <!-- Latest compiled and minified JavaScript -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+   <script src="https://cdnjs.cloudflare.com/ajax/libs/bootbox.js/4.4.0/bootbox.min.js"> </script>
+   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
+   <script src="https://cdn.jsdelivr.net/npm/promise-polyfill"></script>
+    <script>
+        // Get the modal
+        var modal = document.getElementById("myModal");
+
+        // Get the button that opens the modal
+        var btn = document.getElementById("myBtn");
+
+        // Get the <span> element that closes the modal
+        var span = document.getElementsByClassName("close")[0];
+
+        // When the user clicks the button, open the modal
+        btn.onclick = function() {
+          modal.style.display = "block";
+        }
+
+        // When the user clicks on <span> (x), close the modal
+        span.onclick = function() {
+            console.log("dddddddddddd")
+          modal.style.display = "none";
+        }
+
+        // When the user clicks anywhere outside of the modal, close it
+        window.onclick = function(event) {
+          if (event.target == modal) {
+            modal.style.display = "none";
+          }
+        }
+        </script>
+    <script>
+
+     $("#imgInp").change(function(){
+        readURL(this);
+    });
+
+    function readURL(input) {
+        if (input.files && input.files[0]) {
+            var reader = new FileReader();
+
+            reader.onload = function (e) {
+                $('#blah').attr('src', e.target.result);
+        }
+        reader.readAsDataURL(input.files[0]);
+        }
+    }
+
+
+    var today = new Date();
+    var dd = today.getDate();
+    var mm = today.getMonth()+1; //January is 0!
+    var yyyy = today.getFullYear();
+    if(dd<10){
+        dd='0'+dd
+    }
+    if(mm<10){
+        mm='0'+mm
+    }
+
+    today = yyyy+'-'+mm+'-'+dd;
+    // document.getElementById("datereported").setAttribute("max", today);
+
+    $(document).ready(function(e){
+
+        $('#dob').attr("max",today);
+
+
+      var trucksForm = $(".track_driver_form")
+        var pic = $("#imgInp")
+        console.log(pic[0])
+      {#console.log("ab", trucksForm.submit);#}
+
+      trucksForm.submit(function(e){
+        e.preventDefault();
+        console.log("inside trucksForm");
+        var thisForm = $(this);
+        var endPoint = thisForm.attr("action") || window.location.href;
+        var method = thisForm.attr("method");
+        var formData = thisForm.serialize();
+
+        Swal.fire({
+          title: "Please wait!,Saving Details!",
+          // text: "Please wait",
+          imageUrl: "/static/images/ajax-loader.gif",
+          showConfirmButton: false,
+          allowOutsideClick: false
+        });
+        $.ajax({
+          type:method,
+          url:endPoint,
+          data: formData,
+          success:function(data){
+            if(data == "error"){
+              console.log(trucksForm[0])
+              Swal.fire({
+                title: 'Duplicate Data Entry!!',
+                text: 'Names and Phone number entered already exist in the system and still ongoing quarantine!!',
+                icon: 'info'
+              });
+            }else{
+              Swal.fire({
+                title: 'Success!',
+                text: 'Truck Driver Quarantine Details Saved',
+                icon: 'success'
+              });
+              trucksForm[0].reset();
+              pic[0].reset();
+            }
+          },
+          error:function(er){
+              console.log(er)
+            console.log("Quarantine saving error");
+            console.log(er.responseText);
+            Swal.fire({
+              title: 'Error!',
+              text: 'Quarantine Details Cannot be Saved',
+              icon: 'error'
+            });
+          }
+        });
+
+      });
+
+    });
+
+     function region_filter(){
+        var _region = document.getElementById('country').value;
+        var _county = document.getElementById('county_div');
+        console.log(_region)
+        if(_region == "KENYA"){
+          _county.style.display = 'block';
+        }else{
+          _county.style.display = 'none';
+        }
+     }
+
+     function getsubcounty(){
+
+       var county=$('#county').val();
+       console.log(county);
+       $.ajax({
+         url:'/get_subcounty/',
+         type:'POST',
+         datatype:'json',
+         data:{county:county,csrfmiddlewaretoken:$('input[name=csrfmiddlewaretoken]').val()},
+
+         success:function(data){
+           var options = '<option value="" selected disabled>Select Subcounty</option>';
+           console.log("in success");
+           console.log(data);
+           $('#subcounty').html(options);
+           for(var i=0;i<data.length;i++){
+
+             var options = '<option value="' + data[i].fields['name'] + '">' + data[i].fields['name'] + '</option>';
+             $('#subcounty').append(options);
+           }
+         },error:function(){
+           console.log("in error");
+           var options = '<option value="" selected disabled>select county</option>';
+           $('#subcounty').html(options);
+         }
+       });
+     }
+
+     function getward(){
+
+       var subcounty=$('#subcounty').val();
+       console.log(subcounty);
+       $.ajax({
+         url:'/get_ward/',
+         type:'POST',
+         datatype:'json',
+         data:{subcounty:subcounty,csrfmiddlewaretoken:$('input[name=csrfmiddlewaretoken]').val()},
+
+         success:function(data){
+           var options = '<option value="" selected disabled>Select Ward</option>';
+           console.log("in success ward");
+           console.log(data);
+           $('#ward').html(options);
+           for(var i=0;i<data.length;i++){
+
+               var options = '<option value="' + data[i].fields['organisationunitid'] + '">' + data[i].fields['name'] + '</option>';
+             $('#ward').append(options);
+           }
+         },error:function(){
+           console.log("in error");
+           var options = '<option value="" selected disabled>Select Ward</option>';
+           $('#ward').html(options);
+         }
+       });
+     }
+
+     function checkPhone(){
+       var number = $('#phone_number').val();
+       // console.log(number);
+       if(number.length < 10 || number.length > 15){
+         console.log("Enter valid phone number");
+         Swal.fire({
+           title: 'error!',
+           text: 'Enter a valid phone Number',
+           icon: 'error'
+         });
+         document.getElementById("phone_number").focus();
+       }else if(number.substring(0, 1) !== "+"){
+         console.log("Enter country code with +")
+         Swal.fire({
+           title: 'error!',
+           text: 'Enter Country code with + e.g +254',
+           icon: 'error'
+         });
+         document.getElementById("phone_number").focus();
+       }
+     }
+
+    function checkTemp(){
+       var temp = $('#temperature').val();
+       // console.log(number);
+       if(temp.length > 4 || temp.length < 2){
+         console.log("Enter valid temperature");
+         Swal.fire({
+           title: 'error!',
+           text: 'Enter a valid temperature measure',
+           icon: 'error'
+         });
+         document.getElementById("temperature").focus();
+       }else if(temp < 34 || temp > 45){
+         console.log("Enter country code with +")
+         Swal.fire({
+           title: 'error!',
+           text: 'Temperature value should be between 34 and 45 Degrees',
+           icon: 'error'
+         });
+         document.getElementById("temperature").focus();
+       }
+     }
+
+    </script>
+{% endblock %}

@@ -44,7 +44,7 @@
         							<table class="table table-hover" id="quarantine_report">
         								<thead class="thead-dark">
                           <tr>
-                            <th>Last Names</th>
+                            <th>Last Name</th>
                             <th>First Name</th>
                             <th>Age</th>
                             <th>Gender</th>
@@ -415,9 +415,22 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.0.0-alpha/js/bootstrap.min.js"></script> -->
   <script>
     $(document).ready(function () {
+      console.log(my_list_data);
           $('#quarantine_report').DataTable({
-              "order": [],
               dom: 'Bfrtip',
+              ajax: {
+                url: "{% url 'veoc:truck_quarantine_list' %}",
+                data: my_list_data,
+              },
+
+              processing: true,
+              deferRender: true,
+              paging: true,
+              responsive: true,
+              lengthMenu: [10, 25, 50, 75, 100 ],
+              order: [],
+              pagingType: 'simple',
+              info: true,
               buttons: [
                   'copy', 'csv', 'excel', 'pdf', 'print'
               ]

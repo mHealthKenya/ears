@@ -2709,8 +2709,7 @@ def lab_certificate(request):
         # return JsonResponse({'success':cert_data})
 
 @login_required
-def truck_driver_register(request):
-
+def truck_driver_register_old(request):
     if request.method == 'POST':
         first_name = request.POST.get('first_name','')
         middle_name = request.POST.get('middle_name','')
@@ -2932,6 +2931,315 @@ def truck_driver_register(request):
         data = {'country':cntry,'county':county, 'day':day, 'weigh_site':weigh_site, 'border_points':b_points, 'language':language}
 
         return render(request, 'veoc/truck_driver_registration.html', data)
+
+
+@login_required
+def truck_driver_register(request):
+
+    if request.method == 'POST':
+        first_name = request.POST.get('first_name','')
+        middle_name = request.POST.get('middle_name','')
+        last_name = request.POST.get('last_name','')
+        sex = request.POST.get('sex','')
+        dob = request.POST.get('dob','')
+        phone_number = request.POST.get('phone_number','')
+        passport_number = request.POST.get('passport_number','')
+        nationality = request.POST.get('nationality','')
+        origin_country = request.POST.get('country','')
+        cnty = request.POST.get('county','')
+        sub_cnty = request.POST.get('subcounty','')
+        ward = request.POST.get('ward','')
+        nextofkin = request.POST.get('nok','')
+        nok_phone_number = request.POST.get('nok_phone_num','')
+        village = request.POST.get('village','')
+        street = request.POST.get('street','')
+        weighbridge_name = request.POST.get('weighbridge_name','')
+        border_name = request.POST.get('border_name','')
+        date_of_contact = request.POST.get('date_of_arrival','')
+        cough = request.POST.get('cough','')
+        breathing_difficulty = request.POST.get('breathing_difficulty','')
+        fever = request.POST.get('fever','')
+        temp = request.POST.get('temperature','')
+        sample_taken = request.POST.get('sample_taken','')
+        comorbidity = request.POST.get('comorbidity','')
+        drugs = request.POST.get('drugs','')
+        company_name = request.POST.get('company_name','')
+        company_phone = request.POST.get('company_phone','')
+        company_address = request.POST.get('company_address','')
+        company_street = request.POST.get('company_street','')
+        company_building = request.POST.get('company_building','')
+        vehicle_registration = request.POST.get('vehicle_registration','')
+        hotel = request.POST.get('hotel_name','')
+        hotel_phone = request.POST.get('hotel_phone','')
+        hotel_town = request.POST.get('hotel_town','')
+        date_check_in = request.POST.get('date_check_in','')
+        date_check_out = request.POST.get('date_check_out','')
+        action_taken = request.POST.get('action_taken','')
+        language = request.POST.get('communication_language','')
+
+        #values for lab tests
+        #patient_contact = request.POST.get('id','')
+        case_id = request.POST.get('case_id','')
+        type_of_case = request.POST.get('type_of_case','')
+        sample_no = request.POST.get('sample_no','')
+        travel_history = request.POST.get('travel_history','')
+        travel_from = request.POST.get('travel_from','')
+        contact_with_case = request.POST.get('contact_with_case','')
+        confirmed_case = request.POST.get('confirmed_case','')
+        have_symptoms = request.POST.get('have_symptoms','')
+        onset_symptoms = request.POST.get('onset_symptoms','')
+        date_specimen_collected = request.POST.get('date_specimen_collected','')
+        symptoms_shown = request.POST.get('symptoms_shown','')
+        speci_type = request.POST.get('specimen_type','')
+        lab_name = request.POST.get('lab_name','')
+
+
+        if request.FILES:
+            driver_image = request.FILES['photo']
+        else:
+            driver_image = ''
+
+        if origin_country.lower() == "kenya" :
+            countyObject = organizational_units.objects.get(name = cnty)
+            subcountyObject = organizational_units.objects.get(name = sub_cnty)
+            wardObject = organizational_units.objects.get(organisationunitid = ward)
+        else :
+            countyObject = organizational_units.objects.get(organisationunitid = 18)
+            subcountyObject = organizational_units.objects.get(organisationunitid = 18)
+            wardObject = organizational_units.objects.get(organisationunitid = 18)
+
+        # country_code = country.objects.get(name = )
+        user_phone = "+254"
+        #Remove spacing on the number
+        mobile_number = phone_number.replace(" ", "")
+        print(mobile_number)
+        #check if the leading character is 0
+        if str(mobile_number[0]) == "0":
+            user_phone = user_phone + str(mobile_number[1:])
+            print("number leading with 0")
+        elif str(mobile_number[0]) == "+":
+            user_phone = mobile_number
+            print("Save phone number as it is")
+        elif str(mobile_number[0:2]) == "25":
+            user_phone = "+" + str(mobile_number[0:])
+            print("Save phone number with appended +")
+        else:
+            user_phone = user_phone + str(mobile_number)
+            print("number not leading with 0")
+
+        #get todays date
+        # current_date = date.today().strftime('%Y-%m-%d')
+        current_date = datetime.now()
+
+        #get current user
+        current_user = request.user
+        # print(current_user)
+        userObject = User.objects.get(pk = current_user.id)
+        weigh_site = weighbridge_sites.objects.get(weighbridge_name = weighbridge_name)
+        bord_name = border_points.objects.get(border_name = border_name)
+        site_name = ''
+        quar_site = quarantine_sites.objects.filter(site_name = "Country Border")
+        for site in quar_site:
+            site_name = site.id
+
+        contact_save = ''
+        source = "Truck Registration"
+        #Check if mobile number exists in the table
+        details_exist = quarantine_contacts.objects.filter(phone_number = user_phone, first_name = first_name, last_name=last_name, date_of_contact__gte = date.today()- timedelta(days=14)).first()
+        if details_exist :
+            for mob_ex in details_exist:
+                print("Details exist Phone Number" + str(mob_ex.phone_number) + "Registered on :" + str(mob_ex.created_at))
+
+            return HttpResponse("error")
+        else:
+            quarantineObject = quarantine_sites.objects.get(pk = site_name)
+            languageObject = translation_languages.objects.get(pk = language)
+            contact_identifier = uuid.uuid4().hex
+            #saving values to quarantine_contacts database first
+            contact_save = quarantine_contacts.objects.create(first_name=first_name, last_name=last_name, middle_name=middle_name,
+                county=countyObject, subcounty=subcountyObject, ward=wardObject,sex=sex, dob=dob, passport_number=passport_number,
+                phone_number=user_phone, date_of_contact=date_of_contact,  communication_language=languageObject,
+                nationality=nationality, drugs=drugs, nok=nextofkin, nok_phone_num=nok_phone_number, cormobidity=comorbidity,
+                origin_country=origin_country, quarantine_site= quarantineObject, source=source, contact_uuid=contact_identifier,
+                updated_at=current_date, created_by=userObject, updated_by=userObject, created_at=current_date)
+
+            contact_save.save()
+            trans_one = transaction.savepoint()
+
+            patient_id = contact_save.pk
+            print(patient_id)
+            #check whether the patientObject has been set
+
+            patientObject = truck_quarantine_contacts.objects.get(pk = patient_id)
+
+            #save contacts in the track_quarantine_contacts if data has been saved on the quarantine contacts
+            if patient_id :
+                try:
+                    truck_save = truck_quarantine_contacts.objects.create(patient_contacts=patientObject, street=street, village=village,
+                        vehicle_registration=vehicle_registration, company_name=company_name, company_phone=company_phone,border_point=bord_name,
+                        company_physical_address=company_address, company_street=company_street,company_building=company_building, temperature=temp,
+                        weighbridge_facility=weigh_site, cough=cough, breathing_difficulty=breathing_difficulty, fever=fever,sample_taken=sample_taken,
+                        action_taken=action_taken, hotel=hotel, hotel_phone=hotel_phone,hotel_town=hotel_town, date_check_in=date_check_in, date_check_out=date_check_out,
+                        driver_image=driver_image)
+
+                    truck_save.save()
+                except IntegrityError:
+                    transaction.savepoint_rollback(trans_one)
+                    return HttpResponse("error")
+
+                #if patient id exists, save lab details to
+                #patient_contact_object = truck_quarantine_contacts.objects.filter(id = contact_save.pk)
+                labsObjects = testing_labs.objects.get(pk=lab_name).first()
+                lab_res_typesObjects = covid_results_classifications.objects.get(pk=4).first()
+                samp_typesObjects = covid_sample_types.objects.get(pk=speci_type).first()
+                p_contacts = ''
+
+                #for p_cont in patient_contact_object:
+                #            p_contacts = p_cont.patient_contacts.id
+
+                # print(p_contacts)
+                contact_object = 275#quarantine_contacts.objects.get(pk = contact_save.pk).first()
+
+                lab_identifier = uuid.uuid4().hex
+                # print(lab_identifier)
+                print(contact_object);
+                save_lab = truck_quarantine_lab.objects.create(patient_contacts=contact_object, test_sample_uuid=lab_identifier, case_identification_id=case_id,
+                                                                       sample_number=sample_no, travel_history=travel_history, contact_with_case=contact_with_case, confirmed_case_name = confirmed_case,
+                                                                       have_symptoms=have_symptoms, onset_of_symptoms=onset_symptoms, symptoms_shown=symptoms_shown, type_of_case=type_of_case,
+                                                                       date_specimen_collected=date_specimen_collected, specimen_type=samp_typesObjects, lab=labsObjects, travel_from=travel_from,
+                                                                       lab_results=lab_res_typesObjects, date_lab_confirmation=current_date, created_at=current_date,
+                                                                       updated_at=current_date, created_by=userObject, updated_by=userObject, processed=0, sample_identifier="T00000")
+
+                lab_id = save_lab.pk
+                print(lab_id)
+                sam_identifier = 'T'
+
+                if len(str(lab_id)) == 1:
+                    sam_identifier = "T000"+str(lab_id)
+                elif len(str(lab_id)) == 2:
+                    sam_identifier = "T00"+str(lab_id)
+                elif len(str(lab_id)) == 3:
+                    sam_identifier = "T0"+str(lab_id)
+                elif len(str(lab_id)) == 4:
+                    sam_identifier = "T"+str(lab_id)
+                else :
+                    sam_identifier = sam_identifier+str(lab_id)
+
+                print(sam_identifier)
+
+                # update the sample identifier
+                truck_quarantine_lab.objects.filter(pk=lab_id).update(sample_identifier=sam_identifier)
+
+                if save_lab:
+                    print("Saving success")
+                    return JsonResponse({'success':True, 'sample_identifier': sam_identifier})
+
+                else:
+                    print("Saving error")
+                    return JsonResponse({'error':"error"})
+
+
+            #return HttpResponse("Hello from Laboratory!")
+
+
+            else :
+                print("data not saved in truck quarantine contacts")
+
+
+        #check if details have been saved
+        if not contact_save:
+            # send sms to the patient for successful registration_form
+            # url = "https://mlab.mhealthkenya.co.ke/api/sms/gateway"
+            url = "http://mlab.localhost/api/sms/gateway"
+            msg = ''
+            msg2 = ''
+            print(language)
+            if language == "1" :
+                #Language is english
+                print("inside english")
+                msg = "Thank you " + first_name + " for registering on self quarantine. You will be required to send your daily temperature details during this quarantine period of 14 days. Ministry of Health"
+                msg2 = first_name +", for self reporting iPhone users and non-smart phone users, dial *299# to send daily details, for Android phone users, download the self reporting app on this link: https://cutt.ly/jitenge_moh . Ministry of Health"
+            elif language == "2" :
+                #language is Swahili
+                msg = "Asante " + first_name + " kwa kujisajili. Unahitajika kuripoti dalili yako ya afya kila siku kwa siku 14. Wizara ya Afya."
+                msg2 = first_name +", ikiwa huna simu ya kidigitali ama una iPhone, bonyeza *299# kuripoti dalili ya afya. Watumizi wa simu aina ya Android, wanaweza kupakua Jitenge App kupitia https://cutt.ly/jitenge_moh.  Wizara ya Afya."
+            elif language == "3" :
+                #language is French
+                msg = "Merci " + first_name + " de votre inscription. Vous devrez envoyer vos détails de température quotidiens pendant cette periode d'isolation de 14 jours. Ministre de la Santé"
+                msg2 = first_name +", pour l'auto déclaration les utilisateurs de iphone et les utilisateurs de téléphone non intelligent, composent *299# d'envoyer détails du quotidien, pour les utilisateurs de téléphone intelligent telechargez l'application d'auto déclaration sur ce lien https://cutt.ly/jitenge_moh. Ministre de la santé."
+
+
+            #process first message
+            pp = {"phone_no": mobile_number, "message": msg}
+            payload = json.dumps(pp)
+
+            #process second message
+            pp2 = {"phone_no": mobile_number, "message": msg2}
+            payload2 = json.dumps(pp2)
+            # payload = "{\r\n   \"phone_no\": \"+254705255873\",\r\n   \"message\": \"TEST CORONA FROM EARS SYSTEM\"\r\n}"
+
+            headers = {
+              'Content-Type': 'application/json',
+              'Authorization': 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImp0aSI6IjE3MGExZGI0ZjFiYWE1ZWNkOGI4YTBiODNlNDc0MTA2NTJiNDg4Mzc4ZTQwNjExNDA0MGQwZmQ2NTEzNTM1NTg5MjFhYjBmNzI1ZDM3NzYwIn0.eyJhdWQiOiI0IiwianRpIjoiMTcwYTFkYjRmMWJhYTVlY2Q4YjhhMGI4M2U0NzQxMDY1MmI0ODgzNzhlNDA2MTE0MDQwZDBmZDY1MTM1MzU1ODkyMWFiMGY3MjVkMzc3NjAiLCJpYXQiOjE1ODQxODk0NTMsIm5iZiI6MTU4NDE4OTQ1MywiZXhwIjoxNjE1NzI1NDUzLCJzdWIiOiI2Iiwic2NvcGVzIjpbXX0.e2Pt76bE6IT7J0hSBpnc7tHShg9BKSXOMuwnQwqC3_xpJXUo2ez7sQPUa4uPp77XQ05xsumNbWapXkqxvVxp-3Gjn-o9UJ39AWHBFRJYqOXM_foZcxRBoXajUfJTTRS5BTMFEfMn2nMeLie9BH7mbgfKBpZXU_3_tClWGUcNbsibbhXgjSxskJoDls8XGVUdgc5pqMZBBBlR9cCrtK3H8PJf6XywMn9CYbw4KF8V1ADC9dYz-Iyhmwe2_LmU3ByTQMaVHCd3GVKWIvlGwNhm2_gRcEHjjZ8_PXR38itUT0M3NTmT6LBeeeb8IWV-3YFkhilbbjA03q9_6f2gjlOpChF4Ut2rC5pqTg7sW5A4PV8gepPnIBpJy5xKQzgf75zDUmuhKlYlirk8MKoRkiIUgWqOZSf49DUxbIaKIijjX3TYrwmBwZ0RTm2keSvk3bt4QutpLRxel6cajbI32rZLuDjs1_MCZNPKAK1ZgPvwt1OaHLM3om0TmSKyugPvhgNJ5fW_on_HLkTbQV6EPqN3Us7S5whFv1MQcwlgsxU9a4CJZa89elr1TaKvqbkaKqGjetwlCDf6AKQmThy5IqQ5zlIRNwlZDgz_DsGyeZUStQhc-HW65NsB_J_fe_jI5tMeRNCz4PE8T0Rghbs8xHLTFKuMGrJL0Rheq6kfEk4c0UM'
+            }
+
+            requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
+
+            #send first message
+            response = requests.request("POST", url, headers=headers, data = payload, verify=False)
+
+            # print(response.text.encode('utf8'))
+            #convert string response to a dictionary
+            msg_resp = eval(response.text)
+            # print(msg_resp)
+
+            #check if Success is in the Dictionary values
+            success = 'Success' in msg_resp.values()
+            # print(success)
+
+            if success:
+                print("Successfully sent first sms")
+                #send Second message
+                response2 = requests.request("POST", url, headers=headers, data = payload2, verify=False)
+
+                # print(response2.text.encode('utf8'))
+
+        cntry = country.objects.all()
+        county = organizational_units.objects.all().filter(hierarchylevel = 2).order_by('name')
+        weigh_site = weighbridge_sites.objects.all().filter(active = True).order_by('weighbridge_name')
+        b_points = border_points.objects.all().filter(active = True).order_by('border_name')
+        language = translation_languages.objects.all()
+        day = time.strftime("%Y-%m-%d")
+        samp_types = covid_sample_types.objects.all().order_by('id')
+        labs = testing_labs.objects.all()
+
+
+        data = {'country':cntry,'county':county, 'day':day, 'weigh_site':weigh_site, 'border_points':b_points, 'language':language, 'labs':labs, 'samp_types': samp_types}
+
+        return render(request, 'veoc/truck_driver_registration_tabs.html', data)
+
+    else:
+        cntry = country.objects.all()
+        county = organizational_units.objects.all().filter(hierarchylevel = 2).order_by('name')
+        weigh_site = weighbridge_sites.objects.all().filter(active = True).order_by('weighbridge_name')
+        b_points = border_points.objects.all().filter(active = True).order_by('border_name')
+        language = translation_languages.objects.all()
+        day = time.strftime("%Y-%m-%d")
+        samp_types = covid_sample_types.objects.all().order_by('id')
+        labs = testing_labs.objects.all()
+
+
+        qs = User.objects.filter(groups__name='National Watchers')
+        print(qs.query)
+        # for q in qs :
+        #     val = q.
+
+
+
+
+        data = {'country':cntry,'county':county, 'day':day, 'weigh_site':weigh_site, 'border_points':b_points, 'language':language, 'labs':labs, 'samp_types': samp_types}
+
+        return render(request, 'veoc/truck_driver_registration_tabs.html', data)
 
 @login_required
 def truck_driver_lab_test(request):
