@@ -5317,6 +5317,15 @@ def truck_complete_quarantine(request):
 
     return render(request, 'veoc/truck_quarantine_complete.html', data)
 
+
+def line_list_data(request):
+    all_line_list = moh_line_listing.objects.all()
+    all_line_list_count = moh_line_listing.objects.all().count()
+
+    data = {'line_lists': all_line_list, 'line_list_count': all_line_list_count}
+
+    return render(request, 'veoc/line_list_report.html', data)
+
 @login_required
 def ongoing_tasks(request):
     if request.method == 'POST':

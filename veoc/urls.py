@@ -63,6 +63,7 @@ urlpatterns = [
     url(r'^events_report/$', views.events_report, name='events_report'),
     url(r'^filter_events_report/$', views.filter_events_report, name='filter_events_report'),
     url(r'^ongoing_tasks/$', views.ongoing_tasks, name='ongoing_tasks'),
+    url(r'^line_list_data/$', views.line_list_data, name='line_list_data'),
     url(r'^quarantine_list/$', views.quarantine_list, name='quarantine_list'),
     url(r'^home_care_list/$', views.home_care_list, name='home_care_list'),
     # url(r'^truck_quarantine_list/$', views.truck_q_list, name='truck_q_list'),
