@@ -2859,7 +2859,7 @@ def lab_certificate(request):
         # return JsonResponse({'success':cert_data})
 
 @login_required
-def truck_driver_register_old(request):
+def truck_driver_register(request):
     if request.method == 'POST':
         first_name = request.POST.get('first_name','')
         middle_name = request.POST.get('middle_name','')
@@ -3084,7 +3084,7 @@ def truck_driver_register_old(request):
 
 
 @login_required
-def truck_driver_register(request):
+def truck_driver_register_new(request):
 
     if request.method == 'POST':
         first_name = request.POST.get('first_name','')
@@ -4246,10 +4246,10 @@ def truck_quarantine_list(request):
 
     user_level = ""
     user_group = request.user.groups.values_list('id', flat=True)
-    print(user_group)
+    # print(user_group)
     for grp in user_group:
         user_level = grp
-    print(user_level)
+    # print(user_level)
 
     quar_sites = weighbridge_sites.objects.all().order_by('weighbridge_name')
     truck_cont_details = []
@@ -4299,7 +4299,7 @@ def truck_quarantine_list(request):
             q_data = quarantine_contacts.objects.filter(source = 'Truck Registration').order_by('-date_of_contact')
             for d in q_data:
                 t_details = truck_quarantine_contacts.objects.filter(patient_contacts=d.id).values_list('border_point__border_name', flat=True).first()
-                print(t_details)
+                # print(t_details)
                 truck_cont_details.append(t_details)
 
         elif(user_level == 7):
@@ -4309,7 +4309,7 @@ def truck_quarantine_list(request):
             q_data = quarantine_contacts.objects.filter(source = 'Truck Registration').order_by('-date_of_contact')
             for d in q_data:
                 t_details = truck_quarantine_contacts.objects.filter(patient_contacts=d.id).filter(border_point__border_name=user_access_level).values_list('border_point__border_name', flat=True).first()
-                print(t_details)
+                # print(t_details)
                 truck_cont_details.append(t_details)
 
         else:
