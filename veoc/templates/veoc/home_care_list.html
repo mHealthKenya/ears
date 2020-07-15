@@ -55,7 +55,7 @@
                             <th>Enrollment date</th>
                             <th>Registered by</th>
                             <th>Map View</th>
-                            <!-- <th>Edit</th> -->
+                            <th>Edit Details</th>
                           </tr>
                           </thead>
                           <tbody>
@@ -91,12 +91,14 @@
                                </i>
                              </button>
                            </td>
-                           <!-- <td>
-                             <button type="button" class="btn btn-primary btn-xs edit_button"
+                           <td>
+                             <button type="button" class="btn btn-info btn-sm pull-left edit_button"
                                data-toggle="modal" data-target="#edit_quarantine_modal"
                                data-id="{{ follow.pk }}"
                                data-last_name="{{ follow.last_name }}"
                                data-first_name="{{ follow.first_name }}"
+                               data-middle_name="{{ follow.middle_name }}"
+                               data-passport_number="{{ follow.passport_number }}"
                                data-phone_number="{{ follow.phone_number }}"
                                data-nationality="{{ follow.nationality }}"
                                data-origin_country="{{ follow.origin_country }}"
@@ -104,13 +106,11 @@
                                data-quarantine_site="{{ follow.quarantine_site.site_name }}"
                                data-nok="{{ follow.nok }}"
                                data-nok_phone_num="{{ follow.nok_phone_num }}"
-                               data-cormobidity="{{ follow.cormobidity }}"
-                               data-drugs="{{ follow.drugs }}"
                                title="Edit">
                                <i class="fa fa-edit">
                                </i>
                              </button>
-                           </td> -->
+                           </td>
                           </tr>
                         {% endfor %}
                       </tbody>
@@ -182,60 +182,72 @@
         <div class="modal-dialog" role="document">
           <div class="modal-content">
             <div class="modal-header">
-              <h5 class="modal-title" id="exampleModalLabel">Home Care Patient Edit</h5>
+              <h5 class="modal-title" id="exampleModalLabel">Home Isolation Patient Edit</h5>
               <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
               </button>
             </div>
             <div class="modal-body">
-              <form method="post" action="{% url 'veoc:edit_home_care_list' %}">
+              <form method="post" action="{% url 'veoc:edit_home_isolation_list' %}">
                 {% csrf_token %}
                 <div class="modal-body">
                   <div class="form-group" style="display: none;">
                       <input class="form-control id" name="id" style="display: none;">
                   </div>
-                  <div class="form-group">
-                    <label for="callername">First Name : *</label>
-                    <input class="form-control f_name" type="text" id="f_name" name="first_name" size="45" placeholder="first name" required/>
-                  </div>
-                  <div class="form-group">
-                    <label for="callernumber">Last Name : *</label>
-                    <input class="form-control l_name" type="text" id="l_name" name="last_name" maxlength="10" size="45" placeholder="last name" required/>
-                  </div>
-                  <div class="form-group">
-                    <label for="callernumber">ID / Passport Number : *</label>
-                    <input class="form-control passport_num" type="text" id="passport_num" name="passport_number" maxlength="10" size="45" placeholder="passport number" required/>
-                  </div>
-                  <div>
-                    <label for="callername">Phone Number : *</label>
-                    <input class="form-control phone_num" type="number" id="phone_num" name="phone_number" minlength="10" placeholder="phone number" required/>
-                  </div>
-                  <div class="form-group">
-                    <label for="country">Country of Origin : *</label>
-                    <select class="form-control cntry" name="country" id="cntry">
-                         <option value="" disabled selected>Select Country</option>
-                         {% for cntry in country %}
-                             <option value="{{cntry.name}}">{{cntry.name}}</option>
-                         {% endfor %}
-                     </select>
-                  </div>
-                  <div class="form-group">
-                    <label for="nationality">Nationality : *</label>
-                    <select class="form-control natnality" name="natnality" id="nationality">
-                         <option value="" disabled selected>Select Nationality</option>
-                         {% for cntry in country %}
-                             <option value="{{cntry.name}}">{{cntry.name}}</option>
-                         {% endfor %}
-                     </select>
-                  </div>
-                  <div class="form-group">
-                    <label for="comorbidity">Comorbidity : </label>
-                    <input class="form-control comorbidity" type="text" id="comorbidity" name="comorbidity" placeholder="comorbidity"/>
-                  </div>
-                  <div class="form-group">
-                    <label for="drugs">Any drugs on? : </label>
-                    <input class="form-control drugs" type="text" id="drugs" name="drugs" placeholder="Drugs"/>
-                  </div>
+                    <div class="form-row" id="gender_details_div">
+                      <div class="form-group col-md-4">
+                        <label for="f_name">First Name : *</label>
+                        <input class="form-control f_name" type="text" id="f_name" name="first_name" placeholder="first name" required/>
+                      </div>
+                      <div class="form-group col-md-4">
+                        <label for="l_name">Last Name : *</label>
+                        <input class="form-control l_name" type="text" id="l_name" name="last_name" placeholder="last name" required/>
+                      </div>
+                      <div class="form-group col-md-4">
+                        <label for="m_name">Middle Name : </label>
+                        <input class="form-control m_name" type="text" id="m_name" name="middle_name" placeholder="middle name"/>
+                      </div>
+                    </div>
+                    <div class="form-row" id="gender_details_div">
+                      <div class="form-group col-md-6">
+                        <label for="passport_num">ID / Passport Number : *</label>
+                        <input class="form-control passport_num" type="text" id="passport_num" name="passport_number" placeholder="passport number" required/>
+                      </div>
+                      <div class="form-group col-md-6">
+                        <label for="phone_num">Phone Number : *</label>
+                        <input class="form-control phone_number" type="tel" id="phone_number" name="phone_number" placeholder="country code first e.g +254720000000" required/>
+                      </div>
+                    </div>
+                    <div class="form-row" id="gender_details_div">
+                      <div class="form-group col-md-6">
+                        <label for="country">Country of Origin : *</label>
+                        <select class="form-control cntry" name="country" id="cntry">
+                             <option value="" disabled selected>Select Country</option>
+                             {% for cntry in country %}
+                                 <option value="{{cntry.name}}">{{cntry.name}}</option>
+                             {% endfor %}
+                         </select>
+                      </div>
+                      <div class="form-group col-md-6">
+                        <label for="nationality">Nationality : *</label>
+                        <select class="form-control natnality" name="nationality" id="natnality">
+                             <option value="" disabled selected>Select Nationality</option>
+                             {% for cntry in country %}
+                                 <option value="{{cntry.name}}">{{cntry.name}}</option>
+                             {% endfor %}
+                         </select>
+                      </div>
+                    </div>
+                    <div class="form-row" id="gender_details_div">
+                      <div class="form-group col-md-6">
+                         <label for="callername">Next of Kin : </label>
+                         <input class="form-control" type="text" id="nok" name="nok" placeholder="next of kin"/>
+                       </div>
+                       <div class="form-group col-md-6">
+                         <label for="callername">Next of Kin Phone No : </label>
+                         <input class="form-control" type="number" id="nok_phone_num" name="nok_phone_num" placeholder="Next of kin phone number"/>
+                       </div>
+                    </div>
                 </div>
                 <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
                 <button type="submit" id="adddescriptionbtn" class="btn btn-success btn-sm pull-right">Save Changes</button>
@@ -302,25 +314,29 @@
       var id = $(this).data('id');
       var first_name = $(this).data('first_name');
       var last_name = $(this).data('last_name');
-      var country = $(this).data('country');
+      var middle_name = $(this).data('middle_name');
+      var country = $(this).data('origin_country');
       var nationality = $(this).data('nationality');
-      var phone_number = $(this).data('phone_number');
-      var country = $(this).data('country');
-      var comorbidity = $(this).data('cormobidity');
-      var drugs = $(this).data('drugs');
+      var phone = $(this).data('phone_number');
+      var passport_number = $(this).data('passport_number');
+      var nok = $(this).data('nok');
+      var nok_phone_num = $(this).data('nok_phone_num');
 
-      console.log(id);
-      console.log(first_name);
+        console.log(id);
+        console.log(phone);
+        console.log(country);
 
-      $(".id").val(id);
-      $(".f_name").val(first_name);
-      $(".l_name").val(last_name);
-      $(".cntry").val(country);
-      $(".natnality").val(nationality);
-      $(".phone_num").val(phone_number);
-      $(".comorbidity").val(comorbidity);
-      $(".drugs").val(drugs);
-  });
+        $(".id").val(id);
+        $(".f_name").val(first_name);
+        $(".l_name").val(last_name);
+        $(".m_name").val(middle_name);
+        $(".cntry").val(country);
+        $(".natnality").val(nationality);
+        $(".phone_number").val(phone);
+        $(".passport_num").val(passport_number);
+        $(".nok").val(nok);
+        $(".nok_phone_num").val(nok_phone_num);
+    });
 
     function openMap(){
       google.charts.load('current', {'packages': ['map']});

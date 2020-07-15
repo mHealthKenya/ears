@@ -5,7 +5,7 @@
         <div id="breadcrumb">
           <ul class="breadcrumb">
              <li><i class="fa fa-home"></i><a href="{% url 'veoc:access_dashboard' %}"> Dashboard</a></li>
-             <li class="active">Corona Quarantine Form</li>
+             <li class="active">Facility Quarantine Registartion Form</li>
           </ul>
         </div><!-- /breadcrumb-->
 
@@ -78,7 +78,7 @@
                     <div class="form-row" id="gender_details_div">
                        <div class="form-group col-md-6">
                          <label for="callername">Phone Number : *</label>
-                         <input class="form-control" type="number" id="phone_number" name="phone_number" minlength="10" placeholder="phone number" required/>
+                         <input class="form-control" type="tel" id="phone_number" name="phone_number" onchange="checkPhone()" minlength="10" placeholder="country code first e.g +254720000000" required/>
                        </div>
                        <div class="form-group col-md-6">
                          <label for="callernumber">Email address : </label>
@@ -114,7 +114,7 @@
                          <input class="form-control" type="text" id="place_of_diagnosis" name="place_of_diagnosis" size="45" placeholder="place of diagnosis"/>
                        </div>
                        <div class="form-group col-md-6">
-                         <label for="datereport">Date of Arrival : *</label>
+                         <label for="datereport">Date of Contact : *</label>
                          <input class="form-control" type="date" value="{{ day }}" id="date_of_contact" max='2000-13-13' name="date_of_contact">
                        </div>
                      </div>
@@ -235,6 +235,28 @@
             $('#priority').val('0');
         }
     }
+
+    function checkPhone(){
+       var number = $('#phone_number').val();
+       // console.log(number);
+       if(number.length < 10 || number.length > 15){
+         console.log("Enter valid phone number");
+         Swal.fire({
+           title: 'error!',
+           text: 'Enter a valid phone Number',
+           icon: 'error'
+         });
+         document.getElementById("phone_number").focus();
+       }else if(number.substring(0, 1) !== "+"){
+         console.log("Enter country code with +")
+         Swal.fire({
+           title: 'error!',
+           text: 'Enter Country code with + e.g +254',
+           icon: 'error'
+         });
+         document.getElementById("phone_number").focus();
+       }
+     }
 
      function region_filter(){
         var _region = document.getElementById('country').value;
