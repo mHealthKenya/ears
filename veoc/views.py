@@ -4722,7 +4722,7 @@ def symptomatic_cases(request):
     return render(request, 'veoc/quarantine_symptomatic.html', data)
 
 @login_required
-def home_care_follow_up(request):
+def home_care_symtomatic(request):
 
     global data, follow_data, follow_data_count
 
@@ -4809,7 +4809,7 @@ def home_care_follow_up(request):
     return render(request, 'veoc/home_care_symtomatic.html', data)
 
 @login_required
-def home_care_symtomatic(request):
+def home_care_follow_up(request):
 
     global data, follow_data, follow_data_count
 
@@ -4835,60 +4835,60 @@ def home_care_symtomatic(request):
         if(user_level == 1 or user_level == 2):
             #pull data whose quarantine site id is equal to q_site_name
             print("inside National")
-            follow_data = quarantine_follow_up.objects.filter(created_at__gte = date_from, created_at__lte=date_to).filter(patient_contacts__source = 'HOMECARE')
-            follow_data_count = quarantine_follow_up.objects.filter(created_at__gte = date_from, created_at__lte=date_to).filter(patient_contacts__source = 'HOMECARE').count()
+            follow_data = quarantine_follow_up.objects.filter(created_at__gte = date_from, created_at__lte=date_to).filter(patient_contacts__source = 'Jitenge Homecare Module')
+            follow_data_count = quarantine_follow_up.objects.filter(created_at__gte = date_from, created_at__lte=date_to).filter(patient_contacts__source = 'Jitenge Homecare Module').count()
 
         elif(user_level == 3 or user_level == 5):
             user_county_id = u.persons.county_id
             print(user_county_id)
-            follow_data = quarantine_follow_up.objects.filter(patient_contacts__county_id = user_county_id).filter(created_at__gte = date_from, created_at__lte=date_to).filter(patient_contacts__source = 'HOMECARE')
-            follow_data_count = quarantine_follow_up.objects.filter(patient_contacts__county_id = user_county_id).filter(created_at__gte = date_from, created_at__lte=date_to).filter(patient_contacts__source = 'HOMECARE').count()
+            follow_data = quarantine_follow_up.objects.filter(patient_contacts__county_id = user_county_id).filter(created_at__gte = date_from, created_at__lte=date_to).filter(patient_contacts__source = 'Jitenge Homecare Module')
+            follow_data_count = quarantine_follow_up.objects.filter(patient_contacts__county_id = user_county_id).filter(created_at__gte = date_from, created_at__lte=date_to).filter(patient_contacts__source = 'Jitenge Homecare Module').count()
 
         elif (user_level == 4 or user_level == 6):
             user_sub_county_id = u.persons.sub_county_id
             print(user_sub_county_id)
-            follow_data = quarantine_follow_up.objects.filter(patient_contacts__subcounty_id = user_sub_county_id).filter(created_at__gte = date_from, created_at__lte=date_to).filter(patient_contacts__source = 'HOMECARE')
-            follow_data_count = quarantine_follow_up.objects.filter(patient_contacts__subcounty_id = user_sub_county_id).filter(created_at__gte = date_from, created_at__lte=date_to).filter(patient_contacts__source = 'HOMECARE').count()
+            follow_data = quarantine_follow_up.objects.filter(patient_contacts__subcounty_id = user_sub_county_id).filter(created_at__gte = date_from, created_at__lte=date_to).filter(patient_contacts__source = 'Jitenge Homecare Module')
+            follow_data_count = quarantine_follow_up.objects.filter(patient_contacts__subcounty_id = user_sub_county_id).filter(created_at__gte = date_from, created_at__lte=date_to).filter(patient_contacts__source = 'Jitenge Homecare Module').count()
 
         elif (user_level == 7):
             user_sub_county_id = u.persons.sub_county_id
             print(user_sub_county_id)
-            follow_data = quarantine_follow_up.objects.filter(self_quarantine = False).filter(created_at__gte = date_from, created_at__lte=date_to).filter(patient_contacts__source = 'HOMECARE')
-            follow_data_count = quarantine_follow_up.objects.filter(self_quarantine = False).filter(created_at__gte = date_from, created_at__lte=date_to).filter(patient_contacts__source = 'HOMECARE').count()
+            follow_data = quarantine_follow_up.objects.filter(self_quarantine = False).filter(created_at__gte = date_from, created_at__lte=date_to).filter(patient_contacts__source = 'Jitenge Homecare Module')
+            follow_data_count = quarantine_follow_up.objects.filter(self_quarantine = False).filter(created_at__gte = date_from, created_at__lte=date_to).filter(patient_contacts__source = 'Jitenge Homecare Module').count()
 
         else:
-            follow_data = quarantine_follow_up.objects.filter(patient_contacts__quarantine_site = user_access_level).filter(created_at__gte = date_from, created_at__lte=date_to).filter(patient_contacts__source = 'HOMECARE')
-            follow_data_count = quarantine_follow_up.objects.filter(patient_contacts__quarantine_site = user_access_level).filter(created_at__gte = date_from, created_at__lte=date_to).filter(patient_contacts__source = 'HOMECARE').count()
+            follow_data = quarantine_follow_up.objects.filter(patient_contacts__quarantine_site = user_access_level).filter(created_at__gte = date_from, created_at__lte=date_to).filter(patient_contacts__source = 'Jitenge Homecare Module')
+            follow_data_count = quarantine_follow_up.objects.filter(patient_contacts__quarantine_site = user_access_level).filter(created_at__gte = date_from, created_at__lte=date_to).filter(patient_contacts__source = 'Jitenge Homecare Module').count()
 
         data = {'follow_data': follow_data, 'follow_data_count': follow_data_count, 'start_day': date_from, 'end_day': date_to}
     else:
         if(user_level == 1 or user_level == 2):
             #pull data whose quarantine site id is equal to q_site_name
             print("inside National")
-            follow_data = quarantine_follow_up.objects.filter(patient_contacts__source = 'HOMECARE')
-            follow_data_count = quarantine_follow_up.objects.filter(patient_contacts__source = 'HOMECARE').count()
+            follow_data = quarantine_follow_up.objects.filter(patient_contacts__source = 'Jitenge Homecare Module')
+            follow_data_count = quarantine_follow_up.objects.filter(patient_contacts__source = 'Jitenge Homecare Module').count()
 
         elif(user_level == 3 or user_level == 5):
             user_county_id = u.persons.county_id
             print(user_county_id)
-            follow_data = quarantine_follow_up.objects.filter(patient_contacts__county_id = user_county_id).filter(patient_contacts__source = 'HOMECARE')
-            follow_data_count = quarantine_follow_up.objects.filter(patient_contacts__county_id = user_county_id).filter(patient_contacts__source = 'HOMECARE').count()
+            follow_data = quarantine_follow_up.objects.filter(patient_contacts__county_id = user_county_id).filter(patient_contacts__source = 'Jitenge Homecare Module')
+            follow_data_count = quarantine_follow_up.objects.filter(patient_contacts__county_id = user_county_id).filter(patient_contacts__source = 'Jitenge Homecare Module').count()
 
         elif (user_level == 4 or user_level == 6):
             user_sub_county_id = u.persons.sub_county_id
             print(user_sub_county_id)
-            follow_data = quarantine_follow_up.objects.filter(patient_contacts__subcounty_id = user_sub_county_id).filter(patient_contacts__source = 'HOMECARE')
-            follow_data_count = quarantine_follow_up.objects.filter(patient_contacts__subcounty_id = user_sub_county_id).filter(patient_contacts__source = 'HOMECARE').count()
+            follow_data = quarantine_follow_up.objects.filter(patient_contacts__subcounty_id = user_sub_county_id).filter(patient_contacts__source = 'Jitenge Homecare Module')
+            follow_data_count = quarantine_follow_up.objects.filter(patient_contacts__subcounty_id = user_sub_county_id).filter(patient_contacts__source = 'Jitenge Homecare Module').count()
 
         elif (user_level == 7):
             user_sub_county_id = u.persons.sub_county_id
             print(user_sub_county_id)
-            follow_data = quarantine_follow_up.objects.filter(self_quarantine = False).filter(patient_contacts__source = 'HOMECARE')
-            follow_data_count = quarantine_follow_up.objects.filter(self_quarantine = False).filter(patient_contacts__source = 'HOMECARE').count()
+            follow_data = quarantine_follow_up.objects.filter(self_quarantine = False).filter(patient_contacts__source = 'Jitenge Homecare Module')
+            follow_data_count = quarantine_follow_up.objects.filter(self_quarantine = False).filter(patient_contacts__source = 'Jitenge Homecare Module').count()
 
         else:
-            follow_data = quarantine_follow_up.objects.filter(patient_contacts__quarantine_site = user_access_level).filter(patient_contacts__source = 'HOMECARE')
-            follow_data_count = quarantine_follow_up.objects.filter(patient_contacts__quarantine_site = user_access_level).filter(patient_contacts__source = 'HOMECARE').count()
+            follow_data = quarantine_follow_up.objects.filter(patient_contacts__quarantine_site = user_access_level).filter(patient_contacts__source = 'Jitenge Homecare Module')
+            follow_data_count = quarantine_follow_up.objects.filter(patient_contacts__quarantine_site = user_access_level).filter(patient_contacts__source = 'Jitenge Homecare Module').count()
 
         day = time.strftime("%Y-%m-%d")
         data = {'follow_data': follow_data, 'follow_data_count': follow_data_count, 'start_day': day, 'end_day': day}
@@ -5234,24 +5234,24 @@ def complete_quarantine(request):
     if(user_access_level == 'National'):
         #pull data whose quarantine site id is equal to q_site_name
         print("inside National")
-        follow_data = quarantine_follow_up.objects.filter(created_at__gte = date.today()- timedelta(days=14)).exclude(patient_contacts__source = 'HOMECARE').exclude(patient_contacts__source = 'Truck Registration')
-        follow_data_count = quarantine_follow_up.objects.filter(created_at__gte = date.today()- timedelta(days=14)).exclude(patient_contacts__source = 'HOMECARE').exclude(patient_contacts__source = 'Truck Registration').count()
+        follow_data = quarantine_follow_up.objects.filter(created_at__gte = date.today()- timedelta(days=14)).exclude(patient_contacts__source = 'Jitenge Homecare Module').exclude(patient_contacts__source = 'Truck Registration')
+        follow_data_count = quarantine_follow_up.objects.filter(created_at__gte = date.today()- timedelta(days=14)).exclude(patient_contacts__source = 'Jitenge Homecare Module').exclude(patient_contacts__source = 'Truck Registration').count()
 
     elif(user_access_level == "County"):
         user_county_id = u.persons.county_id
         print(user_county_id)
-        follow_data = quarantine_follow_up.objects.filter(patient_contacts__county_id = user_county_id).filter(created_at__gte = date.today()- timedelta(days=14)).exclude(patient_contacts__source = 'HOMECARE').exclude(patient_contacts__source = 'Truck Registration')
-        follow_data_count = quarantine_follow_up.objects.filter(patient_contacts__county_id = user_county_id).filter(created_at__gte = date.today()- timedelta(days=14)).exclude(patient_contacts__source = 'HOMECARE').exclude(patient_contacts__source = 'Truck Registration').count()
+        follow_data = quarantine_follow_up.objects.filter(patient_contacts__county_id = user_county_id).filter(created_at__gte = date.today()- timedelta(days=14)).exclude(patient_contacts__source = 'Jitenge Homecare Module').exclude(patient_contacts__source = 'Truck Registration')
+        follow_data_count = quarantine_follow_up.objects.filter(patient_contacts__county_id = user_county_id).filter(created_at__gte = date.today()- timedelta(days=14)).exclude(patient_contacts__source = 'Jitenge Homecare Module').exclude(patient_contacts__source = 'Truck Registration').count()
 
     elif (user_access_level == "SubCounty"):
         user_sub_county_id = u.persons.sub_county_id
         print(user_sub_county_id)
-        follow_data = quarantine_follow_up.objects.filter(patient_contacts__subcounty_id = user_sub_county_id).filter(created_at__gte = date.today()- timedelta(days=14)).exclude(patient_contacts__source = 'HOMECARE').exclude(patient_contacts__source = 'Truck Registration')
-        follow_data_count = quarantine_follow_up.objects.filter(patient_contacts__subcounty_id = user_sub_county_id).filter(created_at__gte = date.today()- timedelta(days=14)).exclude(patient_contacts__source = 'HOMECARE').exclude(patient_contacts__source = 'Truck Registration').count()
+        follow_data = quarantine_follow_up.objects.filter(patient_contacts__subcounty_id = user_sub_county_id).filter(created_at__gte = date.today()- timedelta(days=14)).exclude(patient_contacts__source = 'Jitenge Homecare Module').exclude(patient_contacts__source = 'Truck Registration')
+        follow_data_count = quarantine_follow_up.objects.filter(patient_contacts__subcounty_id = user_sub_county_id).filter(created_at__gte = date.today()- timedelta(days=14)).exclude(patient_contacts__source = 'Jitenge Homecare Module').exclude(patient_contacts__source = 'Truck Registration').count()
 
     else:
-        follow_data = quarantine_follow_up.objects.filter(self_quarantine = False).exclude(patient_contacts__source = 'HOMECARE').exclude(patient_contacts__source = 'Truck Registration')
-        follow_data_count = quarantine_follow_up.objects.filter(self_quarantine = False).exclude(patient_contacts__source = 'HOMECARE').exclude(patient_contacts__source = 'Truck Registration').count()
+        follow_data = quarantine_follow_up.objects.filter(self_quarantine = False).exclude(patient_contacts__source = 'Jitenge Homecare Module').exclude(patient_contacts__source = 'Truck Registration')
+        follow_data_count = quarantine_follow_up.objects.filter(self_quarantine = False).exclude(patient_contacts__source = 'Jitenge Homecare Module').exclude(patient_contacts__source = 'Truck Registration').count()
 
     data = {'follow_data': follow_data, 'follow_data_count': follow_data_count}
 
@@ -5271,24 +5271,24 @@ def complete_home_care(request):
     if(user_access_level == 'National'):
         #pull data whose quarantine site id is equal to q_site_name
         print("inside National")
-        follow_data = quarantine_follow_up.objects.filter(created_at__gte = date.today()- timedelta(days=14)).filter(patient_contacts__source = 'HOMECARE')
-        follow_data_count = quarantine_follow_up.objects.filter(created_at__gte = date.today()- timedelta(days=14)).filter(patient_contacts__source = 'HOMECARE').count()
+        follow_data = quarantine_follow_up.objects.filter(created_at__gte = date.today()- timedelta(days=14)).filter(patient_contacts__source = 'Jitenge Homecare Module')
+        follow_data_count = quarantine_follow_up.objects.filter(created_at__gte = date.today()- timedelta(days=14)).filter(patient_contacts__source = 'Jitenge Homecare Module').count()
 
     elif(user_access_level == "County"):
         user_county_id = u.persons.county_id
         print(user_county_id)
-        follow_data = quarantine_follow_up.objects.filter(patient_contacts__county_id = user_county_id).filter(created_at__gte = date.today()- timedelta(days=14)).filter(patient_contacts__source = 'HOMECARE')
-        follow_data_count = quarantine_follow_up.objects.filter(patient_contacts__county_id = user_county_id).filter(created_at__gte = date.today()- timedelta(days=14)).filter(patient_contacts__source = 'HOMECARE').count()
+        follow_data = quarantine_follow_up.objects.filter(patient_contacts__county_id = user_county_id).filter(created_at__gte = date.today()- timedelta(days=14)).filter(patient_contacts__source = 'Jitenge Homecare Module')
+        follow_data_count = quarantine_follow_up.objects.filter(patient_contacts__county_id = user_county_id).filter(created_at__gte = date.today()- timedelta(days=14)).filter(patient_contacts__source = 'Jitenge Homecare Module').count()
 
     elif (user_access_level == "SubCounty"):
         user_sub_county_id = u.persons.sub_county_id
         print(user_sub_county_id)
-        follow_data = quarantine_follow_up.objects.filter(patient_contacts__subcounty_id = user_sub_county_id).filter(created_at__gte = date.today()- timedelta(days=14)).filter(patient_contacts__source = 'HOMECARE')
-        follow_data_count = quarantine_follow_up.objects.filter(patient_contacts__subcounty_id = user_sub_county_id).filter(created_at__gte = date.today()- timedelta(days=14)).filter(patient_contacts__source = 'HOMECARE').count()
+        follow_data = quarantine_follow_up.objects.filter(patient_contacts__subcounty_id = user_sub_county_id).filter(created_at__gte = date.today()- timedelta(days=14)).filter(patient_contacts__source = 'Jitenge Homecare Module')
+        follow_data_count = quarantine_follow_up.objects.filter(patient_contacts__subcounty_id = user_sub_county_id).filter(created_at__gte = date.today()- timedelta(days=14)).filter(patient_contacts__source = 'Jitenge Homecare Module').count()
 
     else:
-        follow_data = quarantine_follow_up.objects.filter(self_quarantine = False).filter(patient_contacts__source = 'HOMECARE')
-        follow_data_count = quarantine_follow_up.objects.filter(self_quarantine = False).filter(patient_contacts__source = 'HOMECARE').count()
+        follow_data = quarantine_follow_up.objects.filter(self_quarantine = False).filter(patient_contacts__source = 'Jitenge Homecare Module')
+        follow_data_count = quarantine_follow_up.objects.filter(self_quarantine = False).filter(patient_contacts__source = 'Jitenge Homecare Module').count()
 
     data = {'follow_data': follow_data, 'follow_data_count': follow_data_count}
 
@@ -6024,36 +6024,36 @@ def edit_quarantine_list(request):
         if update_record:
             if(user_level == 1 or user_level == 2):
                 # print("inside National")
-                q_data = quarantine_contacts.objects.exclude(source = 'HOMECARE').exclude(source = 'Truck Registration').order_by('-date_of_contact')
-                q_data_count = quarantine_contacts.objects.exclude(source = 'HOMECARE').exclude(source = 'Truck Registration').count()
+                q_data = quarantine_contacts.objects.exclude(source = 'Jitenge Homecare Module').exclude(source = 'Truck Registration').order_by('-date_of_contact')
+                q_data_count = quarantine_contacts.objects.exclude(source = 'Jitenge Homecare Module').exclude(source = 'Truck Registration').count()
                 quar_sites = quarantine_sites.objects.exclude(site_name = 'Country Border').order_by('site_name')
             elif(user_level == 3 or user_level == 5):
                 # print("inside County")
                 user_county_id = u.persons.county_id
                 print(user_county_id)
-                q_data = quarantine_contacts.objects.exclude(source = 'HOMECARE').exclude(source = 'Truck Registration').filter(county_id = user_county_id).order_by('-date_of_contact')
-                q_data_count = quarantine_contacts.objects.exclude(source = 'HOMECARE').exclude(source = 'Truck Registration').filter(county_id = user_county_id).count()
+                q_data = quarantine_contacts.objects.exclude(source = 'Jitenge Homecare Module').exclude(source = 'Truck Registration').filter(county_id = user_county_id).order_by('-date_of_contact')
+                q_data_count = quarantine_contacts.objects.exclude(source = 'Jitenge Homecare Module').exclude(source = 'Truck Registration').filter(county_id = user_county_id).count()
                 quar_sites = quarantine_sites.objects.exclude(site_name = 'Country Border').filter(county_id = user_county_id).order_by('site_name')
             elif(user_level == 4 or user_level == 6):
                 print("inside SubCounty")
                 user_sub_county_id = u.persons.sub_county
                 print(user_sub_county_id)
-                q_data = quarantine_contacts.objects.exclude(source = 'HOMECARE').exclude(source = 'Truck Registration').filter(subcounty_id = user_sub_county_id).order_by('-date_of_contact')
-                q_data_count = quarantine_contacts.objects.exclude(source = 'HOMECARE').exclude(source = 'Truck Registration').filter(subcounty_id = user_sub_county_id).count()
+                q_data = quarantine_contacts.objects.exclude(source = 'Jitenge Homecare Module').exclude(source = 'Truck Registration').filter(subcounty_id = user_sub_county_id).order_by('-date_of_contact')
+                q_data_count = quarantine_contacts.objects.exclude(source = 'Jitenge Homecare Module').exclude(source = 'Truck Registration').filter(subcounty_id = user_sub_county_id).count()
                 quar_sites = quarantine_sites.objects.exclude(site_name = 'Country Border').filter(subcounty_id = user_sub_county_id).order_by('site_name')
             elif(user_level == 7):
                 print("inside Border")
                 user_sub_county_id = u.persons.sub_county
                 print(user_sub_county_id)
-                q_data = quarantine_contacts.objects.exclude(source = 'HOMECARE').exclude(source = 'Truck Registration').filter(cormobidity = "1").order_by('-date_of_contact')
-                q_data_count = quarantine_contacts.objects.exclude(source = 'HOMECARE').exclude(source = 'Truck Registration').filter(cormobidity = "1").count()
+                q_data = quarantine_contacts.objects.exclude(source = 'Jitenge Homecare Module').exclude(source = 'Truck Registration').filter(cormobidity = "1").order_by('-date_of_contact')
+                q_data_count = quarantine_contacts.objects.exclude(source = 'Jitenge Homecare Module').exclude(source = 'Truck Registration').filter(cormobidity = "1").count()
                 quar_sites = quarantine_sites.objects.all().filter(active = False).order_by('site_name')
             else:
                 print("inside Facility")
                 user_sub_county_id = u.persons.sub_county
                 print(user_sub_county_id)
-                q_data = quarantine_contacts.objects.exclude(source = 'HOMECARE').exclude(source = 'Truck Registration').filter(subcounty_id = user_sub_county_id).order_by('-date_of_contact')
-                q_data_count = quarantine_contacts.objects.exclude(source = 'HOMECARE').exclude(source = 'Truck Registration').filter(subcounty_id = user_sub_county_id).count()
+                q_data = quarantine_contacts.objects.exclude(source = 'Jitenge Homecare Module').exclude(source = 'Truck Registration').filter(subcounty_id = user_sub_county_id).order_by('-date_of_contact')
+                q_data_count = quarantine_contacts.objects.exclude(source = 'Jitenge Homecare Module').exclude(source = 'Truck Registration').filter(subcounty_id = user_sub_county_id).count()
                 quar_sites = quarantine_sites.objects.filter(site_name = user_access_level).order_by('site_name')
 
             cntry = country.objects.all()
