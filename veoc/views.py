@@ -2593,18 +2593,24 @@ def home_care_register(request):
             wardObject = organizational_units.objects.get(organisationunitid = 18)
 
         user_phone = "+254"
+        #Remove spacing on the number
+        mobile_number = phone_number.replace(" ", "")
+        print(mobile_number)
         #check if the leading character is 0
-        if str(phone_number[0]) == "0":
-            user_phone = user_phone + str(phone_number[1:])
-            # print("number leading with 0")
+        if str(mobile_number[0]) == "0":
+            user_phone = user_phone + str(mobile_number[1:])
+            print("number leading with 0")
+        elif str(mobile_number[0]) == "+":
+            user_phone = mobile_number
+            print("Save phone number as it is")
+        elif str(mobile_number[0:2]) == "25":
+            user_phone = "+" + str(mobile_number[0:])
+            print("Save phone number with appended +")
         else:
-            user_phone = user_phone + str(phone_number)
-            # print("number not leading with 0")
+            user_phone = user_phone + str(mobile_number)
+            print("number not leading with 0")
 
-        #get todays date
         current_date = datetime.now()
-
-        #get current user
         current_user = request.user
         print(current_user)
         userObject = User.objects.get(pk = current_user.id)
@@ -4112,7 +4118,7 @@ def home_care_list(request):
             print("inside Facility")
             user_sub_county_id = u.persons.sub_county
             print(user_sub_county_id)
-            q_data = home_based_care.objects.filter(patient_contacts__subcounty_id = user_sub_county_id).filter(date_created__gte = date_from, date_created__lte=date_to).annotate(
+            q_data = home_based_care.objects.filter(patient_contacts__subcounty_id = user_sub_county_id).filter(patient_contacts__created_by = current_user.id).filter(date_created__gte = date_from, date_created__lte=date_to).annotate(
                 first_name=F("patient_contacts__first_name"),
                 last_name=F("patient_contacts__last_name"),
                 sex=F("patient_contacts__sex"),
@@ -4134,6 +4140,7 @@ def home_care_list(request):
     else:
         if(user_level == 1 or user_level == 2):
             print("inside National")
+            print(current_user.id)
             q_data = home_based_care.objects.all().annotate(
                 first_name=F("patient_contacts__first_name"),
                 last_name=F("patient_contacts__last_name"),
@@ -4153,6 +4160,7 @@ def home_care_list(request):
             print("inside County")
             user_county_id = u.persons.county_id
             print(user_county_id)
+            print(current_user.id)
             q_data = home_based_care.objects.filter(patient_contacts__county_id = user_county_id).annotate(
                 first_name=F("patient_contacts__first_name"),
                 last_name=F("patient_contacts__last_name"),
@@ -4172,6 +4180,7 @@ def home_care_list(request):
             print("inside SubCounty")
             user_sub_county_id = u.persons.sub_county
             print(user_sub_county_id)
+            print(current_user.id)
             q_data = home_based_care.objects.filter(patient_contacts__subcounty_id = user_sub_county_id).annotate(
                 first_name=F("patient_contacts__first_name"),
                 last_name=F("patient_contacts__last_name"),
@@ -4191,6 +4200,7 @@ def home_care_list(request):
             print("inside Border")
             user_sub_county_id = u.persons.sub_county
             print(user_sub_county_id)
+            print(current_user.id)
             q_data = home_based_care.objects.all().annotate(
                 first_name=F("patient_contacts__first_name"),
                 last_name=F("patient_contacts__last_name"),
@@ -4210,7 +4220,8 @@ def home_care_list(request):
             print("inside Facility")
             user_sub_county_id = u.persons.sub_county
             print(user_sub_county_id)
-            q_data = home_based_care.objects.filter(patient_contacts__subcounty_id = user_sub_county_id).annotate(
+            print(current_user.id)
+            q_data = home_based_care.objects.filter(patient_contacts__subcounty_id = user_sub_county_id).filter(patient_contacts__created_by = current_user.id).annotate(
                 first_name=F("patient_contacts__first_name"),
                 last_name=F("patient_contacts__last_name"),
                 sex=F("patient_contacts__sex"),

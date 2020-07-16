@@ -15,16 +15,20 @@
                   <form class="calls_form" method="POST" action="{% url 'veoc:home_care_register' %}" >
                     {% csrf_token %}
                     <div class="form-group col-md-12">
-                      <label><i><u>NB</u> : Inputs with * must have values</i></label>
+                      <h5><font color="#FF0000"><b><u>NB</u> : Inputs with * must have values, Fill in all sections.</b></font></h5>
                     </div>
                     <div class="form-row" id="caller_details_div">
-                       <div class="form-group col-md-6">
+                       <div class="form-group col-md-4">
                          <label for="callername">First Name : *</label>
-                         <input class="form-control" type="text" id="first_name" name="first_name" size="45" placeholder="first name" required/>
+                         <input class="form-control" type="text" id="first_name" name="first_name" placeholder="first name" required/>
                        </div>
-                       <div class="form-group col-md-6">
+                       <div class="form-group col-md-4">
+                         <label for="middle_name">Middle Name : </label>
+                         <input class="form-control" type="text" id="middle_name" name="middle_name" placeholder="middle name"/>
+                       </div>
+                        <div class="form-group col-md-4">
                          <label for="callernumber">Last Name : *</label>
-                         <input class="form-control" type="text" id="last_name" name="last_name" maxlength="10" size="45" placeholder="last name" required/>
+                         <input class="form-control" type="text" id="last_name" name="last_name" placeholder="last name" required/>
                        </div>
                     </div>
                     <div class="form-row" id="gender_details_div">
@@ -190,13 +194,22 @@
           type:method,
           url:endPoint,
           data: formData,
-          success:function(){
-            Swal.fire({
-              title: 'Success!',
-              text: 'Quarantine Details Saved',
-              icon: 'success'
-            });
-            callsForm[0].reset();
+          success:function(data){
+              if(data == "error"){
+              console.log(callsForm[0])
+              Swal.fire({
+                title: 'Duplicate Data Entry!!',
+                text: 'Names and Phone number entered already exist in the system and still ongoing quarantine!!',
+                icon: 'info'
+              });
+            }else {
+              Swal.fire({
+                  title: 'Success!',
+                  text: 'Quarantine Details Saved',
+                  icon: 'success'
+              });
+              callsForm[0].reset();
+          }
           },
           error:function(er){
             console.log("Quarantine saving error");
