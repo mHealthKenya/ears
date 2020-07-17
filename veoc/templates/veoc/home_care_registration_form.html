@@ -1,0 +1,327 @@
+{% extends "veoc/main_template.html" %}
+
+{% block main %}
+      <div id="main-container">
+        <div id="breadcrumb">
+          <ul class="breadcrumb">
+             <li><i class="fa fa-home"></i><a href="{% url 'veoc:access_dashboard' %}"> Dashboard</a></li>
+             <li class="active">Home care Registration Form</li>
+          </ul>
+        </div><!-- /breadcrumb-->
+
+        <div class="padding-md">
+          <div class="row">
+            <div class="col-md-12">
+                  <form class="calls_form" method="POST" action="{% url 'veoc:home_care_register' %}" >
+                    {% csrf_token %}
+                    <div class="form-group col-md-12">
+                      <h5><font color="#FF0000"><b><u>NB</u> : Inputs with * must have values, Fill in all sections.</b></font></h5>
+                    </div>
+                    <div class="form-row" id="caller_details_div">
+                       <div class="form-group col-md-4">
+                         <label for="callername">First Name : *</label>
+                         <input class="form-control" type="text" id="first_name" name="first_name" placeholder="first name" required/>
+                       </div>
+                       <div class="form-group col-md-4">
+                         <label for="middle_name">Middle Name : </label>
+                         <input class="form-control" type="text" id="middle_name" name="middle_name" placeholder="middle name"/>
+                       </div>
+                        <div class="form-group col-md-4">
+                         <label for="callernumber">Last Name : *</label>
+                         <input class="form-control" type="text" id="last_name" name="last_name" placeholder="last name" required/>
+                       </div>
+                    </div>
+                    <div class="form-row" id="gender_details_div">
+                       <div class="form-group col-md-6">
+                         <label for="sex">Gender : *</label>
+                         <select class="form-control" id="sex" name="sex">
+                             <option value="Male">Male</option>
+                             <option value="Female">Female</option>
+                         </select>
+                       </div>
+                       <div class="form-group col-md-6">
+                         <label for="callernumber">Date of Birth : *</label>
+                         <input class="form-control" type="date" value="{{ day }}" id="dob" max='2000-13-13' name="dob">
+                       </div>
+                    </div>
+                      <div class="form-row" id="country_details_div">
+                       <div class="form-group col-md-6">
+                         <label for="callername">Phone Number : *</label>
+                         <input class="form-control" type="tel" id="phone_number" name="phone_number" onchange="checkPhone()" minlength="10" placeholder="country code first e.g +254720000000" required/>
+                       </div>
+                       <div class="form-group col-md-6">
+                         <label for="callernumber">ID / Passport Number : *</label>
+                         <input class="form-control" type="text" id="passport_number" name="passport_number" maxlength="10" size="45" placeholder="passport number" required/>
+                       </div>
+                    </div>
+                    <div class="form-row" id="country_details_div">
+                       <div class="form-group col-md-6">
+                         <label for="nationality">Nationality : *</label>
+                         <select class="form-control" name="nationality" id="nationality">
+                              <option value="" disabled selected>Select Nationality</option>
+                              {% for cntry in country %}
+                                  <option value="{{cntry.name}}">{{cntry.name}}</option>
+                              {% endfor %}
+                          </select>
+                       </div>
+                       <div class="form-group col-md-6">
+                         <label for="country">Country of Origin : *</label>
+                         <select class="form-control" name="country" id="country" onchange="region_filter()">
+                              <option value="" disabled selected>Select Country</option>
+                              {% for cntry in country %}
+                                  <option value="{{cntry.name}}">{{cntry.name}}</option>
+                              {% endfor %}
+                          </select>
+                       </div>
+                     </div>
+                     <div class="form-row" id="county_div" style="display: none;">
+                       <div class="form-group col-md-4">
+                         <label for="county">County : *</label>
+                         <select class="form-control" name="county" id="county" onchange="getsubcounty()">
+                              <option value="" disabled selected>Select County</option>
+                              {% for cnty in county %}
+                                  <option value="{{cnty.name}}">{{cnty.name}}</option>
+                              {% endfor %}
+                          </select>
+                       </div>
+                       <div class="form-group col-md-4">
+                         <label for="subcounty">Subcounty : *</label>
+                         <select class="form-control" name="subcounty" id="subcounty" onchange="getward()">
+                              <option value="" disabled selected>Select sub-county</option>
+                          </select>
+                       </div>
+                       <div class="form-group col-md-4">
+                         <label for="ward">Ward : *</label>
+                         <select class="form-control" name="ward" id="ward">
+                              <option value="" disabled selected>Select ward</option>
+                          </select>
+                       </div>
+                     </div>
+                     <div class="form-row" id="diagnosis_status_div">
+                       <div class="form-group col-md-6">
+                         <label for="status">Place of Diagnosis : </label>
+                         <input class="form-control" type="text" id="place_of_diagnosis" name="place_of_diagnosis" size="45" placeholder="place of diagnosis"/>
+                       </div>
+                       <div class="form-group col-md-6">
+                         <label for="datereport">Date of Contact : *</label>
+                         <input class="form-control" type="date" value="{{ day }}" id="date_of_contact" max='2000-13-13' name="date_of_contact">
+                       </div>
+                     </div>
+                     <div class="form-row" id="country_details_div">
+                       <div class="form-group col-md-6">
+                         <label for="comorbidity">Comorbidity : </label>
+                         <input class="form-control" type="text" id="comorbidity" name="comorbidity" placeholder="comorbidity"/>
+                       </div>
+                       <div class="form-group col-md-6">
+                         <label for="drugs">Any drugs on? : </label>
+                         <input class="form-control" type="text" id="drugs" name="drugs" placeholder="Drugs"/>
+                       </div>
+                    </div>
+                     <div class="form-row" id="gender_details_div">
+                        <div class="form-group col-md-6">
+                          <label for="callername">Next of Kin : </label>
+                          <input class="form-control" type="text" id="nok" name="nok" placeholder="next of kin"/>
+                        </div>
+                        <div class="form-group col-md-6">
+                          <label for="callername">Next of Kin Phone No : </label>
+                          <input class="form-control" type="number" id="nok_phone_num" name="nok_phone_num" minlength="10" placeholder="Next of kin phone number"/>
+                        </div>
+                     </div>
+                     <div class="form-row" id="save_div">
+                       <div class="form-group col-md-12">
+                         <button type="submit" id="save_button" class="btn btn-primary">Save</button>
+                       </div>
+                     </div>
+                  </form>
+                </div>
+        			</div><!-- /row-->
+        		<div class="row">
+        	</div><!-- /.row -->
+        </div><!-- /.padding-md -->
+      </div><!-- /main-container -->
+
+{% endblock %}
+
+{% block script %}
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <!-- Latest compiled and minified JavaScript -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+   <script src="https://cdnjs.cloudflare.com/ajax/libs/bootbox.js/4.4.0/bootbox.min.js"> </script>
+   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
+   <script src="https://cdn.jsdelivr.net/npm/promise-polyfill"></script>
+
+    <script>
+
+    var today = new Date();
+    var dd = today.getDate();
+    var mm = today.getMonth()+1; //January is 0!
+    var yyyy = today.getFullYear();
+    if(dd<10){
+        dd='0'+dd
+    }
+    if(mm<10){
+        mm='0'+mm
+    }
+
+    today = yyyy+'-'+mm+'-'+dd;
+    // document.getElementById("datereported").setAttribute("max", today);
+
+    $(document).ready(function(e){
+      var callsForm = $(".calls_form")
+      var call_category = $("#callCategory")
+      console.log(call_category);
+
+      if (call_category == ""){
+
+      }
+      callsForm.submit(function(e){
+        e.preventDefault();
+        console.log("inside calls_form");
+        var thisForm = $(this);
+        var endPoint = thisForm.attr("action") || window.location.href;
+        var method = thisForm.attr("method");
+        var formData = thisForm.serialize();
+
+        Swal.fire({
+          title: "Please wait!,Saving Details!",
+          // text: "Please wait",
+          imageUrl: "/static/images/ajax-loader.gif",
+          showConfirmButton: false,
+          allowOutsideClick: false
+        });
+        $.ajax({
+          type:method,
+          url:endPoint,
+          data: formData,
+          success:function(data){
+              if(data == "error"){
+              console.log(callsForm[0])
+              Swal.fire({
+                title: 'Duplicate Data Entry!!',
+                text: 'Names and Phone number entered already exist in the system and still ongoing quarantine!!',
+                icon: 'info'
+              });
+            }else {
+              Swal.fire({
+                  title: 'Success!',
+                  text: 'Quarantine Details Saved',
+                  icon: 'success'
+              });
+              callsForm[0].reset();
+          }
+          },
+          error:function(er){
+            console.log("Quarantine saving error");
+            console.log(er.responseText);
+            Swal.fire({
+              title: 'Error!',
+              text: 'Quarantine Details Cannot be Saved',
+              icon: 'error'
+            });
+          }
+        });
+
+      });
+
+    });
+
+    function get_checkbox_value() {
+        if ($('#priority').attr('checked')) {
+            $('#priority').val('1');
+        } else {
+            $('#priority').val('0');
+        }
+    }
+
+    function checkPhone(){
+       var number = $('#phone_number').val();
+       // console.log(number);
+       if(number.length < 10 || number.length > 15){
+         console.log("Enter valid phone number");
+         Swal.fire({
+           title: 'error!',
+           text: 'Enter a valid phone Number',
+           icon: 'error'
+         });
+         document.getElementById("phone_number").focus();
+       }else if(number.substring(0, 1) !== "+"){
+         console.log("Enter country code with +")
+         Swal.fire({
+           title: 'error!',
+           text: 'Enter Country code with + e.g +254',
+           icon: 'error'
+         });
+         document.getElementById("phone_number").focus();
+       }
+     }
+
+     function region_filter(){
+        var _region = document.getElementById('country').value;
+        var _county = document.getElementById('county_div');
+        console.log(_region)
+        if(_region == "KENYA"){
+          _county.style.display = 'block';
+        }else{
+          _county.style.display = 'none';
+        }
+     }
+
+     function getsubcounty(){
+
+       var county=$('#county').val();
+       console.log(county);
+       $.ajax({
+         url:'/get_subcounty/',
+         type:'POST',
+         datatype:'json',
+         data:{county:county,csrfmiddlewaretoken:$('input[name=csrfmiddlewaretoken]').val()},
+
+         success:function(data){
+           var options = '<option value="" selected disabled>Select Subcounty</option>';
+           console.log("in success");
+           console.log(data);
+           $('#subcounty').html(options);
+           for(var i=0;i<data.length;i++){
+
+             var options = '<option value="' + data[i].fields['name'] + '">' + data[i].fields['name'] + '</option>';
+             $('#subcounty').append(options);
+           }
+         },error:function(){
+           console.log("in error");
+           var options = '<option value="" selected disabled>select county</option>';
+           $('#subcounty').html(options);
+         }
+       });
+     }
+
+     function getward(){
+
+       var subcounty=$('#subcounty').val();
+       console.log(subcounty);
+       $.ajax({
+         url:'/get_ward/',
+         type:'POST',
+         datatype:'json',
+         data:{subcounty:subcounty,csrfmiddlewaretoken:$('input[name=csrfmiddlewaretoken]').val()},
+
+         success:function(data){
+           var options = '<option value="" selected disabled>Select Ward</option>';
+           console.log("in success ward");
+           console.log(data);
+           $('#ward').html(options);
+           for(var i=0;i<data.length;i++){
+
+               var options = '<option value="' + data[i].fields['organisationunitid'] + '">' + data[i].fields['name'] + '</option>';
+             $('#ward').append(options);
+           }
+         },error:function(){
+           console.log("in error");
+           var options = '<option value="" selected disabled>Select Ward</option>';
+           $('#ward').html(options);
+         }
+       });
+     }
+
+    </script>
+{% endblock %}

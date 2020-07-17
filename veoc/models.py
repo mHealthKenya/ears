@@ -804,6 +804,7 @@ class home_based_care(models.Model):
     patient_contacts = models.ForeignKey(quarantine_contacts, on_delete=models.DO_NOTHING, related_name='home_care_contact')
     health_care_worker = models.ForeignKey(User, on_delete=models.DO_NOTHING, related_name='health_care_worker_contact')
     data_source = models.CharField(max_length=255, blank=True)
+    active = models.BooleanField(default=True)
     date_created = models.DateTimeField(default=datetime.now())
 
     def __str__(self):
@@ -813,6 +814,7 @@ class discharged_quarantine(models.Model):
     patient_contacts = models.ForeignKey(quarantine_contacts, on_delete=models.DO_NOTHING, related_name='discharged_quarantine_contact')
     health_care_worker = models.ForeignKey(User, on_delete=models.DO_NOTHING, related_name='health_care_worker_discharged_quarantine')
     source = models.CharField(max_length=255, blank=True)
+    active = models.BooleanField(default=True)
     date_created = models.DateTimeField(default=datetime.now())
 
     def __str__(self):
