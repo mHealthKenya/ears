@@ -138,7 +138,7 @@
                                          <label for="weighbridgesite">Weighbridge Site : </label>
                                          <select class="form-control" name="weighbridge_name" id="weighbridge_name" >
                                               <option value="" disabled selected>Select Weighbridge Site</option>
-                                              {% for qty in weigh_site %}
+                                              {% for qty in weigh_name %}
                                                   <option value="{{qty.weighbridge_name}}">{{qty.weighbridge_name}}</option>
                                               {% endfor %}
                                           </select>
