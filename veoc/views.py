@@ -2792,14 +2792,20 @@ def truck_driver_profile(request, profileid):
     return render(request, 'veoc/truck_driver_profile.html', data)
 
 @login_required
-def truck_driver_revisit(request, profileid):
+def truck_driver_revisit(request):
 
-    patient_contact_object = quarantine_contacts.objects.filter(id = profileid)
-    print(patient_contact_object)
+    if request.method=='POST':
 
-    for p_contacts in patient_contact_object:
-        #Get the details that should be updated, then insert the new details
-        print(p_contacts.phone_number)
+        myid=request.POST.get('id','')
+        date_of_arrival = request.POST.get('date_of_arrival','')
+        border_name = request.POST.get('border_name','')
+        weighbridge_name = request.POST.get('weighbridge_name','')
+        cough = request.POST.get('cough','')
+        breathing_difficulty = request.POST.get('breathing_difficulty','')
+        fever = request.POST.get('fever','')
+        sample_taken = request.POST.get('sample_taken','')
+        sample_taken = request.POST.get('sample_taken','')
+        temperature = request.POST.get('sample_taken','')
 
     return render(request, 'veoc/truck_quarantine_complete.html', data)
 
@@ -5323,8 +5329,10 @@ def truck_complete_quarantine(request):
     all_data = quarantine_contacts.objects.all().filter(source = 'Truck Registration').filter(date_of_contact__lte = date.today()- timedelta(days=14)).order_by('-date_of_contact')
     q_data_count = quarantine_contacts.objects.all().filter(source = 'Truck Registration').filter(date_of_contact__lte = date.today()- timedelta(days=14)).count()
     quar_sites = weighbridge_sites.objects.all().order_by('weighbridge_name')
+    bord_sites = border_points.objects.all().order_by('border_name')
+    day = time.strftime("%Y-%m-%d")
 
-    data = {'all_data': all_data, 'all_data_count': q_data_count, 'weigh_name':quar_sites}
+    data = {'all_data': all_data, 'all_data_count': q_data_count, 'weigh_name':quar_sites, 'border_points': bord_sites, 'day': day}
 
     return render(request, 'veoc/truck_quarantine_complete.html', data)
 
