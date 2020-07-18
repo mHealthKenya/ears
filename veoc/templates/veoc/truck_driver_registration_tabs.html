@@ -1,14 +1,9 @@
 {% extends "veoc/main_template.html" %}
-<script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
-  <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
-  <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
-  <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
-
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
 <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet"/>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 {% block main %}
-    <style>
+  <style>
         body {font-family: Arial, Helvetica, sans-serif;}
 
         /* The Modal (background) */
@@ -67,22 +62,21 @@
                     <div class="container">
   <h2>Truck Driver Register</h2>
   <p>Kindly fill all 4 sections before submitting the form.</p>
-
   <nav>
-  <ul class="nav nav-tabs nav_content" id="nav-tab" role="tablist">
-<li><a class="nav-item nav-link active" id="nav-home-tab" data-toggle="tab" href="#nav-home" role="tab" aria-controls="nav-home" aria-selected="true">Driver Details</a></li>
-<li><a class="nav-item nav-link" id="nav-health-tab" data-toggle="tab" href="#nav-health" role="tab" aria-controls="nav-profile" aria-selected="false">Current Health Situation</a></li>
-<li><a class="nav-item nav-link" id="nav-company-tab" data-toggle="tab" href="#nav-company" role="tab" aria-controls="nav-contact" aria-selected="false">Company and Hotel Details</a></li>
-<li><a class="nav-item nav-link" id="nav-lab-tab" data-toggle="tab" href="#nav-lab" role="tab" aria-controls="nav-contact" aria-selected="false">Lab Details</a></li>
-
+  <ul class="nav nav-pills nav_content">
+<li><a data-toggle="pill" href="#nav-home">Driver Details</a></li>
+<li><a data-toggle="pill" href="#nav-health">Current Health Situation</a></li>
+<li><a data-toggle="pill" href="#nav-company">Company and Hotel Details</a></li>
+<li><a data-toggle="pill" href="#nav-lab">Lab Details</a></li>
   </ul>
 </nav>
 </div>
                     <div class="form-group col-md-12">
                         <h5><font color="#FF0000"><b><u>NB</u> : Inputs with * must have values, Fill in all sections.</b></font></h5>
                     </div>
-                    <div class="tab-content" id="nav-tabContent">
-<div class="tab-pane fade in active" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab">                    <div class="form-group col-md-12">
+                    <div class="tab-content">
+                      <div class="tab-pane fade in active" id="nav-home" >
+                      <div class="form-group col-md-12">
                       <h4 align="center"><b><u>SECTION A : TRAVELLER / TRUCK DRIVER DETAILS</u></b></h4>
                     </div>
                     <div class="form-row" id="caller_details_div">
@@ -106,7 +100,7 @@
                       </div>
                        <div class="form-group col-md-4">
                          <label for="sex">Gender : *</label>
-                         <select class="form-control" id="sex" name="sex" required>
+                         <select class="form-control" id="sex" name="sex" required >
                              <option value="Male">Male</option>
                              <option value="Female">Female</option>
                          </select>
@@ -219,17 +213,14 @@
                         </div>
                     </div>
                     <div class="form-group row">
-                                            <div class="col-md-3 offset-md-1">
-                                                   <button class=" btnNext pull-right" data-toggle="tab" href="#nav-health"
-                     class="btn btn-success" id="nextBtn">
-                                                       Next
-                                                   </button></div>
-
-
+                    <div class="col-md-12 offset-md-1">
+                        <input type="button" name="pull-right" value="Next" class="btn btn-success pull-right">
+                      </div>
+                    </div>
                      </div>
 
-                    </div>
-  <div class="tab-pane fade" id="nav-health" role="tabpanel" aria-labelledby="nav-health-tab">                      <div class="form-row col-md-12">
+  <div class="tab-pane fade" id="nav-health">
+    <div class="form-row col-md-12">
                         <h4 align="center"><b><u>SECTION B : CURRENT HEALTH SITUATION</u></b></h4>
                         <br>
                       </div>
@@ -259,7 +250,7 @@
                          </select>
                        </div>
                        <div class="form-group col-md-3">
-                         <label for="sample">Sample Taken : *</label>
+                         <label for="sample_taken">Sample Taken : *</label>
                          <select class="form-control" id="sample_taken" name="sample_taken" required>
                            <option value="" disabled selected>Select Option</option>
                            <option value="t">Yes</option>
@@ -270,7 +261,7 @@
                      <div class="form-row" id="comobidity_details_div">
                        <div class="form-group col-md-3">
                          <label for="temperature">Temperature : *</label>
-                         <input class="form-control" type=number step=0.01 id="temperature" name="temperature" onchange="checkTemp()" maxlength="5" placeholder="temperature"/>
+                         <input class="form-control" type=number step=0.01 id="temperature" name="temperature" onchange="checkTemp()" maxlength="5" placeholder="temperature" required/>
                        </div>
                        <div class="form-group col-md-3">
                          <label for="comorbidity">Comorbidity : </label>
@@ -292,21 +283,18 @@
                     <div class="form-group row">
                       <div class="col-md-3 offset-md-1">
                              <button data-toggle="tab" href="#nav-home"
-                     class="btn btn-primary">
+                     class="btn btn-primary pull-left">
                                  Previous
                              </button></div>
 
-                                            <div class="col-md-3 offset-md-1">
-                                                   <button data-toggle="tab" href="#nav-company"
-                     class="btn btn-success">
-                                                       Next
-                                                   </button></div>
+                                            <div class=" offset-md-1">
+                                                   <button class="btn btn-success pull-right">Next</button></div>
 
 
                      </div>
 
                     </div>
-                    <div class="tab-pane fade" id="nav-company" role="tabpanel" aria-labelledby="nav-company-tab">
+                    <div class="tab-pane fade" id="nav-company">
                      <div class="form-row col-md-12">
                        <h4 align="center"><b><u>SECTION C : COMPANY / ORGANIZATION  DETAILS</u></b></h4>
                        <br>
@@ -377,24 +365,21 @@
                      </div>
 
                      <div class="form-group row">
-                       <div class="col-md-3 offset-md-1">
-                              <button data-toggle="tab" href="#nav-company"
-class="btn btn-primary">
+                       <div class="col-md-8  offset-md-4">
+                              <button data-toggle="tab" href="#nav-health"
+class="btn btn-primary pull-left">
                                   Previous
                               </button></div>
 
-                                             <div class="col-md-3 offset-md-1">
-                                                    <button data-toggle="tab" href="#nav-lab"
-                      class="btn btn-success">
-                                                        Next
-                                                    </button></div>
+                                             <div class="col-md-4 offset-md-1">
+                                                    <button class="btn btn-success pull-right">Next</button></div>
 
 
                       </div>
 
                      </div>
- <div class="tab-pane fade" id="nav-lab" role="tabpanel" aria-labelledby="nav-lab-tab">                     <div class="form-row col-md-12">
-
+                     <div class="tab-pane fade" id="nav-lab">
+                        <div class="form-row col-md-12">
                            <div class="form-group" style="display: none;">
                                {% for patient_detail in patient_details %}
                                    <input class="form-control id" name="id" value="{{ patient_detail.id }}" style="display: none;">
@@ -506,27 +491,25 @@ class="btn btn-primary">
 
 <br><br>
                       <div class="form-row" id="save_div">
-                        <div class="form-group col-md-12">
-                            <button type="submit" id="save_button" class="btn btn-primary">Save</button>
+                        <div class="form-group col-md-12"><br>
+                            <button type="submit" id="save_button" class="btn btn-success"> Save  </button>
                         </div>
                       </div>
+                      <div class="form-group col-md-12">
                         <button id="myBtn" type="button" class="btn btn-primary">Take Driver Picture</button>
+                        </div>
                       </div>
                       </div>
 
  </div>
-
+    </form>
  </div>
-                  </form>
 
-{#                <button type="button" class="btn btn-primary btn-xs view_button" data-toggle="modal" data-target="#profile_photo_modal" title="View">#}
-{#                <i class="fa fa-eye"></i></button>#}
-                </div>
+<!--{#                <button type="button" class="btn btn-primary btn-xs view_button" data-toggle="modal" data-target="#profile_photo_modal" title="View">#}
+{#                <i class="fa fa-eye"></i></button>#}                -->
         			</div><!-- /row-->
-        		<div class="row">
-        	</div><!-- /.row -->
-        </div><!-- /.padding-md -->
-      </div><!-- /main-container -->
+            </div><!-- /.padding-md -->
+          </div><!-- /main-container -->
 
 
 {% endblock %}
@@ -540,21 +523,33 @@ class="btn btn-primary">
    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
    <script src="https://cdn.jsdelivr.net/npm/promise-polyfill"></script>
     <script>
-      $('.pull-right').click(function () {
-      var validationMessage = '';
+        $('.pull-right').click(function () {
+          var validationMessage = '';
 
-      // Check inputs are filled.
-      $.each($(this).closest('.tab-pane').find(':input[required]'),function () {
-          if ($(this).val() == '')
-              validationMessage += "Please fill " + $(this).closest('.form-group').find('label').html().replace('*', '') + "\n";
-      });
+        // Check inputs are filled.
+          $.each($(this).closest('.tab-pane').find(':input[required]:visible, option:selected'),function () {
+              if ($(this).val() == ''){
+                  validationMessage += "Please fill " + $(this).closest('.form-group').find('label').html().replace('*', '') + "\n";
+                }
+              });
 
-      // Validation is false
-      if (validationMessage != '')
-          alert(validationMessage);
-      else
-          $('.nav-tabs > .active').next('li').find('a').trigger('click');
-  });
+        // Validation is false
+        if (validationMessage) {
+          Swal.fire({
+            title: "Fill all the details marked with *",
+            text: validationMessage,
+            dangerMode: true,
+            button: 'Cancel Message',
+            icon: 'error',
+            timer: 3000,
+            //imageUrl: "/static/images/sort_desc.png",
+            showConfirmButton: true,
+            allowOutsideClick: false
+          })
+        }else {
+          $('.nav-pills > .active').next('li').find('a').trigger('click');
+        }
+        });
         // Get the modal
         var modal = document.getElementById("myModal");
 
