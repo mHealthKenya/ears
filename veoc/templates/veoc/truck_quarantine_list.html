@@ -25,10 +25,32 @@
                         <label for="pwd">To :</label>
                         <input class="form-control" type="date" id="date_to" name="date_to" value="{{ end_day }}" required>
                       </div>
-                      <button type="submit" class="btn btn-primary" >UPDATE</button>
+                      <button type="submit" class="btn btn-primary" >Update</button>
                     </form>
                   <!-- <button type="submit" class="btn btn-primary" align="right">Update</button> -->
               </div>
+
+              <div>
+                  <form class="form-inline" method="post" action="{% url 'veoc:truck_quarantine_list' %}">{% csrf_token %}
+                      <div class="form-group">
+                        <label for="email">From :</label>
+                        <select class="form-control" name="border_point" id="border_point">
+                           <option value="1">Busia</option>
+                           <option value="2">Namanga</option>
+                           <option value="3">Lunga Lunga</option>
+                           <option value="4">Malaba</option>
+                           <option value="5">RECTDS</option>
+                           <option value="6">Isebania</option>
+                           <option value="7">Mariakani</option>
+                           <option value="9">Kilindini</option>
+                           <option value="10">Taveta</option>
+                        </select>
+                      </div>
+                      <button type="submit" class="btn btn-primary" >Filter</button>
+                    </form>
+                  <!-- <button type="submit" class="btn btn-primary" align="right">Update</button> -->
+              </div>
+              <a href="{% url 'veoc:truck_export_csv' %}" class="btn btn-info btn-sm"><i class="fa fa-download" aria-hidden="true"></i> Truckers Raw Data</a>
 
               <div class="panel-heading"><b>COVID-19 Truck Driver Quarantine Cases Report</b></div>
 

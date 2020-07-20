@@ -711,6 +711,8 @@
 
                             <div>
                             <hr>
+                            <button class="btn btn-lg btn-success pull-right" type="button" onclick="btnSave()"><i class="glyphicon glyphicon-save"></i> Save PDF</button>
+
                                 <button class="btn btn-lg btn-success pull-right" onclick="javascript:PrintElem();" type="submit" id="btnAttPrint"><i class="glyphicon glyphicon-print"></i> Print Attestation</button>
                             </div>
                                 {% else %}
@@ -738,6 +740,18 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.1.4/jspdf.plugin.autotable.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.3.2/jspdf.min.js"></script>
   <script>
+    function btnSave(){
+      var doc = new jsPDF();
+  var elementHTML = $('#dvAttestation').html();
+  var specialElementHandlers = {
+      '#elementH': function (element, renderer) {
+          return true;
+      }
+  };
+  doc.fromHTML(elementHTML, 15, 15, {
+      'width': 170,
+      'elementHandlers': specialElementHandlers
+  });
     $(document).ready(function() {
 
         var labForm = $(".track_driver_profile")

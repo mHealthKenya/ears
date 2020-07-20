@@ -9,11 +9,11 @@
         			<div id="breadcrumb">
         				<ul class="breadcrumb">
         					 <li><i class="fa fa-home"></i><a href="{% url 'veoc:access_dashboard' %}"> Dashboard</a></li>
-        					 <li class="active">Quarantine Cases</li>
+        					 <li class="active">Self Quarantine</li>
         				</ul>
         			</div><!-- /breadcrumb-->
 
-              <div class="panel-heading">QUARANTINE CASES DATA FILTERS</div>
+              <div class="panel-heading">SELF QUARANTINE DATA FILTERS</div>
                 <div class="panel-body" align="left">
                   <form class="form-inline" method="post" action="{% url 'veoc:quarantine_list' %}">{% csrf_token %}
                       <div class="form-group">
@@ -47,16 +47,17 @@
                   <!-- <button type="submit" class="btn btn-primary" align="right">Update</button> -->
               </div>
 
-              <div class="panel-heading"><b>COVID19 Quarantine Cases Report</b></div>
+              <div class="panel-heading"><b>COVID19 Self Quarantine Report</b></div>
 
         			<div class="padding-md">
         				<div class="row">
         					<div class="col-md-12">
         						<div class="panel panel-default table-responsive">
         							<div class="panel-heading">
-        								Quarantine Cases
+        								Self Quarantine
         								<span class="label label-info pull-right" id="totalspan">{{quarantine_data_count}} Reported cases </span>
         							</div>
+                      
         							<div class="padding-md clearfix">
         							<table class="table table-hover" id="quarantine_report">
         								<thead class="thead-dark">
@@ -355,7 +356,7 @@
     function openMap(){
       google.charts.load('current', {'packages': ['map']});
       google.charts.setOnLoadCallback(drawCountyChart);
-    }    
+    }
 
     function drawCountyChart() {
       // console.log("inside drawCountyChart");

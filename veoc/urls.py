@@ -23,6 +23,8 @@ router.register('events', views.EventView)
 
 urlpatterns = [
     url('api/', include(router.urls)),
+    url(r'^export_csv/$', views.export_csv, name='export_csv'),
+    url(r'^truck_export_csv/$', views.truck_export_csv, name='truck_export_csv'),
     url(r'^$', views.login, name='login'),
     url(r'^login/$', views.login, name='login'),
     url(r'^logout/$', views.logout, name='logout'),

@@ -59,6 +59,9 @@
                             <th>Has Cough?</th>
                             <th>Difficulty in breathing?</th>
                             <th>Comments</th>
+                            <th>Registered By</th>
+                            <th>County</th>
+                            <th>Sub County</th>
                           </tr>
                           </thead>
                           <tbody>
@@ -99,6 +102,9 @@
                             {% else %}
                               <td>None</td>
                             {% endif %}
+                            <td>{{ follow.patient_contacts.contact_by_id }}</td>
+                              <td>{{ follow.patient_contacts.county_id }}</td>
+                                <td>{{ follow.patient_contacts.subcounty_id }}</td>
                           </tr>
                         {% endfor %}
                       </tbody>

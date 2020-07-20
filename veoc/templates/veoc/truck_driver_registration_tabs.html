@@ -1,6 +1,9 @@
 {% extends "veoc/main_template.html" %}
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+<link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet"/>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 {% block main %}
-    <style>
+  <style>
         body {font-family: Arial, Helvetica, sans-serif;}
 
         /* The Modal (background) */
@@ -59,25 +62,27 @@
                     <div class="container">
   <h2>Truck Driver Register</h2>
   <p>Kindly fill all 4 sections before submitting the form.</p>
-  <ul class="nav nav-pills">
-    <li class="active"><a data-toggle="pill" href="#home">Traveller/Driver Details</a></li>
-    <li><a data-toggle="pill" href="#menu1">Current Health Situation</a></li>
-    <li><a data-toggle="pill" href="#menu2">Company and Hotel Details</a></li>
-    <li><a data-toggle="pill" href="#menu3">Lab/Sample Collection Details</a></li>
+  <nav>
+  <ul class="nav nav-pills nav_content">
+<li><a data-toggle="pill" href="#nav-home">Driver Details</a></li>
+<li><a data-toggle="pill" href="#nav-health">Current Health Situation</a></li>
+<li><a data-toggle="pill" href="#nav-company">Company and Hotel Details</a></li>
+<li><a data-toggle="pill" href="#nav-lab">Lab Details</a></li>
   </ul>
+</nav>
 </div>
                     <div class="form-group col-md-12">
                         <h5><font color="#FF0000"><b><u>NB</u> : Inputs with * must have values, Fill in all sections.</b></font></h5>
                     </div>
                     <div class="tab-content">
-                      <div id="home" class="tab-pane fade in active">
-                    <div class="form-group col-md-12">
+                      <div class="tab-pane fade in active" id="nav-home" >
+                      <div class="form-group col-md-12">
                       <h4 align="center"><b><u>SECTION A : TRAVELLER / TRUCK DRIVER DETAILS</u></b></h4>
                     </div>
                     <div class="form-row" id="caller_details_div">
                        <div class="form-group col-md-4">
                          <label for="firstname">First Name : *</label>
-                         <input class="form-control" type="text" id="first_name" name="first_name" size="45" placeholder="first name" placeholder=""/>
+                         <input class="form-control" type="text" id="first_name" name="first_name" size="45" placeholder="first name" required/>
                        </div>
                        <div class="form-group col-md-4">
                          <label for="middlename">Midle Name : </label>
@@ -85,30 +90,30 @@
                        </div>
                        <div class="form-group col-md-4">
                          <label for="callernumber">Last Name : *</label>
-                         <input class="form-control" type="text" id="last_name" name="last_name" maxlength="10" size="45" placeholder="last name" placeholder=""/>
+                         <input class="form-control" type="text" id="last_name" name="last_name" maxlength="10" size="45" placeholder="last name" required/>
                        </div>
                     </div>
                     <div class="form-row" id="gender_details_div">
                       <div class="form-group col-md-4">
                         <label for="callername">Phone Number : *</label>
-                        <input class="form-control" type="tel" id="phone_number" name="phone_number" onchange="checkPhone()" minlength="10" placeholder="country code first e.g +254720000000" placeholder=""/>
+                        <input class="form-control" type="tel" id="phone_number" name="phone_number" onchange="checkPhone()" minlength="10" placeholder="country code first e.g +254720000000" required/>
                       </div>
                        <div class="form-group col-md-4">
                          <label for="sex">Gender : *</label>
-                         <select class="form-control" id="sex" name="sex">
+                         <select class="form-control" id="sex" name="sex" required >
                              <option value="Male">Male</option>
                              <option value="Female">Female</option>
                          </select>
                        </div>
                        <div class="form-group col-md-4">
                          <label for="callernumber">Date of Birth : *</label>
-                         <input class="form-control" type="date" value="{{ day }}" id="dob" max='2000-13-13' name="dob" placeholder=""="">
+                         <input class="form-control" type="date" value="{{ day }}" id="dob" max='2000-13-13' name="dob" required>
                        </div>
                     </div>
                     <div class="form-row" id="country_details_div">
                       <div class="form-group col-md-4">
                         <label for="country">Country of Origin : *</label>
-                        <select class="form-control" name="country" id="country" onchange="region_filter()">
+                        <select class="form-control" name="country" id="country" onchange="region_filter()" required>
                              <option value="" disabled selected>Select Country</option>
                              {% for cntry in country %}
                                  <option value="{{cntry.name}}">{{cntry.name}}</option>
@@ -117,7 +122,7 @@
                       </div>
                       <div class="form-group col-md-4">
                         <label for="nationality">Nationality : *</label>
-                        <select class="form-control" name="nationality" id="nationality">
+                        <select class="form-control" name="nationality" id="nationality" required>
                              <option value="" disabled selected>Select Nationality</option>
                              {% for cntry in country %}
                                  <option value="{{cntry.name}}">{{cntry.name}}</option>
@@ -126,13 +131,13 @@
                       </div>
                        <div class="form-group col-md-4">
                          <label for="callernumber">ID / Passport / Alien Number : *</label>
-                         <input class="form-control" type="text" id="passport_number" name="passport_number" maxlength="10" size="45" placeholder="passport number" placeholder=""/>
+                         <input class="form-control" type="text" id="passport_number" name="passport_number" maxlength="10" size="45" placeholder="passport number" required/>
                        </div>
                     </div>
                     <div class="form-row" id="county_div" style="display: none;">
                       <div class="form-group col-md-4">
                         <label for="county">County : *</label>
-                        <select class="form-control" name="county" id="county" onchange="getsubcounty()">
+                        <select class="form-control" name="county" id="county" onchange="getsubcounty()" required>
                              <option value="" disabled selected>Select County</option>
                              {% for cnty in county %}
                                  <option value="{{cnty.name}}">{{cnty.name}}</option>
@@ -155,7 +160,7 @@
                     <div class="form-row" id="gender_details_div">
                        <div class="form-group col-md-6">
                          <label for="borderpoint">Border Point : *</label>
-                         <select class="form-control" name="border_name" id="border_name" >
+                         <select class="form-control" name="border_name" id="border_name" required>
                               <option value="" disabled selected>Select Border Point</option>
                               {% for b_point in border_points %}
                                   <option value="{{b_point.border_name}}">{{b_point.border_name}}</option>
@@ -164,7 +169,7 @@
                        </div>
                        <div class="form-group col-md-6">
                          <label for="weighbridgesite">Weighbridge Site : *</label>
-                         <select class="form-control" name="weighbridge_name" id="weighbridge_name" >
+                         <select class="form-control" name="weighbridge_name" id="weighbridge_name" required>
                               <option value="" disabled selected>Select Weighbridge Site</option>
                               {% for qty in weigh_site %}
                                   <option value="{{qty.weighbridge_name}}">{{qty.weighbridge_name}}</option>
@@ -193,7 +198,7 @@
                       </div>
                         <div class="form-group col-md-6">
                              <label for="datereport">Date of Arrival : *</label>
-                             <input class="form-control" type="date" value="{{ day }}" id="date_of_arrival" max="{{ day }}" name="date_of_arrival">
+                             <input class="form-control" type="date" value="{{ day }}" id="date_of_arrival" max="{{ day }}" name="date_of_arrival" required>
                         </div>
                     </div>
 
@@ -207,16 +212,22 @@
                             <span class="btn btn-success" onclick="document.getElementById('myModal').style.display='none'">Upload &#10004;</span>
                         </div>
                     </div>
+                    <div class="form-group row">
+                    <div class="col-md-12 offset-md-1">
+                        <input type="button" name="pull-right" value="Next" class="btn btn-success pull-right">
+                      </div>
                     </div>
-                      <div id="menu1" class="tab-pane fade">
-                      <div class="form-row col-md-12">
+                     </div>
+
+  <div class="tab-pane fade" id="nav-health">
+    <div class="form-row col-md-12">
                         <h4 align="center"><b><u>SECTION B : CURRENT HEALTH SITUATION</u></b></h4>
                         <br>
                       </div>
                      <div class="form-row" id="symptoms_div">
                        <div class="form-group col-md-3">
                          <label for="cough">Cough : *</label>
-                         <select class="form-control" id="cough" name="cough" placeholder="">
+                         <select class="form-control" id="cough" name="cough" required>
                            <option value="" disabled selected>Select Option</option>
                            <option value="t">Yes</option>
                            <option value="f">No</option>
@@ -224,7 +235,7 @@
                        </div>
                        <div class="form-group col-md-3">
                          <label for="breathing">Breathing Difficulty : *</label>
-                         <select class="form-control" id="breathing_difficulty" name="breathing_difficulty" placeholder="">
+                         <select class="form-control" id="breathing_difficulty" name="breathing_difficulty" required>
                            <option value="" disabled selected>Select Option</option>
                            <option value="t">Yes</option>
                            <option value="f">No</option>
@@ -232,15 +243,15 @@
                        </div>
                        <div class="form-group col-md-3">
                          <label for="fever">Fever : *</label>
-                         <select class="form-control" id="fever" name="fever" placeholder="">
+                         <select class="form-control" id="fever" name="fever" required>
                            <option value="" disabled selected>Select Option</option>
                            <option value="t">Yes</option>
                            <option value="f">No</option>
                          </select>
                        </div>
                        <div class="form-group col-md-3">
-                         <label for="sample">Sample Taken : *</label>
-                         <select class="form-control" id="sample_taken" name="sample_taken" placeholder="">
+                         <label for="sample_taken">Sample Taken : *</label>
+                         <select class="form-control" id="sample_taken" name="sample_taken" required>
                            <option value="" disabled selected>Select Option</option>
                            <option value="t">Yes</option>
                            <option value="f">No</option>
@@ -250,7 +261,7 @@
                      <div class="form-row" id="comobidity_details_div">
                        <div class="form-group col-md-3">
                          <label for="temperature">Temperature : *</label>
-                         <input class="form-control" type=number step=0.01 id="temperature" name="temperature" onchange="checkTemp()" maxlength="5" placeholder="temperature"/>
+                         <input class="form-control" type=number step=0.01 id="temperature" name="temperature" onchange="checkTemp()" maxlength="5" placeholder="temperature" required/>
                        </div>
                        <div class="form-group col-md-3">
                          <label for="comorbidity">Comorbidity : </label>
@@ -269,8 +280,21 @@
                          </select>
                        </div>
                     </div>
+                    <div class="form-group row">
+                      <div class="col-md-3 offset-md-1">
+                             <button data-toggle="tab" href="#nav-home"
+                     class="btn btn-primary pull-left">
+                                 Previous
+                             </button></div>
+
+                                            <div class=" offset-md-1">
+                                                   <button class="btn btn-success pull-right">Next</button></div>
+
+
+                     </div>
+
                     </div>
-                      <div id="menu2" class="tab-pane fade">
+                    <div class="tab-pane fade" id="nav-company">
                      <div class="form-row col-md-12">
                        <h4 align="center"><b><u>SECTION C : COMPANY / ORGANIZATION  DETAILS</u></b></h4>
                        <br>
@@ -279,11 +303,11 @@
                      <div class="form-row" id="company_div">
                        <div class="form-group col-md-4">
                          <label for="c_name">Company Name : *</label>
-                         <input class="form-control" type="text" id="company_name" name="company_name" size="45" placeholder="company name" placeholder=""/>
+                         <input class="form-control" type="text" id="company_name" name="company_name" size="45" placeholder="company name" required/>
                        </div>
                        <div class="form-group col-md-4">
                          <label for="c_phone">Company Phone : *</label>
-                         <input class="form-control" type="tel" id="company_phone" name="company_phone" placeholder="company phone" placeholder="">
+                         <input class="form-control" type="tel" id="company_phone" name="company_phone" placeholder="company phone" required>
                        </div>
                        <div class="form-group col-md-4">
                          <label for="c_address">Company Physical Address : </label>
@@ -301,7 +325,7 @@
                        </div>
                        <div class="form-group col-md-4">
                          <label for="v_reg">Vehicle Registration : *</label>
-                         <input class="form-control" type="text" id="vehicle_registration" name="vehicle_registration" placeholder="vehicle registration" placeholder="">
+                         <input class="form-control" type="text" id="vehicle_registration" name="vehicle_registration" placeholder="vehicle registration" required>
                        </div>
                      </div>
                      <div class="form-row col-md-12">
@@ -339,10 +363,23 @@
                          <textarea class="form-control" id="action_taken" rows="3" name="action_taken" placeholder="Enter action taken"></textarea>
                        </div>
                      </div>
-                     </div>
-                     <div id="menu3" class="tab-pane fade">
-                     <div class="form-row col-md-12">
 
+                     <div class="form-group row">
+                       <div class="col-md-8  offset-md-4">
+                              <button data-toggle="tab" href="#nav-health"
+class="btn btn-primary pull-left">
+                                  Previous
+                              </button></div>
+
+                                             <div class="col-md-4 offset-md-1">
+                                                    <button class="btn btn-success pull-right">Next</button></div>
+
+
+                      </div>
+
+                     </div>
+                     <div class="tab-pane fade" id="nav-lab">
+                        <div class="form-row col-md-12">
                            <div class="form-group" style="display: none;">
                                {% for patient_detail in patient_details %}
                                    <input class="form-control id" name="id" value="{{ patient_detail.id }}" style="display: none;">
@@ -357,7 +394,7 @@
                            <div class="form-group">
                                <div class="col-xs-6">
                                    <label for="type_of_case"><h4>Type of Case :</h4></label>
-                                   <select class="form-control" id="type_of_case" name="type_of_case" placeholder="">
+                                   <select class="form-control" id="type_of_case" name="type_of_case" required>
                                        <option value="" disabled selected>Select Option</option>
                                        <option value="Initial">Initial</option>
                                        <option value="Repeat">Repeat</option>
@@ -367,7 +404,7 @@
                            <div class="form-group">
                                <div class="col-xs-6">
                                    <label for="travel_history"><h4>Travel History (Last 14 days)? :</h4></label>
-                                   <select class="form-control" id="travel_history" name="travel_history" onchange="activate_countries()" placeholder="">
+                                   <select class="form-control" id="travel_history" name="travel_history" onchange="activate_countries()" required>
                                        <option value="" disabled selected>Select Option</option>
                                        <option value="True">Yes</option>
                                        <option value="False">No</option>
@@ -388,7 +425,7 @@
                            <div class="form-group">
                                <div class="col-xs-6">
                                    <label for="travel_history"><h4>Contact with case ? :</h4></label>
-                                   <select class="form-control" id="contact_with_case" name="contact_with_case" placeholder="">
+                                   <select class="form-control" id="contact_with_case" name="contact_with_case" required>
                                        <option value="" disabled selected>Select Option</option>
                                        <option value="True">Yes</option>
                                        <option value="False">No</option>
@@ -404,7 +441,7 @@
                            <div class="form-group">
                                <div class="col-xs-6">
                                    <label for="have_symptoms"><h4>Have symptoms ? :</h4></label>
-                                   <select class="form-control" id="have_symptoms" name="have_symptoms" placeholder="">
+                                   <select class="form-control" id="have_symptoms" name="have_symptoms" required>
                                        <option value="" disabled selected>Select Option</option>
                                        <option value="True">Yes</option>
                                        <option value="False">No</option>
@@ -432,7 +469,7 @@
                            <div class="form-group">
                                <div class="col-xs-6">
                                    <label for="specimen_taken"><h4>Specimen Type :</h4></label>
-                                   <select class="form-control" id="specimen_type" name="specimen_type" placeholder="">
+                                   <select class="form-control" id="specimen_type" name="specimen_type" required>
                                        <option value="" disabled selected>Select specimen type</option>
                                        {% for samp in samp_types %}
                                            <option value="{{ samp.id }}">{{ samp.name }}</option>
@@ -443,7 +480,7 @@
                            <div class="form-group">
                                <div class="col-xs-6">
                                    <label for="lab_name"><h4>Labaratory Name</h4></label>
-                                   <select class="form-control" id="lab_name" name="lab_name" placeholder="">
+                                   <select class="form-control" id="lab_name" name="lab_name" required>
                                        <option value="" disabled selected>Select Laboratory</option>
                                        {% for lab in labs %}
                                            <option value="{{ lab.id }}">{{ lab.name }}</option>
@@ -454,27 +491,25 @@
 
 <br><br>
                       <div class="form-row" id="save_div">
-                        <div class="form-group col-md-12">
-                            <button type="submit" id="save_button" class="btn btn-primary">Save</button>
+                        <div class="form-group col-md-12"><br>
+                            <button type="submit" id="save_button" class="btn btn-success"> Save  </button>
                         </div>
                       </div>
+                      <div class="form-group col-md-12">
                         <button id="myBtn" type="button" class="btn btn-primary">Take Driver Picture</button>
+                        </div>
                       </div>
                       </div>
 
  </div>
-
+    </form>
  </div>
-                  </form>
 
-{#                <button type="button" class="btn btn-primary btn-xs view_button" data-toggle="modal" data-target="#profile_photo_modal" title="View">#}
-{#                <i class="fa fa-eye"></i></button>#}
-                </div>
+<!--{#                <button type="button" class="btn btn-primary btn-xs view_button" data-toggle="modal" data-target="#profile_photo_modal" title="View">#}
+{#                <i class="fa fa-eye"></i></button>#}                -->
         			</div><!-- /row-->
-        		<div class="row">
-        	</div><!-- /.row -->
-        </div><!-- /.padding-md -->
-      </div><!-- /main-container -->
+            </div><!-- /.padding-md -->
+          </div><!-- /main-container -->
 
 
 {% endblock %}
@@ -488,6 +523,33 @@
    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
    <script src="https://cdn.jsdelivr.net/npm/promise-polyfill"></script>
     <script>
+        $('.pull-right').click(function () {
+          var validationMessage = '';
+
+        // Check inputs are filled.
+          $.each($(this).closest('.tab-pane').find(':input[required]:visible, option:selected'),function () {
+              if ($(this).val() == ''){
+                  validationMessage += "Please fill " + $(this).closest('.form-group').find('label').html().replace('*', '') + "\n";
+                }
+              });
+
+        // Validation is false
+        if (validationMessage) {
+          Swal.fire({
+            title: "Fill all the details marked with *",
+            text: validationMessage,
+            dangerMode: true,
+            button: 'Cancel Message',
+            icon: 'error',
+            timer: 3000,
+            //imageUrl: "/static/images/sort_desc.png",
+            showConfirmButton: true,
+            allowOutsideClick: false
+          })
+        }else {
+          $('.nav-pills > .active').next('li').find('a').trigger('click');
+        }
+        });
         // Get the modal
         var modal = document.getElementById("myModal");
 

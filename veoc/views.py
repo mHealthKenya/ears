@@ -41,6 +41,36 @@ import uuid
 from django.core.mail import send_mail
 from django.conf import settings
 
+
+#export raw data as csv_file
+def export_csv(request):
+  response = HttpResponse(content_type='text/csv')
+  response['Content-Disposition'] = 'attachment;  filename="users.csv"'
+  writer = csv.writer(response)
+  writer.writerow(['Username', 'First name', 'Last name', 'Email address', 'Is Superuser', 'Last Login', 'Is Staff', 'Is Active', 'Date Joined'])
+  users = User.objects.all().values_list('username', 'first_name', 'last_name', 'email', 'is_superuser', 'last_login', 'is_staff', 'is_active', 'date_joined')
+  for user in users:
+      writer.writerow(user)
+  return response
+
+#export raw data as csv_file fro truck quarantine list
+def truck_export_csv(request):
+    q_data = quarantine_contacts.objects.filter(source = 'Truck Registration').order_by('-date_of_contact')
+    for d in q_data:
+        t_details = truck_quarantine_contacts.objects.values_list('street')
+        #truck_cont_details = []
+        #truck_cont_details.append(t_details)
+    response = HttpResponse(content_type='text/csv')
+    response['Content-Disposition'] = 'attachment;  filename="truck_drivers_quarantine_list.csv"'
+    writer = csv.writer(response)
+    writer.writerow(['Street', 'Village', 'Number Plate', 'Company Name', 'Company Phone', 'Company Pyysical Address', 'Company Street', 'Company Building', 'Cough', 'Breathing Difficulty', 'Fever', 'Sample Taken', 'Action Taken', 'Hotel', 'Hotel Phone Number', 'Hotel Town', 'Date Check In', 'Date Check Out', 'Temperature'])
+    t_details = truck_quarantine_contacts.objects.values_list('street', 'village', 'vehicle_registration', 'company_name', 'company_phone', 'company_physical_address', 'company_street', 'company_building', 'cough', 'breathing_difficulty', 'fever', 'sample_taken', 'action_taken', 'hotel', 'hotel_phone', 'hotel_town', 'date_check_in', 'date_check_out', 'temperature')
+    #truckers = User.objects.all().values_list('username', 'first_name', 'last_name', 'email', 'is_superuser', 'last_login', 'is_staff', 'is_active', 'date_joined')
+    for obj in t_details:
+      writer.writerow(obj)
+    return response
+
+
 # Create your views here.
 contacts = contact_type.objects.all()
 
@@ -287,11 +317,11 @@ def user_register(request):
 
         user.save()
 
-        # subject = 'Jitenge System Registration'
-        # message = 'Dear ' + first_name + ',' + '\n' + '\n' + 'You have been registered on the Jitenge System (EARS - Emergency Alert Reporting System) under ' + org_unit + '\n' + 'Your username is '+ user_name +' and your password is  '  + email + '. You can use these for the initial login. Kindly change your password once you login for the first time.' + '\n' + 'You can access the system through this link https://ears.mhealthkenya.co.ke/.' + '\n'+'Thank You.'
-        # email_from = settings.EMAIL_HOST_USER
-        # recipient_list = [email]
-        # send_mail(subject, message, email_from, recipient_list)
+        subject = 'Jitenge System Registration'
+        message = 'Dear ' + first_name + ',' + '\n' + '\n' + 'You have been registered on the Jitenge System (EARS - Emergency Alert Reporting System) ' + '\n' + 'Your username is '+ user_name +' and your password is  '  + email + '. You can use these for the initial login. Kindly change your password once you login for the first time.' + '\n' + 'You can access the system through this link https://ears.mhealthkenya.co.ke/.' + '\n'+'Thank You.'
+        email_from = settings.EMAIL_HOST_USER
+        recipient_list = [email]
+        send_mail(subject, message, email_from, recipient_list)
 
         user_id = user.pk
         userObject = User.objects.get(pk = user_id)
@@ -4273,37 +4303,70 @@ def truck_quarantine_list(request):
     truck_cont_details = []
 
     if request.method == 'POST':
-
+        border_point = request.POST.get('border_point','')
         date_from = request.POST.get('date_from','')
         date_to = request.POST.get('date_to','')
 
-        if(user_level == 1 or user_level == 2):
-            print("inside National")
-            #add a border point filter to enable filtering specific border point--------
-            q_data_count = quarantine_contacts.objects.filter(date_of_contact__gte = date_from, date_of_contact__lte=date_to).filter(source = 'Truck Registration').count()
-            q_data = quarantine_contacts.objects.filter(source = 'Truck Registration').filter(date_of_contact__gte = date_from, date_of_contact__lte=date_to).order_by('-date_of_contact')
-            for d in q_data:
-                t_details = truck_quarantine_contacts.objects.filter(patient_contacts=d.id).values_list('border_point__border_name', flat=True).first()
-                print(t_details)
-                truck_cont_details.append(t_details)
+        if border_point:
+            day = time.strftime("%Y-%m-%d")
+            date_to = day
+            date_from = day
 
-        elif(user_level == 7):
-            print("inside Border")
-            #find ways of filtering data based on the border point-------
-            q_data_count = quarantine_contacts.objects.filter(date_of_contact__gte = date_from, date_of_contact__lte=date_to).filter(source = 'Truck Registration').count()
-            q_data = quarantine_contacts.objects.filter(source = 'Truck Registration').filter(date_of_contact__gte = date_from, date_of_contact__lte=date_to).order_by('-date_of_contact')
-            for d in q_data:
-                t_details = truck_quarantine_contacts.objects.filter(patient_contacts=d.id).filter(border_point__border_name=user_access_level).values_list('border_point__border_name', flat=True).first()
-                print(t_details)
-                truck_cont_details.append(t_details)
+            if(user_level == 1 or user_level == 2):
+                print("inside National")
+                #add a border point filter to enable filtering specific border point--------
+                q_data_count = quarantine_contacts.objects.filter(source = 'Truck Registration').count()
+                q_data = quarantine_contacts.objects.filter(source = 'Truck Registration').order_by('-date_of_contact')
+                for d in q_data:
+                    t_details = truck_quarantine_contacts.objects.filter(patient_contacts=d.id, border_point_id=border_point).values_list('border_point__border_name', flat=True).first()
+                    print(t_details)
+                    truck_cont_details.append(t_details)
 
+            elif(user_level == 7):
+                print("inside Border")
+                #find ways of filtering data based on the border point-------
+                q_data_count = quarantine_contacts.objects.filter(source = 'Truck Registration').count()
+                q_data = quarantine_contacts.objects.filter(source = 'Truck Registration').order_by('-date_of_contact')
+                for d in q_data:
+                    t_details = truck_quarantine_contacts.objects.filter(patient_contacts=d.id).filter(border_point__border_name=user_access_level).values_list('border_point__border_name', flat=True).first()
+                    print(t_details)
+                    truck_cont_details.append(t_details)
+
+            else:
+                print("inside non border users")
+                q_data_count = quarantine_contacts.objects.filter(source = 'Kitu hakuna').count()
+                q_data = quarantine_contacts.objects.filter(source = 'Kitu hakuna').order_by('-date_of_contact')
+                for d in q_data:
+                    t_details = truck_quarantine_contacts.objects.filter(patient_contacts=d.id)
+                    truck_cont_details.append(t_details)
         else:
-            print("inside non border users")
-            q_data_count = quarantine_contacts.objects.filter(date_of_contact__gte = date_from, date_of_contact__lte=date_to).filter(source = 'Kitu hakuna').count()
-            q_data = quarantine_contacts.objects.filter(source = 'Kitu hakuna').filter(date_of_contact__gte = date_from, date_of_contact__lte=date_to).order_by('-date_of_contact')
-            for d in q_data:
-                t_details = truck_quarantine_contacts.objects.filter(patient_contacts=d.id)
-                truck_cont_details.append(t_details)
+            if(user_level == 1 or user_level == 2):
+                print("inside National")
+                #add a border point filter to enable filtering specific border point--------
+                q_data_count = quarantine_contacts.objects.filter(date_of_contact__gte = date_from, date_of_contact__lte=date_to, ).filter(source = 'Truck Registration').count()
+                q_data = quarantine_contacts.objects.filter(source = 'Truck Registration').filter(date_of_contact__gte = date_from, date_of_contact__lte=date_to).order_by('-date_of_contact')
+                for d in q_data:
+                    t_details = truck_quarantine_contacts.objects.filter(patient_contacts=d.id, border_point_id=border_point).values_list('border_point__border_name', flat=True).first()
+                    print(t_details)
+                    truck_cont_details.append(t_details)
+
+            elif(user_level == 7):
+                print("inside Border")
+                #find ways of filtering data based on the border point-------
+                q_data_count = quarantine_contacts.objects.filter(date_of_contact__gte = date_from, date_of_contact__lte=date_to).filter(source = 'Truck Registration').count()
+                q_data = quarantine_contacts.objects.filter(source = 'Truck Registration').filter(date_of_contact__gte = date_from, date_of_contact__lte=date_to).order_by('-date_of_contact')
+                for d in q_data:
+                    t_details = truck_quarantine_contacts.objects.filter(patient_contacts=d.id).filter(border_point__border_name=user_access_level).values_list('border_point__border_name', flat=True).first()
+                    print(t_details)
+                    truck_cont_details.append(t_details)
+
+            else:
+                print("inside non border users")
+                q_data_count = quarantine_contacts.objects.filter(date_of_contact__gte = date_from, date_of_contact__lte=date_to).filter(source = 'Kitu hakuna').count()
+                q_data = quarantine_contacts.objects.filter(source = 'Kitu hakuna').filter(date_of_contact__gte = date_from, date_of_contact__lte=date_to).order_by('-date_of_contact')
+                for d in q_data:
+                    t_details = truck_quarantine_contacts.objects.filter(patient_contacts=d.id)
+                    truck_cont_details.append(t_details)
 
         my_list_data = zip(q_data, truck_cont_details)
 
@@ -4342,6 +4405,7 @@ def truck_quarantine_list(request):
 
         day = time.strftime("%Y-%m-%d")
         data = {'quarantine_data_count': q_data_count, 'weigh_name':quar_sites, 'my_list_data' :my_list_data, 'start_day': day, 'end_day': day}
+        print(truck_cont_details)
 
     return render(request, 'veoc/truck_quarantine_list.html', data)
 
@@ -5316,24 +5380,52 @@ def complete_home_care(request):
 @login_required
 def truck_ongoing_quarantine(request):
 
-    all_data = quarantine_contacts.objects.all().filter(source = 'Truck Registration').filter(date_of_contact__gte = date.today()- timedelta(days=14)).order_by('-date_of_contact')
-    q_data_count = quarantine_contacts.objects.all().filter(source = 'Truck Registration').filter(date_of_contact__gte = date.today()- timedelta(days=14)).count()
-    quar_sites = weighbridge_sites.objects.all().order_by('weighbridge_name')
+    if request.method == "POST":
+        date_from = request.POST.get('date_from', '')
+        date_to = request.POST.get('date_to', '')
+        day = time.strftime("%Y-%m-%d")
 
-    data = {'all_data': all_data, 'all_data_count': q_data_count, 'weigh_name':quar_sites}
+        all_data = quarantine_contacts.objects.all().filter(source = 'Truck Registration').filter(date_of_contact__gte = date_from , date_of_contact__lte = date_to).order_by('-date_of_contact')
+        q_data_count = quarantine_contacts.objects.all().filter(source = 'Truck Registration').filter(date_of_contact__gte = date_from, date_of_contact__lte = date_to).count()
+        quar_sites = weighbridge_sites.objects.all().order_by('weighbridge_name')
+
+        data = {'all_data': all_data, 'all_data_count': q_data_count, 'weigh_name':quar_sites, 'day':day}
+    else:
+        all_data = quarantine_contacts.objects.all().filter(source = 'Truck Registration').filter(date_of_contact__gte = date.today()- timedelta(days=14)).order_by('-date_of_contact')
+        q_data_count = quarantine_contacts.objects.all().filter(source = 'Truck Registration').filter(date_of_contact__gte = date.today()- timedelta(days=14)).count()
+        quar_sites = weighbridge_sites.objects.all().order_by('weighbridge_name')
+        day = time.strftime("%Y-%m-%d")
+
+        data = {'all_data': all_data, 'all_data_count': q_data_count, 'weigh_name':quar_sites, 'day':day}
 
     return render(request, 'veoc/truck_ongoing_complete.html', data)
 
 @login_required
 def truck_complete_quarantine(request):
 
-    all_data = quarantine_contacts.objects.all().filter(source = 'Truck Registration').filter(date_of_contact__lte = date.today()- timedelta(days=14)).order_by('-date_of_contact')
-    q_data_count = quarantine_contacts.objects.all().filter(source = 'Truck Registration').filter(date_of_contact__lte = date.today()- timedelta(days=14)).count()
-    quar_sites = weighbridge_sites.objects.all().order_by('weighbridge_name')
-    bord_sites = border_points.objects.all().order_by('border_name')
-    day = time.strftime("%Y-%m-%d")
+    if request.method == "POST":
+        date_from = request.POST.get('date_from', '')
+        date_to = request.POST.get('date_to', '')
+        day = time.strftime("%Y-%m-%d")
 
-    data = {'all_data': all_data, 'all_data_count': q_data_count, 'weigh_name':quar_sites, 'border_points': bord_sites, 'day': day}
+
+        all_data = quarantine_contacts.objects.all().filter(source = 'Truck Registration').filter(date_of_contact__gte = date_from, date_of_contact__lte = date_to).order_by('-date_of_contact')
+        q_data_count = quarantine_contacts.objects.all().filter(source = 'Truck Registration').filter(date_of_contact__gte = date_from, date_of_contact__lte = date_to).count()
+        quar_sites = weighbridge_sites.objects.all().order_by('weighbridge_name')
+        bord_sites = border_points.objects.all().order_by('border_name')
+
+        data = {'all_data': all_data, 'all_data_count': q_data_count, 'weigh_name':quar_sites, 'border_points': bord_sites, 'day': day}
+
+
+
+    else:
+        all_data = quarantine_contacts.objects.all().filter(source = 'Truck Registration').filter(date_of_contact__lte = date.today()- timedelta(days=14)).order_by('-date_of_contact')
+        q_data_count = quarantine_contacts.objects.all().filter(source = 'Truck Registration').filter(date_of_contact__lte = date.today()- timedelta(days=14)).count()
+        quar_sites = weighbridge_sites.objects.all().order_by('weighbridge_name')
+        bord_sites = border_points.objects.all().order_by('border_name')
+        day = time.strftime("%Y-%m-%d")
+
+        data = {'all_data': all_data, 'all_data_count': q_data_count, 'weigh_name':quar_sites, 'border_points': bord_sites, 'day': day}
 
     return render(request, 'veoc/truck_quarantine_complete.html', data)
 
