@@ -751,6 +751,25 @@ class quarantine_revisit(models.Model):
     def __str__(self):
         return self.patient_contacts.first_name + ' - ' + self.patient_contacts.phone_number
 
+class covid_results(models.Model):
+    person_phone_regex = RegexValidator(regex=r'^\+?1?\d{10,15}$', message="Phone number must be entered in the format: '+999999999'. Up to 15 digits allowed.")
+
+    patient_contacts = models.ForeignKey(quarantine_contacts, on_delete=models.DO_NOTHING, related_name='results_contact')
+    id_number = models.CharField(max_length=200)
+    name = models.CharField(max_length=200)
+    phone_number = models.CharField(validators=[person_phone_regex], max_length=255, blank=True)
+    lab = models.CharField(max_length=200, blank=True)
+    date_tested = models.DateTimeField(default=datetime.now())
+    result = models.CharField(max_length=200)
+    created_at = models.DateTimeField(default=datetime.now())
+    updated_at = models.DateTimeField(default=datetime.now())
+    api_processed = models.IntegerField(default=0)
+    api_access_date = models.DateTimeField(default=datetime.now())
+    source = models.CharField(max_length=200)
+
+    def __str__(self):
+        return self.patient_contacts.first_name + ' - ' + self.patient_contacts.phone_number
+
 class testing_labs(models.Model):
     name=models.CharField(max_length=200)
 

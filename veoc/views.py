@@ -2777,6 +2777,7 @@ def truck_driver_profile(request, profileid):
             # created_by=F("patient_contacts__created_by_id__username"),
         )
 
+    lab_results = covid_results.objects.filter(patient_contacts = profileid)
     # print(lab_data)
 
     labs = testing_labs.objects.all()
@@ -2784,7 +2785,7 @@ def truck_driver_profile(request, profileid):
     lab_res_types = covid_results_classifications.objects.all().order_by('id')
     samp_types = covid_sample_types.objects.all().order_by('id')
     day = time.strftime("%Y-%m-%d")
-    data = {'patient_contact_object': patient_contact_object, 'lab_data': lab_data, 'patient_details':patient_details, 'lab_res': lab_res,
+    data = {'patient_contact_object': patient_contact_object, 'lab_data': lab_data, 'patient_details':patient_details, 'lab_res': lab_res, 'lab_results': lab_results,
             'lab_res_count':lab_res_count,  'labs': labs, 'lab_res_types':lab_res_types, 'samp_types':samp_types, 'day':day, 'country': cntry,
             'follow_up_details':follow_up_details, 'follow_up_details_count':follow_up_details_count, "pic": quarantine_contacts.objects.get(id=profileid)}
 

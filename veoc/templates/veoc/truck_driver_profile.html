@@ -448,7 +448,9 @@
                                         <td>{{ lab.date_specimen_collected|date:'d-m-Y' }}</td>
                                         <td>{{ lab.specimen_type }}</td>
                                         <td>{{ lab.lab.name }}</td>
-                                        <td>{{ lab.lab_results }}</td>
+                                        {% for res in lab_results %}
+                                            <td>{{ res.result }}</td>
+                                        {% endfor %}
                                         <td>{{ lab.date_lab_confirmation|date:'d-m-Y' }}</td>
                                         <td>{{ lab.sample_identifier }}</td>
                                     </tr>
@@ -481,7 +483,7 @@
                         </div>
                         <hr>
                         <div class="invoice-box" id="dvContainer">
-                            {% for lab in lab_res %}
+                            {% for lab in lab_results %}
                                 {% if forloop.last %}
                                     <table cellpadding="0" cellspacing="0">
                                         <tr class="top">
@@ -530,11 +532,13 @@
                                         </tr>
                                         <tr class="item">
                                             <td>Date Sample Collected</td>
-                                            <td><i>{{ lab.date_specimen_collected|date:'d-m-Y' }}</td>
+                                            {% for res in lab_res %}
+                                                <td><i>{{ res.date_specimen_collected|date:'d-m-Y' }}</td>
+                                            {% endfor %}
                                         </tr>
                                         <tr class="item">
                                             <td>Date Test Confirmation</td>
-                                            <td><i>{{ lab.date_lab_confirmation|date:'d-m-Y' }}</i></td>
+                                            <td><i>{{ lab.date_tested|date:'d-m-Y' }}</i></td>
                                         </tr>
                                         <tr class="item">
                                             <td>Health Status</td>
@@ -546,7 +550,9 @@
                                         </tr>
                                         <tr class="item">
                                             <td>Sample Type</td>
-                                            <td><i>{{ lab.specimen_type.name }}</i></td>
+                                            {% for res in lab_res %}
+                                                <td><i>{{ res.specimen_type.name }}</i></td>
+                                            {% endfor %}
                                         <tr class="item">
                                         <td>Results Received by</td>
                                         {% for pat in patient_details %}
@@ -554,12 +560,12 @@
                                         {% endfor %}
                                     </tr>
                                         <tr class="item last">
-                                            <td>Date dispatched</td>
-                                            <td><i>{{ lab.date_lab_confirmation|date:'d-m-Y' }}</i></td>
+                                            <td>Date Received</td>
+                                            <td><i>{{ lab.created_at|date:'d-m-Y' }}</i></td>
                                         </tr>
                                         <tr class="total">
                                             <td>Lab Results</td>
-                                            <td><i>{{ lab.lab_results }}</i></td>
+                                            <td><i>{{ lab.result }}</i></td>
                                         </tr>
                                     </table>
                                 {% endif %}
@@ -579,8 +585,9 @@
                         </div>
                         <hr>
                         <div class="invoice-box" id="dvAttestation">
-                            {% for lab in lab_res %}
-                                {% if forloop.last %}
+                            {% for lab in lab_results %}
+                                {% if forloop.last and lab.result == "Negative" %}
+{#                                    {% if lab.result == "Negative" %}#}
                                     <table cellpadding="0" cellspacing="0">
                                         <tr class="heading">
                                             <div colspan="2">
@@ -641,7 +648,7 @@
                                                         exact place of work){% for l in patient_details %}
                                                                     ____<i><b>{{ l.company_name }}</b></i>________{% endfor %} has been
                                                         tested and found negative for COVID-19 following laboratory tests conducted
-                                                        on ___<i><b>{{ lab.date_lab_confirmation|date:'d-m-Y' }}</b></i>____ at the ____<i><b>{{ lab.lab.name }}</b></i>___
+                                                        on ___<i><b>{{ lab.date_tested|date:'d-m-Y' }}</b></i>____ at the ____<i><b>{{ lab.lab }}</b></i>___
                                                         (indicate laboratory facility)
                                                         This attestation is issued in accordance with Public Health Act Cap 242 Laws of Kenya
                                                         and the applicable Rules and Regulations for Prevention and Suppression of Infectious
@@ -706,8 +713,10 @@
                             <hr>
                                 <button class="btn btn-lg btn-success pull-right" onclick="javascript:PrintElem();" type="submit" id="btnAttPrint"><i class="glyphicon glyphicon-print"></i> Print Attestation</button>
                             </div>
-                        {% endif %}
-                        {% endfor %}
+                                {% else %}
+                                    <h3>No attestation data for {{ lab.patient_contacts.first_name }} {{ lab.patient_contacts.last_name }}</h3>
+                            {% endif %}
+                            {% endfor %}
                     </div>
                 </div>
             </div><!--/tab-content-->
