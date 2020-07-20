@@ -4300,77 +4300,45 @@ def truck_quarantine_list(request):
     # print(user_level)
 
     quar_sites = weighbridge_sites.objects.all().order_by('weighbridge_name')
+    bord_points = border_points.objects.all().order_by('border_name')
     truck_cont_details = []
 
     if request.method == 'POST':
-        border_point = request.POST.get('border_point','')
+        # border_point = request.POST.get('border_point','')
         date_from = request.POST.get('date_from','')
         date_to = request.POST.get('date_to','')
 
-        if border_point:
-            day = time.strftime("%Y-%m-%d")
-            date_to = day
-            date_from = day
+        if(user_level == 1 or user_level == 2):
+            print("inside National")
+            #add a border point filter to enable filtering specific border point--------
+            q_data_count = quarantine_contacts.objects.filter(date_of_contact__gte = date_from, date_of_contact__lte=date_to).filter(source = 'Truck Registration').count()
+            q_data = quarantine_contacts.objects.filter(source = 'Truck Registration').filter(date_of_contact__gte = date_from, date_of_contact__lte=date_to).order_by('-date_of_contact')
+            for d in q_data:
+                t_details = truck_quarantine_contacts.objects.filter(patient_contacts=d.id).values_list('border_point__border_name', flat=True).first()
+                print(t_details)
+                truck_cont_details.append(t_details)
 
-            if(user_level == 1 or user_level == 2):
-                print("inside National")
-                #add a border point filter to enable filtering specific border point--------
-                q_data_count = quarantine_contacts.objects.filter(source = 'Truck Registration').count()
-                q_data = quarantine_contacts.objects.filter(source = 'Truck Registration').order_by('-date_of_contact')
-                for d in q_data:
-                    t_details = truck_quarantine_contacts.objects.filter(patient_contacts=d.id, border_point_id=border_point).values_list('border_point__border_name', flat=True).first()
-                    print(t_details)
-                    truck_cont_details.append(t_details)
+        elif(user_level == 7):
+            print("inside Border")
+            #find ways of filtering data based on the border point-------
+            q_data_count = quarantine_contacts.objects.filter(date_of_contact__gte = date_from, date_of_contact__lte=date_to).filter(source = 'Truck Registration').count()
+            q_data = quarantine_contacts.objects.filter(source = 'Truck Registration').filter(date_of_contact__gte = date_from, date_of_contact__lte=date_to).order_by('-date_of_contact')
+            for d in q_data:
+                t_details = truck_quarantine_contacts.objects.filter(patient_contacts=d.id).filter(border_point__border_name=user_access_level).values_list('border_point__border_name', flat=True).first()
+                print(t_details)
+                truck_cont_details.append(t_details)
 
-            elif(user_level == 7):
-                print("inside Border")
-                #find ways of filtering data based on the border point-------
-                q_data_count = quarantine_contacts.objects.filter(source = 'Truck Registration').count()
-                q_data = quarantine_contacts.objects.filter(source = 'Truck Registration').order_by('-date_of_contact')
-                for d in q_data:
-                    t_details = truck_quarantine_contacts.objects.filter(patient_contacts=d.id).filter(border_point__border_name=user_access_level).values_list('border_point__border_name', flat=True).first()
-                    print(t_details)
-                    truck_cont_details.append(t_details)
-
-            else:
-                print("inside non border users")
-                q_data_count = quarantine_contacts.objects.filter(source = 'Kitu hakuna').count()
-                q_data = quarantine_contacts.objects.filter(source = 'Kitu hakuna').order_by('-date_of_contact')
-                for d in q_data:
-                    t_details = truck_quarantine_contacts.objects.filter(patient_contacts=d.id)
-                    truck_cont_details.append(t_details)
         else:
-            if(user_level == 1 or user_level == 2):
-                print("inside National")
-                #add a border point filter to enable filtering specific border point--------
-                q_data_count = quarantine_contacts.objects.filter(date_of_contact__gte = date_from, date_of_contact__lte=date_to, ).filter(source = 'Truck Registration').count()
-                q_data = quarantine_contacts.objects.filter(source = 'Truck Registration').filter(date_of_contact__gte = date_from, date_of_contact__lte=date_to).order_by('-date_of_contact')
-                for d in q_data:
-                    t_details = truck_quarantine_contacts.objects.filter(patient_contacts=d.id, border_point_id=border_point).values_list('border_point__border_name', flat=True).first()
-                    print(t_details)
-                    truck_cont_details.append(t_details)
-
-            elif(user_level == 7):
-                print("inside Border")
-                #find ways of filtering data based on the border point-------
-                q_data_count = quarantine_contacts.objects.filter(date_of_contact__gte = date_from, date_of_contact__lte=date_to).filter(source = 'Truck Registration').count()
-                q_data = quarantine_contacts.objects.filter(source = 'Truck Registration').filter(date_of_contact__gte = date_from, date_of_contact__lte=date_to).order_by('-date_of_contact')
-                for d in q_data:
-                    t_details = truck_quarantine_contacts.objects.filter(patient_contacts=d.id).filter(border_point__border_name=user_access_level).values_list('border_point__border_name', flat=True).first()
-                    print(t_details)
-                    truck_cont_details.append(t_details)
-
-            else:
-                print("inside non border users")
-                q_data_count = quarantine_contacts.objects.filter(date_of_contact__gte = date_from, date_of_contact__lte=date_to).filter(source = 'Kitu hakuna').count()
-                q_data = quarantine_contacts.objects.filter(source = 'Kitu hakuna').filter(date_of_contact__gte = date_from, date_of_contact__lte=date_to).order_by('-date_of_contact')
-                for d in q_data:
-                    t_details = truck_quarantine_contacts.objects.filter(patient_contacts=d.id)
-                    truck_cont_details.append(t_details)
+            print("inside non border users")
+            q_data_count = quarantine_contacts.objects.filter(date_of_contact__gte = date_from, date_of_contact__lte=date_to).filter(source = 'Kitu hakuna').count()
+            q_data = quarantine_contacts.objects.filter(source = 'Kitu hakuna').filter(date_of_contact__gte = date_from, date_of_contact__lte=date_to).order_by('-date_of_contact')
+            for d in q_data:
+                t_details = truck_quarantine_contacts.objects.filter(patient_contacts=d.id)
+                truck_cont_details.append(t_details)
 
         my_list_data = zip(q_data, truck_cont_details)
 
-        data = {'quarantine_data_count': q_data_count, 'weigh_name':quar_sites, 'my_list_data' :my_list_data, 'start_day': date_from, 'end_day': date_to}
+        data = {'quarantine_data_count': q_data_count, 'weigh_name':quar_sites, 'border_points':bord_points, 'my_list_data' :my_list_data, 'start_day': date_from, 'end_day': date_to}
 
     else :
         if(user_level == 1 or user_level == 2):
@@ -4404,7 +4372,7 @@ def truck_quarantine_list(request):
         my_list_data = zip(q_data, truck_cont_details)
 
         day = time.strftime("%Y-%m-%d")
-        data = {'quarantine_data_count': q_data_count, 'weigh_name':quar_sites, 'my_list_data' :my_list_data, 'start_day': day, 'end_day': day}
+        data = {'quarantine_data_count': q_data_count, 'weigh_name':quar_sites, 'border_points':bord_points, 'my_list_data' :my_list_data, 'start_day': day, 'end_day': day}
         print(truck_cont_details)
 
     return render(request, 'veoc/truck_quarantine_list.html', data)
