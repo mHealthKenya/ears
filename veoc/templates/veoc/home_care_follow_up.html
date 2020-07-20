@@ -59,6 +59,9 @@
                             <th>Has Cough?</th>
                             <th>Difficulty in breathing?</th>
                             <th>Comments</th>
+                            <th>Registered By</th>
+                            <th>County</th>
+                            <th>Sub County</th>
                           </tr>
                           </thead>
                           <tbody>
@@ -91,14 +94,32 @@
                             {% else %}
                                 <td>{{ follow.body_temperature }}</td>
                             {% endif %}
-                            <td>{{ follow.fever }}</td>
-                            <td>{{ follow.cough }}</td>
-                            <td>{{ follow.difficulty_breathing }}</td>
+                            {% if follow.fever == 'Yes' %}
+                            <td style="background-color: #F51B00">
+                              <b>{{ follow.fever }}</b></td>
+                            {% else %}
+                                <td>{{ follow.fever }}</td>
+                            {% endif %}
+                            {% if follow.cough == 'Yes' %}
+                            <td style="background-color: #F51B00">
+                              <b>{{ follow.cough }}</b></td>
+                            {% else %}
+                                <td>{{ follow.cough }}</td>
+                            {% endif %}
+                            {% if follow.difficulty_breathing == 'Yes' %}
+                            <td style="background-color: #F51B00">
+                              <b>{{ follow.difficulty_breathing }}</b></td>
+                            {% else %}
+                                <td>{{ follow.difficulty_breathing }}</td>
+                            {% endif %}                            
                             {% if follow.comment.strip %}
                               <td>{{ follow.comment }}</td>
                             {% else %}
                               <td>None</td>
                             {% endif %}
+                            <td>{{ follow.patient_contacts.contact_by_id }}</td>
+                              <td>{{ follow.patient_contacts.county_id }}</td>
+                                <td>{{ follow.patient_contacts.subcounty_id }}</td>
                           </tr>
                         {% endfor %}
                       </tbody>

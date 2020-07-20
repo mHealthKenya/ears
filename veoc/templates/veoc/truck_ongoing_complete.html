@@ -14,7 +14,21 @@
         			</div><!-- /breadcrumb-->
 
               <div class="panel-heading"><b>COVID19 Quarantine Ongoing Follow Up Report</b></div>
-
+              <div class="panel-body" align="left">
+                  <form class="form-inline" method="post" action="{% url 'veoc:truck_quarantine_list' %}">{% csrf_token %}
+                      <div class="form-group">
+                        <label for="date_from">From :</label>
+                        <input class="form-control" type="date" id="date_from" name="date_from" value="{{ day }}" required>
+                      </div>
+                        &nbsp; &nbsp;
+                      <div class="form-group">
+                        <label for="date_to">To :</label>
+                        <input class="form-control" type="date" id="date_to" name="date_to" value="{{ day }}" required>
+                      </div>
+                      <button type="submit" class="btn btn-primary" >Update</button>
+                    </form>
+                  <!-- <button type="submit" class="btn btn-primary" align="right">Update</button> -->
+              </div>
         			<div class="padding-md">
         				<div class="row">
         					<div class="col-md-12">
