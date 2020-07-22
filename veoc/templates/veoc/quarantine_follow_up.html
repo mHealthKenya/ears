@@ -91,24 +91,24 @@
                             {% else %}
                                 <td>{{ follow.body_temperature }}</td>
                             {% endif %}
-                            {% if follow.fever == 'Yes' %}
+                            {% if follow.fever == 'YES' %}
                             <td style="background-color: #F51B00">
                               <b>{{ follow.fever }}</b></td>
                             {% else %}
                                 <td>{{ follow.fever }}</td>
                             {% endif %}
-                            {% if follow.cough == 'Yes' %}
+                            {% if follow.cough == 'YES' %}
                             <td style="background-color: #F51B00">
                               <b>{{ follow.cough }}</b></td>
                             {% else %}
                                 <td>{{ follow.cough }}</td>
                             {% endif %}
-                            {% if follow.difficulty_breathing == 'Yes' %}
+                            {% if follow.difficulty_breathing == 'YES' %}
                             <td style="background-color: #F51B00">
                               <b>{{ follow.difficulty_breathing }}</b></td>
                             {% else %}
                                 <td>{{ follow.difficulty_breathing }}</td>
-                            {% endif %}              
+                            {% endif %}
                             {% if follow.comment.strip %}
                               <td>{{ follow.comment }}</td>
                             {% else %}

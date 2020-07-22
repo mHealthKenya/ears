@@ -318,7 +318,7 @@ def user_register(request):
         user.save()
 
         subject = 'Jitenge System Registration'
-        message = 'Dear ' + first_name + ',' + '\n' + '\n' + 'You have been registered on the Jitenge System (EARS - Emergency Alert Reporting System) ' + '\n' + 'Your username is '+ user_name +' and your password is  '  + email + '. You can use these for the initial login. Kindly change your password once you login for the first time.' + '\n' + 'You can access the system through this link https://ears.mhealthkenya.co.ke/.' + '\n'+'Thank You.'
+        message = 'Dear ' + first_name + ',' + '\n' + '\n' + 'You have been registered on the Jitenge System (EARS - Emergency Alert Reporting System) ' + '\n' + 'Your username is '+ user_name +' and your password is  '  + email + '. They are both case sensitive, you may use these credentials for the initial login. You will be prompted to change your password once you login for the first time.' + '\n' + 'You can access the system through this link https://ears.mhealthkenya.co.ke/.' + '\n'+'Thank You.'
         email_from = settings.EMAIL_HOST_USER
         recipient_list = [email]
         send_mail(subject, message, email_from, recipient_list)
@@ -2807,16 +2807,16 @@ def truck_driver_profile(request, profileid):
             # created_by=F("patient_contacts__created_by_id__username"),
         )
 
-    lab_results = covid_results.objects.filter(patient_contacts = profileid)
+    #lab_results = covid_results.objects.filter(patient_contacts = profileid)
     # print(lab_data)
 
     labs = testing_labs.objects.all()
     cntry = country.objects.all()
-    lab_res_types = covid_results_classifications.objects.all().order_by('id')
-    samp_types = covid_sample_types.objects.all().order_by('id')
+    #lab_res_types = covid_results_classifications.objects.all().order_by('id')
+    #samp_types = covid_sample_types.objects.all().order_by('id')
     day = time.strftime("%Y-%m-%d")
-    data = {'patient_contact_object': patient_contact_object, 'lab_data': lab_data, 'patient_details':patient_details, 'lab_res': lab_res, 'lab_results': lab_results,
-            'lab_res_count':lab_res_count,  'labs': labs, 'lab_res_types':lab_res_types, 'samp_types':samp_types, 'day':day, 'country': cntry,
+    data = {'patient_contact_object': patient_contact_object, 'lab_data': lab_data, 'patient_details':patient_details, 'lab_res': lab_res,
+              'labs': labs,  'day':day, 'country': cntry,
             'follow_up_details':follow_up_details, 'follow_up_details_count':follow_up_details_count, "pic": quarantine_contacts.objects.get(id=profileid)}
 
 
@@ -7483,7 +7483,7 @@ def forgot_password(request):
             if email_details != '':
                 email_values = {'email_details': email_details}
                 subject = 'Jitenge Password Reset'
-                message = 'Dear ' + email_details.first_name + ','+'\n' +'You have requested for a password reset on the Jitenge System. Your new password is  ' + email_details.email + '. Please login with your new credentials here: https://ears.mhealthkenya.co.ke/login/' +'\n'+'Thank You. ' + '\n' + 'Jitenge System.'
+                message = 'Dear ' + email_details.first_name + ','+'\n' +'You have requested for a password reset on the Jitenge System. Your new password is  ' + email_details.email + '. They password is case sesnitive. Please login with your new credentials here: https://ears.mhealthkenya.co.ke/login/' +'\n'+'Thank You. ' + '\n' + 'Jitenge System.'
                 email_from = settings.EMAIL_HOST_USER
                 recipient_list = [email_details.email]
                 send_mail(subject, message, email_from, recipient_list)
