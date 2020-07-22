@@ -2789,7 +2789,7 @@ def truck_driver_profile(request, profileid):
             source=F("patient_contacts__source"),
             date_of_contact=F("patient_contacts__date_of_contact"),
             created_by=F("patient_contacts__created_by_id__username"),
-        )
+        ).order_by('created_at')
 
     # print(follow_up_details)
     follow_up_details_count = quarantine_follow_up.objects.filter(patient_contacts = profileid).order_by('follow_up_day').count()

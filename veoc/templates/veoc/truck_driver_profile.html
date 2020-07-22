@@ -738,7 +738,7 @@
       pdf.setPage(1);
       pdf.setFontSize(8);
          pdf.html(document.getElementById('dvTable'), {
-             callback: function (pdf) {               
+             callback: function (pdf) {
                  pdf.save('jitenge.pdf');
              }
          });
@@ -802,6 +802,7 @@
             console.log("inside editDetailsForm");
             var thisForm = $(this);
             var endPoint = thisForm.attr("action") || window.location.href;
+            console.log(endPoint);
             var method = thisForm.attr("method");
             var formData = thisForm.serialize();
 
@@ -856,8 +857,6 @@
             {% if forloop.last %}
                 {% for l in patient_details %}
                     msg = "{{ lab.test_sample_uuid }}"
-{#                    msg = "Names : {{ lab.patient_contacts.first_name }} {{ lab.patient_contacts.last_name }} \nID/Passport No : {{ lab.patient_contacts.passport_number }} \nPhone No : {{ lab.patient_contacts.phone_number }}" +#}
-{#                    " \nCompany : {{ l.company_name }} \nLab : {{ lab.lab.name }} \nLab Results: {{ lab.lab_results }}";#}
                     qrcode.makeCode(msg)
                 {% endfor %}
             {% endif %}
