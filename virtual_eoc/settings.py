@@ -54,7 +54,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'veoc.apps.VeocConfig',
-    'rest_framework'#,
+    'rest_framework',
+    'airport_app'
     # 'django_mobile'
 ]
 
@@ -111,7 +112,7 @@ DATABASES = {
         'NAME': os.environ.get('DB_NAME','virtual_eoc'),
         'USER': os.environ.get('DB_USER','postgres'),
         'PASSWORD': os.environ.get('DB_PASS','P0stgr3s!@#'),
-        'HOST': '197.232.82.136',
+        'HOST': '192.168.0.20',
         'PORT': '5432',
     }
 }
