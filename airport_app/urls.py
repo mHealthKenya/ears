@@ -13,7 +13,11 @@ app_name = 'airport_app'
 
 urlpatterns = [
     #url('api/', include(router.urls)),
-    url(r'^airport_register/$', views.airport_register, name='airport_register')
+    url(r'^airport_register/$', views.airport_register, name='airport_register'),
+    url(r'^airport_list/$', views.airport_list, name='airport_list'),
+    url(r'^airport_follow_up/$', views.airport_follow_up, name='airport_follow_up'),
+    url(r'^airport_symptomatic/$', views.airport_symtomatic, name='airport_symtomatic'),
+    url(r'^complete_airport/$', views.complete_airport, name='complete_airport'),
     ]
 
 # urlpatterns += staticfiles_urlpatterns()

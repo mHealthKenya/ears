@@ -49,3 +49,23 @@ from django.conf import settings
 def airport_register(request):
 
     return render(request, 'airport_app/airport_register.html')
+
+@login_required
+def airport_list(request):
+
+    return render(request, 'airport_app/airport_list.html')
+
+@login_required
+def airport_follow_up(request):
+
+    return render(request, 'airport_app/airport_follow_up.html')
+
+@login_required
+def airport_symtomatic(request):
+
+    return render(request, 'airport_app/airport_symtomatic.html')
+
+@login_required
+def complete_airport(request):
+
+    return render(request, 'airport_app/complete_airport.html')            
