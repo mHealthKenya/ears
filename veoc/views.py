@@ -4303,6 +4303,23 @@ def truck_quarantine_list(request):
     bord_points = border_points.objects.all().order_by('border_name')
     truck_cont_details = []
 
+    if (user_level == 1 or user_level == 2):
+        my_model = quarantine_contacts.objects.filter(source = 'Truck Registration').order_by('-date_of_contact')
+        # number of items on each page
+        number_of_item = 10
+        # Paginator
+        paginatorr = Paginator(my_model, number_of_item)
+        # query_set for first page
+        first_page = paginatorr.page(1).object_list
+        # range of page ex range(1, 3)
+        page_range = paginatorr.page_range
+
+        context = {
+            'paginatorr': paginatorr,
+            'first_page': first_page,
+            'page_range': page_range
+        }
+
     if request.method == 'POST':
         # border_point = request.POST.get('border_point','')
         date_from = request.POST.get('date_from','')
@@ -4317,6 +4334,9 @@ def truck_quarantine_list(request):
                 t_details = truck_quarantine_contacts.objects.filter(patient_contacts=d.id).values_list('border_point__border_name', flat=True).first()
                 print(t_details)
                 truck_cont_details.append(t_details)
+            page_n = request.POST.get('page_n', None)  # getting page number
+            results = list(paginatorr.page(page_n).object_list.values('id', 'title'))
+            return JsonResponse({"results": results})
 
         elif(user_level == 7):
             print("inside Border")
@@ -4350,6 +4370,7 @@ def truck_quarantine_list(request):
                 t_details = truck_quarantine_contacts.objects.filter(patient_contacts=d.id).values_list('border_point__border_name', flat=True).first()
                 # print(t_details)
                 truck_cont_details.append(t_details)
+            print("a",q_data)
 
         elif(user_level == 7):
             print("inside Border")
@@ -4374,7 +4395,7 @@ def truck_quarantine_list(request):
         day = time.strftime("%Y-%m-%d")
         data = {'quarantine_data_count': q_data_count, 'weigh_name':quar_sites, 'border_points':bord_points, 'my_list_data' :my_list_data, 'start_day': day, 'end_day': day}
         print(truck_cont_details)
-
+    data.update(context)
     return render(request, 'veoc/truck_quarantine_list.html', data)
 
 @login_required
