@@ -4313,11 +4313,13 @@ def truck_quarantine_list(request):
         first_page = paginatorr.page(1).object_list
         # range of page ex range(1, 3)
         page_range = paginatorr.page_range
-
+        page_number = request.GET.get('page')
+        page_obj = paginatorr.get_page(page_number)
         context = {
             'paginatorr': paginatorr,
             'first_page': first_page,
-            'page_range': page_range
+            'page_range': page_range,
+            'page_obj': page_obj
         }
 
     if request.method == 'POST':
