@@ -181,6 +181,9 @@
                         {% endfor %}
                       </tbody>
     							</table>
+                                    {% for i in page_range %}
+<a style="margin-left: 5px; font-size: 20px;" href="{{i}}">{{i}}</a>
+{% endfor %}
                 </div>
               </div>
     				</div>
@@ -432,7 +435,33 @@
 {% block script %}
   <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.0.0-alpha/js/bootstrap.min.js"></script> -->
-  <script>
+    <script>
+        $('a').click(function (event) {
+            event.preventDefault();
+            var page_n = $(this).attr('href');
+            // ajax
+            $.ajax({
+                type: "POST",
+                url: "{% url 'veoc:truck_quarantine_list' %}", // name of url
+                data: {
+                    page_n: page_n, //page_number
+                    csrfmiddlewaretoken: '{{ csrf_token }}',
+                },
+                success: function (resp) {
+                    //loop
+                    $('#posts').html('')
+                    $.each(resp.results, function (i, val) {
+                        //apending posts
+                        $('#posts').append('<h2>' + val.title + '</h2>')
+                    });
+                },
+                error: function () {
+                }
+            }); //
+
+        });
+    </script>
+    <script>
     $(document).ready(function () {
           $('#quarantine_report').DataTable({
               "order": [],
