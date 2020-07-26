@@ -5968,9 +5968,18 @@ def truck_symptomatic_cases(request):
     follow_data_count = quarantine_follow_up.objects.all().filter(patient_contacts__in=qua_contacts).filter(
         Q(body_temperature__gte=38) | Q(fever='YES') | Q(cough='YES') | Q(difficulty_breathing='YES')).count()
 
+    paginator = Paginator(follow_data, 10)
+    page_number = request.GET.get('page')
+    try:
+        page_obj = paginator.page(page_number)
+    except PageNotAnInteger:
+        page_obj = paginator.page(1)
+    except EmptyPage:
+        page_obj = paginator.page(paginator.num_pages)
+
     # check if temperature is higher than 38.0 to send sms
     # if temperature is higher and sms_status = No send an sms
-    for f_data in follow_data:
+    for f_data in page_obj:
         temp = f_data.body_temperature
         cough = f_data.cough
         breathe = f_data.difficulty_breathing
@@ -6132,7 +6141,7 @@ def truck_symptomatic_cases(request):
         else:
             print("has none")
 
-    data = {'follow_data': follow_data, 'follow_data_count': follow_data_count}
+    data = {'follow_data': follow_data, 'follow_data_count': follow_data_count, 'page_obj': page_obj}
 
     return render(request, 'veoc/truck_quarantine_symptomatic.html', data)
 

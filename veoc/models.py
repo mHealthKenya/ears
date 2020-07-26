@@ -733,6 +733,7 @@ class truck_quarantine_contacts(models.Model):
     def __str__(self):
         return self.patient_contacts.first_name + ' - ' + self.vehicle_registration + ' - ' + self.border_point.border_name
 
+
 class quarantine_revisit(models.Model):
     patient_contacts = models.ForeignKey(quarantine_contacts, on_delete=models.DO_NOTHING, related_name='revisit_contact')
     date_of_revisit = models.DateField(default=date.today)
@@ -994,7 +995,6 @@ class general_feedback(models.Model):
        ordering = ['-created_at']
     def __str__(self):
         return self.challenge
-
 
 
 class airline_quarantine(models.Model):
