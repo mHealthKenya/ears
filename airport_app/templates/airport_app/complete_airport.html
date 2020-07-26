@@ -1,0 +1,346 @@
+{% extends "veoc/main_template.html" %}
+
+{% block main %}
+
+    <script type="text/javascript"
+        src="https://cdn.datatables.net/v/dt/jqc-1.12.3/jszip-2.5.0/pdfmake-0.1.18/dt-1.10.12/b-1.2.2/b-flash-1.2.2/b-html5-1.2.2/b-print-1.2.2/datatables.min.js"></script>
+
+            <div id="main-container">
+        			<div id="breadcrumb">
+        				<ul class="breadcrumb">
+        					 <li><i class="fa fa-home"></i><a href="{% url 'veoc:access_dashboard' %}"> Dashboard</a></li>
+        					 <li class="active">Airport Completed Quarantine Report</li>
+        				</ul>
+        			</div><!-- /breadcrumb-->
+
+              <div class="panel-heading"><b>COVID19 Quarantine Complete</b></div>
+              <div class="panel-body" align="left">
+                  <form class="form-inline" method="post" action="{% url 'veoc:complete_airport' %}">{% csrf_token %}
+                      <div class="form-group">
+                        <label for="date_from">From :</label>
+                        <input class="form-control" type="date" id="date_from" name="date_from" value="{{ day }}" required>
+                      </div>
+                        &nbsp; &nbsp;
+                      <div class="form-group">
+                        <label for="date_to">To :</label>
+                        <input class="form-control" type="date" id="date_to" name="date_to" value="{{ day }}" required>
+                      </div>
+                      <button type="submit" class="btn btn-primary" >Update</button>
+                    </form>
+                  <!-- <button type="submit" class="btn btn-primary" align="right">Update</button> -->
+              </div>
+        			<div class="padding-md">
+        				<div class="row">
+        					<div class="col-md-12">
+        						<div class="panel panel-default table-responsive">
+        							<div class="panel-heading">
+        								Completed Quarantine Report
+        								<span class="label label-info pull-right" id="totalspan">{{all_data_count}} cases </span>
+        							</div>
+        							<div class="padding-md clearfix">
+        							<table class="table table-hover" id="quarantine_complete_report">
+        								<thead class="thead-dark">
+                          <tr>
+                            <th>Last Names</th>
+                            <th>First Name</th>
+                            <th>DOB</th>
+                            <th>Gender</th>
+                            <th>Mobile</th>
+                            <th>Passport No</th>
+                            <th>Nationality</th>
+                            <th>Origin Country</th>
+{#                            <th>Weighbridge Site</th>#}
+                            <th>date of contact</th>
+                            <th>Registered by</th>
+                            <th>Restart Quarantine</th>
+                          </tr>
+                          </thead>
+                          <tbody>
+                          {% for q_data in all_data %}
+                          <tr>
+                            <td>{{ q_data.last_name }}</td>
+                            <td>{{ q_data.first_name }}</td>
+                            {% if q_data.age == 0 %}
+                              <td>Unknown</td>
+                          {% else %}
+                              <td>{{ q_data.age }}</td>
+                          {% endif %}
+                            <td>{{ q_data.sex }}</td>
+                            <td>{{ q_data.phone_number }}</td>
+                            <td>{{ q_data.passport_number }}</td>
+                            <td>{{ q_data.nationality }}</td>
+                            <td>{{ q_data.origin_country }}</td>
+{#                            <td>{{ q_data.weighbridge_facility }}</td>#}
+                            <td>{{ q_data.date_of_contact }}</td>
+                            <td>{{ q_data.created_by }}</td>
+                            <td>
+                             <button type="button" id="revisit_view" class="btn btn-info btn-sm pull-left revisit_view"
+                               data-toggle="modal" data-target="#revisitViewModal"
+                               data-id="{{ q_data.pk }}"
+                               data-names="{{ q_data.first_name }} {{ q_data.last_name }}"
+                               data-phone_number="{{ q_data.phone_number }}"
+                               data-passport_number="{{ q_data.passport_number }}"
+                               title="Open Revisit View">
+                               <i class="fa fa-exchange">
+                               </i>
+                             </button>
+                           </td>
+{#                            <td>#}
+{#                               <a href="/truck_driver_revisit/{{q_data.pk}}" class="btn btn-info btn-sm pull-left" title="Restart Quarantine"><i class="fa fa-exchange"></i></a>#}
+{#                            </td>#}
+                          </tr>
+                        {% endfor %}
+                      </tbody>
+    							</table>
+                </div>
+              </div>
+    				</div>
+    			</div><!-- /row-->
+        </div><!-- /.padding-md -->
+      </div><!-- /main-container -->
+
+    <!-- Map View modal -->
+      <div class="modal fade" id="revisitViewModal" tabindex="-1" role="dialog" aria-hidden="true">
+      		<div class="modal-dialog" role="document">
+      			<div class="modal-content">
+        			<div class="modal-header">
+        				<h5 class="modal-title" id="exampleModalLongTitle"><b>REVISIT QUARANTINE DETAILS</b></h5>
+        				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        				<span aria-hidden="true">&times;</span>
+        				</button>
+        			</div>
+        			<div class="modal-body">
+                      <div class="padding-md">
+                        <div class="row">
+                          <div class="col-md-12">
+                            <div class="panel panel-default">
+                              <div class="panel-heading"><b>Fill in All Revisit Details</b></div>
+                              <div class="panel-body" align="center">
+                                <form method="POST" id="track_driver_revisit_form" class="track_driver_revisit_form" action="{% url 'airport_app:truck_driver_revisit' %}">
+                                {% csrf_token %}
+                                  <div class="form-group" style="display: none;">
+                                      <input class="form-control id" name="id" style="display: none;">
+                                  </div>
+                                <div class="form-group col-md-4">
+                                    <label for="heading">Driver Names:</label>
+                                    <input class="form-control names" name="names" readonly>
+                                </div>
+                                <div class="form-group col-md-4">
+                                    <label for="heading">Phone Number:</label>
+                                    <input class="form-control phone_num" name="phone_num" readonly>
+                                </div>
+                                <div class="form-group col-md-4">
+                                    <label for="heading">Passport Num:</label>
+                                    <input class="form-control passport" name="passport" readonly>
+                                </div>
+                                  <div class="form-row">
+                                      <div class="form-row" id="gender_details_div">
+                                      <div class="form-group col-md-6">
+                                         <label for="datereport">Date of Revisit : </label>
+                                         <input class="form-control" type="date" value="{{ day }}" id="date_of_arrival" max="{{ day }}" name="date_of_arrival">
+                                    </div>
+                                       <div class="form-group col-md-6">
+                                         <label for="borderpoint">Border Point : *</label>
+                                         <select class="form-control" name="border_name" id="border_name" >
+                                              <option value="" disabled selected>Select Border Point</option>
+                                              {% for b_point in border_points %}
+                                                  <option value="{{b_point.border_name}}">{{b_point.border_name}}</option>
+                                              {% endfor %}
+                                          </select>
+                                       </div>
+                                       <div class="form-group col-md-6">
+                                         <label for="weighbridgesite">Weighbridge Site : </label>
+                                         <select class="form-control" name="weighbridge_name" id="weighbridge_name" >
+                                              <option value="" disabled selected>Select Weighbridge Site</option>
+                                              {% for qty in weigh_name %}
+                                                  <option value="{{qty.weighbridge_name}}">{{qty.weighbridge_name}}</option>
+                                              {% endfor %}
+                                          </select>
+                                        </div>
+                                      <div class="form-row" id="symptoms_div">
+                                           <div class="form-group col-md-6">
+                                             <label for="cough">Cough : </label>
+                                             <select class="form-control" id="cough" name="cough" required>
+                                               <option value="" disabled selected>Select Option</option>
+                                               <option value="t">Yes</option>
+                                               <option value="f">No</option>
+                                             </select>
+                                           </div>
+                                           <div class="form-group col-md-6">
+                                             <label for="breathing">Breathing Difficulty : </label>
+                                             <select class="form-control" id="breathing_difficulty" name="breathing_difficulty" required>
+                                               <option value="" disabled selected>Select Option</option>
+                                               <option value="t">Yes</option>
+                                               <option value="f">No</option>
+                                             </select>
+                                           </div>
+                                           <div class="form-group col-md-6">
+                                             <label for="fever">Fever : </label>
+                                             <select class="form-control" id="fever" name="fever" required>
+                                               <option value="" disabled selected>Select Option</option>
+                                               <option value="t">Yes</option>
+                                               <option value="f">No</option>
+                                             </select>
+                                           </div>
+                                           <div class="form-group col-md-6">
+                                             <label for="sample">Sample Taken : </label>
+                                             <select class="form-control" id="sample_taken" name="sample_taken" required>
+                                               <option value="" disabled selected>Select Option</option>
+                                               <option value="t">Yes</option>
+                                               <option value="f">No</option>
+                                             </select>
+                                           </div>
+                                         </div>
+                                         <div class="form-row" id="comobidity_details_div">
+                                           <div class="form-group col-md-6">
+                                             <label for="temperature">Temperature : </label>
+                                             <input class="form-control" type=number step=0.01 id="temperature" name="temperature" onchange="checkTemp()" maxlength="5" placeholder="temperature"/>
+                                           </div>
+                                    </div>
+                                  </div>
+                                  <div class="form-row" id="save_div">
+                                    <div class="form-group col-md-12">
+                                        <button type="submit" class="btn btn-success btn-sm pull-right">Add Quarantine Revisit</button>
+                                    </div>
+                                      <div class="form-group col-md-12">
+                                      </div>
+                                  </div>
+                                </form>
+                            </div>
+                          </div><!-- /div panel-default -->
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+{% endblock %}
+
+{% block script %}
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
+  <script>
+    $(document).ready(function () {
+          $('#quarantine_complete_report').DataTable({
+              "order": [],
+              dom: 'Bfrtip',
+              buttons: [
+                  'copy', 'csv', 'excel', 'pdf', 'print'
+              ]
+          });
+
+          // Setup - add a text input to each footer cell
+          $('#quarantine_complete_report thead td').each(function () {
+              var title = $(this).text();
+              $(this).html('<input type="text" placeholder="Search ' + title + '" />');
+          });
+
+          // DataTable
+          var table = $('#quarantine_complete_report').DataTable();
+
+          // Apply the search
+          table.columns().every(function () {
+              var that = this;
+
+              $('input', this.header()).on('keyup change', function () {
+                  if (that.search() !== this.value) {
+                      that
+                              .search(this.value)
+                              .draw();
+                  }
+              });
+          });
+      });
+
+
+    $(document).on( "click", '.revisit_view',function(e) {
+
+      var id = $(this).data('id');
+      var names = $(this).data('names');
+      var phone_num = $(this).data('phone_number');
+      var passport = $(this).data('passport_number');
+
+      console.log(names);
+
+      $(".id").val(id);
+      $(".names").val(names);
+      $(".phone_num").val(phone_num);
+      $(".passport").val(passport);
+  });
+
+    var revisitsForm = $(".track_driver_revisit_form")
+
+      revisitsForm.submit(function(e){
+        e.preventDefault();
+        console.log("inside revisitsForm");
+        var thisForm = $(this);
+        var endPoint = thisForm.attr("action") || window.location.href;
+        var method = thisForm.attr("method");
+        var formData = thisForm.serialize();
+
+        Swal.fire({
+          title: "Please wait!,Saving Details!",
+          // text: "Please wait",
+          imageUrl: "/static/images/ajax-loader.gif",
+          showConfirmButton: false,
+          allowOutsideClick: false
+        });
+        $.ajax({
+          type:method,
+          url:endPoint,
+          data: formData,
+          success:function(data){
+            if(data == "error"){
+              console.log(trucksForm[0])
+              Swal.fire({
+                title: 'Duplicate Data Entry!!',
+                text: 'Names and Phone number entered already exist in the system and still ongoing quarantine!!',
+                icon: 'info'
+              });
+            }else{
+              Swal.fire({
+                title: 'Success!',
+                text: 'Driver added to quarantine revisit',
+                icon: 'success'
+              });
+              revisitsForm[0].reset();
+            }
+          },
+          error:function(er){
+              console.log(er)
+            console.log("Revisit saving error");
+            console.log(er.responseText);
+            Swal.fire({
+              title: 'Error!',
+              text: 'Quarantine Revisit Details Cannot be Saved',
+              icon: 'error'
+            });
+          }
+        });
+
+      });
+
+  function checkTemp(){
+       var temp = $('#temperature').val();
+       // console.log(number);
+       if(temp.length > 4 || temp.length < 2){
+         console.log("Enter valid temperature");
+         Swal.fire({
+           title: 'error!',
+           text: 'Enter a valid temperature measure',
+           icon: 'error'
+         });
+         document.getElementById("temperature").focus();
+       }else if(temp < 34 || temp > 45){
+         Swal.fire({
+           title: 'error!',
+           text: 'Temperature value should be between 34 and 45 Degrees',
+           icon: 'error'
+         });
+         document.getElementById("temperature").focus();
+       }
+     }
+
+  </script>
+{% endblock %}
