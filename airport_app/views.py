@@ -222,76 +222,25 @@ def airport_list(request):
         user_level = grp
     # print(user_level)
 
-    quar_sites = weighbridge_sites.objects.all().order_by('weighbridge_name')
     bord_points = border_points.objects.all().order_by('border_name')
     truck_cont_details = []
-    q_data_count = 0
-    context = {}
-    data = {}
-    if user_level == 1 or user_level == 2:
 
-        if request.method == 'POST':
-            # border_point = request.POST.get('border_point','')
+    if request.method == 'POST':
+        if user_level == 1 or user_level == 2:
             date_from = request.POST.get('date_from', '')
             date_to = request.POST.get('date_to', '')
 
             print("inside National")
-            # add a border point filter to enable filtering specific border point--------
             q_data_count = airline_quarantine.objects.select_related('patient_contacts'). \
-                filter(date_of_contact__gte=date_from, date_of_contact__lte=date_to). \
-                filter(source='Truck Registration').count()
+                filter(patient_contacts__date_of_contact__gte=date_from, patient_contacts__date_of_contact__lte=date_to). \
+                filter(patient_contacts__source='Airport Registration').count()
             q_data = airline_quarantine.objects.select_related('patient_contacts') \
                 .filter(patient_contacts__date_of_contact__gte=date_from,
                         patient_contacts__date_of_contact__lte=date_to,
-                        patient_contacts__source='Truck Registration'). \
+                        patient_contacts__source='Airport Registration'). \
                 order_by('-patient_contacts__date_of_contact')
 
-            paginator = Paginator(q_data, 10)
-            page_number = request.GET.get('page')
-            try:
-                page_obj = paginator.page(page_number)
-            except PageNotAnInteger:
-                page_obj = paginator.page(1)
-            except EmptyPage:
-                page_obj = paginator.page(paginator.num_pages)
-
-            my_list_data = page_obj
-            for i in my_list_data:
-                print(i)
-            day = time.strftime("%Y-%m-%d")
-            data = {'quarantine_data_count': q_data_count, 'weigh_name': quar_sites, 'border_points': bord_points,
-                    'my_list_data': my_list_data, 'start_day': day, 'end_day': day, 'page_obj': page_obj}
-
-            return render(request, 'veoc/truck_quarantine_list.html', data)
-
-        else:
-            print("inside National")
-            # add a border point filter to enable filtering specific border point--------
-            q_data_count = airline_quarantine.objects.select_related('patient_contacts'). \
-                filter(patient_contacts__source='Truck Registration').count()
-            my_model = airline_quarantine.objects.select_related('patient_contacts'). \
-                filter(patient_contacts__source='Truck Registration').order_by('-patient_contacts__date_of_contact')
-
-            paginator = Paginator(my_model, 10)
-            page_number = request.GET.get('page')
-            try:
-                page_obj = paginator.page(page_number)
-            except PageNotAnInteger:
-                page_obj = paginator.page(1)
-            except EmptyPage:
-                page_obj = paginator.page(paginator.num_pages)
-
-            print(page_obj.number)
-            my_list_data = page_obj
-            day = time.strftime("%Y-%m-%d")
-            data = {'quarantine_data_count': q_data_count, 'weigh_name': quar_sites, 'border_points': bord_points,
-                    'my_list_data': my_list_data, 'start_day': day, 'end_day': day, 'page_obj': page_obj}
-
-            return render(request, 'veoc/truck_quarantine_list.html', data)
-
-    elif user_level == 7:
-
-        if request.method == 'POST':
+        elif user_level == 7:
             # border_point = request.POST.get('border_point','')
             date_from = request.POST.get('date_from', '')
             date_to = request.POST.get('date_to', '')
@@ -299,114 +248,91 @@ def airport_list(request):
             print("inside Border")
             # find ways of filtering data based on the border point-------
             q_data_count = airline_quarantine.objects.select_related('patient_contacts'). \
-                filter(date_of_contact__gte=date_from, date_of_contact__lte=date_to). \
-                filter(source='Truck Registration').count()
+                filter(patient_contacts__date_of_contact__gte=date_from, patient_contacts__date_of_contact__lte=date_to). \
+                filter(patient_contacts__source='Airport Registration').count()
             q_data = airline_quarantine.objects.select_related('patient_contacts'). \
                 filter(border_point__border_name=user_access_level,
-                       patient_contacts__source='Truck Registration',
+                       patient_contacts__source='Airport Registration',
                        patient_contacts__date_of_contact__gte=date_from,
                        patient_contacts__date_of_contact__lte=date_to). \
                 order_by('-patient_contacts__date_of_contact')
 
-            paginator = Paginator(q_data, 10)
-            page_number = request.GET.get('page')
-            try:
-                page_obj = paginator.page(page_number)
-            except PageNotAnInteger:
-                page_obj = paginator.page(1)
-            except EmptyPage:
-                page_obj = paginator.page(paginator.num_pages)
-
-            my_list_data = page_obj
-            day = time.strftime("%Y-%m-%d")
-            data = {'quarantine_data_count': q_data_count, 'weigh_name': quar_sites, 'border_points': bord_points,
-                    'my_list_data': my_list_data, 'start_day': day, 'end_day': day, 'page_obj': page_obj}
-
-            return render(request, 'veoc/truck_quarantine_list.html', data)
-
         else:
-            print("inside Border")
-            # find ways of filtering data based on the border point-------
-            q_data_count = airline_quarantine.objects.select_related('patient_contacts'). \
-                filter(source='Truck Registration').count()
-            q_data = airline_quarantine.objects.select_related('patient_contacts'). \
-                filter(patient_contacts__source='Truck Registration', border_point__border_name=user_access_level). \
-                order_by('-date_of_contact')
-
-            paginator = Paginator(q_data, 10)
-            page_number = request.GET.get('page')
-            try:
-                page_obj = paginator.page(page_number)
-            except PageNotAnInteger:
-                page_obj = paginator.page(1)
-            except EmptyPage:
-                page_obj = paginator.page(paginator.num_pages)
-
-            my_list_data = page_obj
-            day = time.strftime("%Y-%m-%d")
-            data = {'quarantine_data_count': q_data_count, 'weigh_name': quar_sites, 'border_points': bord_points,
-                    'my_list_data': my_list_data, 'start_day': day, 'end_day': day, 'page_obj': page_obj}
-
-            return render(request, 'veoc/truck_quarantine_list.html', data)
-    else:
-        if request.method == 'POST':
             # border_point = request.POST.get('border_point','')
             date_from = request.POST.get('date_from', '')
             date_to = request.POST.get('date_to', '')
 
             print("inside non border users")
             q_data_count = airline_quarantine.objects.select_related('patient_contacts'). \
-                filter(date_of_contact__gte=date_from, date_of_contact__lte=date_to). \
-                filter(source='Kitu hakuna').count()
+                filter(patient_contacts__date_of_contact__gte=date_from, patient_contacts__date_of_contact__lte=date_to). \
+                filter(patient_contacts__source='Kitu hakuna').count()
             q_data = airline_quarantine.objects.select_related('patient_contacts'). \
                 filter(patient_contacts__source='Kitu hakuna').filter(patient_contacts__date_of_contact__gte=date_from,
                                                                       date_of_contact__lte=date_to). \
                 order_by('-patient_contacts__date_of_contact')
 
-            paginator = Paginator(q_data, 10)
-            page_number = request.GET.get('page')
-            try:
-                page_obj = paginator.page(page_number)
-            except PageNotAnInteger:
-                page_obj = paginator.page(1)
-            except EmptyPage:
-                page_obj = paginator.page(paginator.num_pages)
+        paginator = Paginator(q_data, 10)
+        page_number = request.GET.get('page')
+        try:
+            page_obj = paginator.page(page_number)
+        except PageNotAnInteger:
+            page_obj = paginator.page(1)
+        except EmptyPage:
+            page_obj = paginator.page(paginator.num_pages)
 
-            my_list_data = page_obj
-            day = time.strftime("%Y-%m-%d")
-            data = {'quarantine_data_count': q_data_count, 'weigh_name': quar_sites, 'border_points': bord_points,
-                    'my_list_data': my_list_data, 'start_day': day, 'end_day': day, 'page_obj': page_obj}
+        my_list_data = page_obj
+        day = time.strftime("%Y-%m-%d")
+        data = {'quarantine_data_count': q_data_count, 'border_points': bord_points,
+                'my_list_data': my_list_data, 'start_day': day, 'end_day': day, 'page_obj': page_obj}
 
-            return render(request, 'veoc/truck_quarantine_list.html', data)
+    else:
+        if user_level == 1 or user_level == 2:
+            print("inside National")
+            # add a border point filter to enable filtering specific border point--------
+            q_data_count = airline_quarantine.objects.select_related('patient_contacts'). \
+                filter(patient_contacts__source='Airport Registration').count()
+            q_data = airline_quarantine.objects.select_related('patient_contacts'). \
+                filter(patient_contacts__source='Airport Registration').order_by('-patient_contacts__date_of_contact')
+
+        elif user_level == 7:
+            print("inside Border")
+            # find ways of filtering data based on the border point-------
+            q_data_count = airline_quarantine.objects.select_related('patient_contacts'). \
+                filter(patient_contacts__source='Airport Registration').count()
+            q_data = airline_quarantine.objects.select_related('patient_contacts'). \
+                filter(patient_contacts__source='Airport Registration', border_point__border_name=user_access_level). \
+                order_by('-date_of_contact')
 
         else:
             print("inside non border users")
             q_data_count = airline_quarantine.objects.select_related('patient_contacts').filter(
-                source='Kitu hakuna').count()
+                patient_contacts__source='Kitu hakuna').count()
             q_data = airline_quarantine.objects.select_related('patient_contacts'). \
                 filter(patient_contacts__source='Kitu hakuna').order_by('-date_of_contact')
 
-            paginator = Paginator(q_data, 10)
-            page_number = request.GET.get('page')
-            try:
-                page_obj = paginator.page(page_number)
-            except PageNotAnInteger:
-                page_obj = paginator.page(1)
-            except EmptyPage:
-                page_obj = paginator.page(paginator.num_pages)
+        paginator = Paginator(q_data, 10)
+        page_number = request.GET.get('page')
+        try:
+            page_obj = paginator.page(page_number)
+        except PageNotAnInteger:
+            page_obj = paginator.page(1)
+        except EmptyPage:
+            page_obj = paginator.page(paginator.num_pages)
 
-            my_list_data = page_obj
-            day = time.strftime("%Y-%m-%d")
-            data = {'quarantine_data_count': q_data_count, 'weigh_name': quar_sites, 'border_points': bord_points,
-                    'my_list_data': my_list_data, 'start_day': day, 'end_day': day, 'page_obj': page_obj}
+        print(page_obj.number)
+        my_list_data = page_obj
 
-            return render(request, 'airport_app/airport_list.html', data)
+        day = time.strftime("%Y-%m-%d")
+        data = {'quarantine_data_count': q_data_count, 'border_points': bord_points,
+                'my_list_data': my_list_data, 'start_day': day, 'end_day': day, 'page_obj': page_obj}
+
+    return render(request, 'airport_app/airport_list.html', data)
 
 
 @login_required
 def airport_follow_up(request):
 
-    qua_contacts = quarantine_contacts.objects.all().filter(source__contains="Truck Registration")
+    qua_contacts = quarantine_contacts.objects.all().filter(source__contains="Airport Registration")
     follow_data = quarantine_follow_up.objects.filter(patient_contacts__source="Airport Registration")
     follow_data_count = quarantine_follow_up.objects.filter(patient_contacts__source="Airport Registration").count()
 

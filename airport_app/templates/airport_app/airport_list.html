@@ -8,7 +8,7 @@
     <div id="main-container">
         <div id="breadcrumb">
             <ul class="breadcrumb">
-                <li><i class="fa fa-home"></i><a href="{% url 'veoc:access_dashboard' %}"> Dashboard</a></li>
+                <li><i class="fa fa-home"></i><a href="{% url 'airport_app:airport_list' %}"> Dashboard</a></li>
                 <li class="active">Airport Quarantine Cases</li>
             </ul>
         </div><!-- /breadcrumb-->
@@ -72,7 +72,7 @@
                                     <th>Passport No</th>
                                     <th>Nationality</th>
                                     <th>Origin Country</th>
-                                    <th>Border Point</th>
+                                    <th>Flight Number</th>
                                     <th>Enrollment date</th>
                                     <th>Registered by</th>
                                     {#                            <th>Company Details</th>#}
@@ -102,7 +102,7 @@
                                             <td>{{ q_data.patient_contacts.passport_number }}</td>
                                             <td>{{ q_data.patient_contacts.nationality }}</td>
                                             <td>{{ q_data.patient_contacts.origin_country }}</td>
-                                            <td>{{ q_data.border_point.border_name }}</td>
+                                            <td>{{ q_data.flight_number }}</td>
                                             <td>{{ q_data.patient_contacts.date_of_contact|date:'d-m-Y' }}</td>
                                             <td>{{ q_data.patient_contacts.created_by }}</td>
                                             {#                            <td>#}

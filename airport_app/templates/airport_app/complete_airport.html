@@ -15,7 +15,7 @@
 
               <div class="panel-heading"><b>COVID19 Quarantine Complete</b></div>
               <div class="panel-body" align="left">
-                  <form class="form-inline" method="post" action="{% url 'veoc:complete_airport' %}">{% csrf_token %}
+                  <form class="form-inline" method="post" action="{% url 'airport_app:complete_airport' %}">{% csrf_token %}
                       <div class="form-group">
                         <label for="date_from">From :</label>
                         <input class="form-control" type="date" id="date_from" name="date_from" value="{{ day }}" required>
