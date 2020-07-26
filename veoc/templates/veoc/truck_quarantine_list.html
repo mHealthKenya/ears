@@ -83,28 +83,28 @@
                                 </tr>
                                 </thead>
                                 <tbody>
-                                {% for q_data, truck_cont_details in my_list_data %}
-                                    {% if truck_cont_details != "None" %}
+                                {% for q_data in my_list_data %}
+                                    {% if q_data.border_point.border_name != "None" %}
                                         <tr>
                                             {#                                  Check user permission to view names#}
                                             {#                                    <td>*********</td>#}
                                             {#                                    <td>*********</td>#}
-                                            <td>{{ q_data.last_name }}</td>
-                                            <td>{{ q_data.first_name }}</td>
-                                            {% if q_data.age == 0 %}
+                                            <td>{{ q_data.patient_contacts.last_name }}</td>
+                                            <td>{{ q_data.patient_contacts.first_name }}</td>
+                                            {% if q_data.patient_contacts.age == 0 %}
                                                 <td>Unknown</td>
                                             {% else %}
-                                                <td>{{ q_data.age }}</td>
+                                                <td>{{ q_data.patient_contacts.age }}</td>
                                             {% endif %}
                                             {#                            <td>{{ q_data.age }}</td>#}
-                                            <td>{{ q_data.sex }}</td>
-                                            <td>{{ q_data.phone_number }}</td>
-                                            <td>{{ q_data.passport_number }}</td>
-                                            <td>{{ q_data.nationality }}</td>
-                                            <td>{{ q_data.origin_country }}</td>
-                                            <td>{{ truck_cont_details }}</td>
-                                            <td>{{ q_data.date_of_contact|date:'d-m-Y' }}</td>
-                                            <td>{{ q_data.created_by }}</td>
+                                            <td>{{ q_data.patient_contacts.sex }}</td>
+                                            <td>{{ q_data.patient_contacts.phone_number }}</td>
+                                            <td>{{ q_data.patient_contacts.passport_number }}</td>
+                                            <td>{{ q_data.patient_contacts.nationality }}</td>
+                                            <td>{{ q_data.patient_contacts.origin_country }}</td>
+                                            <td>{{ q_data.border_point.border_name }}</td>
+                                            <td>{{ q_data.patient_contacts.date_of_contact|date:'d-m-Y' }}</td>
+                                            <td>{{ q_data.patient_contacts.created_by }}</td>
                                             {#                            <td>#}
                                             {#                              <button type="button" id="company_view" class="btn btn-info btn-xs company_view"#}
                                             {#                                data-toggle="modal" data-target="#view_company_modal"#}
