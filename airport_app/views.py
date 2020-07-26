@@ -323,8 +323,7 @@ def airport_list(request):
         my_list_data = page_obj
 
         day = time.strftime("%Y-%m-%d")
-        data = {'quarantine_data_count': q_data_count, 'border_points': bord_points,
-                'my_list_data': my_list_data, 'start_day': day, 'end_day': day, 'page_obj': page_obj}
+        data = {'quarantine_data_count': q_data_count, 'my_list_data': my_list_data, 'start_day': day, 'end_day': day, 'page_obj': page_obj}
 
     return render(request, 'airport_app/airport_list.html', data)
 

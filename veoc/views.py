@@ -4873,9 +4873,10 @@ def truck_quarantine_list(request):
 
             print("inside non border users")
             q_data_count = truck_quarantine_contacts.objects.select_related('patient_contacts'). \
-                filter(patient_contacts__date_of_contact__gte=date_from, patient_contacts__date_of_contact__lte=date_to). \
+                filter(patient_contacts__date_of_contact__gte=date_from,
+                       patient_contacts__date_of_contact__lte=date_to). \
                 filter(patient_contacts__source='Kitu hakuna').count()
-            q_data = airline_quarantine.objects.select_related('patient_contacts'). \
+            q_data = truck_quarantine_contacts.objects.select_related('patient_contacts'). \
                 filter(patient_contacts__source='Kitu hakuna').filter(patient_contacts__date_of_contact__gte=date_from,
                                                                       date_of_contact__lte=date_to). \
                 order_by('-patient_contacts__date_of_contact')
@@ -4907,7 +4908,7 @@ def truck_quarantine_list(request):
             print("inside Border")
             # find ways of filtering data based on the border point-------
             q_data_count = truck_quarantine_contacts.objects.select_related('patient_contacts'). \
-                filter(source='Airport Registration').count()
+                filter(patient_contacts__source='Truck Registration').count()
             q_data = truck_quarantine_contacts.objects.select_related('patient_contacts'). \
                 filter(patient_contacts__source='Truck Registration', border_point__border_name=user_access_level). \
                 order_by('-date_of_contact')
