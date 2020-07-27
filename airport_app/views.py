@@ -252,11 +252,11 @@ def airport_list(request):
             print("inside National")
             q_data_count = airline_quarantine.objects.select_related('patient_contacts'). \
                 filter(patient_contacts__date_of_contact__gte=date_from, patient_contacts__date_of_contact__lte=date_to). \
-                filter(patient_contacts__source='Airport Registration').count()
+                filter(patient_contacts__source='Airline Registration').count()
             q_data = airline_quarantine.objects.select_related('patient_contacts') \
                 .filter(patient_contacts__date_of_contact__gte=date_from,
                         patient_contacts__date_of_contact__lte=date_to,
-                        patient_contacts__source='Airport Registration'). \
+                        patient_contacts__source='Airline Registration'). \
                 order_by('-patient_contacts__date_of_contact')
 
         elif user_level == 7:
@@ -268,10 +268,10 @@ def airport_list(request):
             # find ways of filtering data based on the border point-------
             q_data_count = airline_quarantine.objects.select_related('patient_contacts'). \
                 filter(patient_contacts__date_of_contact__gte=date_from, patient_contacts__date_of_contact__lte=date_to). \
-                filter(patient_contacts__source='Airport Registration').count()
+                filter(patient_contacts__source='Airline Registration').count()
             q_data = airline_quarantine.objects.select_related('patient_contacts'). \
                 filter(border_point__border_name=user_access_level,
-                       patient_contacts__source='Airport Registration',
+                       patient_contacts__source='Airline Registration',
                        patient_contacts__date_of_contact__gte=date_from,
                        patient_contacts__date_of_contact__lte=date_to). \
                 order_by('-patient_contacts__date_of_contact')
@@ -309,17 +309,17 @@ def airport_list(request):
             print("inside National")
             # add a border point filter to enable filtering specific border point--------
             q_data_count = airline_quarantine.objects.select_related('patient_contacts'). \
-                filter(patient_contacts__source='Airport Registration').count()
+                filter(patient_contacts__source='Airline Registration').count()
             q_data = airline_quarantine.objects.select_related('patient_contacts'). \
-                filter(patient_contacts__source='Airport Registration').order_by('-patient_contacts__date_of_contact')
+                filter(patient_contacts__source='Airline Registration').order_by('-patient_contacts__date_of_contact')
 
         elif user_level == 7:
             print("inside Border")
             # find ways of filtering data based on the border point-------
             q_data_count = airline_quarantine.objects.select_related('patient_contacts'). \
-                filter(patient_contacts__source='Airport Registration').count()
+                filter(patient_contacts__source='Airline Registration').count()
             q_data = airline_quarantine.objects.select_related('patient_contacts'). \
-                filter(patient_contacts__source='Airport Registration', border_point__border_name=user_access_level). \
+                filter(patient_contacts__source='Airline Registration', border_point__border_name=user_access_level). \
                 order_by('-date_of_contact')
 
         else:
@@ -342,7 +342,9 @@ def airport_list(request):
         my_list_data = page_obj
 
         day = time.strftime("%Y-%m-%d")
-        data = {'quarantine_data_count': q_data_count, 'my_list_data': my_list_data, 'start_day': day, 'end_day': day, 'page_obj': page_obj}
+        cntry = country.objects.all()
+        data = {'quarantine_data_count': q_data_count, 'my_list_data': my_list_data, 'start_day': day, 'end_day': day,
+                'page_obj': page_obj, 'country': cntry}
 
     return render(request, 'airport_app/airport_list.html', data)
 
@@ -350,9 +352,9 @@ def airport_list(request):
 #@login_required
 def airport_follow_up(request):
 
-    qua_contacts = quarantine_contacts.objects.all().filter(source__contains="Airport Registration")
-    follow_data = quarantine_follow_up.objects.filter(patient_contacts__source="Airport Registration")
-    follow_data_count = quarantine_follow_up.objects.filter(patient_contacts__source="Airport Registration").count()
+    qua_contacts = quarantine_contacts.objects.all().filter(source__contains="Airline Registration")
+    follow_data = quarantine_follow_up.objects.filter(patient_contacts__source="Airline Registration")
+    follow_data_count = quarantine_follow_up.objects.filter(patient_contacts__source="Airline Registration").count()
 
     paginator = Paginator(follow_data, 10)
     page_number = request.GET.get('page')

@@ -38,7 +38,7 @@
                     <div class="panel panel-default table-responsive">
                         <div class="panel-heading">
                             Airport isolation Cases
-                            <span class="label label-info pull-right" id="totalspan">{{ q_data_count }} Reported cases </span>
+                            <span class="label label-info pull-right" id="totalspan">{{ quarantine_data_count }} Reported cases </span>
                         </div>
                         <div class="padding-md clearfix">
                             <table class="table table-hover" id="home_care_report">
@@ -65,29 +65,29 @@
                                         {#                                  Check user permission to view names#}
                                         {#                            <td>*********</td>#}
                                         {#                            <td>*********</td>#}
-                                        <td>{{ follow.last_name }}</td>
-                                        <td>{{ follow.first_name }}</td>
+                                        <td>{{ follow.patient_contacts.last_name }}</td>
+                                        <td>{{ follow.patient_contacts.first_name }}</td>
                                         {% if follow.age == 0 %}
                                             <td>Unknown</td>
                                         {% else %}
-                                            <td>{{ follow.age }}</td>
+                                            <td>{{ follow.patient_contacts.age }}</td>
                                         {% endif %}
-                                        <td>{{ follow.sex }}</td>
-                                        <td>{{ follow.phone_number }}</td>
-                                        <td>{{ follow.passport_number }}</td>
-                                        <td>{{ follow.nationality }}</td>
-                                        <td>{{ follow.origin_country }}</td>
+                                        <td>{{ follow.patient_contacts.sex }}</td>
+                                        <td>{{ follow.patient_contacts.phone_number }}</td>
+                                        <td>{{ follow.patient_contacts.passport_number }}</td>
+                                        <td>{{ follow.patient_contacts.nationality }}</td>
+                                        <td>{{ follow.patient_contacts.origin_country }}</td>
                                         <td>{{ follow.flight_number }}</td>
-                                        <td>{{ follow.date_created|date:'d-m-Y' }}</td>
+                                        <td>{{ follow.created_at|date:'d-m-Y' }}</td>
                                         <td>{{ follow.created_by }}</td>
                                         <td>
                                             <button type="button" id="map_view"
                                                     class="btn btn-info btn-sm pull-left map_view"
                                                     data-toggle="modal" data-target="#mapViewModal"
-                                                    data-id="{{ follow.pk }}"
-                                                    data-names="{{ follow.first_name }} {{ follow.last_name }}"
+                                                    data-id="{{ follow.patient_contacts.pk }}"
+                                                    data-names="{{ follow.patient_contacts.first_name }} {{ follow.patient_contacts.last_name }}"
                                                     data-last_contact="{{ follow.date_of_contact|date:'d-m-Y' }}"
-                                                    data-phone_number="{{ follow.phone_number }}"
+                                                    data-phone_number="{{ follow.patient_contacts.phone_number }}"
                                                     title="Open Map View">
                                                 <i class="fa fa-map-marker">
                                                 </i>
@@ -96,18 +96,18 @@
                                         <td>
                                             <button type="button" class="btn btn-info btn-sm pull-left edit_button"
                                                     data-toggle="modal" data-target="#edit_quarantine_modal"
-                                                    data-id="{{ follow.pk }}"
-                                                    data-last_name="{{ follow.last_name }}"
-                                                    data-first_name="{{ follow.first_name }}"
-                                                    data-middle_name="{{ follow.middle_name }}"
-                                                    data-passport_number="{{ follow.passport_number }}"
-                                                    data-phone_number="{{ follow.phone_number }}"
-                                                    data-nationality="{{ follow.nationality }}"
+                                                    data-id="{{ follow.patient_contacts.pk }}"
+                                                    data-last_name="{{ follow.patient_contacts.last_name }}"
+                                                    data-first_name="{{ follow.patient_contacts.first_name }}"
+                                                    data-middle_name="{{ follow.patient_contacts.middle_name }}"
+                                                    data-passport_number="{{ follow.patient_contacts.passport_number }}"
+                                                    data-phone_number="{{ follow.patient_contacts.phone_number }}"
+                                                    data-nationality="{{ follow.patient_contacts.nationality }}"
                                                     data-origin_country="{{ follow.origin_country }}"
-                                                    data-place_of_diagnosis="{{ follow.place_of_diagnosis }}"
-                                                    data-quarantine_site="{{ follow.quarantine_site.site_name }}"
-                                                    data-nok="{{ follow.nok }}"
-                                                    data-nok_phone_num="{{ follow.nok_phone_num }}"
+                                                    data-place_of_diagnosis="{{ follow.patient_contacts.place_of_diagnosis }}"
+                                                    data-quarantine_site="{{ follow.patient_contacts.quarantine_site.site_name }}"
+                                                    data-nok="{{ follow.patient_contacts.nok }}"
+                                                    data-nok_phone_num="{{ follow.patient_contacts.nok_phone_num }}"
                                                     title="Edit">
                                                 <i class="fa fa-edit">
                                                 </i>
