@@ -152,21 +152,7 @@ def airport_register(request):
                                                               updated_by=userObject, created_at=current_date)
 
             contact_save.save()
-            trans_one = transaction.savepoint()
-
-
-            patient_id = contact_save.pk
-            print(patient_id)
-            patientObject = quarantine_contacts.objects.get(pk=patient_id)
-            # save contacts in the track_quarantine_contacts if data has been saved on the quarantine contacts
-            if patient_id:
-                try:
-                    airport_user_save = airline_quarantine.objects.create(airline=airline, flight_number=flight_number, seat_number=seat_number, destination_city=destination_city, travel_history=countries_visited, cough=cough, breathing_difficulty=breathing_difficulty, fever=fever, chills=chills, temperature=temperature, measured_temperature=measured_temperature,arrival_airport_code=arrival_airport_code, released=released, risk_assessment_referal=risk_assessment_referal, designated_hospital_refferal=designated_hospital_referal, created_at=current_date, updated_at=current_date, patient_contacts_id=patient_id, created_by_id=user_id, updated_by_id=user_id, residence=residence, estate=estate, postal_address=postal_address, status="True")
-
-                    airport_user_save.save()
-                except IntegrityError:
-                    transaction.savepoint_rollback(trans_one)
-                    return HttpResponse("error")
+            
 
             patients_contacts_id = contact_save.pk
             print(patients_contacts_id)
@@ -563,59 +549,27 @@ def search_symptoms(f_data):
 
 @login_required
 def complete_airport(request):
-    global follow_data, follow_data_count
+    if request.method == "POST":
+        date_from = request.POST.get('date_from', '')
+        date_to = request.POST.get('date_to', '')
+        day = time.strftime("%Y-%m-%d")
 
-    # check logged users access level to display relevant records -- national, county, SubCounty
-    current_user = request.user
-    u = User.objects.get(username=current_user.username)
-    user_access_level = u.persons.access_level
-    print("Access Level---")
-    print(user_access_level)
+        all_data = quarantine_contacts.objects.all().filter(source='Airport Registration').filter(
+            date_of_contact__gte=date_from, date_of_contact__lte=date_to).order_by('-date_of_contact')
+        q_data_count = quarantine_contacts.objects.all().filter(source='Airport Registration').filter(
+            date_of_contact__gte=date_from, date_of_contact__lte=date_to).count()
 
-    if (user_access_level == 'National'):
-        # pull data whose quarantine site id is equal to q_site_name
-        print("inside National")
-        follow_data = quarantine_follow_up.objects.filter(created_at__lte=date.today() - timedelta(days=14)).filter(
-            patient_contacts__source='Airport Registration')
-        follow_data_count = quarantine_follow_up.objects.filter(
-            patient_contacts__source='Airport Registration').count()
+        data = {'all_data': all_data, 'all_data_count': q_data_count,'day': day}
 
-    elif (user_access_level == "County"):
-        user_county_id = u.persons.county_id
-        print(user_county_id)
-        follow_data = quarantine_follow_up.objects.filter(patient_contacts__county_id=user_county_id).filter(
-            created_at__lte=date.today() - timedelta(days=14)).filter(
-            patient_contacts__source='Airport Registration').order_by('-created_at')
-        follow_data_count = quarantine_follow_up.objects.filter(patient_contacts__county_id=user_county_id).filter(
-            created_at__lte=date.today() - timedelta(days=14)).filter(
-            patient_contacts__source='Airport Registration').count()
 
-    elif (user_access_level == "SubCounty"):
-        user_sub_county_id = u.persons.sub_county_id
-        print(user_sub_county_id)
-        follow_data = quarantine_follow_up.objects.filter(patient_contacts__subcounty_id=user_sub_county_id).filter(
-            created_at__lte=date.today() - timedelta(days=14)).filter(
-            patient_contacts__source='Airport Registration').order_by('-created_at')
-        follow_data_count = quarantine_follow_up.objects.filter(
-            patient_contacts__subcounty_id=user_sub_county_id).filter(
-            created_at__lte=date.today() - timedelta(days=14)).filter(
-            patient_contacts__source='Airport Registration').count()
 
     else:
-        follow_data = quarantine_contacts.objects.filter(self_quarantine=False).filter(
-            created_at__lte=date.today() - timedelta(days=14)).filter(
-            patient_contacts__source='Airport Registration').order_by('-created_at')
-        follow_data_count = quarantine_contacts.objects.filter(self_quarantine=False).filter(
-            patient_contacts__source='Airport Registration').count()
+        all_data = quarantine_contacts.objects.all().filter(source='Airport Registration').filter(
+            date_of_contact__lte=date.today() - timedelta(days=14)).order_by('-date_of_contact')
+        q_data_count = quarantine_contacts.objects.all().filter(source='Airport Registration').filter(
+            date_of_contact__lte=date.today() - timedelta(days=14)).count()
+        day = time.strftime("%Y-%m-%d")
 
-    paginator = Paginator(follow_data, 10)
-    page_number = request.GET.get('page')
-    try:
-        page_obj = paginator.page(page_number)
-    except PageNotAnInteger:
-        page_obj = paginator.page(1)
-    except EmptyPage:
-        page_obj = paginator.page(paginator.num_pages)
-    data = {'follow_data': follow_data, 'follow_data_count': follow_data_count, 'page_obj': page_obj}
+        data = {'all_data': all_data, 'all_data_count': q_data_count, 'day': day}
 
     return render(request, 'airport_app/complete_airport.html', data)
