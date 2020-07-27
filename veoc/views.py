@@ -5021,7 +5021,6 @@ def truck_quarantine_list(request):
             # border_point = request.POST.get('border_point','')
             date_from = request.POST.get('date_from', '')
             date_to = request.POST.get('date_to', '')
-            print("aaaaaaaaa",date_from)
 
             print("inside National")
             # add a border point filter to enable filtering specific border point--------

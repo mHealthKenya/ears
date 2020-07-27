@@ -243,7 +243,6 @@ def airport_list(request):
     # print(user_level)
 
     bord_points = border_points.objects.all().order_by('border_name')
-    truck_cont_details = []
 
     if request.method == 'POST':
         if user_level == 1 or user_level == 2:

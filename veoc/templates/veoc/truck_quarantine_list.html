@@ -145,17 +145,17 @@
                                                 <button type="button" id="map_view"
                                                         class="btn btn-info btn-sm pull-left map_view"
                                                         data-toggle="modal" data-target="#mapViewModal"
-                                                        data-id="{{ q_data.pk }}"
-                                                        data-names="{{ q_data.first_name }} {{ q_data.last_name }}"
-                                                        data-last_contact="{{ q_data.date_of_contact|date:'d-m-Y' }}"
-                                                        data-phone_number="{{ q_data.phone_number }}"
+                                                        data-id="{{ q_data.patient_contacts.pk }}"
+                                                        data-names="{{ q_data.patient_contacts.first_name }} {{ q_data.patient_contacts.last_name }}"
+                                                        data-last_contact="{{ q_data.patient_contacts.date_of_contact|date:'d-m-Y' }}"
+                                                        data-phone_number="{{ q_data.patient_contacts.phone_number }}"
                                                         title="Open Map View">
                                                     <i class="fa fa-map-marker">
                                                     </i>
                                                 </button>
                                             </td>
                                             <td>
-                                                <a href="/truck_driver_profile/{{ q_data.pk }}"
+                                                <a href="/truck_driver_profile/{{ q_data.patient_contacts.pk }}"
                                                    class="btn btn-info btn-sm pull-left" title="View Profile"><i
                                                         class="fa fa-eye"></i></a>
                                             </td>
