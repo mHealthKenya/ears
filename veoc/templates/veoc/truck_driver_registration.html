@@ -90,13 +90,13 @@
                        </div>
                        <div class="form-group col-md-4">
                          <label for="callernumber">Date of Birth : *</label>
-                         <input class="form-control" type="date" value="{{ day }}" id="dob" max='2000-13-13' name="dob" required="">
+                         <input class="form-control" type="date" value="{{ day }}" id="dob" max='2000-13-13' name="dob" required="required">
                        </div>
                     </div>
                     <div class="form-row" id="country_details_div">
                       <div class="form-group col-md-4">
                         <label for="country">Country of Origin : *</label>
-                        <select class="form-control" name="country" id="country" onchange="region_filter()">
+                        <select class="form-control" name="country" id="country" onchange="region_filter()" required>
                              <option value="" disabled selected>Select Country</option>
                              {% for cntry in country %}
                                  <option value="{{cntry.name}}">{{cntry.name}}</option>
@@ -105,7 +105,7 @@
                       </div>
                       <div class="form-group col-md-4">
                         <label for="nationality">Nationality : *</label>
-                        <select class="form-control" name="nationality" id="nationality">
+                        <select class="form-control" name="nationality" id="nationality" required>
                              <option value="" disabled selected>Select Nationality</option>
                              {% for cntry in country %}
                                  <option value="{{cntry.name}}">{{cntry.name}}</option>
@@ -143,7 +143,7 @@
                     <div class="form-row" id="gender_details_div">
                        <div class="form-group col-md-6">
                          <label for="borderpoint">Border Point : *</label>
-                         <select class="form-control" name="border_name" id="border_name" >
+                         <select class="form-control" name="border_name" id="border_name" required>
                               <option value="" disabled selected>Select Border Point</option>
                               {% for b_point in border_points %}
                                   <option value="{{b_point.border_name}}">{{b_point.border_name}}</option>
@@ -152,7 +152,7 @@
                        </div>
                        <div class="form-group col-md-6">
                          <label for="weighbridgesite">Weighbridge Site : *</label>
-                         <select class="form-control" name="weighbridge_name" id="weighbridge_name" >
+                         <select class="form-control" name="weighbridge_name" id="weighbridge_name" required>
                               <option value="" disabled selected>Select Weighbridge Site</option>
                               {% for qty in weigh_site %}
                                   <option value="{{qty.weighbridge_name}}">{{qty.weighbridge_name}}</option>
