@@ -83,13 +83,11 @@ def airport_register(request):
         risk_assessment_referal = request.POST.get('risk_assessment_referal','')
         designated_hospital_referal = request.POST.get('designated_hospital_referal','')
 
-<<<<<<< HEAD
+
 
 
         if origin_country.lower() == "kenya" :
-=======
-        if origin_country.lower() == "kenya":
->>>>>>> cd5d82af2882a62bb13f5eda5059b3d021459b8f
+
             countyObject = organizational_units.objects.get(name = cnty)
             subcountyObject = organizational_units.objects.get(name = sub_cnty)
             wardObject = organizational_units.objects.get(organisationunitid = ward)
@@ -156,7 +154,7 @@ def airport_register(request):
             contact_save.save()
             trans_one = transaction.savepoint()
 
-<<<<<<< HEAD
+
             patient_id = contact_save.pk
             print(patient_id)
             patientObject = quarantine_contacts.objects.get(pk=patient_id)
@@ -169,7 +167,7 @@ def airport_register(request):
                 except IntegrityError:
                     transaction.savepoint_rollback(trans_one)
                     return HttpResponse("error")
-=======
+
             patients_contacts_id = contact_save.pk
             print(patients_contacts_id)
             print(patients_contacts_id)
@@ -177,7 +175,7 @@ def airport_register(request):
             if contact_save:
                 print("in")
                 airport_user_save = airline_quarantine.objects.create(airline=airline, flight_number=flight_number, seat_number=seat_number, destination_city=destination_city, travel_history=countries_visited, cough=cough, breathing_difficulty=breathing_difficulty, fever=fever, chills=chills, temperature=fever, measured_temperature=measured_temperature,arrival_airport_code=arrival_airport_code, released=released, risk_assessment_referal=risk_assessment_referal, designated_hospital_referal=designated_hospital_referal, created_at=current_date, updated_at=current_date, patients_contacts_id=patientObject, created_by_id=userObject, updated_by_id=userObject, residence=residence, estate=estate, postal_address=postal_address, status="Active")
->>>>>>> cd5d82af2882a62bb13f5eda5059b3d021459b8f
+
 
             else:
                 print("data not saved in truck quarantine contacts")
@@ -565,25 +563,59 @@ def search_symptoms(f_data):
 
 @login_required
 def complete_airport(request):
-    if request.method == "POST":
-        date_from = request.POST.get('date_from', '')
-        date_to = request.POST.get('date_to', '')
-        day = time.strftime("%Y-%m-%d")
+    global follow_data, follow_data_count
 
-        all_data = quarantine_contacts.objects.all().filter(source='Airport Registration').filter(
-            date_of_contact__gte=date_from, date_of_contact__lte=date_to).order_by('-date_of_contact')
-        q_data_count = quarantine_contacts.objects.all().filter(source='Airport Registration').filter(
-            date_of_contact__gte=date_from, date_of_contact__lte=date_to).count()
+    # check logged users access level to display relevant records -- national, county, SubCounty
+    current_user = request.user
+    u = User.objects.get(username=current_user.username)
+    user_access_level = u.persons.access_level
+    print("Access Level---")
+    print(user_access_level)
 
-        data = {'all_data': all_data, 'all_data_count': q_data_count, 'day': day}
+    if (user_access_level == 'National'):
+        # pull data whose quarantine site id is equal to q_site_name
+        print("inside National")
+        follow_data = quarantine_follow_up.objects.filter(created_at__lte=date.today() - timedelta(days=14)).filter(
+            patient_contacts__source='Airport Registration')
+        follow_data_count = quarantine_follow_up.objects.filter(
+            patient_contacts__source='Airport Registration').count()
 
+    elif (user_access_level == "County"):
+        user_county_id = u.persons.county_id
+        print(user_county_id)
+        follow_data = quarantine_follow_up.objects.filter(patient_contacts__county_id=user_county_id).filter(
+            created_at__lte=date.today() - timedelta(days=14)).filter(
+            patient_contacts__source='Airport Registration').order_by('-created_at')
+        follow_data_count = quarantine_follow_up.objects.filter(patient_contacts__county_id=user_county_id).filter(
+            created_at__lte=date.today() - timedelta(days=14)).filter(
+            patient_contacts__source='Airport Registration').count()
 
+    elif (user_access_level == "SubCounty"):
+        user_sub_county_id = u.persons.sub_county_id
+        print(user_sub_county_id)
+        follow_data = quarantine_follow_up.objects.filter(patient_contacts__subcounty_id=user_sub_county_id).filter(
+            created_at__lte=date.today() - timedelta(days=14)).filter(
+            patient_contacts__source='Airport Registration').order_by('-created_at')
+        follow_data_count = quarantine_follow_up.objects.filter(
+            patient_contacts__subcounty_id=user_sub_county_id).filter(
+            created_at__lte=date.today() - timedelta(days=14)).filter(
+            patient_contacts__source='Airport Registration').count()
 
     else:
-        all_data = quarantine_contacts.objects.all().filter(source='Airport Registration').order_by('-date_of_contact')
-        q_data_count = quarantine_contacts.objects.all().filter(source='Airport Registration').count()
-        day = time.strftime("%Y-%m-%d")
+        follow_data = quarantine_contacts.objects.filter(self_quarantine=False).filter(
+            created_at__lte=date.today() - timedelta(days=14)).filter(
+            patient_contacts__source='Airport Registration').order_by('-created_at')
+        follow_data_count = quarantine_contacts.objects.filter(self_quarantine=False).filter(
+            patient_contacts__source='Airport Registration').count()
 
-        data = {'all_data': all_data, 'all_data_count': q_data_count, 'day': day}
+    paginator = Paginator(follow_data, 10)
+    page_number = request.GET.get('page')
+    try:
+        page_obj = paginator.page(page_number)
+    except PageNotAnInteger:
+        page_obj = paginator.page(1)
+    except EmptyPage:
+        page_obj = paginator.page(paginator.num_pages)
+    data = {'follow_data': follow_data, 'follow_data_count': follow_data_count, 'page_obj': page_obj}
 
     return render(request, 'airport_app/complete_airport.html', data)
