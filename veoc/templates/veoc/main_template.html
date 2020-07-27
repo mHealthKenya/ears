@@ -303,6 +303,14 @@
                 <li><a href="/contact_list">Contact Type</a></li>
             </ul>
           </li>
+          {% if request.user.get_username == 'admin' or request.user.get_username == 'test' %}
+          <li>
+            <a href="#"><span class="fa-stack fa-lg pull-left"><i class="fa fa-download fa-stack-1x "></i></span>Raw Data</a>
+            <ul class="nav-pills nav-stacked" style="list-style-type:none;">
+				<li><a href="/raw_data_downloads">Downloads List</a></li>
+            </ul>
+          </li>
+          {% endif %}
         {% elif user_level == 'County Managers' or user_level == 'County Watchers' or request.user|has_group:"County Managers" or request.user|has_group:"County Watchers" %}
           <li>
               <a href="#"><span class="fa-stack fa-lg pull-left"><i class="fa fa-edit fa-stack-1x "></i></span>DATA REGISTER</a>

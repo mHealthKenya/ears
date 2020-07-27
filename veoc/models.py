@@ -840,6 +840,79 @@ class discharged_quarantine(models.Model):
     def __str__(self):
         return self.patient_contacts.first_name + ' - ' + self.patient_contacts.phone_number
 
+class v_quarantine_contacts(models.Model):
+    id = models.BigIntegerField(primary_key=True)
+    contact_id = models.CharField(max_length=200)
+    first_name = models.CharField(max_length=200)
+    middle_name = models.CharField(max_length=200)
+    last_name = models.CharField(max_length=200)
+    sex = models.CharField(max_length=200)
+    dob = models.CharField(max_length=200)
+    passport_number = models.CharField(max_length=200)
+    phone_number = models.CharField(max_length=200)
+    email_address = models.CharField(max_length=200)
+    origin_country = models.CharField(max_length=200)
+    nationality = models.CharField(max_length=200)
+    county = models.CharField(max_length=200)
+    subcounty = models.CharField(max_length=200)
+    source = models.CharField(max_length=200)
+    quarantine_site = models.CharField(max_length=200)
+    sms_communication_language = models.CharField(max_length=200)
+    date_of_contact = models.CharField(max_length=200)
+    created_at = models.CharField(max_length=200)
+
+    class Meta:
+        managed = False
+        db_table = 'v_quarantine_contacts'
+
+class v_follow_up(models.Model):
+    id = models.BigIntegerField(primary_key=True)
+    patient_contacts_id = models.CharField(max_length=200)
+    source = models.CharField(max_length=200)
+    first_name = models.CharField(max_length=200)
+    last_name = models.CharField(max_length=200)
+    phone_number = models.CharField(max_length=200)
+    passport_number = models.CharField(max_length=200)
+    reporting_date = models.CharField(max_length=200)
+    county = models.CharField(max_length=200)
+    subcounty = models.CharField(max_length=200)
+    self_quarantine = models.BooleanField(default=True)
+    follow_up_day = models.CharField(max_length=200)
+    thermal_gun = models.BooleanField(default=True)
+    body_temperature = models.BooleanField(default=True)
+    cough = models.BooleanField(default=True)
+    difficulty_breathing = models.BooleanField(default=True)
+    fever = models.BooleanField(default=True)
+    comment = models.CharField(max_length=200)
+
+    class Meta:
+        managed = False
+        db_table = 'v_follow_up'
+
+class v_lab_results(models.Model):
+    id = models.BigIntegerField(primary_key=True)
+    name = models.CharField(max_length=200)
+    patient_contacts_id = models.CharField(max_length=200)
+    phone_number = models.CharField(max_length=200)
+    id_number = models.CharField(max_length=200)
+    sex = models.CharField(max_length=200)
+    dob = models.CharField(max_length=200)
+    testing_lab = models.CharField(max_length=200)
+    date_tested = models.CharField(max_length=200)
+    result = models.CharField(max_length=200)
+    system_registration_date = models.CharField(max_length=200)
+    nationality = models.CharField(max_length=200)
+    origin_country = models.CharField(max_length=200)
+    county = models.CharField(max_length=200)
+    sub_county = models.CharField(max_length=200)
+    source = models.CharField(max_length=200)
+    border_name = models.CharField(max_length=200)
+    date_received = models.CharField(max_length=200)
+
+    class Meta:
+        managed = False
+        db_table = 'v_lab_results'
+
 class watcher_team_leads(models.Model):
     team_lead=models.ForeignKey(contact, on_delete=models.CASCADE, blank=False)
     team_name=models.CharField(max_length=20)

@@ -268,6 +268,47 @@ def truck_export_csv(request):
         writer.writerow(obj)
     return response
 
+def raw_quarantine_contacts_csv(request):
+    q_data = v_quarantine_contacts.objects.values_list('contact_id', 'first_name', 'middle_name', 'last_name', 'sex', 'dob', 'passport_number', 'phone_number',
+                'email_address', 'origin_country', 'nationality', 'county', 'subcounty', 'source', 'quarantine_site', 'sms_communication_language', 'date_of_contact', 'created_at')
+
+    response = HttpResponse(content_type='text/csv')
+    response['Content-Disposition'] = 'attachment;  filename="raw_quarantine_contacts_data.csv"'
+    writer = csv.writer(response)
+    writer.writerow(['contact_id', 'first_name', 'middle_name', 'last_name', 'sex', 'dob', 'passport_number', 'phone_number', 'email_address', 'origin_country',
+                     'nationality', 'county', 'subcounty', 'source', 'quarantine_site', 'sms_communication_language', 'date_of_contact', 'created_at'])
+
+    for obj in q_data:
+        writer.writerow(obj)
+    return response
+
+def raw_follow_up_csv(request):
+    follow_data = v_follow_up.objects.values_list('patient_contacts_id', 'source', 'first_name', 'last_name', 'phone_number', 'passport_number', 'reporting_date',
+                'county', 'subcounty', 'self_quarantine', 'follow_up_day', 'thermal_gun', 'body_temperature', 'cough', 'difficulty_breathing', 'fever', 'comment')
+
+    response = HttpResponse(content_type='text/csv')
+    response['Content-Disposition'] = 'attachment;  filename="raw_follow_up_data.csv"'
+    writer = csv.writer(response)
+    writer.writerow(['patient_contacts_id', 'source', 'first_name', 'last_name', 'phone_number', 'passport_number', 'reporting_date', 'county', 'subcounty',
+                     'self_quarantine', 'follow_up_day', 'thermal_gun', 'body_temperature', 'cough', 'difficulty_breathing', 'fever', 'comment'])
+
+    for obj in follow_data:
+        writer.writerow(obj)
+    return response
+
+def raw_lab_results_csv(request):
+    lab_data = v_lab_results.objects.values_list('name', 'patient_contacts_id', 'phone_number', 'id_number', 'sex', 'dob', 'testing_lab', 'date_tested',
+                'result', 'system_registration_date', 'nationality', 'origin_country', 'county', 'sub_county', 'source', 'border_name', 'date_received')
+
+    response = HttpResponse(content_type='text/csv')
+    response['Content-Disposition'] = 'attachment;  filename="raw_quarantine_contacts_data.csv"'
+    writer = csv.writer(response)
+    writer.writerow(['name', 'patient_contacts_id', 'phone_number', 'id_number', 'sex', 'dob', 'testing_lab', 'date_tested', 'result',
+                     'system_registration_date', 'nationality', 'origin_country', 'county', 'sub_county', 'source', 'border_name', 'date_received'])
+
+    for obj in lab_data:
+        writer.writerow(obj)
+    return response
 
 # Create your views here.
 contacts = contact_type.objects.all()
@@ -6531,6 +6572,12 @@ def truck_ongoing_quarantine(request):
         data = {'all_data': all_data, 'all_data_count': q_data_count, 'weigh_name': quar_sites, 'day': day}
 
     return render(request, 'veoc/truck_ongoing_complete.html', data)
+
+
+@login_required
+def raw_data_downloads(request):
+
+    return render(request, 'veoc/raw_data.html')
 
 
 @login_required
