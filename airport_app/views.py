@@ -76,11 +76,14 @@ def airport_register(request):
         residence = request.POST.get('residence','')
         estate = request.POST.get('estate','')
         postal_address = request.POST.get('postal_address','')
+        temperature = request.POST.get('measured_temperature','')
         measured_temperature = request.POST.get('measured_temperature','')
         arrival_airport_code = request.POST.get('arrival_airport_code','')
         released = request.POST.get('released','')
         risk_assessment_referal = request.POST.get('risk_assessment_referal','')
         designated_hospital_referal = request.POST.get('designated_hospital_referal','')
+
+
 
         if origin_country.lower() == "kenya" :
             countyObject = organizational_units.objects.get(name = cnty)
@@ -100,48 +103,70 @@ def airport_register(request):
             user_phone = user_phone + str(phone_number)
             # print("number not leading with 0")
 
-        #get todays date
-        current_date = datetime.now()
-
-        #get current user
+        # get current user
         current_user = request.user
-        print(current_user)
-        userObject = User.objects.get(pk = current_user.id)
-        site_name = "Home"
-        qua_site = quarantine_sites.objects.get(site_name = site_name)
+        user_id = current_user.id
+        # print(current_user)
+        userObject = User.objects.get(pk=current_user.id)
+        #weigh_site = weighbridge_sites.objects.get(weighbridge_name=weighbridge_name)
+        #bord_name = border_points.objects.get(border_name=border_name)
+        #site_name = ''
+        quar_site = quarantine_sites.objects.filter(site_name="Country Border")
+        for site in quar_site:
+            site_name = site.id
+
         contact_save = ''
-        source = "Web Registration"
-        contact_identifier = uuid.uuid4().hex
-        #Check if mobile number exists in the table
-        details_exist = quarantine_contacts.objects.filter(phone_number = phone_number, first_name = first_name, last_name=last_name)
-        if details_exist :
+        current_date = datetime.now()
+        source = "Airport Registration"
+        # Check if mobile number exists in the table
+        details_exist = quarantine_contacts.objects.filter(phone_number=phone_number, first_name=first_name,
+                                                           last_name=last_name,
+                                                           date_of_contact__gte=date.today() - timedelta(days=14))
+        if details_exist:
             for mob_ex in details_exist:
-                print("Details exist Phone Number" + str(mob_ex.phone_number) + "Registered on :" + str(mob_ex.created_at))
+                print("Details exist Phone Number" + str(mob_ex.phone_number) + "Registered on :" + str(
+                    mob_ex.created_at))
 
             return HttpResponse("error")
         else:
-            #saving values to databse
-            contact_save = quarantine_contacts.objects.create(first_name=first_name, last_name=last_name, middle_name=middle_name,
-            county=countyObject, subcounty=subcountyObject, ward=wardObject,sex=sex, dob=dob, passport_number=passport_number,
-            phone_number=phone_number, email_address=email_address, date_of_contact=date_of_arrival, source=source,
-            nationality=nationality, drugs="no", nok=nok, nok_phone_num=nok_phone_number, cormobidity="None",
-            origin_country=origin_country, place_of_diagnosis="Airport", quarantine_site=qua_site,contact_uuid=contact_identifier,
-            updated_at=current_date, created_by=userObject, updated_by=userObject, created_at=current_date)
+            language = 1
+            quarantineObject = quarantine_sites.objects.get(pk=site_name)
+            languageObject = translation_languages.objects.get(pk=language)
+            contact_identifier = uuid.uuid4().hex
+            # saving values to quarantine_contacts database first
+            contact_save = quarantine_contacts.objects.create(first_name=first_name, last_name=last_name,
+                                                              middle_name=middle_name,
+                                                              county=countyObject, subcounty=subcountyObject,
+                                                              ward=wardObject, sex=sex, dob=dob,
+                                                              passport_number=passport_number,
+                                                              phone_number=phone_number, date_of_contact=date_of_arrival,
+                                                              communication_language=languageObject,
+                                                              nationality=nationality, drugs="No", nok=nok,
+                                                              nok_phone_num=nok_phone_number, cormobidity="None",
+                                                              origin_country=origin_country,
+                                                              quarantine_site=quarantineObject, source=source,
+                                                              contact_uuid=contact_identifier,
+                                                              updated_at=current_date, created_by=userObject,
+                                                              updated_by=userObject, created_at=current_date)
 
             contact_save.save()
             trans_one = transaction.savepoint()
 
-            patients_contacts_id = contact_save.pk
-            print(patients_contacts_id)
-            patientObject = quarantine_contacts.objects.get(pk = patients_contacts_id)
-            if patients_contacts_id:
+            patient_id = contact_save.pk
+            print(patient_id)
+            patientObject = quarantine_contacts.objects.get(pk=patient_id)
+            # save contacts in the track_quarantine_contacts if data has been saved on the quarantine contacts
+            if patient_id:
+                try:
+                    airport_user_save = airline_quarantine.objects.create(airline=airline, flight_number=flight_number, seat_number=seat_number, destination_city=destination_city, travel_history=countries_visited, cough=cough, breathing_difficulty=breathing_difficulty, fever=fever, chills=chills, temperature=temperature, measured_temperature=measured_temperature,arrival_airport_code=arrival_airport_code, released=released, risk_assessment_referal=risk_assessment_referal, designated_hospital_refferal=designated_hospital_referal, created_at=current_date, updated_at=current_date, patient_contacts_id=patient_id, created_by_id=user_id, updated_by_id=user_id, residence=residence, estate=estate, postal_address=postal_address, status="True")
 
-                airport_user_save = airline_quarantine.objects.create(airline=airline, flight_number=flight_number, seat_number=seat_number, destination_city=destination_city, travel_history=countries_visited, cough=cough, breathing_difficulty=breathing_difficulty, fever=fever, chills=chills, temperature=fever, measured_temperature=measured_temperature,arrival_airport_code=arrival_airport_code, released=released, risk_assessment_referal=risk_assessment_referal, designated_hospital_referal=designated_hospital_referal, created_at=current_date, updated_at=current_date, patients_contacts_id=patientObject, created_by_id=userObject, updated_by_id=userObject, residence=residence, estate=estate, postal_address=postal_address, status="Active")
+                    airport_user_save.save()
+                except IntegrityError:
+                    transaction.savepoint_rollback(trans_one)
+                    return HttpResponse("error")
 
-                airport_user_save.save()
             else:
-                print("not working")
-
+                print("data not saved in truck quarantine contacts")
 
         #check if details have been saved
         if contact_save:
@@ -189,20 +214,18 @@ def airport_register(request):
 
         cntry = country.objects.all()
         county = organizational_units.objects.all().filter(hierarchylevel = 2).order_by('name')
-        qua_site = quarantine_sites.objects.all().filter(active = True).order_by('site_name')
         day = time.strftime("%Y-%m-%d")
 
-        data = {'country':cntry,'county':county, 'day':day, 'qua_site':qua_site}
+        data = {'country':cntry,'county':county, 'day':day}
 
         return render(request, 'airport_app/airport_register.html', data)
 
     else:
         cntry = country.objects.all()
         county = organizational_units.objects.all().filter(hierarchylevel = 2).order_by('name')
-        qua_site = quarantine_sites.objects.all().filter(active = True).order_by('site_name')
         day = time.strftime("%Y-%m-%d")
 
-        data = {'country':cntry,'county':county, 'day':day, 'qua_site':qua_site}
+        data = {'country':cntry,'county':county, 'day':day}
 
         return render(request, 'airport_app/airport_register.html', data)
 
@@ -356,7 +379,7 @@ def airport_list(request):
     return render(request, 'airport_app/airport_list.html', data)
 
 
-@login_required
+#@login_required
 def airport_follow_up(request):
 
     qua_contacts = quarantine_contacts.objects.all().filter(source__contains="Truck Registration")
@@ -546,4 +569,25 @@ def airport_symtomatic(request):
 
 @login_required
 def complete_airport(request):
-    return render(request, 'airport_app/complete_airport.html')
+    if request.method == "POST":
+        date_from = request.POST.get('date_from', '')
+        date_to = request.POST.get('date_to', '')
+        day = time.strftime("%Y-%m-%d")
+
+        all_data = quarantine_contacts.objects.all().filter(source='Airport Registration').filter(
+            date_of_contact__gte=date_from, date_of_contact__lte=date_to).order_by('-date_of_contact')
+        q_data_count = quarantine_contacts.objects.all().filter(source='Airport Registration').filter(
+            date_of_contact__gte=date_from, date_of_contact__lte=date_to).count()
+
+        data = {'all_data': all_data, 'all_data_count': q_data_count, 'day': day}
+
+
+
+    else:
+        all_data = quarantine_contacts.objects.all().filter(source='Airport Registration').order_by('-date_of_contact')
+        q_data_count = quarantine_contacts.objects.all().filter(source='Airport Registration').count()
+        day = time.strftime("%Y-%m-%d")
+
+        data = {'all_data': all_data, 'all_data_count': q_data_count, 'day': day}
+
+    return render(request, 'airport_app/complete_airport.html', data)

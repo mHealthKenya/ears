@@ -3,344 +3,292 @@
 {% block main %}
 
     <script type="text/javascript"
-        src="https://cdn.datatables.net/v/dt/jqc-1.12.3/jszip-2.5.0/pdfmake-0.1.18/dt-1.10.12/b-1.2.2/b-flash-1.2.2/b-html5-1.2.2/b-print-1.2.2/datatables.min.js"></script>
+            src="https://cdn.datatables.net/v/dt/jqc-1.12.3/jszip-2.5.0/pdfmake-0.1.18/dt-1.10.12/b-1.2.2/b-flash-1.2.2/b-html5-1.2.2/b-print-1.2.2/datatables.min.js"></script>
 
             <div id="main-container">
-        			<div id="breadcrumb">
-        				<ul class="breadcrumb">
-        					 <li><i class="fa fa-home"></i><a href="{% url 'veoc:access_dashboard' %}"> Dashboard</a></li>
-        					 <li class="active">Airport Completed Quarantine Report</li>
-        				</ul>
-        			</div><!-- /breadcrumb-->
+              <div id="breadcrumb">
+                <ul class="breadcrumb">
+                   <li><i class="fa fa-home"></i><a href="{% url 'veoc:access_dashboard' %}"> Dashboard</a></li>
+                   <li class="active">Completed Quarantine Report</li>
+                </ul>
+              </div><!-- /breadcrumb-->
 
-              <div class="panel-heading"><b>COVID19 Quarantine Complete</b></div>
-              <div class="panel-body" align="left">
-                  <form class="form-inline" method="post" action="{% url 'veoc:complete_airport' %}">{% csrf_token %}
-                      <div class="form-group">
-                        <label for="date_from">From :</label>
-                        <input class="form-control" type="date" id="date_from" name="date_from" value="{{ day }}" required>
+              <div class="panel-heading"><b>COVID19 Quarantine Complete Contact Tracing and Follow Up Report</b></div>
+
+              <div class="padding-md">
+                <div class="row">
+                  <div class="col-md-12">
+                    <div class="panel panel-default table-responsive">
+                      <div class="panel-heading">
+                        Completed Quarantine Report
+                        <span class="label label-info pull-right" id="totalspan">{{all_data_count}} Reported cases </span>
                       </div>
-                        &nbsp; &nbsp;
-                      <div class="form-group">
-                        <label for="date_to">To :</label>
-                        <input class="form-control" type="date" id="date_to" name="date_to" value="{{ day }}" required>
-                      </div>
-                      <button type="submit" class="btn btn-primary" >Update</button>
-                    </form>
-                  <!-- <button type="submit" class="btn btn-primary" align="right">Update</button> -->
-              </div>
-        			<div class="padding-md">
-        				<div class="row">
-        					<div class="col-md-12">
-        						<div class="panel panel-default table-responsive">
-        							<div class="panel-heading">
-        								Completed Quarantine Report
-        								<span class="label label-info pull-right" id="totalspan">{{all_data_count}} cases </span>
-        							</div>
-        							<div class="padding-md clearfix">
-        							<table class="table table-hover" id="quarantine_complete_report">
-        								<thead class="thead-dark">
+                      <div class="padding-md clearfix">
+                      <table class="table table-hover" id="quarantine_complete_report">
+                        <thead class="thead-dark">
                           <tr>
-                            <th>Last Names</th>
+                            <th>Last Name</th>
                             <th>First Name</th>
-                            <th>DOB</th>
+                            <th>Age</th>
                             <th>Gender</th>
-                            <th>Mobile</th>
-                            <th>Passport No</th>
-                            <th>Nationality</th>
+                            <th>Contact</th>
                             <th>Origin Country</th>
-{#                            <th>Weighbridge Site</th>#}
-                            <th>date of contact</th>
-                            <th>Registered by</th>
-                            <th>Restart Quarantine</th>
+                            <th>Date of last contact</th>
+                            <th>Follow up Day</th>
+                            <th>Temperature</th>
+                            <th>Has Fever?</th>
+                            <th>Has Cough?</th>
+                            <th>Difficulty in breathing?</th>
+                            <th>Has Thermal Gun?</th>
+                            <th>Reported Date</th>
                           </tr>
                           </thead>
                           <tbody>
-                          {% for q_data in all_data %}
+                          {% for follow in follow_data %}
                           <tr>
-                            <td>{{ q_data.last_name }}</td>
-                            <td>{{ q_data.first_name }}</td>
-                            {% if q_data.age == 0 %}
-                              <td>Unknown</td>
-                          {% else %}
-                              <td>{{ q_data.age }}</td>
-                          {% endif %}
-                            <td>{{ q_data.sex }}</td>
-                            <td>{{ q_data.phone_number }}</td>
-                            <td>{{ q_data.passport_number }}</td>
-                            <td>{{ q_data.nationality }}</td>
-                            <td>{{ q_data.origin_country }}</td>
-{#                            <td>{{ q_data.weighbridge_facility }}</td>#}
-                            <td>{{ q_data.date_of_contact }}</td>
-                            <td>{{ q_data.created_by }}</td>
-                            <td>
-                             <button type="button" id="revisit_view" class="btn btn-info btn-sm pull-left revisit_view"
-                               data-toggle="modal" data-target="#revisitViewModal"
-                               data-id="{{ q_data.pk }}"
-                               data-names="{{ q_data.first_name }} {{ q_data.last_name }}"
-                               data-phone_number="{{ q_data.phone_number }}"
-                               data-passport_number="{{ q_data.passport_number }}"
-                               title="Open Revisit View">
-                               <i class="fa fa-exchange">
-                               </i>
-                             </button>
-                           </td>
-{#                            <td>#}
-{#                               <a href="/truck_driver_revisit/{{q_data.pk}}" class="btn btn-info btn-sm pull-left" title="Restart Quarantine"><i class="fa fa-exchange"></i></a>#}
-{#                            </td>#}
+                            <td>{{ follow.patient_contacts.last_name }}</td>
+                            <td>{{ follow.patient_contacts.first_name }}</td>
+                            <td>{{ follow.patient_contacts.age }}</td>
+                            <td>{{ follow.patient_contacts.sex }}</td>
+                            <td>{{ follow.patient_contacts.phone_number }}</td>
+                            <td>{{ follow.patient_contacts.origin_country }}</td>
+                            <td>{{ follow.patient_contacts.date_of_contact|date:'d-m-Y' }}</td>
+                            <td>{{ follow.follow_up_day }}</td>
+                            <td>{{ follow.body_temperature }}</td>
+                            <td>{{ follow.fever }}</td>
+                            <td>{{ follow.cough }}</td>
+                            <td>{{ follow.difficulty_breathing }}</td>
+                            <td>{{ follow.thermal_gun }}</td>
+                            <td>{{ follow.created_at|date:'d-m-Y' }}</td>
                           </tr>
                         {% endfor %}
                       </tbody>
-    							</table>
+                  </table>
                 </div>
               </div>
-    				</div>
-    			</div><!-- /row-->
+            </div>
+          </div><!-- /row-->
         </div><!-- /.padding-md -->
       </div><!-- /main-container -->
-
-    <!-- Map View modal -->
-      <div class="modal fade" id="revisitViewModal" tabindex="-1" role="dialog" aria-hidden="true">
-      		<div class="modal-dialog" role="document">
-      			<div class="modal-content">
-        			<div class="modal-header">
-        				<h5 class="modal-title" id="exampleModalLongTitle"><b>REVISIT QUARANTINE DETAILS</b></h5>
-        				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-        				<span aria-hidden="true">&times;</span>
-        				</button>
-        			</div>
-        			<div class="modal-body">
-                      <div class="padding-md">
-                        <div class="row">
-                          <div class="col-md-12">
-                            <div class="panel panel-default">
-                              <div class="panel-heading"><b>Fill in All Revisit Details</b></div>
-                              <div class="panel-body" align="center">
-                                <form method="POST" id="track_driver_revisit_form" class="track_driver_revisit_form" action="{% url 'airport_app:truck_driver_revisit' %}">
-                                {% csrf_token %}
-                                  <div class="form-group" style="display: none;">
-                                      <input class="form-control id" name="id" style="display: none;">
-                                  </div>
-                                <div class="form-group col-md-4">
-                                    <label for="heading">Driver Names:</label>
-                                    <input class="form-control names" name="names" readonly>
-                                </div>
-                                <div class="form-group col-md-4">
-                                    <label for="heading">Phone Number:</label>
-                                    <input class="form-control phone_num" name="phone_num" readonly>
-                                </div>
-                                <div class="form-group col-md-4">
-                                    <label for="heading">Passport Num:</label>
-                                    <input class="form-control passport" name="passport" readonly>
-                                </div>
-                                  <div class="form-row">
-                                      <div class="form-row" id="gender_details_div">
-                                      <div class="form-group col-md-6">
-                                         <label for="datereport">Date of Revisit : </label>
-                                         <input class="form-control" type="date" value="{{ day }}" id="date_of_arrival" max="{{ day }}" name="date_of_arrival">
-                                    </div>
-                                       <div class="form-group col-md-6">
-                                         <label for="borderpoint">Border Point : *</label>
-                                         <select class="form-control" name="border_name" id="border_name" >
-                                              <option value="" disabled selected>Select Border Point</option>
-                                              {% for b_point in border_points %}
-                                                  <option value="{{b_point.border_name}}">{{b_point.border_name}}</option>
-                                              {% endfor %}
-                                          </select>
-                                       </div>
-                                       <div class="form-group col-md-6">
-                                         <label for="weighbridgesite">Weighbridge Site : </label>
-                                         <select class="form-control" name="weighbridge_name" id="weighbridge_name" >
-                                              <option value="" disabled selected>Select Weighbridge Site</option>
-                                              {% for qty in weigh_name %}
-                                                  <option value="{{qty.weighbridge_name}}">{{qty.weighbridge_name}}</option>
-                                              {% endfor %}
-                                          </select>
-                                        </div>
-                                      <div class="form-row" id="symptoms_div">
-                                           <div class="form-group col-md-6">
-                                             <label for="cough">Cough : </label>
-                                             <select class="form-control" id="cough" name="cough" required>
-                                               <option value="" disabled selected>Select Option</option>
-                                               <option value="t">Yes</option>
-                                               <option value="f">No</option>
-                                             </select>
-                                           </div>
-                                           <div class="form-group col-md-6">
-                                             <label for="breathing">Breathing Difficulty : </label>
-                                             <select class="form-control" id="breathing_difficulty" name="breathing_difficulty" required>
-                                               <option value="" disabled selected>Select Option</option>
-                                               <option value="t">Yes</option>
-                                               <option value="f">No</option>
-                                             </select>
-                                           </div>
-                                           <div class="form-group col-md-6">
-                                             <label for="fever">Fever : </label>
-                                             <select class="form-control" id="fever" name="fever" required>
-                                               <option value="" disabled selected>Select Option</option>
-                                               <option value="t">Yes</option>
-                                               <option value="f">No</option>
-                                             </select>
-                                           </div>
-                                           <div class="form-group col-md-6">
-                                             <label for="sample">Sample Taken : </label>
-                                             <select class="form-control" id="sample_taken" name="sample_taken" required>
-                                               <option value="" disabled selected>Select Option</option>
-                                               <option value="t">Yes</option>
-                                               <option value="f">No</option>
-                                             </select>
-                                           </div>
-                                         </div>
-                                         <div class="form-row" id="comobidity_details_div">
-                                           <div class="form-group col-md-6">
-                                             <label for="temperature">Temperature : </label>
-                                             <input class="form-control" type=number step=0.01 id="temperature" name="temperature" onchange="checkTemp()" maxlength="5" placeholder="temperature"/>
-                                           </div>
-                                    </div>
-                                  </div>
-                                  <div class="form-row" id="save_div">
-                                    <div class="form-group col-md-12">
-                                        <button type="submit" class="btn btn-success btn-sm pull-right">Add Quarantine Revisit</button>
-                                    </div>
-                                      <div class="form-group col-md-12">
-                                      </div>
-                                  </div>
-                                </form>
-                            </div>
-                          </div><!-- /div panel-default -->
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
 
 {% endblock %}
 
 {% block script %}
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
-  <script>
-    $(document).ready(function () {
-          $('#quarantine_complete_report').DataTable({
-              "order": [],
-              dom: 'Bfrtip',
-              buttons: [
-                  'copy', 'csv', 'excel', 'pdf', 'print'
-              ]
-          });
-
-          // Setup - add a text input to each footer cell
-          $('#quarantine_complete_report thead td').each(function () {
-              var title = $(this).text();
-              $(this).html('<input type="text" placeholder="Search ' + title + '" />');
-          });
-
-          // DataTable
-          var table = $('#quarantine_complete_report').DataTable();
-
-          // Apply the search
-          table.columns().every(function () {
-              var that = this;
-
-              $('input', this.header()).on('keyup change', function () {
-                  if (that.search() !== this.value) {
-                      that
-                              .search(this.value)
-                              .draw();
-                  }
-              });
-          });
-      });
-
-
-    $(document).on( "click", '.revisit_view',function(e) {
-
-      var id = $(this).data('id');
-      var names = $(this).data('names');
-      var phone_num = $(this).data('phone_number');
-      var passport = $(this).data('passport_number');
-
-      console.log(names);
-
-      $(".id").val(id);
-      $(".names").val(names);
-      $(".phone_num").val(phone_num);
-      $(".passport").val(passport);
-  });
-
-    var revisitsForm = $(".track_driver_revisit_form")
-
-      revisitsForm.submit(function(e){
-        e.preventDefault();
-        console.log("inside revisitsForm");
-        var thisForm = $(this);
-        var endPoint = thisForm.attr("action") || window.location.href;
-        var method = thisForm.attr("method");
-        var formData = thisForm.serialize();
-
-        Swal.fire({
-          title: "Please wait!,Saving Details!",
-          // text: "Please wait",
-          imageUrl: "/static/images/ajax-loader.gif",
-          showConfirmButton: false,
-          allowOutsideClick: false
-        });
-        $.ajax({
-          type:method,
-          url:endPoint,
-          data: formData,
-          success:function(data){
-            if(data == "error"){
-              console.log(trucksForm[0])
-              Swal.fire({
-                title: 'Duplicate Data Entry!!',
-                text: 'Names and Phone number entered already exist in the system and still ongoing quarantine!!',
-                icon: 'info'
-              });
-            }else{
-              Swal.fire({
-                title: 'Success!',
-                text: 'Driver added to quarantine revisit',
-                icon: 'success'
-              });
-              revisitsForm[0].reset();
-            }
-          },
-          error:function(er){
-              console.log(er)
-            console.log("Revisit saving error");
-            console.log(er.responseText);
-            Swal.fire({
-              title: 'Error!',
-              text: 'Quarantine Revisit Details Cannot be Saved',
-              icon: 'error'
+    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.0.0-alpha/js/bootstrap.min.js"></script> -->
+    <script>
+        $(document).ready(function () {
+            $('#quarantine_report').DataTable({
+                "order": [],
+                dom: 'Bfrtip',
+                buttons: [
+                    'copy', 'csv', 'excel', 'pdf', 'print'
+                ]
             });
-          }
+
+            // Setup - add a text input to each footer cell
+            $('#quarantine_report thead td').each(function () {
+                var title = $(this).text();
+                $(this).html('<input type="text" placeholder="Search ' + title + '" />');
+            });
+
+            // DataTable
+            var table = $('#quarantine_report').DataTable();
+
+            // Apply the search
+            table.columns().every(function () {
+                var that = this;
+
+                $('input', this.header()).on('keyup change', function () {
+                    if (that.search() !== this.value) {
+                        that
+                            .search(this.value)
+                            .draw();
+                    }
+                });
+            });
+
         });
 
-      });
+        $(document).on("click", '.map_view', function (e) {
+            var id = $(this).data('id');
+            var names = $(this).data('names');
+            var contact = $(this).data('last_contact');
+            var phone = $(this).data('phone_number');
 
-  function checkTemp(){
-       var temp = $('#temperature').val();
-       // console.log(number);
-       if(temp.length > 4 || temp.length < 2){
-         console.log("Enter valid temperature");
-         Swal.fire({
-           title: 'error!',
-           text: 'Enter a valid temperature measure',
-           icon: 'error'
-         });
-         document.getElementById("temperature").focus();
-       }else if(temp < 34 || temp > 45){
-         Swal.fire({
-           title: 'error!',
-           text: 'Temperature value should be between 34 and 45 Degrees',
-           icon: 'error'
-         });
-         document.getElementById("temperature").focus();
-       }
-     }
+            // console.log(names);
 
-  </script>
+            $(".id").val(id);
+            $(".first_name").val(names);
+            $(".date_of_contact").val(contact);
+            $(".phone_number").val(phone);
+        });
+
+        $(document).on("click", '.company_view', function (e) {
+            console.log("inside company_view");
+            var id = $(this).data('id');
+            var c_name = $(this).data('company_name');
+            var c_phone = $(this).data('company_phone');
+            var c_address = $(this).data('company_address');
+            var c_street = $(this).data('company_street');
+            var c_building = $(this).data('company_building');
+            var v_registration = $(this).data('vehicle_registration');
+            var village_ = $(this).data('village');
+            var street_ = $(this).data('street');
+
+            console.log(c_name);
+
+            $(".id").val(id);
+            $(".view_company_name").val(c_name);
+            $(".view_company_phone").val(c_phone);
+            $(".view_company_address").val(c_address);
+            $(".view_company_street").val(c_street);
+            $(".view_company_building").val(c_building);
+            $(".view_vehicle_registration").val(v_registration);
+            $(".view_village").val(village_);
+            $(".view_street").val(street_);
+        });
+
+        $(document).on("click", '.hotel_view', function (e) {
+            var id = $(this).data('id');
+            var hotel_ = $(this).data('hotel');
+            var h_phone = $(this).data('hotel_phone');
+            var h_town = $(this).data('hotel_town');
+            var d_check_in = $(this).data('date_check_in');
+            var d_check_out = $(this).data('date_check_out');
+            var cough_ = $(this).data('cough');
+            var b_difficulty = $(this).data('breathing_difficulty');
+            var fever_ = $(this).data('fever');
+            var s_taken = $(this).data('sample_taken');
+            var a_taken = $(this).data('action_taken');
+
+            console.log(hotel_);
+
+            $(".id").val(id);
+            $(".view_hotel").val(hotel_);
+            $(".view_hotel_phone").val(h_phone);
+            $(".view_hotel_town").val(h_town);
+            $(".view_date_check_in").val(d_check_in);
+            $(".view_date_check_out").val(d_check_out);
+            $(".view_cough").val(cough_);
+            $(".view_breathing_difficulty").val(b_difficulty);
+            $(".view_fever").val(fever_);
+            $(".view_sample_taken").val(s_taken);
+            $(".view_action_taken").val(a_taken);
+        });
+
+        $(document).on("click", '.edit_button', function (e) {
+            var id = $(this).data('id');
+            var first_name = $(this).data('first_name');
+            var last_name = $(this).data('last_name');
+            var country = $(this).data('country');
+            var nationality = $(this).data('nationality');
+            var phone_number = $(this).data('phone_number');
+            var country = $(this).data('country');
+            var comorbidity = $(this).data('cormobidity');
+            var drugs = $(this).data('drugs');
+
+            console.log(id);
+            console.log(first_name);
+
+            $(".id").val(id);
+            $(".f_name").val(first_name);
+            $(".l_name").val(last_name);
+            $(".cntry").val(country);
+            $(".natnality").val(nationality);
+            $(".phone_num").val(phone_number);
+            $(".comorbidity").val(comorbidity);
+            $(".drugs").val(drugs);
+        });
+
+        function openMap() {
+            google.charts.load('current', {'packages': ['map']});
+            google.charts.setOnLoadCallback(drawCountyChart);
+        }
+
+        function drawCountyChart() {
+            // console.log("inside drawCountyChart");
+
+            item_id = $(".id").val();
+            // console.log(item_id)
+            $.ajax({
+                url: '/get_quarantine_coordinates/',
+                type: 'POST',
+                datatype: 'json',
+                data: {item_id: item_id, csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val()},
+                success: function (data) {
+                    // console.log(JSON.stringify(data));
+                    var mydata = new google.visualization.DataTable();
+                    mydata.addColumn('number', 'LATITUDE');
+                    mydata.addColumn('number', 'LONGITUDE');
+                    mydata.addColumn('string', 'NAME');
+
+                    for (var i = 0; i < data.length; i++) {
+                        x = data[i].lat;//get the longitude from models
+                        y = data[i].lng;//get latitude from models
+                        z = "Day " + data[i].follow_up_day.toString();//get the position from models
+                        x = parseFloat(x);//convert the longitude to float from string
+                        y = parseFloat(y);//convert the latitude to float from string
+                        mydata.addRow([x, y, z]);//add the coordinates to the map
+
+                    }
+
+                    var options = {
+                        icons: {
+                            default: {
+                                normal: 'https://img.icons8.com/color/48/000000/google-maps-new.png',
+                                selected: 'https://img.icons8.com/color/48/000000/google-maps-new.png'
+                            }
+                        },
+                        showTip: true,
+                        useMapTypeControl: true,
+                        zoomLevel: 9,
+                        enableScrollWheel: true,
+                        mapType: 'styledMap',
+                        center: {lat: -33.8688, lng: 151.2195},
+                        maps: {
+                            // Your custom mapTypeId holding custom map styles.
+                            styledMap: {
+                                name: 'Styled Map', // This name will be displayed in the map type control.
+                                styles: [
+                                    {
+                                        featureType: 'poi.attraction',
+                                        stylers: [{color: '#fce8b2'}]
+                                    },
+                                    {
+                                        featureType: 'road.highway',
+                                        stylers: [{hue: '#0277bd'}, {saturation: -50}]
+                                    },
+                                    {
+                                        featureType: 'road.highway',
+                                        elementType: 'labels.icon',
+                                        stylers: [{hue: '#000'}, {saturation: 100}, {lightness: 50}]
+                                    },
+                                    {
+                                        featureType: 'landscape',
+                                        stylers: [{hue: '#259b24'}, {saturation: 10}, {lightness: -22}]
+                                    }
+                                ]
+                            }
+                        }
+                    };
+
+                    var map = new google.visualization.Map(document.getElementById('map_div'));
+                    // map.controls[google.maps.ControlPosition.TOP_LEFT].push(input);
+                    map.draw(mydata, options);
+                },
+                error: function () {
+                    // alert("error in getting coordinates, try again");
+                }
+            });
+
+        }
+
+        function openCompany() {
+
+        }
+
+        function openHotel() {
+        }
+    </script>
 {% endblock %}

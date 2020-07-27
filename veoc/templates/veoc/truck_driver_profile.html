@@ -578,10 +578,10 @@
                             Attestation
                         </div>
                         <hr>
-                        <div class="invoice-box" id="dvAttestation">
+                        <div class="invoice-box" id="dvAttestation" style="background-color:white">
                             {% for lab in lab_res %}
                                 {% if forloop.last %}
-                                    <table id="dvTable">
+                                    <table id="dvTable" style="background-color:white">
                                         <tr class="heading">
                                             <div colspan="2">
                                                 <div>
@@ -603,7 +603,7 @@
                                                             {% else %}
                                                                 <img src="http://ssl.gstatic.com/accounts/ui/avatar_2x.png" class="avatar img-preview-custom img-thumbnail" alt="avatar" style="width: 150px; height: 150px;">
                                                             {% endif %}</p>
-                                                        <p style="float: right;">Certificate No. <br><i style="color:#1034A6;"></i> MOH/cap 242/2020</i></p>
+                                                        <p style="float: right;">Certificate No. <br><i style="color:#1034A6;"></i> MOH/cap 242/2020</p>
                                                     </div>
                                                 </div>
                                             </div>
@@ -616,7 +616,7 @@
                                                             <img src="/static/images/emblem.png" style="width:40%; max-width:100px;">
                                                             <br>REPUBLIC OF KENYA <br>
                                                         <h3 style="text-align: center">MINISTRY OF HEALTH</h3>
-                                                        </p>
+
                                                     </div>
                                                 </div>
                                             </td>
@@ -727,21 +727,19 @@
     <script src="https://cdn.jsdelivr.net/npm/promise-polyfill"></script>
     <script src="https://code.jquery.com/jquery-1.12.4.min.js" integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ=" crossorigin="anonymous"></script>
     <script type="text/javascript" src="lib/jquery.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.5.3/jspdf.debug.js" integrity="sha384-NaWTHo/8YCBYJ59830LTz/P4aQZK1sS0SneOgAvhsIl3zBu8r9RevNg5lHCHAuQ/"
-        crossorigin="anonymous"></script>
-    <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
+
   <script>
     //Generate PDF
     function saveDiv() {
-      //var canvas = document.getElementById('canvas');
-      let pdf = new jsPDF('p', 'pt',[600, 900]);//new jsPDF('p', 'pt',[900, 1200]);
-      pdf.setPage(1);
-      pdf.setFontSize(8);
-         pdf.html(document.getElementById('dvTable'), {
-             callback: function (pdf) {
-                 pdf.save('jitenge.pdf');
-             }
-         });
+      var options = {
+
+      //  'width': 170,
+
+  };
+  var pdf = new jsPDF('p', 'pt', 'a4');
+  pdf.addHTML($("#dvAttestation"), 15, 15, options, function() {
+    pdf.save('pageContent.pdf');
+  });
     };
 
     $(document).ready(function() {
