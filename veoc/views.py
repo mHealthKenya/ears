@@ -4467,9 +4467,16 @@ def quarantine_list(request):
                     source='Jitenge Homecare Module').exclude(source='Truck Registration').exclude(
                     source='Web Homecare Module').exclude(source='RECDTS').count()
                 quar_sites = quarantine_sites.objects.filter(site_name=user_access_level).order_by('site_name')
-
+        paginator = Paginator(q_data, 10)
+        page_number = request.GET.get('page')
+        try:
+            page_obj = paginator.page(page_number)
+        except PageNotAnInteger:
+            page_obj = paginator.page(1)
+        except EmptyPage:
+            page_obj = paginator.page(paginator.num_pages)
         data = {'quarantine_data': q_data, 'quarantine_data_count': q_data_count, 'quar_sites': quar_sites,
-                'country': cntry, 'start_day': date_from, 'end_day': date_to}
+                'country': cntry, 'start_day': date_from, 'end_day': date_to, 'page_obj': page_obj}
     else:
         if (user_level == 1 or user_level == 2):
             print("inside National")
@@ -4532,8 +4539,16 @@ def quarantine_list(request):
         # quarantine_data = paginator.get_page(page)
         cntry = country.objects.all()
         day = time.strftime("%Y-%m-%d")
+        paginator = Paginator(q_data, 10)
+        page_number = request.GET.get('page')
+        try:
+            page_obj = paginator.page(page_number)
+        except PageNotAnInteger:
+            page_obj = paginator.page(1)
+        except EmptyPage:
+            page_obj = paginator.page(paginator.num_pages)
         data = {'quarantine_data': q_data, 'quarantine_data_count': q_data_count, 'quar_sites': quar_sites,
-                'country': cntry, 'start_day': day, 'end_day': day}
+                'country': cntry, 'start_day': day, 'end_day': day, 'page_obj': page_obj}
 
     return render(request, 'veoc/quarantine_list.html', data)
 
@@ -4663,8 +4678,18 @@ def home_care_list(request):
 
         # day = time.strftime("%Y-%m-%d")
         cntry = country.objects.all()
+
+        paginator = Paginator(q_data, 10)
+        page_number = request.GET.get('page')
+        try:
+            page_obj = paginator.page(page_number)
+        except PageNotAnInteger:
+            page_obj = paginator.page(1)
+        except EmptyPage:
+            page_obj = paginator.page(paginator.num_pages)
+
         data = {'home_care_data': q_data, 'home_care_data_count': q_data_count, 'country': cntry,
-                'start_day': date_from, 'end_day': date_to}
+                'start_day': date_from, 'end_day': date_to, 'page_obj': page_obj}
     else:
         if (user_level == 1 or user_level == 2):
             print("inside National")
@@ -4768,8 +4793,17 @@ def home_care_list(request):
 
         cntry = country.objects.all()
         day = time.strftime("%Y-%m-%d")
+
+        paginator = Paginator(q_data, 10)
+        page_number = request.GET.get('page')
+        try:
+            page_obj = paginator.page(page_number)
+        except PageNotAnInteger:
+            page_obj = paginator.page(1)
+        except EmptyPage:
+            page_obj = paginator.page(paginator.num_pages)
         data = {'home_care_data': q_data, 'home_care_data_count': q_data_count, 'country': cntry, 'start_day': day,
-                'end_day': day}
+                'end_day': day, 'page_obj': page_obj}
 
     return render(request, 'veoc/home_care_list.html', data)
 
@@ -4796,79 +4830,35 @@ def truck_quarantine_list(request):
     bord_points = border_points.objects.all().order_by('border_name')
     truck_cont_details = []
     q_data_count = 0
-    if user_level == 1 or user_level == 2:
 
-        if request.method == 'POST':
+    if request.method == 'POST':
+        if user_level == 1 or user_level == 2:
             # border_point = request.POST.get('border_point','')
             date_from = request.POST.get('date_from', '')
             date_to = request.POST.get('date_to', '')
+            print("aaaaaaaaa",date_from)
 
             print("inside National")
             # add a border point filter to enable filtering specific border point--------
-            q_data_count = truck_quarantine_contacts.objects.select_related('patient_contacts').\
-                filter(date_of_contact__gte=date_from, date_of_contact__lte=date_to). \
-                filter(source='Truck Registration').count()
+            q_data_count = truck_quarantine_contacts.objects.select_related('patient_contacts'). \
+                filter(patient_contacts__date_of_contact__gte=date_from, patient_contacts__date_of_contact__lte=date_to). \
+                filter(patient_contacts__source='Truck Registration').count()
             q_data = truck_quarantine_contacts.objects.select_related('patient_contacts') \
                 .filter(patient_contacts__date_of_contact__gte=date_from,
                         patient_contacts__date_of_contact__lte=date_to,
                         patient_contacts__source='Truck Registration'). \
                 order_by('-patient_contacts__date_of_contact')
 
-            paginator = Paginator(q_data, 10)
-            page_number = request.GET.get('page')
-            try:
-                page_obj = paginator.page(page_number)
-            except PageNotAnInteger:
-                page_obj = paginator.page(1)
-            except EmptyPage:
-                page_obj = paginator.page(paginator.num_pages)
-
-            my_list_data = page_obj
-            for i in my_list_data:
-                print(i)
-            day = time.strftime("%Y-%m-%d")
-            data = {'quarantine_data_count': q_data_count, 'weigh_name': quar_sites, 'border_points': bord_points,
-                    'my_list_data': my_list_data, 'start_day': day, 'end_day': day, 'page_obj': page_obj}
-
-            return render(request, 'veoc/truck_quarantine_list.html', data)
-
-        else:
-            print("inside National")
-            # add a border point filter to enable filtering specific border point--------
-            q_data_count = truck_quarantine_contacts.objects.select_related('patient_contacts'). \
-                filter(patient_contacts__source='Truck Registration').count()
-            my_model = truck_quarantine_contacts.objects.select_related('patient_contacts'). \
-                filter(patient_contacts__source='Truck Registration').order_by('-patient_contacts__date_of_contact')
-
-            paginator = Paginator(my_model, 10)
-            page_number = request.GET.get('page')
-            try:
-                page_obj = paginator.page(page_number)
-            except PageNotAnInteger:
-                page_obj = paginator.page(1)
-            except EmptyPage:
-                page_obj = paginator.page(paginator.num_pages)
-
-            print(page_obj.number)
-            my_list_data = page_obj
-            day = time.strftime("%Y-%m-%d")
-            data = {'quarantine_data_count': q_data_count, 'weigh_name': quar_sites, 'border_points': bord_points,
-                    'my_list_data': my_list_data, 'start_day': day, 'end_day': day, 'page_obj': page_obj}
-
-            return render(request, 'veoc/truck_quarantine_list.html', data)
-
-    elif user_level == 7:
-
-        if request.method == 'POST':
+        elif user_level == 7:
             # border_point = request.POST.get('border_point','')
             date_from = request.POST.get('date_from', '')
             date_to = request.POST.get('date_to', '')
 
             print("inside Border")
             # find ways of filtering data based on the border point-------
-            q_data_count = truck_quarantine_contacts.objects.select_related('patient_contacts').\
-                filter(date_of_contact__gte=date_from, date_of_contact__lte=date_to). \
-                filter(source='Truck Registration').count()
+            q_data_count = truck_quarantine_contacts.objects.select_related('patient_contacts'). \
+                filter(patient_contacts__date_of_contact__gte=date_from, patient_contacts__date_of_contact__lte=date_to). \
+                filter(patient_contacts__source='Truck Registration').count()
             q_data = truck_quarantine_contacts.objects.select_related('patient_contacts'). \
                 filter(border_point__border_name=user_access_level,
                        patient_contacts__source='Truck Registration',
@@ -4876,98 +4866,77 @@ def truck_quarantine_list(request):
                        patient_contacts__date_of_contact__lte=date_to). \
                 order_by('-patient_contacts__date_of_contact')
 
-            paginator = Paginator(q_data, 10)
-            page_number = request.GET.get('page')
-            try:
-                page_obj = paginator.page(page_number)
-            except PageNotAnInteger:
-                page_obj = paginator.page(1)
-            except EmptyPage:
-                page_obj = paginator.page(paginator.num_pages)
-
-            my_list_data = page_obj
-            day = time.strftime("%Y-%m-%d")
-            data = {'quarantine_data_count': q_data_count, 'weigh_name': quar_sites, 'border_points': bord_points,
-                    'my_list_data': my_list_data, 'start_day': day, 'end_day': day, 'page_obj': page_obj}
-
-            return render(request, 'veoc/truck_quarantine_list.html', data)
-
         else:
-            print("inside Border")
-            # find ways of filtering data based on the border point-------
-            q_data_count = truck_quarantine_contacts.objects.select_related('patient_contacts').\
-                filter(source='Truck Registration').count()
-            q_data = truck_quarantine_contacts.objects.select_related('patient_contacts').\
-                filter(patient_contacts__source='Truck Registration', border_point__border_name=user_access_level). \
-                order_by('-date_of_contact')
-
-            paginator = Paginator(q_data, 10)
-            page_number = request.GET.get('page')
-            try:
-                page_obj = paginator.page(page_number)
-            except PageNotAnInteger:
-                page_obj = paginator.page(1)
-            except EmptyPage:
-                page_obj = paginator.page(paginator.num_pages)
-
-            my_list_data = page_obj
-            day = time.strftime("%Y-%m-%d")
-            data = {'quarantine_data_count': q_data_count, 'weigh_name': quar_sites, 'border_points': bord_points,
-                    'my_list_data': my_list_data, 'start_day': day, 'end_day': day, 'page_obj': page_obj}
-
-            return render(request, 'veoc/truck_quarantine_list.html', data)
-    else:
-        if request.method == 'POST':
             # border_point = request.POST.get('border_point','')
             date_from = request.POST.get('date_from', '')
             date_to = request.POST.get('date_to', '')
 
             print("inside non border users")
-            q_data_count = truck_quarantine_contacts.objects.select_related('patient_contacts').\
-                filter(date_of_contact__gte=date_from, date_of_contact__lte=date_to).\
-                filter(source='Kitu hakuna').count()
-            q_data = truck_quarantine_contacts.objects.select_related('patient_contacts').\
+            q_data_count = truck_quarantine_contacts.objects.select_related('patient_contacts'). \
+                filter(patient_contacts__date_of_contact__gte=date_from,
+                       patient_contacts__date_of_contact__lte=date_to). \
+                filter(patient_contacts__source='Kitu hakuna').count()
+            q_data = truck_quarantine_contacts.objects.select_related('patient_contacts'). \
                 filter(patient_contacts__source='Kitu hakuna').filter(patient_contacts__date_of_contact__gte=date_from,
-                                                                      date_of_contact__lte=date_to).\
+                                                                      date_of_contact__lte=date_to). \
                 order_by('-patient_contacts__date_of_contact')
 
-            paginator = Paginator(q_data, 10)
-            page_number = request.GET.get('page')
-            try:
-                page_obj = paginator.page(page_number)
-            except PageNotAnInteger:
-                page_obj = paginator.page(1)
-            except EmptyPage:
-                page_obj = paginator.page(paginator.num_pages)
+        paginator = Paginator(q_data, 10)
+        page_number = request.GET.get('page')
+        try:
+            page_obj = paginator.page(page_number)
+        except PageNotAnInteger:
+            page_obj = paginator.page(1)
+        except EmptyPage:
+            page_obj = paginator.page(paginator.num_pages)
 
-            my_list_data = page_obj
-            day = time.strftime("%Y-%m-%d")
-            data = {'quarantine_data_count': q_data_count, 'weigh_name': quar_sites, 'border_points': bord_points,
-                    'my_list_data': my_list_data, 'start_day': day, 'end_day': day, 'page_obj': page_obj}
+        my_list_data = page_obj
+        day = time.strftime("%Y-%m-%d")
+        data = {'quarantine_data_count': q_data_count, 'border_points': bord_points,
+                'my_list_data': my_list_data, 'start_day': day, 'end_day': day, 'page_obj': page_obj}
 
-            return render(request, 'veoc/truck_quarantine_list.html', data)
+    else:
+        if user_level == 1 or user_level == 2:
+            print("inside National")
+            # add a border point filter to enable filtering specific border point--------
+            q_data_count = truck_quarantine_contacts.objects.select_related('patient_contacts'). \
+                filter(patient_contacts__source='Truck Registration').count()
+            q_data = truck_quarantine_contacts.objects.select_related('patient_contacts'). \
+                filter(patient_contacts__source='Truck Registration').order_by('-patient_contacts__date_of_contact')
+
+        elif user_level == 7:
+            print("inside Border")
+            # find ways of filtering data based on the border point-------
+            q_data_count = truck_quarantine_contacts.objects.select_related('patient_contacts'). \
+                filter(patient_contacts__source='Truck Registration').count()
+            q_data = truck_quarantine_contacts.objects.select_related('patient_contacts'). \
+                filter(patient_contacts__source='Truck Registration', border_point__border_name=user_access_level). \
+                order_by('-date_of_contact')
 
         else:
             print("inside non border users")
-            q_data_count = truck_quarantine_contacts.objects.select_related('patient_contacts').filter(source='Kitu hakuna').count()
-            q_data = truck_quarantine_contacts.objects.select_related('patient_contacts').\
+            q_data_count = truck_quarantine_contacts.objects.select_related('patient_contacts').filter(
+                source='Kitu hakuna').count()
+            q_data = truck_quarantine_contacts.objects.select_related('patient_contacts'). \
                 filter(patient_contacts__source='Kitu hakuna').order_by('-date_of_contact')
 
-            paginator = Paginator(q_data, 10)
-            page_number = request.GET.get('page')
-            try:
-                page_obj = paginator.page(page_number)
-            except PageNotAnInteger:
-                page_obj = paginator.page(1)
-            except EmptyPage:
-                page_obj = paginator.page(paginator.num_pages)
+        paginator = Paginator(q_data, 10)
+        page_number = request.GET.get('page')
+        try:
+            page_obj = paginator.page(page_number)
+        except PageNotAnInteger:
+            page_obj = paginator.page(1)
+        except EmptyPage:
+            page_obj = paginator.page(paginator.num_pages)
 
-            my_list_data = page_obj
-            day = time.strftime("%Y-%m-%d")
-            data = {'quarantine_data_count': q_data_count, 'weigh_name': quar_sites, 'border_points': bord_points,
-                    'my_list_data': my_list_data, 'start_day': day, 'end_day': day, 'page_obj': page_obj}
+        print(page_obj.number)
+        my_list_data = page_obj
 
-            return render(request, 'veoc/truck_quarantine_list.html', data)
+        day = time.strftime("%Y-%m-%d")
+        data = {'quarantine_data_count': q_data_count, 'border_points': bord_points,
+                'my_list_data': my_list_data, 'start_day': day, 'end_day': day, 'page_obj': page_obj}
+
+    return render(request, 'veoc/truck_quarantine_list.html', data)
 
 
 @login_required
@@ -5147,9 +5116,16 @@ def follow_up(request):
                 patient_contacts__source='Truck Registration').exclude(patient_contacts__source='RECDTS').exclude(
                 patient_contacts__source='Jitenge Homecare Module').exclude(
                 patient_contacts__source='Web Homecare Module').count()
-
+        paginator = Paginator(follow_data, 10)
+        page_number = request.GET.get('page')
+        try:
+            page_obj = paginator.page(page_number)
+        except PageNotAnInteger:
+            page_obj = paginator.page(1)
+        except EmptyPage:
+            page_obj = paginator.page(paginator.num_pages)
         data = {'follow_data': follow_data, 'follow_data_count': follow_data_count, 'start_day': date_from,
-                'end_day': date_to}
+                'end_day': date_to, 'page_obj': page_obj}
     else:
         if (user_level == 1 or user_level == 2):
             # pull data whose quarantine site id is equal to q_site_name
@@ -5213,11 +5189,20 @@ def follow_up(request):
                 patient_contacts__source='Web Homecare Module').count()
 
         day = time.strftime("%Y-%m-%d")
-        data = {'follow_data': follow_data, 'follow_data_count': follow_data_count, 'start_day': day, 'end_day': day}
+        paginator = Paginator(follow_data, 10)
+        page_number = request.GET.get('page')
+        try:
+            page_obj = paginator.page(page_number)
+        except PageNotAnInteger:
+            page_obj = paginator.page(1)
+        except EmptyPage:
+            page_obj = paginator.page(paginator.num_pages)
+        data = {'follow_data': follow_data, 'follow_data_count': follow_data_count, 'start_day': day, 'end_day': day,
+                'page_obj': page_obj}
 
     # check if temperature is higher than 38.0 to send sms
     # if temperature is higher and sms_status = No send an sms
-    for f_data in follow_data:
+    for f_data in page_obj:
         temp = f_data.body_temperature
         cntry = f_data.patient_contacts.origin_country
         case_f_name = f_data.patient_contacts.first_name
@@ -5374,8 +5359,17 @@ def symptomatic_cases(request):
                 follow_up_day__lte=14).filter(created_at__gte=date_from, created_at__lte=date_to).exclude(
                 patient_contacts__source='Jitenge Homecare Module').count()
 
+        paginator = Paginator(follow_data, 10)
+        page_number = request.GET.get('page')
+        try:
+            page_obj = paginator.page(page_number)
+        except PageNotAnInteger:
+            page_obj = paginator.page(1)
+        except EmptyPage:
+            page_obj = paginator.page(paginator.num_pages)
+
         data = {'follow_data': follow_data, 'follow_data_count': follow_data_count, 'start_day': date_from,
-                'end_day': date_to}
+                'end_day': date_to, 'page_obj': page_obj}
     else:
         if (user_level == 1 or user_level == 2):
             # pull data whose quarantine site id is equal to q_site_name
@@ -5429,11 +5423,21 @@ def symptomatic_cases(request):
                 follow_up_day__lte=14).exclude(patient_contacts__source='Jitenge Homecare Module').count()
 
         day = time.strftime("%Y-%m-%d")
-        data = {'follow_data': follow_data, 'follow_data_count': follow_data_count, 'start_day': day, 'end_day': day}
+
+        paginator = Paginator(follow_data, 10)
+        page_number = request.GET.get('page')
+        try:
+            page_obj = paginator.page(page_number)
+        except PageNotAnInteger:
+            page_obj = paginator.page(1)
+        except EmptyPage:
+            page_obj = paginator.page(paginator.num_pages)
+        data = {'follow_data': follow_data, 'follow_data_count': follow_data_count, 'start_day': day, 'end_day': day,
+                'page_obj': page_obj}
 
     # check if temperature is higher than 38.0 to send sms
     # if temperature is higher and sms_status = No send an sms
-    for f_data in follow_data:
+    for f_data in page_obj:
         temp = f_data.body_temperature
         cntry = f_data.patient_contacts.origin_country
         case_f_name = f_data.patient_contacts.first_name
@@ -5591,8 +5595,17 @@ def home_care_symtomatic(request):
                                                                             created_at__lte=date_to).filter(
                 patient_contacts__source='Jitenge Homecare Module').count()
 
+        paginator = Paginator(follow_data, 10)
+        page_number = request.GET.get('page')
+        try:
+            page_obj = paginator.page(page_number)
+        except PageNotAnInteger:
+            page_obj = paginator.page(1)
+        except EmptyPage:
+            page_obj = paginator.page(paginator.num_pages)
+
         data = {'follow_data': follow_data, 'follow_data_count': follow_data_count, 'start_day': date_from,
-                'end_day': date_to}
+                'end_day': date_to, 'page_obj': page_obj}
     else:
         if (user_level == 1 or user_level == 2):
             # pull data whose quarantine site id is equal to q_site_name
@@ -5648,7 +5661,18 @@ def home_care_symtomatic(request):
                 patient_contacts__source='Jitenge Homecare Module').count()
 
         day = time.strftime("%Y-%m-%d")
-        data = {'follow_data': follow_data, 'follow_data_count': follow_data_count, 'start_day': day, 'end_day': day}
+
+        paginator = Paginator(follow_data, 10)
+        page_number = request.GET.get('page')
+        try:
+            page_obj = paginator.page(page_number)
+        except PageNotAnInteger:
+            page_obj = paginator.page(1)
+        except EmptyPage:
+            page_obj = paginator.page(paginator.num_pages)
+
+        data = {'follow_data': follow_data, 'follow_data_count': follow_data_count, 'start_day': day, 'end_day': day,
+                'page_obj': page_obj}
 
     return render(request, 'veoc/home_care_symtomatic.html', data)
 
@@ -5727,8 +5751,17 @@ def home_care_follow_up(request):
                                                                             created_at__lte=date_to).filter(
                 patient_contacts__source='Jitenge Homecare Module').count()
 
+        paginator = Paginator(follow_data, 10)
+        page_number = request.GET.get('page')
+        try:
+            page_obj = paginator.page(page_number)
+        except PageNotAnInteger:
+            page_obj = paginator.page(1)
+        except EmptyPage:
+            page_obj = paginator.page(paginator.num_pages)
+
         data = {'follow_data': follow_data, 'follow_data_count': follow_data_count, 'start_day': date_from,
-                'end_day': date_to}
+                'end_day': date_to, 'page_obj': page_obj}
     else:
         if (user_level == 1 or user_level == 2):
             # pull data whose quarantine site id is equal to q_site_name
@@ -5771,7 +5804,18 @@ def home_care_follow_up(request):
                 patient_contacts__source='Jitenge Homecare Module').count()
 
         day = time.strftime("%Y-%m-%d")
-        data = {'follow_data': follow_data, 'follow_data_count': follow_data_count, 'start_day': day, 'end_day': day}
+
+        paginator = Paginator(follow_data, 10)
+        page_number = request.GET.get('page')
+        try:
+            page_obj = paginator.page(page_number)
+        except PageNotAnInteger:
+            page_obj = paginator.page(1)
+        except EmptyPage:
+            page_obj = paginator.page(paginator.num_pages)
+
+        data = {'follow_data': follow_data, 'follow_data_count': follow_data_count, 'start_day': day, 'end_day': day,
+                'page_obj': page_obj}
 
     return render(request, 'veoc/home_care_follow_up.html', data)
 
@@ -5968,9 +6012,18 @@ def truck_symptomatic_cases(request):
     follow_data_count = quarantine_follow_up.objects.all().filter(patient_contacts__in=qua_contacts).filter(
         Q(body_temperature__gte=38) | Q(fever='YES') | Q(cough='YES') | Q(difficulty_breathing='YES')).count()
 
+    paginator = Paginator(follow_data, 10)
+    page_number = request.GET.get('page')
+    try:
+        page_obj = paginator.page(page_number)
+    except PageNotAnInteger:
+        page_obj = paginator.page(1)
+    except EmptyPage:
+        page_obj = paginator.page(paginator.num_pages)
+
     # check if temperature is higher than 38.0 to send sms
     # if temperature is higher and sms_status = No send an sms
-    for f_data in follow_data:
+    for f_data in page_obj:
         temp = f_data.body_temperature
         cough = f_data.cough
         breathe = f_data.difficulty_breathing
@@ -6132,7 +6185,7 @@ def truck_symptomatic_cases(request):
         else:
             print("has none")
 
-    data = {'follow_data': follow_data, 'follow_data_count': follow_data_count}
+    data = {'follow_data': follow_data, 'follow_data_count': follow_data_count, 'page_obj': page_obj}
 
     return render(request, 'veoc/truck_quarantine_symptomatic.html', data)
 
@@ -6194,7 +6247,16 @@ def complete_quarantine(request):
             patient_contacts__source='Truck Registration').filter(
             created_at__lte=date.today() - timedelta(days=14)).count()
 
-    data = {'follow_data': follow_data, 'follow_data_count': follow_data_count}
+    paginator = Paginator(follow_data, 10)
+    page_number = request.GET.get('page')
+    try:
+        page_obj = paginator.page(page_number)
+    except PageNotAnInteger:
+        page_obj = paginator.page(1)
+    except EmptyPage:
+        page_obj = paginator.page(paginator.num_pages)
+
+    data = {'follow_data': follow_data, 'follow_data_count': follow_data_count, 'page_obj': page_obj}
 
     return render(request, 'veoc/quarantine_complete.html', data)
 
@@ -6247,7 +6309,15 @@ def complete_home_care(request):
         follow_data_count = quarantine_follow_up.objects.filter(self_quarantine=False).filter(
             patient_contacts__source='Jitenge Homecare Module').count()
 
-    data = {'follow_data': follow_data, 'follow_data_count': follow_data_count}
+    paginator = Paginator(follow_data, 10)
+    page_number = request.GET.get('page')
+    try:
+        page_obj = paginator.page(page_number)
+    except PageNotAnInteger:
+        page_obj = paginator.page(1)
+    except EmptyPage:
+        page_obj = paginator.page(paginator.num_pages)
+    data = {'follow_data': follow_data, 'follow_data_count': follow_data_count, 'page_obj': page_obj}
 
     return render(request, 'veoc/quarantine_complete.html', data)
 

@@ -122,3 +122,4 @@ dmypy.json
 # End of https://www.gitignore.io/api/django
 .idea/virtual_eoc.iml
 .idea/misc.xml
+.idea/inspectionProfiles/Project_Default.xml

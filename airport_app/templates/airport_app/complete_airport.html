@@ -6,6 +6,7 @@
             src="https://cdn.datatables.net/v/dt/jqc-1.12.3/jszip-2.5.0/pdfmake-0.1.18/dt-1.10.12/b-1.2.2/b-flash-1.2.2/b-html5-1.2.2/b-print-1.2.2/datatables.min.js"></script>
 
             <div id="main-container">
+<<<<<<< HEAD
               <div id="breadcrumb">
                 <ul class="breadcrumb">
                    <li><i class="fa fa-home"></i><a href="{% url 'veoc:access_dashboard' %}"> Dashboard</a></li>
@@ -22,6 +23,26 @@
                       <div class="panel-heading">
                         Completed Quarantine Report
                         <span class="label label-info pull-right" id="totalspan">{{all_data_count}} Reported cases </span>
+=======
+        			<div id="breadcrumb">
+        				<ul class="breadcrumb">
+        					 <li><i class="fa fa-home"></i><a href="{% url 'veoc:access_dashboard' %}"> Dashboard</a></li>
+        					 <li class="active">Airport Completed Quarantine Report</li>
+        				</ul>
+        			</div><!-- /breadcrumb-->
+
+              <div class="panel-heading"><b>COVID19 Quarantine Complete</b></div>
+              <div class="panel-body" align="left">
+                  <form class="form-inline" method="post" action="{% url 'airport_app:complete_airport' %}">{% csrf_token %}
+                      <div class="form-group">
+                        <label for="date_from">From :</label>
+                        <input class="form-control" type="date" id="date_from" name="date_from" value="{{ day }}" required>
+                      </div>
+                        &nbsp; &nbsp;
+                      <div class="form-group">
+                        <label for="date_to">To :</label>
+                        <input class="form-control" type="date" id="date_to" name="date_to" value="{{ day }}" required>
+>>>>>>> cd5d82af2882a62bb13f5eda5059b3d021459b8f
                       </div>
                       <div class="padding-md clearfix">
                       <table class="table table-hover" id="quarantine_complete_report">
