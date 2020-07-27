@@ -74,7 +74,7 @@ def airport_register(request):
         residence = request.POST.get('residence','')
         estate = request.POST.get('estate','')
         postal_address = request.POST.get('postal_address','')
-        temperature = request.POST.get('measured_temperature','')
+        temperature = request.POST.get('fever','')
         measured_temperature = request.POST.get('measured_temperature','')
         arrival_airport_code = request.POST.get('arrival_airport_code','')
         released = request.POST.get('released','')
@@ -117,7 +117,7 @@ def airport_register(request):
 
         contact_save = ''
         current_date = datetime.now()
-        source = "Airport Registration"
+        source = "Web Airport Registration"
         status = 't'
         # Check if mobile number exists in the table
         details_exist = quarantine_contacts.objects.filter(phone_number=phone_number, first_name=first_name,
@@ -157,11 +157,10 @@ def airport_register(request):
 
             patients_contacts_id = contact_save.pk
             print(patients_contacts_id)
-            print(patients_contacts_id)
             patientObject = quarantine_contacts.objects.get(pk = patients_contacts_id)
             if contact_save and patients_contacts_id:
-                print("in")
-                airport_user_save = airline_quarantine.objects.create(airline=airline, flight_number=flight_number, seat_number=seat_number, destination_city=destination_city, travel_history=countries_visited, cough=cough, breathing_difficulty=breathing_difficulty, fever=fever, chills=chills, temperature=measured_temperature, measured_temperature=measured_temperature,arrival_airport_code=arrival_airport_code, released=released, risk_assessment_referal=risk_assessment_referal, designated_hospital_refferal=designated_hospital_referal, created_at=current_date, updated_at=current_date, patient_contacts_id=patients_contacts_id, created_by_id=user_id, updated_by_id=user_id, residence=residence, estate=estate, postal_address=postal_address, status=status)
+                print("working")
+                airport_user_save = airline_quarantine.objects.create(airline=airline, flight_number=flight_number, seat_number=seat_number, destination_city=destination_city, travel_history=countries_visited, cough=cough, breathing_difficulty=breathing_difficulty, fever=fever, chills=chills, temperature=temperature, measured_temperature=measured_temperature, arrival_airport_code=arrival_airport_code, released=released, risk_assessment_referal=risk_assessment_referal, designated_hospital_refferal=designated_hospital_referal, created_at=current_date, updated_at=current_date, patient_contacts_id=patients_contacts_id, created_by_id=user_id, updated_by_id=user_id, residence=residence, estate=estate, postal_address=postal_address, status=status)
 
 
             else:

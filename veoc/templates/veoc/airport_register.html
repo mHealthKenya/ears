@@ -26,7 +26,7 @@
                        </div>
                        <div class="form-group col-md-4">
                          <label for="middle_name">Middle Name : </label>
-                         <input class="form-control" type="text" id="middle_name" name="middle_name" maxlength="10" size="45" placeholder="Middle Name" required/>
+                         <input class="form-control" type="text" id="middle_name" name="middle_name" maxlength="10" size="45" placeholder="Middle Name"/>
                        </div>
                        <div class="form-group col-md-4">
                          <label for="last_name">Last Name : *</label>
@@ -128,14 +128,18 @@
                        </div>
                        <div class="form-group col-md-4">
                          <label for="countries_visited">Countries Visited : </label>
-                         <input class="form-control" type="text" id="countries_visited" name="countries_visited" placeholder="Countries Visited in the past two weeks"/>
-                       </div>
+                         <select class="form-control" name="countries_visited" id="countries_visited">
+                              <option value="" disabled selected>Select County</option>
+                              {% for cntry in country %}
+                                  <option value="{{cntry.name}}">{{cntry.name}}</option>
+                              {% endfor %}
+                          </select></div>
                        <div class="form-group col-md-4">
                          <label for="fever">Fever (37.5°C or higher): </label>
                          <select class="form-control" id="fever" name="fever">
                              <option style="display:none">Select</option>
-                             <option value="True">Yes</option>
-                             <option value="False">No</option>
+                             <option value="t">Yes</option>
+                             <option value="f">No</option>
                        </select>
                        </div>
                     </div>
@@ -144,32 +148,32 @@
                         <label for="feverish">Feverish : </label>
                         <select class="form-control" id="feverish" name="feverish">
                             <option style="display:none">Select</option>
-                            <option value="True">Yes</option>
-                            <option value="False">No</option>
+                            <option value="t">Yes</option>
+                            <option value="f">No</option>
                       </select>
                       </div>
                       <div class="form-group col-md-3">
                         <label for="chills">Chills : </label>
                         <select class="form-control" id="chills" name="chills">
                             <option style="display:none">Select</option>
-                            <option value="True">Yes</option>
-                            <option value="False">No</option>
+                            <option value="t">Yes</option>
+                            <option value="f">No</option>
                       </select>
                       </div>
                       <div class="form-group col-md-3">
                         <label for="cough">Cough : </label>
                         <select class="form-control" id="cough" name="cough">
                             <option style="display:none">Select</option>
-                            <option value="True">Yes</option>
-                            <option value="False">No</option>
+                            <option value="t">Yes</option>
+                            <option value="f">No</option>
                       </select>
                       </div>
                       <div class="form-group col-md-3">
                         <label for="breathing_difficulty">Difficulty in breathing : </label>
                         <select class="form-control" id="breathing_difficulty" name="breathing_difficulty">
                             <option style="display:none">Select</option>
-                            <option value="True">Yes</option>
-                            <option value="False">No</option>
+                            <option value="t">Yes</option>
+                            <option value="f">No</option>
                       </select>
                       </div>
                    </div>
@@ -200,7 +204,7 @@
                     <div class="form-row" id="country_details_div">
                       <div class="form-group col-md-6">
                         <label for="measured_temperature">Measured Temperature : </label>
-                        <input class="form-control" type="text" id="measured_temperature" name="measured_temperature" placeholder="Measured Temperature"/>
+                        <input class="form-control" type=number step=0.01 id="measured_temperature" name="measured_temperature" onchange="checkTemp()" maxlength="5" placeholder="Measured Temperature"/>
                       </div>
                       <div class="form-group col-md-6">
                         <label for="arrival_airport_code">Arrival Airport Code : </label>
@@ -212,25 +216,25 @@
                      <label for="released">Released : </label>
                      <select class="form-control" id="released" name="released">
                          <option style="display:none">Select</option>
-                         <option value="True">Yes</option>
-                         <option value="False">No</option>
+                         <option value="t">Yes</option>
+                         <option value="f">No</option>
                    </select>
                    </div>
                    <div class="form-group col-md-4">
                      <label for="risk_assessment_referal">Risk Assesment Referral : </label>
                        <select class="form-control" id="risk_assessment_referal" name="risk_assessment_referal">
                            <option style="display:none">Select</option>
-                           <option value="True">Yes</option>
-                           <option value="False">No</option>
+                           <option value="t">Yes</option>
+                           <option value="f">No</option>
                      </select>
                    </div>
                    <div class="form-group col-md-4">
                      <label for="designated_hospital_referal">Designated Hospital Referral  : </label>
                      <select class="form-control" id="designated_hospital_referal" name="designated_hospital_referal">
-                         <option style="display:none">Select</option>
-                         <option value="True">Yes</option>
-                         <option value="False">No</option>
-                   </select>
+                       <option style="display:none">Select</option>
+                       <option value="t">Yes</option>
+                       <option value="f">No</option>
+                 </select>
                    </div>
                    </div>
                      <div class="form-row" id="save_div">
@@ -352,6 +356,27 @@
          document.getElementById("phone_number").focus();
        }
      }
+
+     function checkTemp(){
+        var temp = $('#measured_temperature').val();
+        // console.log(number);
+        if(temp.length > 4 || temp.length < 2){
+          console.log("Enter valid temperature");
+          Swal.fire({
+            title: 'error!',
+            text: 'Enter a valid temperature measure',
+            icon: 'error'
+          });
+          document.getElementById("measured_temperature").focus();
+        }else if(temp < 34 || temp > 45){
+          Swal.fire({
+            title: 'error!',
+            text: 'Temperature value should be between 34 and 45 Degrees',
+            icon: 'error'
+          });
+          document.getElementById("measured_temperature").focus();
+        }
+      }
 
      function region_filter(){
         var _region = document.getElementById('country').value;
