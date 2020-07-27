@@ -1,0 +1,691 @@
+{% extends "veoc/main_template.html" %}
+
+{% block main %}
+
+    <script type="text/javascript"
+            src="https://cdn.datatables.net/v/dt/jqc-1.12.3/jszip-2.5.0/pdfmake-0.1.18/dt-1.10.12/b-1.2.2/b-flash-1.2.2/b-html5-1.2.2/b-print-1.2.2/datatables.min.js"></script>
+
+    <div id="main-container">
+        <div id="breadcrumb">
+            <ul class="breadcrumb">
+                <li><i class="fa fa-home"></i><a href="{% url 'airport_app:airport_list' %}"> Dashboard</a></li>
+                <li class="active">Airport Quarantine Cases</li>
+            </ul>
+        </div><!-- /breadcrumb-->
+
+        <div class="panel-heading">AIRPORT DATE ENROLLED FILTER</div>
+        <div class="panel-body" align="left">
+            <form class="form-inline" method="post" action="{% url 'airport_app:airport_list' %}">{% csrf_token %}
+                <div class="form-group">
+                    <label for="email">From :</label>
+                    <input class="form-control" type="date" id="date_from" name="date_from" value="{{ start_day }}"
+                           required>
+                </div>
+                &nbsp; &nbsp;
+                <div class="form-group">
+                    <label for="pwd">To :</label>
+                    <input class="form-control" type="date" id="date_to" name="date_to" value="{{ end_day }}" required>
+                </div>
+                <button type="submit" class="btn btn-primary">Update</button>
+            </form>
+            <!-- <button type="submit" class="btn btn-primary" align="right">Update</button> -->
+        </div>
+        {#              <div class="panel-body" align="left">#}
+        {#                  <form class="form-inline" method="post" action="{% url 'veoc:truck_quarantine_list' %}">#}
+        {#                    {% csrf_token %}#}
+        {#                      <div class="form-group">#}
+        {#                          <label for="site"><b>Border Point :&nbsp; &nbsp; </b></label>#}
+        {#                          <select class="form-control" id="border_point" name="border_point">#}
+        {#                             <option value="" disabled selected>Select Border Point</option>#}
+        {#                             {% for border_point in border_points %}#}
+        {#                                 <option value="{{ border_point.id }}">{{ border_point.border_name}}</option>#}
+        {#                             {% endfor %}#}
+        {#                         </select>#}
+        {#                      </div>#}
+        {##}
+        {#                      <button type="submit" class="btn btn-primary" align="right">FILTER</button>#}
+        {#                  </form>#}
+        {#                  <!-- <button type="submit" class="btn btn-primary" align="right">Update</button> -->#}
+        {#              </div>#}
+
+        {#              <a href="{% url 'veoc:truck_export_csv' %}" class="btn btn-info btn-sm"><i class="fa fa-download" aria-hidden="true"></i> Truckers Raw Data</a>#}
+
+        <div class="panel-heading"><b>COVID-19 Airport Quarantine Cases Report</b></div>
+
+        <div class="padding-md">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="panel panel-default table-responsive">
+                        <div class="panel-heading">
+                            Quarantine Cases
+                            <span class="label label-info pull-right" id="totalspan">{{ quarantine_data_count }} Reported cases </span>
+                        </div>
+                        <div class="padding-md clearfix">
+                            <table class="table table-hover" id="quarantine_report">
+                                <thead class="thead-dark">
+                                <tr>
+                                    <th>Last Name</th>
+                                    <th>First Name</th>
+                                    <th>Age</th>
+                                    <th>Gender</th>
+                                    <th>Mobile</th>
+                                    <th>Passport No</th>
+                                    <th>Nationality</th>
+                                    <th>Origin Country</th>
+                                    <th>Flight Number</th>
+                                    <th>Enrollment date</th>
+                                    <th>Registered by</th>
+                                    {#                            <th>Company Details</th>#}
+                                    {#                            <th>Acommodation</th>#}
+                                    <th>Map View</th>
+                                    <th>View Profile</th>
+                                    <!-- <th>Edit</th> -->
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {% for q_data in my_list_data %}
+                                    {% if q_data.border_point.border_name != "None" %}
+                                        <tr>
+                                            {#                                  Check user permission to view names#}
+                                            {#                                    <td>*********</td>#}
+                                            {#                                    <td>*********</td>#}
+                                            <td>{{ q_data.patient_contacts.last_name }}</td>
+                                            <td>{{ q_data.patient_contacts.first_name }}</td>
+                                            {% if q_data.patient_contacts.age == 0 %}
+                                                <td>Unknown</td>
+                                            {% else %}
+                                                <td>{{ q_data.patient_contacts.age }}</td>
+                                            {% endif %}
+                                            {#                            <td>{{ q_data.age }}</td>#}
+                                            <td>{{ q_data.patient_contacts.sex }}</td>
+                                            <td>{{ q_data.patient_contacts.phone_number }}</td>
+                                            <td>{{ q_data.patient_contacts.passport_number }}</td>
+                                            <td>{{ q_data.patient_contacts.nationality }}</td>
+                                            <td>{{ q_data.patient_contacts.origin_country }}</td>
+                                            <td>{{ q_data.flight_number }}</td>
+                                            <td>{{ q_data.patient_contacts.date_of_contact|date:'d-m-Y' }}</td>
+                                            <td>{{ q_data.patient_contacts.created_by }}</td>
+                                            {#                            <td>#}
+                                            {#                              <button type="button" id="company_view" class="btn btn-info btn-xs company_view"#}
+                                            {#                                data-toggle="modal" data-target="#view_company_modal"#}
+                                            {#                                data-id="{{ q_data.pk }}"#}
+                                            {#                                data-company_name="{{ q_data.company_name }}"#}
+                                            {#                                data-company_phone="{{ q_data.company_phone }}"#}
+                                            {#                                data-company_address="{{ q_data.company_physical_address}}"#}
+                                            {#                                data-company_street="{{ q_data.company_street }}"#}
+                                            {#                                data-company_building="{{ q_data.company_building }}"#}
+                                            {#                                data-vehicle_registration="{{ q_data.vehicle_registration }}"#}
+                                            {#                                data-village="{{ q_data.village }}"#}
+                                            {#                                data-street="{{ q_data.street }}"#}
+                                            {#                                title="Company">#}
+                                            {#                                <i class="fa fa-industry">#}
+                                            {#                                </i>#}
+                                            {#                            </button>#}
+                                            {#                            </td>#}
+                                            {#                            <td>#}
+                                            {#                              <button type="button" id="hotel_view" class="btn btn-info btn-xs hotel_view"#}
+                                            {#                                data-toggle="modal" data-target="#view_hotel_modal"#}
+                                            {#                                data-id="{{ q_data.pk }}"#}
+                                            {#                                data-hotel="{{ q_data.hotel }}"#}
+                                            {#                                data-hotel_phone="{{ q_data.hotel_phone }}"#}
+                                            {#                                data-hotel_town="{{ q_data.hotel_town}}"#}
+                                            {#                                data-date_check_in="{{ q_data.date_check_in }}"#}
+                                            {#                                data-date_check_out="{{ q_data.date_check_out }}"#}
+                                            {#                                data-cough="{{ q_data.cough }}"#}
+                                            {#                                data-breathing_difficulty="{{ q_data.breathing_difficulty }}"#}
+                                            {#                                data-fever="{{ q_data.fever }}"#}
+                                            {#                                data-sample_taken="{{ q_data.sample_taken }}"#}
+                                            {#                                data-action_taken="{{ q_data.action_taken }}"#}
+                                            {#                                title="Accomodation">#}
+                                            {#                                <i class="fa fa-hotel">#}
+                                            {#                                </i>#}
+                                            {#                            </button>#}
+                                            {#                            </td>#}
+                                            <td>
+                                                <button type="button" id="map_view"
+                                                        class="btn btn-info btn-sm pull-left map_view"
+                                                        data-toggle="modal" data-target="#mapViewModal"
+                                                        data-id="{{ q_data.pk }}"
+                                                        data-names="{{ q_data.first_name }} {{ q_data.last_name }}"
+                                                        data-last_contact="{{ q_data.date_of_contact|date:'d-m-Y' }}"
+                                                        data-phone_number="{{ q_data.phone_number }}"
+                                                        title="Open Map View">
+                                                    <i class="fa fa-map-marker">
+                                                    </i>
+                                                </button>
+                                            </td>
+                                            <td>
+                                                <a href="/truck_driver_profile/{{ q_data.pk }}"
+                                                   class="btn btn-info btn-sm pull-left" title="View Profile"><i
+                                                        class="fa fa-eye"></i></a>
+                                            </td>
+                                            {#                           <td><a href="/test_profile/{{q_data.pk}}"><i class="btn btn-info btn-sm pull-left" aria-hidden="true" role="button" title="View Profile"></i></a>#}
+                                            <!-- <td>
+                                     <button type="button" class="btn btn-primary btn-xs edit_button"
+                                       data-toggle="modal" data-target="#edit_quarantine_modal"
+                                       data-id="{{ q_data.pk }}"
+                                       data-last_name="{{ q_data.last_name }}"
+                                       data-first_name="{{ q_data.first_name }}"
+                                       data-phone_number="{{ q_data.phone_number }}"
+                                       data-nationality="{{ q_data.nationality }}"
+                                       data-origin_country="{{ q_data.origin_country }}"
+                                       data-place_of_diagnosis="{{ q_data.place_of_diagnosis }}"
+                                       data-quarantine_site="{{ q_data.quarantine_site.site_name }}"
+                                       data-nok="{{ q_data.nok }}"
+                                       data-nok_phone_num="{{ q_data.nok_phone_num }}"
+                                       data-cormobidity="{{ q_data.cormobidity }}"
+                                       data-drugs="{{ q_data.drugs }}"
+                                       title="Edit">
+                                       <i class="fa fa-edit">
+                                       </i>
+                                     </button>
+                                   </td> -->
+                                        </tr>
+                                    {% endif %}
+                                {% endfor %}
+                                </tbody>
+                            </table>
+                            <div class="pagination">
+                                <span class="step-links">
+                                    {% if page_obj.has_previous %}
+                                        <a href="?page=1">&laquo; first</a>
+                                        <a href="?page={{ page_obj.previous_page_number }}">previous</a>
+                                    {% endif %}
+
+                                    <span class="current">
+                                        Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+                                    </span>
+
+                                    {% if page_obj.has_next %}
+                                        <a href="?page={{ page_obj.next_page_number }}">next</a>
+                                        <a href="?page={{ page_obj.paginator.num_pages }}">last &raquo;</a>
+                                    {% endif %}
+{#                                    <br>pages#}
+{#                                    {% for i in page_range %}#}
+{#                                        <a href="{{ i }}">{{ i }}</a>#}
+{#                                    {% endfor %}#}
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div><!-- /row-->
+        </div><!-- /.padding-md -->
+    </div><!-- /main-container -->
+
+    <!-- View company modal -->
+    <div class="modal fade" id="view_company_modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Company Details</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form method="post" action="#">
+                        <div class="modal-body">
+                            <div class="form-group">
+                                <label for="heading">Company Name :</label>
+                                <input class="form-control view_company_name" name="view_company_name" readonly>
+                            </div>
+                            <div class="form-group">
+                                <label for="heading">Company Phone :</label>
+                                <input class="form-control view_company_phone" name="view_company_phone" readonly>
+                            </div>
+                            <div class="form-group">
+                                <label for="heading">Company Physical Address :</label>
+                                <input class="form-control view_company_address" name="view_company_address" readonly>
+                            </div>
+                            <div class="form-group">
+                                <label for="heading">Company Street :</label>
+                                <input class="form-control view_company_street" name="view_company_street" readonly>
+                            </div>
+                            <div class="form-group">
+                                <label for="heading">Vehicle Registration :</label>
+                                <input class="form-control view_vehicle_registration" name="view_vehicle_registration"
+                                       readonly>
+                            </div>
+                            <div class="form-group">
+                                <label for="heading">Village :</label>
+                                <input class="form-control view_village" name="view_village" readonly>
+                            </div>
+                            <div class="form-group">
+                                <label for="heading">Street :</label>
+                                <input class="form-control view_street" name="view_street" readonly>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- View hotel modal -->
+    <div class="modal fade" id="view_hotel_modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Case Accomodation Details</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form method="post" action="#">
+                        <div class="modal-body">
+                            <div class="form-group">
+                                <label for="heading">Hotel :</label>
+                                <input class="form-control view_hotel" name="view_hotel" readonly>
+                            </div>
+                            <div class="form-group">
+                                <label for="heading">Hotel Phone :</label>
+                                <input class="form-control view_hotel_phone" name="view_hotel_phone" readonly>
+                            </div>
+                            <div class="form-group">
+                                <label for="heading">Hotel Town :</label>
+                                <input class="form-control view_hotel_town" name="view_hotel_town" readonly>
+                            </div>
+                            <div class="form-group">
+                                <label for="heading">Date Check In :</label>
+                                <input class="form-control view_date_check_in" name="view_date_check_indate_check_in"
+                                       readonly>
+                            </div>
+                            <div class="form-group">
+                                <label for="heading">Date Check Out :</label>
+                                <input class="form-control view_date_check_out" name="view_date_check_out" readonly>
+                            </div>
+                            <div class="form-group">
+                                <label for="heading">Cough :</label>
+                                <input class="form-control view_cough" name="view_cough" readonly>
+                            </div>
+                            <div class="form-group">
+                                <label for="heading">Breathing Difficulty :</label>
+                                <input class="form-control view_breathing_difficulty" name="view_breathing_difficulty"
+                                       readonly>
+                            </div>
+                            <div class="form-group">
+                                <label for="heading">Fever :</label>
+                                <input class="form-control view_fever" name="view_fever" readonly>
+                            </div>
+                            <div class="form-group">
+                                <label for="heading">Sample Taken :</label>
+                                <input class="form-control view_sample_taken" name="view_sample_taken" readonly>
+                            </div>
+                            <div class="form-group">
+                                <label for="heading">Action Taken :</label>
+                                <input class="form-control view_action_taken" name="view_action_taken" readonly>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Map View modal -->
+    <div class="modal fade" id="mapViewModal" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLongTitle"><b>QUARANTINED CASE FOLLOW UP DETAILS</b></h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="padding-md">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="panel panel-default">
+                                    <div class="panel-heading"><b>Quarantined Case Details</b></div>
+                                    <div class="panel-body" align="center">
+                                        <form method="post" action="#">
+                                            <div class="form-group" style="display: none;">
+                                                <input class="form-control id" name="id" style="display: none;">
+                                            </div>
+                                            <div class="form-row">
+                                                <div class="form-group col-md-4">
+                                                    <label for="county">Names :</label>
+                                                    <input class="form-control first_name" name="first_name" readonly>
+                                                </div>
+                                                <div class="form-group col-md-4">
+                                                    <label for="county">Mobile No :</label>
+                                                    <input class="form-control phone_number" name="phone_number"
+                                                           readonly>
+                                                </div>
+                                                <div class="form-group col-md-4">
+                                                    <label for="county">Date last contacted :</label>
+                                                    <input class="form-control date_of_contact" name="date_of_contact"
+                                                           readonly>
+                                                </div>
+                                            </div>
+                                        </form>
+                                        <button type="submit" onClick="openMap()"
+                                                class="btn btn-success btn-sm pull-right">View Map
+                                        </button>
+                                    </div>
+                                </div><!-- /div panel-default -->
+                                <div class="panel panel-default">
+                                    <div class="panel-heading"><b>Patient Self Reporting Locations</b></div>
+                                    <div class="panel-body">
+                                        <div id="map_div">
+                                        </div><!-- div to hold map -->
+                                    </div><!-- panel-body -->
+                                </div><!-- /div panel-default -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit Disease modal -->
+    <div class="modal fade" id="edit_quarantine_modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Quarantine Case Edit</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form method="post" action="{% url 'veoc:edit_quarantine_list' %}">
+                        {% csrf_token %}
+                        <div class="modal-body">
+                            <div class="form-group" style="display: none;">
+                                <input class="form-control id" name="id" style="display: none;">
+                            </div>
+                            <div class="form-group">
+                                <label for="callername">First Name : *</label>
+                                <input class="form-control f_name" type="text" id="f_name" name="first_name" size="45"
+                                       placeholder="first name" required/>
+                            </div>
+                            <div class="form-group">
+                                <label for="callernumber">Last Name : *</label>
+                                <input class="form-control l_name" type="text" id="l_name" name="last_name"
+                                       maxlength="10" size="45" placeholder="last name" required/>
+                            </div>
+                            <div class="form-group">
+                                <label for="callernumber">ID / Passport Number : *</label>
+                                <input class="form-control passport_num" type="text" id="passport_num"
+                                       name="passport_number" maxlength="10" size="45" placeholder="passport number"
+                                       required/>
+                            </div>
+                            <div>
+                                <label for="callername">Phone Number : *</label>
+                                <input class="form-control phone_num" type="number" id="phone_num" name="phone_number"
+                                       minlength="10" placeholder="phone number" required/>
+                            </div>
+                            <div class="form-group">
+                                <label for="country">Country of Origin : *</label>
+                                <select class="form-control cntry" name="country" id="cntry">
+                                    <option value="" disabled selected>Select Country</option>
+                                    {% for cntry in country %}
+                                        <option value="{{ cntry.name }}">{{ cntry.name }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="nationality">Nationality : *</label>
+                                <select class="form-control natnality" name="natnality" id="nationality">
+                                    <option value="" disabled selected>Select Nationality</option>
+                                    {% for cntry in country %}
+                                        <option value="{{ cntry.name }}">{{ cntry.name }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="comorbidity">Comorbidity : </label>
+                                <input class="form-control comorbidity" type="text" id="comorbidity" name="comorbidity"
+                                       placeholder="comorbidity"/>
+                            </div>
+                            <div class="form-group">
+                                <label for="drugs">Any drugs on? : </label>
+                                <input class="form-control drugs" type="text" id="drugs" name="drugs"
+                                       placeholder="Drugs"/>
+                            </div>
+                        </div>
+                        <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                        <button type="submit" id="adddescriptionbtn" class="btn btn-success btn-sm pull-right">Save
+                            Changes
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block script %}
+    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.0.0-alpha/js/bootstrap.min.js"></script> -->
+    <script>
+        $(document).ready(function () {
+            $('#quarantine_report').DataTable({
+                "order": [],
+                dom: 'Bfrtip',
+                buttons: [
+                    'copy', 'csv', 'excel', 'pdf', 'print'
+                ]
+            });
+
+            // Setup - add a text input to each footer cell
+            $('#quarantine_report thead td').each(function () {
+                var title = $(this).text();
+                $(this).html('<input type="text" placeholder="Search ' + title + '" />');
+            });
+
+            // DataTable
+            var table = $('#quarantine_report').DataTable();
+
+            // Apply the search
+            table.columns().every(function () {
+                var that = this;
+
+                $('input', this.header()).on('keyup change', function () {
+                    if (that.search() !== this.value) {
+                        that
+                            .search(this.value)
+                            .draw();
+                    }
+                });
+            });
+
+        });
+
+        $(document).on("click", '.map_view', function (e) {
+            var id = $(this).data('id');
+            var names = $(this).data('names');
+            var contact = $(this).data('last_contact');
+            var phone = $(this).data('phone_number');
+
+            // console.log(names);
+
+            $(".id").val(id);
+            $(".first_name").val(names);
+            $(".date_of_contact").val(contact);
+            $(".phone_number").val(phone);
+        });
+
+        $(document).on("click", '.company_view', function (e) {
+            console.log("inside company_view");
+            var id = $(this).data('id');
+            var c_name = $(this).data('company_name');
+            var c_phone = $(this).data('company_phone');
+            var c_address = $(this).data('company_address');
+            var c_street = $(this).data('company_street');
+            var c_building = $(this).data('company_building');
+            var v_registration = $(this).data('vehicle_registration');
+            var village_ = $(this).data('village');
+            var street_ = $(this).data('street');
+
+            console.log(c_name);
+
+            $(".id").val(id);
+            $(".view_company_name").val(c_name);
+            $(".view_company_phone").val(c_phone);
+            $(".view_company_address").val(c_address);
+            $(".view_company_street").val(c_street);
+            $(".view_company_building").val(c_building);
+            $(".view_vehicle_registration").val(v_registration);
+            $(".view_village").val(village_);
+            $(".view_street").val(street_);
+        });
+
+        $(document).on("click", '.hotel_view', function (e) {
+            var id = $(this).data('id');
+            var hotel_ = $(this).data('hotel');
+            var h_phone = $(this).data('hotel_phone');
+            var h_town = $(this).data('hotel_town');
+            var d_check_in = $(this).data('date_check_in');
+            var d_check_out = $(this).data('date_check_out');
+            var cough_ = $(this).data('cough');
+            var b_difficulty = $(this).data('breathing_difficulty');
+            var fever_ = $(this).data('fever');
+            var s_taken = $(this).data('sample_taken');
+            var a_taken = $(this).data('action_taken');
+
+            console.log(hotel_);
+
+            $(".id").val(id);
+            $(".view_hotel").val(hotel_);
+            $(".view_hotel_phone").val(h_phone);
+            $(".view_hotel_town").val(h_town);
+            $(".view_date_check_in").val(d_check_in);
+            $(".view_date_check_out").val(d_check_out);
+            $(".view_cough").val(cough_);
+            $(".view_breathing_difficulty").val(b_difficulty);
+            $(".view_fever").val(fever_);
+            $(".view_sample_taken").val(s_taken);
+            $(".view_action_taken").val(a_taken);
+        });
+
+        $(document).on("click", '.edit_button', function (e) {
+            var id = $(this).data('id');
+            var first_name = $(this).data('first_name');
+            var last_name = $(this).data('last_name');
+            var country = $(this).data('country');
+            var nationality = $(this).data('nationality');
+            var phone_number = $(this).data('phone_number');
+            var country = $(this).data('country');
+            var comorbidity = $(this).data('cormobidity');
+            var drugs = $(this).data('drugs');
+
+            console.log(id);
+            console.log(first_name);
+
+            $(".id").val(id);
+            $(".f_name").val(first_name);
+            $(".l_name").val(last_name);
+            $(".cntry").val(country);
+            $(".natnality").val(nationality);
+            $(".phone_num").val(phone_number);
+            $(".comorbidity").val(comorbidity);
+            $(".drugs").val(drugs);
+        });
+
+        function openMap() {
+            google.charts.load('current', {'packages': ['map']});
+            google.charts.setOnLoadCallback(drawCountyChart);
+        }
+
+        function drawCountyChart() {
+            // console.log("inside drawCountyChart");
+
+            item_id = $(".id").val();
+            // console.log(item_id)
+            $.ajax({
+                url: '/get_quarantine_coordinates/',
+                type: 'POST',
+                datatype: 'json',
+                data: {item_id: item_id, csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val()},
+                success: function (data) {
+                    // console.log(JSON.stringify(data));
+                    var mydata = new google.visualization.DataTable();
+                    mydata.addColumn('number', 'LATITUDE');
+                    mydata.addColumn('number', 'LONGITUDE');
+                    mydata.addColumn('string', 'NAME');
+
+                    for (var i = 0; i < data.length; i++) {
+                        x = data[i].lat;//get the longitude from models
+                        y = data[i].lng;//get latitude from models
+                        z = "Day " + data[i].follow_up_day.toString();//get the position from models
+                        x = parseFloat(x);//convert the longitude to float from string
+                        y = parseFloat(y);//convert the latitude to float from string
+                        mydata.addRow([x, y, z]);//add the coordinates to the map
+
+                    }
+
+                    var options = {
+                        icons: {
+                            default: {
+                                normal: 'https://img.icons8.com/color/48/000000/google-maps-new.png',
+                                selected: 'https://img.icons8.com/color/48/000000/google-maps-new.png'
+                            }
+                        },
+                        showTip: true,
+                        useMapTypeControl: true,
+                        zoomLevel: 9,
+                        enableScrollWheel: true,
+                        mapType: 'styledMap',
+                        center: {lat: -33.8688, lng: 151.2195},
+                        maps: {
+                            // Your custom mapTypeId holding custom map styles.
+                            styledMap: {
+                                name: 'Styled Map', // This name will be displayed in the map type control.
+                                styles: [
+                                    {
+                                        featureType: 'poi.attraction',
+                                        stylers: [{color: '#fce8b2'}]
+                                    },
+                                    {
+                                        featureType: 'road.highway',
+                                        stylers: [{hue: '#0277bd'}, {saturation: -50}]
+                                    },
+                                    {
+                                        featureType: 'road.highway',
+                                        elementType: 'labels.icon',
+                                        stylers: [{hue: '#000'}, {saturation: 100}, {lightness: 50}]
+                                    },
+                                    {
+                                        featureType: 'landscape',
+                                        stylers: [{hue: '#259b24'}, {saturation: 10}, {lightness: -22}]
+                                    }
+                                ]
+                            }
+                        }
+                    };
+
+                    var map = new google.visualization.Map(document.getElementById('map_div'));
+                    // map.controls[google.maps.ControlPosition.TOP_LEFT].push(input);
+                    map.draw(mydata, options);
+                },
+                error: function () {
+                    // alert("error in getting coordinates, try again");
+                }
+            });
+
+        }
+
+        function openCompany() {
+
+        }
+
+        function openHotel() {
+        }
+    </script>
+{% endblock %}

@@ -1,3 +1,4 @@
+
 from django.db import models
 from django.contrib.auth.models import User
 from django.core.validators import RegexValidator
@@ -839,6 +840,79 @@ class discharged_quarantine(models.Model):
     def __str__(self):
         return self.patient_contacts.first_name + ' - ' + self.patient_contacts.phone_number
 
+class v_quarantine_contacts(models.Model):
+    id = models.BigIntegerField(primary_key=True)
+    contact_id = models.CharField(max_length=200)
+    first_name = models.CharField(max_length=200)
+    middle_name = models.CharField(max_length=200)
+    last_name = models.CharField(max_length=200)
+    sex = models.CharField(max_length=200)
+    dob = models.CharField(max_length=200)
+    passport_number = models.CharField(max_length=200)
+    phone_number = models.CharField(max_length=200)
+    email_address = models.CharField(max_length=200)
+    origin_country = models.CharField(max_length=200)
+    nationality = models.CharField(max_length=200)
+    county = models.CharField(max_length=200)
+    subcounty = models.CharField(max_length=200)
+    source = models.CharField(max_length=200)
+    quarantine_site = models.CharField(max_length=200)
+    sms_communication_language = models.CharField(max_length=200)
+    date_of_contact = models.CharField(max_length=200)
+    created_at = models.CharField(max_length=200)
+
+    class Meta:
+        managed = False
+        db_table = 'v_quarantine_contacts'
+
+class v_follow_up(models.Model):
+    id = models.BigIntegerField(primary_key=True)
+    patient_contacts_id = models.CharField(max_length=200)
+    source = models.CharField(max_length=200)
+    first_name = models.CharField(max_length=200)
+    last_name = models.CharField(max_length=200)
+    phone_number = models.CharField(max_length=200)
+    passport_number = models.CharField(max_length=200)
+    reporting_date = models.CharField(max_length=200)
+    county = models.CharField(max_length=200)
+    subcounty = models.CharField(max_length=200)
+    self_quarantine = models.BooleanField(default=True)
+    follow_up_day = models.CharField(max_length=200)
+    thermal_gun = models.BooleanField(default=True)
+    body_temperature = models.BooleanField(default=True)
+    cough = models.BooleanField(default=True)
+    difficulty_breathing = models.BooleanField(default=True)
+    fever = models.BooleanField(default=True)
+    comment = models.CharField(max_length=200)
+
+    class Meta:
+        managed = False
+        db_table = 'v_follow_up'
+
+class v_lab_results(models.Model):
+    id = models.BigIntegerField(primary_key=True)
+    name = models.CharField(max_length=200)
+    patient_contacts_id = models.CharField(max_length=200)
+    phone_number = models.CharField(max_length=200)
+    id_number = models.CharField(max_length=200)
+    sex = models.CharField(max_length=200)
+    dob = models.CharField(max_length=200)
+    testing_lab = models.CharField(max_length=200)
+    date_tested = models.CharField(max_length=200)
+    result = models.CharField(max_length=200)
+    system_registration_date = models.CharField(max_length=200)
+    nationality = models.CharField(max_length=200)
+    origin_country = models.CharField(max_length=200)
+    county = models.CharField(max_length=200)
+    sub_county = models.CharField(max_length=200)
+    source = models.CharField(max_length=200)
+    border_name = models.CharField(max_length=200)
+    date_received = models.CharField(max_length=200)
+
+    class Meta:
+        managed = False
+        db_table = 'v_lab_results'
+
 class watcher_team_leads(models.Model):
     team_lead=models.ForeignKey(contact, on_delete=models.CASCADE, blank=False)
     team_name=models.CharField(max_length=20)
@@ -994,3 +1068,32 @@ class general_feedback(models.Model):
        ordering = ['-created_at']
     def __str__(self):
         return self.challenge
+
+class airline_quarantine(models.Model):
+    patient_contacts = models.ForeignKey(quarantine_contacts, on_delete=models.DO_NOTHING, related_name='airline_contact')
+    airline = models.CharField(max_length=100, blank=True)
+    flight_number = models.CharField(max_length=200, blank=True)
+    seat_number = models.CharField(max_length=200, blank=True)
+    destination_city = models.CharField(max_length=200, blank=True)
+    travel_history = models.CharField(max_length=200, blank=True)
+    residence = models.CharField(max_length=200, blank=True)
+    postal_address = models.CharField(max_length=200, blank=True)
+    estate = models.CharField(max_length=200, blank=True)
+    cough = models.BooleanField(default=True)
+    breathing_difficulty = models.BooleanField(default=True)
+    fever = models.BooleanField(default=True)
+    chills = models.BooleanField(default=True)
+    temperature = models.FloatField(max_length=200, blank=True, default='0.0')
+    measured_temperature = models.FloatField(max_length=200, blank=True, default='0.0')
+    arrival_airport_code = models.CharField(max_length=200, blank=True)
+    released = models.BooleanField(default=True)
+    risk_assessment_referal = models.BooleanField(default=True)
+    designated_hospital_refferal = models.BooleanField(default=True)
+    status = models.BooleanField(default=True)
+    created_at = models.DateTimeField(default=datetime.now())
+    updated_at = models.DateTimeField(default=datetime.now())
+    created_by = models.ForeignKey(User, on_delete=models.DO_NOTHING, related_name='airline_updated_by')
+    updated_by = models.ForeignKey(User, on_delete=models.DO_NOTHING, related_name='airline_created_by')
+
+    def _str_(self):
+        return self.patient_contacts.first_name + ' - ' + self.airline + ' - ' + self.flight_number

@@ -54,7 +54,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'veoc.apps.VeocConfig',
-    'rest_framework'#,
+    'rest_framework',
+    'airport_app'
     # 'django_mobile'
 ]
 

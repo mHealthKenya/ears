@@ -23,8 +23,12 @@ router.register('events', views.EventView)
 
 urlpatterns = [
     url('api/', include(router.urls)),
+    url(r'^airport_register/$', views.airport_register, name='airport_register'),
     url(r'^export_csv/$', views.export_csv, name='export_csv'),
     url(r'^truck_export_csv/$', views.truck_export_csv, name='truck_export_csv'),
+    url(r'^raw_quarantine_contacts_csv/$', views.raw_quarantine_contacts_csv, name='raw_quarantine_contacts_csv'),
+    url(r'^raw_follow_up_csv/$', views.raw_follow_up_csv, name='raw_follow_up_csv'),
+    url(r'^raw_lab_results_csv/$', views.raw_lab_results_csv, name='raw_lab_results_csv'),
     url(r'^$', views.login, name='login'),
     url(r'^login/$', views.login, name='login'),
     url(r'^logout/$', views.logout, name='logout'),
@@ -56,6 +60,7 @@ urlpatterns = [
     url(r'^upload_csv/$', views.upload_csv, name='upload_csv'),
 
     url(r'^call_report/$', views.call_report, name='call_report'),
+    url(r'^raw_data_downloads/$', views.raw_data_downloads, name='raw_data_downloads'),
     url(r'^filter_call_report/$', views.filter_call_report, name='filter_call_report'),
     url(r'^unrelated_call_report/$', views.unrelated_call_report, name='unrelated_call_report'),
     url(r'^filter_unrelated_call_report/$', views.filter_unrelated_call_report, name='filter_unrelated_call_report'),

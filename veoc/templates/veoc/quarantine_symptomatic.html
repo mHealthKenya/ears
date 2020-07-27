@@ -59,10 +59,11 @@
                             <th>Has Cough?</th>
                             <th>Difficulty in breathing?</th>
                             <th>Comments</th>
+                            <th>Registered By</th>
                           </tr>
                           </thead>
                           <tbody>
-                          {% for follow in follow_data %}
+                          {% for follow in page_obj %}
                           <tr>
                           {#                                  Check user permission to view names#}
 {#                            <td>*********</td>#}
@@ -91,18 +92,55 @@
                             {% else %}
                                 <td>{{ follow.body_temperature }}</td>
                             {% endif %}
-                            <td>{{ follow.fever }}</td>
-                            <td>{{ follow.cough }}</td>
-                            <td>{{ follow.difficulty_breathing }}</td>
+                            {% if follow.fever == "YES" %}
+                            <td style="background-color: #F51B00">
+                              <b>{{ follow.fever }}</b></td>
+                            {% else %}
+                                <td>{{ follow.fever }}</td>
+                            {% endif %}
+                            {% if follow.cough == "YES" %}
+                            <td style="background-color: #F51B00">
+                              <b>{{ follow.cough }}</b></td>
+                            {% else %}
+                                <td>{{ follow.cough }}</td>
+                            {% endif %}
+                            {% if follow.difficulty_breathing == "YES" %}
+                            <td style="background-color: #F51B00">
+                              <b>{{ follow.difficulty_breathing }}</b></td>
+                            {% else %}
+                                <td>{{ follow.difficulty_breathing }}</td>
+                            {% endif %}
                             {% if follow.comment.strip %}
                               <td>{{ follow.comment }}</td>
                             {% else %}
                               <td>None</td>
                             {% endif %}
+                            <td>{{ follow.patient_contacts.created_by.username}}</td>
                           </tr>
                         {% endfor %}
                       </tbody>
     							</table>
+                                    <div class="pagination">
+                                <span class="step-links">
+                                    {% if page_obj.has_previous %}
+                                        <a href="?page=1">&laquo; first</a>
+                                        <a href="?page={{ page_obj.previous_page_number }}">previous</a>
+                                    {% endif %}
+
+                                    <span class="current">
+                                        Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+                                    </span>
+
+                                    {% if page_obj.has_next %}
+                                        <a href="?page={{ page_obj.next_page_number }}">next</a>
+                                        <a href="?page={{ page_obj.paginator.num_pages }}">last &raquo;</a>
+                                    {% endif %}
+                                    {#                                    <br>pages#}
+{#                                    {% for i in page_range %}#}
+{#                                        <a href="{{ i }}">{{ i }}</a>#}
+{#                                    {% endfor %}#}
+                                </span>
+                            </div>
                 </div>
               </div>
     				</div>
