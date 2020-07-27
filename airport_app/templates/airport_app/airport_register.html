@@ -26,7 +26,7 @@
                        </div>
                        <div class="form-group col-md-4">
                          <label for="middle_name">Middle Name : </label>
-                         <input class="form-control" type="text" id="middle_name" name="middle_name" maxlength="10" size="45" placeholder="Middle Name" required/>
+                         <input class="form-control" type="text" id="middle_name" name="middle_name" maxlength="10" size="45" placeholder="Middle Name"/>
                        </div>
                        <div class="form-group col-md-4">
                          <label for="last_name">Last Name : *</label>
@@ -128,8 +128,9 @@
                        </div>
                        <div class="form-group col-md-4">
                          <label for="countries_visited">Countries Visited : </label>
-                         <input class="form-control" type="text" id="countries_visited" name="countries_visited" placeholder="Countries Visited in the past two weeks"/>
-                       </div>
+                         {% for cntry in country %}
+                             <option value="{{cntry.name}}">{{cntry.name}}</option>
+                         {% endfor %}                       </div>
                        <div class="form-group col-md-4">
                          <label for="fever">Fever (37.5°C or higher): </label>
                          <select class="form-control" id="fever" name="fever">
@@ -200,7 +201,7 @@
                     <div class="form-row" id="country_details_div">
                       <div class="form-group col-md-6">
                         <label for="measured_temperature">Measured Temperature : </label>
-                        <input class="form-control" type="text" id="measured_temperature" name="measured_temperature" placeholder="Measured Temperature"/>
+                        <input class="form-control" type="number" step="0.01" id="measured_temperature" name="measured_temperature" placeholder="Measured Temperature"/>
                       </div>
                       <div class="form-group col-md-6">
                         <label for="arrival_airport_code">Arrival Airport Code : </label>

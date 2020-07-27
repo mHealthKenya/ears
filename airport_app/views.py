@@ -76,7 +76,7 @@ def airport_register(request):
         residence = request.POST.get('residence','')
         estate = request.POST.get('estate','')
         postal_address = request.POST.get('postal_address','')
-        temperature = request.POST.get('measured_temperature','')
+        temperature = request.POST.get('fever','')
         measured_temperature = request.POST.get('measured_temperature','')
         arrival_airport_code = request.POST.get('arrival_airport_code','')
         released = request.POST.get('released','')
@@ -152,7 +152,7 @@ def airport_register(request):
                                                               updated_by=userObject, created_at=current_date)
 
             contact_save.save()
-            
+
 
             patients_contacts_id = contact_save.pk
             print(patients_contacts_id)

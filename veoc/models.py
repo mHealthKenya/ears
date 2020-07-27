@@ -1083,7 +1083,7 @@ class airline_quarantine(models.Model):
     breathing_difficulty = models.BooleanField(default=True)
     fever = models.BooleanField(default=True)
     chills = models.BooleanField(default=True)
-    temperature = models.FloatField(max_length=200, blank=True, default='0.0')
+    temperature = models.BooleanField(default=True)
     measured_temperature = models.FloatField(max_length=200, blank=True, default='0.0')
     arrival_airport_code = models.CharField(max_length=200, blank=True)
     released = models.BooleanField(default=True)
