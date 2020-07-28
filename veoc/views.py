@@ -64,7 +64,7 @@ def airport_register(request):
         seat_number = request.POST.get('seat_number','')
         destination_city = request.POST.get('destination_city','')
         countries_visited = request.POST.get('countries_visited','')
-        fever = request.POST.get('fever','')
+        temperature = request.POST.get('fever','')
         feverish = request.POST.get('feverish','')
         chills = request.POST.get('chills','')
         cough = request.POST.get('cough','')
@@ -74,18 +74,13 @@ def airport_register(request):
         residence = request.POST.get('residence','')
         estate = request.POST.get('estate','')
         postal_address = request.POST.get('postal_address','')
-        temperature = request.POST.get('fever','')
         measured_temperature = request.POST.get('measured_temperature','')
         arrival_airport_code = request.POST.get('arrival_airport_code','')
         released = request.POST.get('released','')
         risk_assessment_referal = request.POST.get('risk_assessment_referal','')
         designated_hospital_referal = request.POST.get('designated_hospital_referal','')
 
-
-
-
         if origin_country.lower() == "kenya" :
-
             countyObject = organizational_units.objects.get(name = cnty)
             subcountyObject = organizational_units.objects.get(name = sub_cnty)
             wardObject = organizational_units.objects.get(organisationunitid = ward)
@@ -94,39 +89,43 @@ def airport_register(request):
             subcountyObject = organizational_units.objects.get(organisationunitid = 18)
             wardObject = organizational_units.objects.get(organisationunitid = 18)
 
+        # country_code = country.objects.get(name = )
         user_phone = "+254"
-        #check if the leading character is 0
-        if str(phone_number[0]) == "0":
-            user_phone = user_phone + str(phone_number[1:])
-            # print("number leading with 0")
+        # Remove spacing on the number
+        mobile_number = phone_number.replace(" ", "")
+        print(mobile_number)
+        # check if the leading character is 0
+        if str(mobile_number[0]) == "0":
+            user_phone = user_phone + str(mobile_number[1:])
+            print("number leading with 0")
+        elif str(mobile_number[0]) == "+":
+            user_phone = mobile_number
+            print("Save phone number as it is")
+        elif str(mobile_number[0:2]) == "25":
+            user_phone = "+" + str(mobile_number[0:])
+            print("Save phone number with appended +")
         else:
-            user_phone = user_phone + str(phone_number)
-            # print("number not leading with 0")
+            user_phone = user_phone + str(mobile_number)
+            print("number not leading with 0")
 
         # get current user
         current_user = request.user
-        user_id = current_user.id
         # print(current_user)
         userObject = User.objects.get(pk=current_user.id)
-        #weigh_site = weighbridge_sites.objects.get(weighbridge_name=weighbridge_name)
-        #bord_name = border_points.objects.get(border_name=border_name)
-        #site_name = ''
-        quar_site = quarantine_sites.objects.filter(site_name="Country Border")
+        site_name = ''
+        quar_site = quarantine_sites.objects.filter(site_name="Home")
         for site in quar_site:
             site_name = site.id
 
         contact_save = ''
         current_date = datetime.now()
         source = "Web Airport Registration"
-        status = 't'
         # Check if mobile number exists in the table
-        details_exist = quarantine_contacts.objects.filter(phone_number=phone_number, first_name=first_name,
-                                                           last_name=last_name,
+        details_exist = quarantine_contacts.objects.filter(phone_number=phone_number, first_name=first_name,last_name=last_name,
                                                            date_of_contact__gte=date.today() - timedelta(days=14))
         if details_exist:
             for mob_ex in details_exist:
-                print("Details exist Phone Number" + str(mob_ex.phone_number) + "Registered on :" + str(
-                    mob_ex.created_at))
+                print("Details exist Phone Number" + str(mob_ex.phone_number) + "Registered on :" + str(mob_ex.created_at))
 
             return HttpResponse("error")
         else:
@@ -135,34 +134,31 @@ def airport_register(request):
             languageObject = translation_languages.objects.get(pk=language)
             contact_identifier = uuid.uuid4().hex
             # saving values to quarantine_contacts database first
-            contact_save = quarantine_contacts.objects.create(first_name=first_name, last_name=last_name,
-                                                              middle_name=middle_name,
-                                                              county=countyObject, subcounty=subcountyObject,
-                                                              ward=wardObject, sex=sex, dob=dob,
-                                                              passport_number=passport_number,
-                                                              phone_number=phone_number, date_of_contact=date_of_arrival,
-                                                              communication_language=languageObject,
-                                                              nationality=nationality, drugs="No", nok=nok,
-                                                              nok_phone_num=nok_phone_number, cormobidity="None",
-                                                              origin_country=origin_country,
-                                                              quarantine_site=quarantineObject, source=source,
-                                                              contact_uuid=contact_identifier,
-                                                              updated_at=current_date, created_by=userObject,
-                                                              updated_by=userObject, created_at=current_date)
+            contact_save = quarantine_contacts.objects.create(first_name=first_name, last_name=last_name, middle_name=middle_name, county=countyObject,
+                            subcounty=subcountyObject, ward=wardObject, sex=sex, dob=dob, passport_number=passport_number, phone_number=user_phone,
+                            date_of_contact=date_of_arrival, communication_language=languageObject, nationality=nationality, drugs="None", nok=nok,
+                            nok_phone_num=nok_phone_number, cormobidity="None", origin_country=origin_country, quarantine_site=quarantineObject, source=source,
+                            contact_uuid=contact_identifier, updated_at=current_date, created_by=userObject, updated_by=userObject, created_at=current_date)
 
             contact_save.save()
+            print(contact_save.pk)
             trans_one = transaction.savepoint()
 
-
-
-            patients_contacts_id = contact_save.pk
-            print(patients_contacts_id)
-            patientObject = quarantine_contacts.objects.get(pk = patients_contacts_id)
-            if contact_save and patients_contacts_id:
+            # patients_contacts_id = contact_save.pk
+            # print(patients_contacts_id)
+            # patientObject = quarantine_contacts.objects.get(pk = patients_contacts_id)
+            if contact_save:
                 print("working")
-                airport_user_save = airline_quarantine.objects.create(airline=airline, flight_number=flight_number, seat_number=seat_number, destination_city=destination_city, travel_history=countries_visited, cough=cough, breathing_difficulty=breathing_difficulty, fever=fever, chills=chills, temperature=temperature, measured_temperature=measured_temperature, arrival_airport_code=arrival_airport_code, released=released, risk_assessment_referal=risk_assessment_referal, designated_hospital_refferal=designated_hospital_referal, created_at=current_date, updated_at=current_date, patient_contacts_id=patients_contacts_id, created_by_id=user_id, updated_by_id=user_id, residence=residence, estate=estate, postal_address=postal_address, status=status)
+                print(temperature)
+                airport_user_save = airline_quarantine.objects.create(airline=airline, flight_number=flight_number, seat_number=seat_number,
+                                          destination_city=destination_city, travel_history=countries_visited, cough=cough, breathing_difficulty=breathing_difficulty,
+                                          fever=feverish, chills=chills, temperature=temperature, measured_temperature=measured_temperature, arrival_airport_code=arrival_airport_code,
+                                          released=released, risk_assessment_referal=risk_assessment_referal, designated_hospital_refferal=designated_hospital_referal,
+                                          created_at=current_date, updated_at=current_date, patient_contacts=contact_save, created_by=userObject, updated_by=userObject,
+                                          residence=residence, estate=estate, postal_address=postal_address, status='t')
 
-
+                airport_user_save.save()
+                print(airport_user_save.id)
             else:
                 print("data not saved in truck quarantine contacts")
 
@@ -3283,78 +3279,75 @@ def home_care_register(request):
 
 @login_required
 def truck_driver_profile(request, profileid):
-    # print(profileid)
 
-    patient_contact_object = quarantine_contacts.objects.filter(id=profileid)
+    patient_contact_object = quarantine_contacts.objects.filter(id = profileid)
     print(patient_contact_object)
 
-    lab_res = truck_quarantine_lab.objects.filter(patient_contacts=profileid)
-    lab_res_count = truck_quarantine_lab.objects.filter(patient_contacts=profileid).count()
+    lab_res = truck_quarantine_lab.objects.filter(patient_contacts = profileid)
+    lab_res_count = truck_quarantine_lab.objects.filter(patient_contacts = profileid).count()
 
     # lab_data = truck_quarantine_lab.objects.get(pk=profileid).annotate(
-    patient_details = truck_quarantine_contacts.objects.filter(patient_contacts=profileid).annotate(
-        first_name=F("patient_contacts__first_name"),
-        last_name=F("patient_contacts__last_name"),
-        sex=F("patient_contacts__sex"),
-        age=F("patient_contacts__dob"),
-        passport_number=F("patient_contacts__passport_number"),
-        phone_number=F("patient_contacts__phone_number"),
-        nationality=F("patient_contacts__nationality"),
-        origin_country=F("patient_contacts__origin_country"),
-        quarantine_site=F("patient_contacts__quarantine_site_id__site_name"),
-        source=F("patient_contacts__source"),
-        date_of_contact=F("patient_contacts__date_of_contact"),
-        created_by=F("patient_contacts__created_by_id__username"),
-    )
+    patient_details = truck_quarantine_contacts.objects.filter(patient_contacts = profileid).annotate(
+            first_name=F("patient_contacts__first_name"),
+            last_name=F("patient_contacts__last_name"),
+            sex=F("patient_contacts__sex"),
+            age=F("patient_contacts__dob"),
+            passport_number=F("patient_contacts__passport_number"),
+            phone_number=F("patient_contacts__phone_number"),
+            nationality=F("patient_contacts__nationality"),
+            origin_country=F("patient_contacts__origin_country"),
+            quarantine_site=F("patient_contacts__quarantine_site_id__site_name"),
+            source=F("patient_contacts__source"),
+            date_of_contact=F("patient_contacts__date_of_contact"),
+            created_by=F("patient_contacts__created_by_id__username"),
+        )
 
     # print(patient_details)
 
-    follow_up_details = quarantine_follow_up.objects.filter(patient_contacts=profileid).order_by(
-        'follow_up_day').annotate(
-        first_name=F("patient_contacts__first_name"),
-        last_name=F("patient_contacts__last_name"),
-        sex=F("patient_contacts__sex"),
-        age=F("patient_contacts__dob"),
-        passport_number=F("patient_contacts__passport_number"),
-        phone_number=F("patient_contacts__phone_number"),
-        nationality=F("patient_contacts__nationality"),
-        origin_country=F("patient_contacts__origin_country"),
-        quarantine_site=F("patient_contacts__quarantine_site_id__site_name"),
-        source=F("patient_contacts__source"),
-        date_of_contact=F("patient_contacts__date_of_contact"),
-        created_by=F("patient_contacts__created_by_id__username"),
-    ).order_by('created_at')
+    follow_up_details = quarantine_follow_up.objects.filter(patient_contacts = profileid).order_by('follow_up_day').annotate(
+            first_name=F("patient_contacts__first_name"),
+            last_name=F("patient_contacts__last_name"),
+            sex=F("patient_contacts__sex"),
+            age=F("patient_contacts__dob"),
+            passport_number=F("patient_contacts__passport_number"),
+            phone_number=F("patient_contacts__phone_number"),
+            nationality=F("patient_contacts__nationality"),
+            origin_country=F("patient_contacts__origin_country"),
+            quarantine_site=F("patient_contacts__quarantine_site_id__site_name"),
+            source=F("patient_contacts__source"),
+            date_of_contact=F("patient_contacts__date_of_contact"),
+            created_by=F("patient_contacts__created_by_id__username"),
+        ).order_by('created_at')
 
     # print(follow_up_details)
-    follow_up_details_count = quarantine_follow_up.objects.filter(patient_contacts=profileid).order_by(
-        'follow_up_day').count()
+    follow_up_details_count = quarantine_follow_up.objects.filter(patient_contacts = profileid).order_by('follow_up_day').count()
 
-    lab_data = truck_quarantine_lab.objects.filter(patient_contacts=profileid).annotate(
-        first_name=F("patient_contacts__first_name"),
-        last_name=F("patient_contacts__last_name"),
-        sex=F("patient_contacts__sex"),
-        age=F("patient_contacts__dob"),
-        passport_number=F("patient_contacts__passport_number"),
-        phone_number=F("patient_contacts__phone_number"),
-        nationality=F("patient_contacts__nationality"),
-        origin_country=F("patient_contacts__origin_country"),
-        date_of_contact=F("patient_contacts__date_of_contact"),
-        # created_by=F("patient_contacts__created_by_id__username"),
-    )
+    lab_data = truck_quarantine_lab.objects.filter(patient_contacts = profileid).annotate(
+            first_name=F("patient_contacts__first_name"),
+            last_name=F("patient_contacts__last_name"),
+            sex=F("patient_contacts__sex"),
+            age=F("patient_contacts__dob"),
+            passport_number=F("patient_contacts__passport_number"),
+            phone_number=F("patient_contacts__phone_number"),
+            nationality=F("patient_contacts__nationality"),
+            origin_country=F("patient_contacts__origin_country"),
+            date_of_contact=F("patient_contacts__date_of_contact"),
+            # created_by=F("patient_contacts__created_by_id__username"),
+        )
 
-    # lab_results = covid_results.objects.filter(patient_contacts = profileid)
+    lab_results = covid_results.objects.filter(patient_contacts = profileid)
     # print(lab_data)
 
     labs = testing_labs.objects.all()
     cntry = country.objects.all()
-    # lab_res_types = covid_results_classifications.objects.all().order_by('id')
-    # samp_types = covid_sample_types.objects.all().order_by('id')
+    lab_res_types = covid_results_classifications.objects.all().order_by('id')
+    samp_types = covid_sample_types.objects.all().order_by('id')
     day = time.strftime("%Y-%m-%d")
-    data = {'patient_contact_object': patient_contact_object, 'lab_data': lab_data, 'patient_details': patient_details,
-            'lab_res': lab_res,
-            'labs': labs, 'day': day, 'country': cntry,
-            'follow_up_details': follow_up_details, 'follow_up_details_count': follow_up_details_count,
-            "pic": quarantine_contacts.objects.get(id=profileid)}
+
+    data = {'patient_contact_object': patient_contact_object, 'lab_data': lab_data, 'patient_details':patient_details, 'lab_res': lab_res, 'lab_results': lab_results,
+            'lab_res_count':lab_res_count,  'labs': labs, 'lab_res_types':lab_res_types, 'samp_types':samp_types, 'day':day, 'country': cntry,
+            'follow_up_details':follow_up_details, 'follow_up_details_count':follow_up_details_count, "pic": quarantine_contacts.objects.get(id=profileid)}
+
 
     return render(request, 'veoc/truck_driver_profile.html', data)
 
@@ -3548,49 +3541,28 @@ def truck_driver_register(request):
             languageObject = translation_languages.objects.get(pk=language)
             contact_identifier = uuid.uuid4().hex
             # saving values to quarantine_contacts database first
-            contact_save = quarantine_contacts.objects.create(first_name=first_name, last_name=last_name,
-                                                              middle_name=middle_name,
-                                                              county=countyObject, subcounty=subcountyObject,
-                                                              ward=wardObject, sex=sex, dob=dob,
-                                                              passport_number=passport_number,
-                                                              phone_number=user_phone, date_of_contact=date_of_contact,
-                                                              communication_language=languageObject,
-                                                              nationality=nationality, drugs=drugs, nok=nextofkin,
-                                                              nok_phone_num=nok_phone_number, cormobidity=comorbidity,
-                                                              origin_country=origin_country,
-                                                              quarantine_site=quarantineObject, source=source,
-                                                              contact_uuid=contact_identifier,
-                                                              updated_at=current_date, created_by=userObject,
-                                                              updated_by=userObject, created_at=current_date)
+            contact_save = quarantine_contacts.objects.create(first_name=first_name, last_name=last_name, middle_name=middle_name,
+                             county=countyObject, subcounty=subcountyObject, ward=wardObject, sex=sex, dob=dob, passport_number=passport_number,
+                             phone_number=user_phone, date_of_contact=date_of_contact, communication_language=languageObject,
+                             nationality=nationality, drugs=drugs, nok=nextofkin, nok_phone_num=nok_phone_number, cormobidity=comorbidity,
+                             origin_country=origin_country, quarantine_site=quarantineObject, source=source, contact_uuid=contact_identifier,
+                             updated_at=current_date, created_by=userObject, updated_by=userObject, created_at=current_date)
 
             contact_save.save()
             trans_one = transaction.savepoint()
 
             patient_id = contact_save.pk
             print(patient_id)
-            patientObject = quarantine_contacts.objects.get(pk=patient_id)
             # save contacts in the track_quarantine_contacts if data has been saved on the quarantine contacts
             if patient_id:
                 try:
-                    truck_save = truck_quarantine_contacts.objects.create(patient_contacts=patientObject, street=street,
-                                                                          village=village,
-                                                                          vehicle_registration=vehicle_registration,
-                                                                          company_name=company_name,
-                                                                          company_phone=company_phone,
-                                                                          border_point=bord_name,
-                                                                          company_physical_address=company_address,
-                                                                          company_street=company_street,
-                                                                          company_building=company_building,
-                                                                          temperature=temp,
-                                                                          weighbridge_facility=weigh_site, cough=cough,
-                                                                          breathing_difficulty=breathing_difficulty,
-                                                                          fever=fever, sample_taken=sample_taken,
-                                                                          action_taken=action_taken, hotel=hotel,
-                                                                          hotel_phone=hotel_phone,
-                                                                          hotel_town=hotel_town,
-                                                                          date_check_in=date_check_in,
-                                                                          date_check_out=date_check_out,
-                                                                          driver_image=driver_image)
+                    truck_save = truck_quarantine_contacts.objects.create(patient_contacts=contact_save, street=street, village=village,
+                                    vehicle_registration=vehicle_registration,company_name=company_name, company_phone=company_phone,
+                                    border_point=bord_name,company_physical_address=company_address,company_street=company_street,
+                                    company_building=company_building,temperature=temp,weighbridge_facility=weigh_site, cough=cough,
+                                    breathing_difficulty=breathing_difficulty, fever=fever, sample_taken=sample_taken,
+                                    action_taken=action_taken, hotel=hotel,hotel_phone=hotel_phone,hotel_town=hotel_town,
+                                    date_check_in=date_check_in,date_check_out=date_check_out,driver_image=driver_image)
 
                     truck_save.save()
                 except IntegrityError:
