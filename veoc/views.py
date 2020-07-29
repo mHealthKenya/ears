@@ -5060,8 +5060,7 @@ def truck_quarantine_list(request):
                 filter(border_point__border_name=user_access_level,
                        patient_contacts__source='Truck Registration',
                        patient_contacts__date_of_contact__gte=date_from,
-                       patient_contacts__date_of_contact__lte=date_to). \
-                order_by('-patient_contacts__date_of_contact')
+                       patient_contacts__date_of_contact__lte=date_to)
 
         else:
             # border_point = request.POST.get('border_point','')
@@ -5107,8 +5106,7 @@ def truck_quarantine_list(request):
             q_data_count = truck_quarantine_contacts.objects.select_related('patient_contacts'). \
                 filter(patient_contacts__source='Truck Registration').count()
             q_data = truck_quarantine_contacts.objects.select_related('patient_contacts'). \
-                filter(patient_contacts__source='Truck Registration', border_point__border_name=user_access_level). \
-                order_by('-date_of_contact')
+                filter(patient_contacts__source='Truck Registration', border_point__border_name=user_access_level)
 
         else:
             print("inside non border users")
