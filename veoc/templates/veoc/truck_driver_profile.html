@@ -542,7 +542,7 @@
                                         </tr>
                                         <tr class="item">
                                             <td>Date Test Confirmation</td>
-                                            <td><i>{{ lab.date_tested|date:'d-m-Y' }}</i></td>
+                                            <td><i>{{ lab.date_tested }}</i></td>
                                         </tr>
                                         <tr class="item">
                                             <td>Health Status</td>
@@ -555,7 +555,11 @@
                                         <tr class="item">
                                             <td>Sample Type</td>
                                             {% for res in lab_res %}
-                                                <td><i>{{ res.specimen_type.name }}</i></td>
+                                                {% if res.specimen_type.name %}
+                                                    <td><i>{{ res.specimen_type.name }}</i></td>
+                                                {% else %}
+                                                    <td><i>Nasopharygneal & Oropharygneal swabs</i></td>
+                                                {% endif %}
                                             {% endfor %}
                                         <tr class="item">
                                         <td>Results Received by</td>
@@ -591,6 +595,7 @@
                         <hr>
                         <div class="invoice-box" id="dvAttestation" style="background-color:white">
                             {% for lab in lab_results %}
+                                <!--Check if date of testing is within last 14 days to showcase validity-->
                                 {% if forloop.last and lab.result == "Negative" %}
                                     <table id="dvTable" style="background-color:white">
                                         <tr class="heading">
@@ -700,7 +705,7 @@
                                         </tr>
                                         <tr class="information">
                                             {% for pat in patient_details %}
-                                                <td>Border Officer Name:.....<i><b>{{ pat.border_point.team_lead_names }}</b></i>....</td>
+                                                <td>Border Officer Name: <i><b>{{ pat.border_point.team_lead_names }}</b></i></td>
                                             {% endfor %}
                                             <td><p id="qr-td" style="float: right;"></p></td>
                                         </tr>
@@ -744,27 +749,19 @@
   <script>
     //Generate PDF
     function saveDiv() {
-      var options = {
-
-      //  'width': 170,
-
-  };
-  var pdf = new jsPDF('p', 'pt', 'a4');
-  pdf.addHTML($("#dvAttestation"), 15, 15, options, function() {
-    pdf.save('Attestation.pdf');
-  });
+      var options = {};
+      var pdf = new jsPDF('p', 'pt', 'a4');
+      pdf.addHTML($("#dvAttestation"), 15, 15, options, function() {
+        pdf.save('Attestation.pdf');
+      });
     };
 
     function saveDivCertificate() {
-      var options = {
-
-      //  'width': 170,
-
-  };
-  var pdf = new jsPDF('p', 'pt', 'a4');
-  pdf.addHTML($("#dvContainer1"), 15, 15, options, function() {
-    pdf.save('LabCertificate.pdf');
-  });
+        var options = {};
+        var pdf = new jsPDF('p', 'pt', 'a4');
+            pdf.addHTML($("#dvContainer1"), 15, 15, options, function() {
+                pdf.save('LabCertificate.pdf');
+            });
     };
 
     $(document).ready(function() {
@@ -908,33 +905,34 @@
     });
 
   function PrintElem() {
-    var prtContent = document.getElementById("dvAttestation");
-    var mywindow = window.open('', '', 'left=0,top=0,width=800,height=900,toolbar=0,scrollbars=0,status=0');
-    mywindow.document.write(prtContent.innerHTML);
+        var prtContent = document.getElementById("dvAttestation");
+        var mywindow = window.open('', '', 'left=0,top=0,width=800,height=900,toolbar=0,scrollbars=0,status=0');
+        mywindow.document.write(prtContent.innerHTML);
 
-    mywindow.document.close(); // necessary for IE >= 10
-    mywindow.setTimeout(function(){
-      mywindow.focus();
-      mywindow.print();
-      mywindow.close();
-    }, 1000);
+        mywindow.document.close(); // necessary for IE >= 10
+        mywindow.setTimeout(function(){
+          mywindow.focus();
+          mywindow.print();
+          mywindow.close();
+        }, 1000);
 
-    return true;
-}
+        return true;
+    }
+
   function PrintElemResult() {
-    var prtContent = document.getElementById("dvContainer1");
-    var mywindow = window.open('', '', 'left=0,top=0,width=800,height=900,toolbar=0,scrollbars=0,status=0');
-    mywindow.document.write(prtContent.innerHTML);
+        var prtContent = document.getElementById("dvContainer1");
+        var mywindow = window.open('', '', 'left=0,top=0,width=800,height=900,toolbar=0,scrollbars=0,status=0');
+        mywindow.document.write(prtContent.innerHTML);
 
-    mywindow.document.close(); // necessary for IE >= 10
-    mywindow.setTimeout(function(){
-      mywindow.focus();
-      mywindow.print();
-      mywindow.close();
-    }, 1000);
+        mywindow.document.close(); // necessary for IE >= 10
+        mywindow.setTimeout(function(){
+          mywindow.focus();
+          mywindow.print();
+          mywindow.close();
+        }, 1000);
 
-    return true;
-  }
+        return true;
+      }
 
   function activate_countries(){
       var _county = document.getElementById('travel_history').value;

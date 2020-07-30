@@ -760,7 +760,7 @@ class covid_results(models.Model):
     name = models.CharField(max_length=200)
     phone_number = models.CharField(validators=[person_phone_regex], max_length=255, blank=True)
     lab = models.CharField(max_length=200, blank=True)
-    date_tested = models.DateTimeField(default=datetime.now())
+    date_tested = models.DateField(default=datetime.now())
     result = models.CharField(max_length=200)
     created_at = models.DateTimeField(default=datetime.now())
     updated_at = models.DateTimeField(default=datetime.now())
