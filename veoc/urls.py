@@ -24,6 +24,9 @@ router.register('events', views.EventView)
 urlpatterns = [
     url('api/', include(router.urls)),
     url(r'^airport_register/$', views.airport_register, name='airport_register'),
+    #url(r'^airport_complete/$', views.airport_complete, name='airport_complete'),
+    url(r'^edit_airport_complete/$', views.edit_airport_complete, name='edit_airport_complete'),
+    url(r'^airport_list_incomplete/$', views.airport_list_incomplete, name='airport_list_incomplete'),
     url(r'^export_csv/$', views.export_csv, name='export_csv'),
     url(r'^truck_export_csv/$', views.truck_export_csv, name='truck_export_csv'),
     url(r'^raw_quarantine_contacts_csv/$', views.raw_quarantine_contacts_csv, name='raw_quarantine_contacts_csv'),

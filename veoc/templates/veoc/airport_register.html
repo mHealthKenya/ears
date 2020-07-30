@@ -43,7 +43,7 @@
                        </div>
                        <div class="form-group col-md-6">
                          <label for="dob">Date of Birth : *</label>
-                         <input class="form-control" type="date" value="{{ day }}" id="dob" max='2000-13-13' name="dob">
+                         <input class="form-control" type="date" value="2002-12-31" id="dob" max='2002-12-31' min="1920-01-01" name="dob">
                        </div>
                     </div>
                     <div class="form-row" id="country_details_div">
@@ -67,7 +67,7 @@
                        </div>
                        <div class="form-group col-md-4">
                          <label for="date_of_arrival">Date of Arrival in Kenya: *</label>
-                         <input class="form-control" type="date" value="{{ day }}" id="date_of_arrival" max='2000-13-13' name="date_of_arrival">
+                         <input class="form-control" type="date" value="{{ day }}" id="date_of_arrival" max='{{ day }}' min="2020-01-01" name="date_of_arrival">
                        </div>
                      </div>
                      <div class="form-row" id="county_div" style="display: none;">

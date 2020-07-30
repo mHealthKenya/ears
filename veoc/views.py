@@ -137,7 +137,7 @@ def airport_register(request):
             # saving values to quarantine_contacts database first
             contact_save = quarantine_contacts.objects.create(first_name=first_name, last_name=last_name, middle_name=middle_name, county=countyObject,
                             subcounty=subcountyObject, ward=wardObject, sex=sex, dob=dob, passport_number=passport_number, phone_number=user_phone,
-                            date_of_contact=date_of_arrival, communication_language=languageObject, nationality=nationality, drugs="None", nok=nok,
+                            date_of_contact=date_of_arrival, communication_language=languageObject, nationality=nationality, drugs="None", nok=nok,email_address=email_address,
                             nok_phone_num=nok_phone_number, cormobidity="None", origin_country=origin_country, quarantine_site=quarantineObject, source=source,
                             contact_uuid=contact_identifier, updated_at=current_date, created_by=userObject, updated_by=userObject, created_at=current_date)
 
@@ -223,6 +223,81 @@ def airport_register(request):
         data = {'country':cntry,'county':county, 'day':day}
 
         return render(request, 'veoc/airport_register.html', data)
+
+@login_required
+def edit_airport_complete(request):
+    if request.method == 'POST':
+        first_name = request.POST.get('first_name','')
+        middle_name = request.POST.get('middle_name','')
+        last_name = request.POST.get('last_name','')
+
+
+        airport_id = request.POST.get('airport_id','')
+        measured_temperature = request.POST.get('measured_temperature','')
+        arrival_airport_code = request.POST.get('arrival_airport_code','')
+        released = request.POST.get('released','')
+        risk_assessment_referal = request.POST.get('risk_assessment_referal','')
+        designated_hospital_referal = request.POST.get('designated_hospital_referal','')
+
+        # get current user
+        current_user = request.user
+        # print(current_user)
+        userObject = User.objects.get(pk=current_user.id)
+        contact_save = ''
+        current_date = datetime.now()
+        source = "Web Airport Registration"
+
+        contact_identifier = uuid.uuid4().hex
+        # saving values to quarantine_contacts database firstobjects.filter(pk=myid).update
+        airport_user_save = airline_quarantine.objects.filter(patient_contacts_id=airport_id).update(measured_temperature=measured_temperature, arrival_airport_code=arrival_airport_code,
+                                  released=released, risk_assessment_referal=risk_assessment_referal, designated_hospital_refferal=designated_hospital_referal,
+                                 updated_at=current_date, updated_by=userObject)
+        #airport_user_save.save()
+        print(airport_id)
+        print(airline_quarantine.objects.get(pk=2))
+
+
+        cntry = country.objects.all()
+        day = time.strftime("%Y-%m-%d")
+        data = { 'country': cntry, 'start_day': day,
+                'end_day': day}
+
+        return render(request, 'veoc/airport_list_incomplete.html', data)
+
+    else:
+        cntry = country.objects.all()
+        day = time.strftime("%Y-%m-%d")
+        data = { 'country': cntry, 'start_day': day,
+                'end_day': day}
+
+        return render(request, 'veoc/airport_list_incomplete.html', data)
+
+
+@login_required
+def airport_list_incomplete(request):
+    if request.method == "POST":
+        date_from = request.POST.get('date_from', '')
+        date_to = request.POST.get('date_to', '')
+        day = time.strftime("%Y-%m-%d")
+
+        all_data = quarantine_contacts.objects.all().filter(source='Web Airport Registration').filter(
+            date_of_contact__gte=date_from, date_of_contact__lte=date_to).order_by('-date_of_contact')
+        q_data_count = quarantine_contacts.objects.all().filter(source='Web Airport Registration').filter(
+            date_of_contact__gte=date_from, date_of_contact__lte=date_to).count()
+
+        data = {'all_data': all_data, 'all_data_count': q_data_count,'day': day}
+
+    else:
+        all_data = quarantine_contacts.objects.all().filter(source='Web Airport Registration').filter(
+            date_of_contact__lte=date.today() - timedelta(days=14)).order_by('-date_of_contact')
+        q_data_count = quarantine_contacts.objects.all().filter(source='Web Airport Registration').filter(
+            date_of_contact__lte=date.today() - timedelta(days=14)).count()
+        day = time.strftime("%Y-%m-%d")
+
+        data = {'all_data': all_data, 'all_data_count': q_data_count, 'day': day}
+
+    return render(request, 'veoc/airport_list_incomplete.html', data)
+
 
 # export raw data as csv_file
 def export_csv(request):
