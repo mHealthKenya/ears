@@ -50,6 +50,8 @@
                             <th>Gender</th>
                             <th>Contact</th>
                             <th>Origin Country</th>
+                            <th>County</th>
+                            <th>Sub County</th>
                             <th>Enrollment Date</th>
                             <th>Reporting Date</th>
                             <th>Follow up Day</th>
@@ -80,6 +82,8 @@
                             <td>{{ follow.patient_contacts.sex }}</td>
                             <td>{{ follow.patient_contacts.phone_number }}</td>
                             <td>{{ follow.patient_contacts.origin_country }}</td>
+                            <td>{{ follow.patient_contacts.county.name }}</td>
+                            <td>{{ follow.patient_contacts.subcounty.name }}</td>
                             <td>{{ follow.patient_contacts.date_of_contact|date:'d-m-Y' }}</td>
                             <td>{{ follow.created_at|date:'d-m-Y' }}</td>
                             <td>{{ follow.follow_up_day }}</td>

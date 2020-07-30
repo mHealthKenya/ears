@@ -51,6 +51,8 @@
                             <th>Passport No</th>
                             <th>Nationality</th>
                             <th>Origin Country</th>
+                              <th>County</th>
+                              <th>Sub County</th>
                             <th>HCW Responsible</th>
                             <th>Enrollment date</th>
                             <th>Registered by</th>
@@ -76,6 +78,8 @@
                             <td>{{ follow.passport_number }}</td>
                             <td>{{ follow.nationality }}</td>
                             <td>{{ follow.origin_country }}</td>
+                          <td>{{ follow.county }}</td>
+                          <td>{{ follow.subcounty }}</td>
                             <td>{{ follow.health_care_worker.username }}</td>
                             <td>{{ follow.date_created|date:'d-m-Y' }}</td>
                             <td>{{ follow.created_by }}</td>

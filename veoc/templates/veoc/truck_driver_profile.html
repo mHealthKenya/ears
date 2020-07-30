@@ -46,7 +46,7 @@
                     <h3>Names: {{ patient_detail.first_name }} {{ patient_detail.last_name }}</h3>
                 {% endfor %}
             </div>
-            </hr><br>
+            <hr><br>
             {% for patient_detail in patient_contact_object %}
                 <ul class="list-group">
                     <li class="list-group-item text-right"><span class="pull-left"><strong>Nationality</strong></span> {{ patient_detail.nationality }}</li>
@@ -448,7 +448,13 @@
                                         <td>{{ lab.date_specimen_collected|date:'d-m-Y' }}</td>
                                         <td>{{ lab.specimen_type }}</td>
                                         <td>{{ lab.lab.name }}</td>
-                                        <td>{{ lab.lab_results }}</td>
+                                        {% if lab_results %}
+                                            {% for res in lab_results %}
+                                                <td>{{ res.result }}</td>
+                                            {% endfor %}
+                                        {% else %}
+                                            <td>Unknown</td>
+                                        {% endif %}
                                         <td>{{ lab.date_lab_confirmation|date:'d-m-Y' }}</td>
                                         <td>{{ lab.sample_identifier }}</td>
                                     </tr>
@@ -480,8 +486,8 @@
                             </form>
                         </div>
                         <hr>
-                        <div class="invoice-box" id="dvContainer">
-                            {% for lab in lab_res %}
+                        <div class="invoice-box" id="dvContainer1" style="background-color:white">
+                            {% for lab in lab_results %}
                                 {% if forloop.last %}
                                     <table cellpadding="0" cellspacing="0">
                                         <tr class="top">
@@ -530,11 +536,13 @@
                                         </tr>
                                         <tr class="item">
                                             <td>Date Sample Collected</td>
-                                            <td><i>{{ lab.date_specimen_collected|date:'d-m-Y' }}</td>
+                                            {% for res in lab_res %}
+                                                <td><i>{{ res.date_specimen_collected|date:'d-m-Y' }}</td>
+                                            {% endfor %}
                                         </tr>
                                         <tr class="item">
                                             <td>Date Test Confirmation</td>
-                                            <td><i>{{ lab.date_lab_confirmation|date:'d-m-Y' }}</i></td>
+                                            <td><i>{{ lab.date_tested }}</i></td>
                                         </tr>
                                         <tr class="item">
                                             <td>Health Status</td>
@@ -546,7 +554,13 @@
                                         </tr>
                                         <tr class="item">
                                             <td>Sample Type</td>
-                                            <td><i>{{ lab.specimen_type.name }}</i></td>
+                                            {% for res in lab_res %}
+                                                {% if res.specimen_type.name %}
+                                                    <td><i>{{ res.specimen_type.name }}</i></td>
+                                                {% else %}
+                                                    <td><i>Nasopharygneal & Oropharygneal swabs</i></td>
+                                                {% endif %}
+                                            {% endfor %}
                                         <tr class="item">
                                         <td>Results Received by</td>
                                         {% for pat in patient_details %}
@@ -554,12 +568,12 @@
                                         {% endfor %}
                                     </tr>
                                         <tr class="item last">
-                                            <td>Date dispatched</td>
-                                            <td><i>{{ lab.date_lab_confirmation|date:'d-m-Y' }}</i></td>
+                                            <td>Date Received</td>
+                                            <td><i>{{ lab.created_at|date:'d-m-Y' }}</i></td>
                                         </tr>
                                         <tr class="total">
                                             <td>Lab Results</td>
-                                            <td><i>{{ lab.lab_results }}</i></td>
+                                            <td><i>{{ lab.result }}</i></td>
                                         </tr>
                                     </table>
                                 {% endif %}
@@ -567,7 +581,8 @@
                         </div>
                         <div>
                             <hr>
-                            <button class="btn btn-lg btn-success pull-right" type="submit" id="btnPrint"><i class="glyphicon glyphicon-print"></i> Print Result</button>
+                            <button class="btn btn-lg btn-success pull-left" type="button" onclick="saveDivCertificate()"><i class="glyphicon glyphicon-save"></i> Save PDF</button>
+                            <button class="btn btn-lg btn-success pull-right" type="submit" id="btnPrint" onclick="javascript:PrintElemResult();"><i class="glyphicon glyphicon-print"></i> Print Result</button>
                         </div>
                     </div>
                 </div>
@@ -579,8 +594,9 @@
                         </div>
                         <hr>
                         <div class="invoice-box" id="dvAttestation" style="background-color:white">
-                            {% for lab in lab_res %}
-                                {% if forloop.last %}
+                            {% for lab in lab_results %}
+                                <!--Check if date of testing is within last 14 days to showcase validity-->
+                                {% if forloop.last and lab.result == "Negative" %}
                                     <table id="dvTable" style="background-color:white">
                                         <tr class="heading">
                                             <div colspan="2">
@@ -613,9 +629,11 @@
                                                 <div>
                                                     <div>
                                                         <p class="title" style="color:#1034A6; text-align: center">
-                                                            <img src="/static/images/emblem.png" style="width:40%; max-width:100px;">
-                                                            <br>REPUBLIC OF KENYA <br>
-                                                        <h3 style="text-align: center">MINISTRY OF HEALTH</h3>
+
+                                                          <img src="/static/images/emblem.png" style="width:40%; max-width:100px;">
+                                                          <br>REPUBLIC OF KENYA <br>
+                                                      <h3 style="text-align: center">MINISTRY OF HEALTH</h3>
+                                                        </p>
 
                                                     </div>
                                                 </div>
@@ -641,7 +659,7 @@
                                                         exact place of work){% for l in patient_details %}
                                                                     ____<i><b>{{ l.company_name }}</b></i>________{% endfor %} has been
                                                         tested and found negative for COVID-19 following laboratory tests conducted
-                                                        on ___<i><b>{{ lab.date_lab_confirmation|date:'d-m-Y' }}</b></i>____ at the ____<i><b>{{ lab.lab.name }}</b></i>___
+                                                        on ___<i><b>{{ lab.date_tested|date:'d-m-Y' }}</b></i>____ at the ____<i><b>{{ lab.lab }}</b></i>___
                                                         (indicate laboratory facility)
                                                         This attestation is issued in accordance with Public Health Act Cap 242 Laws of Kenya
                                                         and the applicable Rules and Regulations for Prevention and Suppression of Infectious
@@ -687,7 +705,7 @@
                                         </tr>
                                         <tr class="information">
                                             {% for pat in patient_details %}
-                                                <td>Border Officer Name:.....<i><b>{{ pat.border_point.team_lead_names }}</b></i>....</td>
+                                                <td>Border Officer Name: <i><b>{{ pat.border_point.team_lead_names }}</b></i></td>
                                             {% endfor %}
                                             <td><p id="qr-td" style="float: right;"></p></td>
                                         </tr>
@@ -704,7 +722,7 @@
                                 <div id="elementH"></div>
                             <div>
                             <hr>
-                            <button class="btn btn-lg btn-success pull-right" type="button" onclick="saveDiv()"><i class="glyphicon glyphicon-save"></i> Save PDF</button>
+                            <button class="btn btn-lg btn-success pull-left" type="button" onclick="saveDiv()"><i class="glyphicon glyphicon-save"></i> Save PDF</button>
 
                                 <button class="btn btn-lg btn-success pull-right" onclick="javascript:PrintElem();" type="submit" id="btnAttPrint"><i class="glyphicon glyphicon-print"></i> Print Attestation</button>
                             </div>
@@ -731,15 +749,19 @@
   <script>
     //Generate PDF
     function saveDiv() {
-      var options = {
+      var options = {};
+      var pdf = new jsPDF('p', 'pt', 'a4');
+      pdf.addHTML($("#dvAttestation"), 15, 15, options, function() {
+        pdf.save('Attestation.pdf');
+      });
+    };
 
-      //  'width': 170,
-
-  };
-  var pdf = new jsPDF('p', 'pt', 'a4');
-  pdf.addHTML($("#dvAttestation"), 15, 15, options, function() {
-    pdf.save('pageContent.pdf');
-  });
+    function saveDivCertificate() {
+        var options = {};
+        var pdf = new jsPDF('p', 'pt', 'a4');
+            pdf.addHTML($("#dvContainer1"), 15, 15, options, function() {
+                pdf.save('LabCertificate.pdf');
+            });
     };
 
     $(document).ready(function() {
@@ -883,19 +905,34 @@
     });
 
   function PrintElem() {
-    var prtContent = document.getElementById("dvAttestation");
-    var mywindow = window.open('', '', 'left=0,top=0,width=800,height=900,toolbar=0,scrollbars=0,status=0');
-    mywindow.document.write(prtContent.innerHTML);
+        var prtContent = document.getElementById("dvAttestation");
+        var mywindow = window.open('', '', 'left=0,top=0,width=800,height=900,toolbar=0,scrollbars=0,status=0');
+        mywindow.document.write(prtContent.innerHTML);
 
-    mywindow.document.close(); // necessary for IE >= 10
-    mywindow.setTimeout(function(){
-      mywindow.focus();
-      mywindow.print();
-      mywindow.close();
-    }, 1000);
+        mywindow.document.close(); // necessary for IE >= 10
+        mywindow.setTimeout(function(){
+          mywindow.focus();
+          mywindow.print();
+          mywindow.close();
+        }, 1000);
 
-    return true;
-}
+        return true;
+    }
+
+  function PrintElemResult() {
+        var prtContent = document.getElementById("dvContainer1");
+        var mywindow = window.open('', '', 'left=0,top=0,width=800,height=900,toolbar=0,scrollbars=0,status=0');
+        mywindow.document.write(prtContent.innerHTML);
+
+        mywindow.document.close(); // necessary for IE >= 10
+        mywindow.setTimeout(function(){
+          mywindow.focus();
+          mywindow.print();
+          mywindow.close();
+        }, 1000);
+
+        return true;
+      }
 
   function activate_countries(){
       var _county = document.getElementById('travel_history').value;

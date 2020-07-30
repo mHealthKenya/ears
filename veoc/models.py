@@ -760,7 +760,7 @@ class covid_results(models.Model):
     name = models.CharField(max_length=200)
     phone_number = models.CharField(validators=[person_phone_regex], max_length=255, blank=True)
     lab = models.CharField(max_length=200, blank=True)
-    date_tested = models.DateTimeField(default=datetime.now())
+    date_tested = models.DateField(default=datetime.now())
     result = models.CharField(max_length=200)
     created_at = models.DateTimeField(default=datetime.now())
     updated_at = models.DateTimeField(default=datetime.now())
@@ -912,6 +912,25 @@ class v_lab_results(models.Model):
     class Meta:
         managed = False
         db_table = 'v_lab_results'
+
+class quarantine_list_view(models.Model):
+    id = models.BigIntegerField(primary_key=True)
+    _id = models.CharField(max_length=200)
+    last_name = models.CharField(max_length=200)
+    first_name = models.CharField(max_length=200)
+    dob = models.CharField(max_length=200)
+    gender = models.CharField(max_length=200)
+    phone_number = models.CharField(max_length=200)
+    passport_number = models.CharField(max_length=200)
+    nationality = models.CharField(max_length=200)
+    origin_country = models.CharField(max_length=200)
+    border_name = models.CharField(max_length=200)
+    date_of_contact = models.CharField(max_length=200)
+    created_by = models.CharField(max_length=200)
+
+    class Meta:
+        managed = False
+        db_table = 'quarantine_list_view'
 
 class watcher_team_leads(models.Model):
     team_lead=models.ForeignKey(contact, on_delete=models.CASCADE, blank=False)
