@@ -615,7 +615,7 @@ def dashboard(request):
     marquee_call_log = []  # an array that collects all confirmed diseases and maps them to the marquee
     marquee_disease = []  # an array that collects all confirmed diseases and maps them to the marquee
     marquee_events = []  # an array that collects all confirmed diseases and maps them to the marquee
-
+    print("Hello Moto")
     # checks if dictionary has values for the past 7 days
     if len(_dcall_logs) == 0:
         marquee_call_log.append("None reported")
@@ -715,7 +715,7 @@ def dashboard(request):
 
     # picking the highest disease numbers for dashboard diseases
     events_reported_dash_vals = dict(Counter(events_thirty_days_stat).most_common(3))
-
+    print("test est")
     # populating the total quarantine respondents
     qua_contacts = quarantine_contacts.objects.all()
     qua_contacts_comp = quarantine_contacts.objects.filter(created_at__gte=date.today() - timedelta(days=14)).order_by(
@@ -739,19 +739,10 @@ def dashboard(request):
     midnight_time = midnight + "+03"
     # print(midnight)
     # print(midnight_time)
+    print("smokie")
+    total_follow_up_stat= quarantine_follow_up.objects.values('patient_contacts').distinct().count()
 
-    for qua_contact in qua_contacts:
-        followup = quarantine_follow_up.objects.all().filter(patient_contacts=qua_contact.id).count()
-        if followup > 0:
-            total_follow_up_stat += 1
-
-    # populating the todays quarantine respondents
-    for today_qua_contact in qua_contacts:
-        # today_followup = quarantine_follow_up.objects.all().filter(patient_contacts = today_qua_contact.id).filter(created_at__gte = midnight).count()
-        today_followup = quarantine_follow_up.objects.all().filter(patient_contacts=today_qua_contact.id).filter(
-            Q(created_at__gte=midnight) | Q(created_at__gte=midnight_time)).count()
-        if today_followup > 0:
-            today_follow_up_stat += 1
+    today_follow_up_stat = quarantine_follow_up.objects.filter(Q(created_at__gte=midnight) | Q(created_at__gte=midnight_time)).count()
 
     # Getting gender totals, ongoing, completed
     for gender in qua_contacts:
@@ -784,7 +775,7 @@ def dashboard(request):
     user_group = request.user.groups.values_list('name', flat=True)
     print(user_group)
     for grp in user_group:
-        user_access_level = grp
+       user_access_level = grp
     print(user_access_level)
 
     # Populating the bargraph
