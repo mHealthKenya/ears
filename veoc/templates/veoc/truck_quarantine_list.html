@@ -61,50 +61,29 @@
                             <span class="label label-info pull-right" id="totalspan">{{ quarantine_data_count }} Reported cases </span>
                         </div>
                         <div class="padding-md clearfix">
-                            <table class="table table-hover" id="quarantine_report">
+                            <table class="table table-hover" id="quarantine_report" data-server-side="true" data-ajax="/trucker_list/?format=datatables">
                                 <thead class="thead-dark">
                                 <tr>
-                                    <th>Last Name</th>
-                                    <th>First Name</th>
-                                    <th>Age</th>
-                                    <th>Gender</th>
-                                    <th>Mobile</th>
-                                    <th>Passport No</th>
-                                    <th>Nationality</th>
-                                    <th>Origin Country</th>
-                                    <th>Border Point</th>
-                                    <th>Enrollment date</th>
-                                    <th>Registered by</th>
+                                    <th data-data="patient_contacts.last_name">Last Name</th>
+                                    <th data-data="patient_contacts.first_name">First Name</th>
+                                    <th data-data="patient_contacts.dob">Age</th>
+                                    <th data-data="patient_contacts.sex">Gender</th>
+                                    <th data-data="patient_contacts.phone_number">Mobile</th>
+                                    <th data-data="patient_contacts.passport_number">Passport No</th>
+                                    <th data-data="patient_contacts.nationality">Nationality</th>
+                                    <th data-data="patient_contacts.origin_country">Origin Country</th>
+                                    <th data-data="border_point.border_name">Border Point</th>
+                                    <th data-data="patient_contacts.date_of_contact">Enrollment date</th>
+                                    <th data-data="patient_contacts.created_by">Registered by</th>
                                     {#                            <th>Company Details</th>#}
                                     {#                            <th>Acommodation</th>#}
-                                    <th>Map View</th>
-                                    <th>View Profile</th>
+                                    <th data-data="patient_contacts.truck_info">">Map View</th>
+                                    <th data-data="patient_contacts.truck_prof">View Profile</th>
                                     <!-- <th>Edit</th> -->
                                 </tr>
                                 </thead>
                                 <tbody>
-                                {% for q_data in my_list_data %}
-                                    {% if q_data.border_point.border_name != "None" %}
-                                        <tr>
-                                            {#                                  Check user permission to view names#}
-                                            {#                                    <td>*********</td>#}
-                                            {#                                    <td>*********</td>#}
-                                            <td>{{ q_data.patient_contacts.last_name }}</td>
-                                            <td>{{ q_data.patient_contacts.first_name }}</td>
-                                            {% if q_data.patient_contacts.age == 0 %}
-                                                <td>Unknown</td>
-                                            {% else %}
-                                                <td>{{ q_data.patient_contacts.age }}</td>
-                                            {% endif %}
-                                            {#                            <td>{{ q_data.age }}</td>#}
-                                            <td>{{ q_data.patient_contacts.sex }}</td>
-                                            <td>{{ q_data.patient_contacts.phone_number }}</td>
-                                            <td>{{ q_data.patient_contacts.passport_number }}</td>
-                                            <td>{{ q_data.patient_contacts.nationality }}</td>
-                                            <td>{{ q_data.patient_contacts.origin_country }}</td>
-                                            <td>{{ q_data.border_point.border_name }}</td>
-                                            <td>{{ q_data.patient_contacts.date_of_contact|date:'d-m-Y' }}</td>
-                                            <td>{{ q_data.patient_contacts.created_by }}</td>
+
                                             {#                            <td>#}
                                             {#                              <button type="button" id="company_view" class="btn btn-info btn-xs company_view"#}
                                             {#                                data-toggle="modal" data-target="#view_company_modal"#}
@@ -141,24 +120,24 @@
                                             {#                                </i>#}
                                             {#                            </button>#}
                                             {#                            </td>#}
-                                            <td>
-                                                <button type="button" id="map_view"
-                                                        class="btn btn-info btn-sm pull-left map_view"
-                                                        data-toggle="modal" data-target="#mapViewModal"
-                                                        data-id="{{ q_data.patient_contacts.pk }}"
-                                                        data-names="{{ q_data.patient_contacts.first_name }} {{ q_data.patient_contacts.last_name }}"
-                                                        data-last_contact="{{ q_data.patient_contacts.date_of_contact|date:'d-m-Y' }}"
-                                                        data-phone_number="{{ q_data.patient_contacts.phone_number }}"
-                                                        title="Open Map View">
-                                                    <i class="fa fa-map-marker">
-                                                    </i>
-                                                </button>
-                                            </td>
-                                            <td>
-                                                <a href="/truck_driver_profile/{{ q_data.patient_contacts.pk }}"
-                                                   class="btn btn-info btn-sm pull-left" title="View Profile"><i
-                                                        class="fa fa-eye"></i></a>
-                                            </td>
+{#                                            <td>#}
+{#                                                <button type="button" id="map_view"#}
+{#                                                        class="btn btn-info btn-sm pull-left map_view"#}
+{#                                                        data-toggle="modal" data-target="#mapViewModal"#}
+{#                                                        data-id="{{ q_data.patient_contacts.pk }}"#}
+{#                                                        data-names="{{ q_data.patient_contacts.first_name }} {{ q_data.patient_contacts.last_name }}"#}
+{#                                                        data-last_contact="{{ q_data.patient_contacts.date_of_contact|date:'d-m-Y' }}"#}
+{#                                                        data-phone_number="{{ q_data.patient_contacts.phone_number }}"#}
+{#                                                        title="Open Map View">#}
+{#                                                    <i class="fa fa-map-marker">#}
+{#                                                    </i>#}
+{#                                                </button>#}
+{#                                            </td>#}
+{#                                            <td>#}
+{#                                                <a href="/truck_driver_profile/{{ q_data.patient_contacts.pk }}"#}
+{#                                                   class="btn btn-info btn-sm pull-left" title="View Profile"><i#}
+{#                                                        class="fa fa-eye"></i></a>#}
+{#                                            </td>#}
                                             {#                           <td><a href="/test_profile/{{q_data.pk}}"><i class="btn btn-info btn-sm pull-left" aria-hidden="true" role="button" title="View Profile"></i></a>#}
                                             <!-- <td>
                                      <button type="button" class="btn btn-primary btn-xs edit_button"
@@ -181,31 +160,8 @@
                                      </button>
                                    </td> -->
                                         </tr>
-                                    {% endif %}
-                                {% endfor %}
                                 </tbody>
                             </table>
-                            <div class="pagination">
-                                <span class="step-links">
-                                    {% if page_obj.has_previous %}
-                                        <a href="?page=1">&laquo; first</a>
-                                        <a href="?page={{ page_obj.previous_page_number }}">previous</a>
-                                    {% endif %}
-
-                                    <span class="current">
-                                        Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
-                                    </span>
-
-                                    {% if page_obj.has_next %}
-                                        <a href="?page={{ page_obj.next_page_number }}">next</a>
-                                        <a href="?page={{ page_obj.paginator.num_pages }}">last &raquo;</a>
-                                    {% endif %}
-{#                                    <br>pages#}
-{#                                    {% for i in page_range %}#}
-{#                                        <a href="{{ i }}">{{ i }}</a>#}
-{#                                    {% endfor %}#}
-                                </span>
-                            </div>
                         </div>
                     </div>
                 </div>
@@ -475,13 +431,28 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.0.0-alpha/js/bootstrap.min.js"></script> -->
     <script>
         $(document).ready(function () {
-            $('#quarantine_report').DataTable({
+            var a = $('#quarantine_report').DataTable({
+                "ajax": "/albums/?format=datatables",
                 "order": [],
                 dom: 'Bfrtip',
                 buttons: [
                     'copy', 'csv', 'excel', 'pdf', 'print'
                 ]
             });
+            $(document).ready(function(){
+            });
+
+                $('#quarantine_report tbody').on( 'click', 'tr',function () {
+                    console.log( a.row( this ).data().patient_contacts );
+                    console.log($("#map_view").attr('data-id'));
+                    var d = document.getElementById("map_view");
+                    d.setAttribute('data-id' , a.row( this ).data().patient_contacts.id);
+                    d.setAttribute('data-last_contact', a.row( this ).data().patient_contacts.date_of_contact);
+                    d.setAttribute('data-names', a.row( this ).data().patient_contacts.first_name+" " +a.row( this ).data().patient_contacts.last_name);
+                    d.setAttribute('data-phone_number', a.row( this ).data().patient_contacts.phone_number);
+                    var prof = document.getElementById("truckerprof");
+                    prof.setAttribute('href', "/truck_driver_profile/"+a.row( this ).data().patient_contacts.id);
+                } );
 
             // Setup - add a text input to each footer cell
             $('#quarantine_report thead td').each(function () {

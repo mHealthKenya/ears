@@ -22,6 +22,8 @@ from django.db import IntegrityError, transaction
 from django.db.models import *
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from django.http import FileResponse
+from rest_framework.generics import RetrieveAPIView
+
 from veoc.models import *
 from veoc.forms import *
 from django.views.decorators.csrf import *
@@ -5162,6 +5164,39 @@ def truck_quarantine_list(request):
                 'my_list_data': my_list_data, 'start_day': day, 'end_day': day, 'page_obj': page_obj}
 
     return render(request, 'veoc/truck_quarantine_list.html', data)
+
+
+class AlbumViewSet(viewsets.ModelViewSet):
+    model = truck_quarantine_contacts
+    serializer_class = TruckSerializer
+
+    def get_queryset(self):
+        user_access_level = User.objects.get(username=self.request.user.username).persons.access_level
+        user_level = ""
+        user_group = self.request.user.groups.values_list('id', flat=True)
+        for grp in user_group:
+            user_level = grp
+        if user_level == 1 or user_level == 2:
+            print("inside National")
+            return truck_quarantine_contacts.objects.select_related('patient_contacts'). \
+                filter(patient_contacts__source='Truck Registration').order_by('-patient_contacts__date_of_contact')
+        elif user_level == 7:
+            print("inside Border")
+            return truck_quarantine_contacts.objects.select_related('patient_contacts'). \
+                filter(patient_contacts__source='Truck Registration', border_point__border_name=user_access_level). \
+                order_by('-date_of_contact')
+        else:
+            print("inside non border users")
+            return truck_quarantine_contacts.objects.select_related('patient_contacts'). \
+                filter(patient_contacts__source='Kitu hakuna').order_by('-date_of_contact')
+
+    def get_options(self):
+        return "options", {
+            "patient_contacts": [{'label': obj.source, 'value': obj.id} for obj in quarantine_contacts.objects.all()]
+        }
+
+    class Meta:
+        datatables_extra_json = ('get_options',)
 
 
 @login_required

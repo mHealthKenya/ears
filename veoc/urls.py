@@ -20,9 +20,9 @@ router.register('incident_status', views.incident_status_view)
 # router.register('organizational_units', views.organizational_unit_view)
 router.register('diseases', views.DiseaseView)
 router.register('events', views.EventView)
+router.register(r'trucker_list', views.AlbumViewSet, 'foobar-detail')
 
 urlpatterns = [
-    url('api/', include(router.urls)),
     url(r'^airport_register/$', views.airport_register, name='airport_register'),
     url(r'^export_csv/$', views.export_csv, name='export_csv'),
     url(r'^truck_export_csv/$', views.truck_export_csv, name='truck_export_csv'),
@@ -222,6 +222,7 @@ urlpatterns = [
     url(r'^call_register_form/$', views.call_register_form, name='call_register_form'),
 ]
 
+urlpatterns += router.urls
 # urlpatterns += staticfiles_urlpatterns()
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 if settings.DEBUG:
