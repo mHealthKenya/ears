@@ -16,11 +16,11 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 from django.conf.urls import include, url
-# from veoc import views
+#from veoc import views
 
 urlpatterns = [
-    # url(r'^$', views.index, name='index'),
-    url(r'^admin/', admin.site.urls),
+   # url(r'^$', views.index, name='index'),
+    url(r'^admin', admin.site.urls),
     url(r'^', include('veoc.urls')),
     url(r'^', include('airport_app.urls')),
 ]

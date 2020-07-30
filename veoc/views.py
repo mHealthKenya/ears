@@ -23,6 +23,8 @@ from django.db import IntegrityError, transaction
 from django.db.models import *
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from django.http import FileResponse
+from rest_framework.generics import RetrieveAPIView
+
 from veoc.models import *
 from veoc.forms import *
 from django.views.decorators.csrf import *
@@ -690,7 +692,7 @@ def dashboard(request):
     marquee_call_log = []  # an array that collects all confirmed diseases and maps them to the marquee
     marquee_disease = []  # an array that collects all confirmed diseases and maps them to the marquee
     marquee_events = []  # an array that collects all confirmed diseases and maps them to the marquee
-
+    print("Hello Moto")
     # checks if dictionary has values for the past 7 days
     if len(_dcall_logs) == 0:
         marquee_call_log.append("None reported")
@@ -790,7 +792,7 @@ def dashboard(request):
 
     # picking the highest disease numbers for dashboard diseases
     events_reported_dash_vals = dict(Counter(events_thirty_days_stat).most_common(3))
-
+    print("test est")
     # populating the total quarantine respondents
     qua_contacts = quarantine_contacts.objects.all()
     qua_contacts_comp = quarantine_contacts.objects.filter(created_at__gte=date.today() - timedelta(days=14)).order_by(
@@ -814,19 +816,10 @@ def dashboard(request):
     midnight_time = midnight + "+03"
     # print(midnight)
     # print(midnight_time)
+    print("smokie")
+    total_follow_up_stat= quarantine_follow_up.objects.values('patient_contacts').distinct().count()
 
-    for qua_contact in qua_contacts:
-        followup = quarantine_follow_up.objects.all().filter(patient_contacts=qua_contact.id).count()
-        if followup > 0:
-            total_follow_up_stat += 1
-
-    # populating the todays quarantine respondents
-    for today_qua_contact in qua_contacts:
-        # today_followup = quarantine_follow_up.objects.all().filter(patient_contacts = today_qua_contact.id).filter(created_at__gte = midnight).count()
-        today_followup = quarantine_follow_up.objects.all().filter(patient_contacts=today_qua_contact.id).filter(
-            Q(created_at__gte=midnight) | Q(created_at__gte=midnight_time)).count()
-        if today_followup > 0:
-            today_follow_up_stat += 1
+    today_follow_up_stat = quarantine_follow_up.objects.filter(Q(created_at__gte=midnight) | Q(created_at__gte=midnight_time)).count()
 
     # Getting gender totals, ongoing, completed
     for gender in qua_contacts:
@@ -859,7 +852,7 @@ def dashboard(request):
     user_group = request.user.groups.values_list('name', flat=True)
     print(user_group)
     for grp in user_group:
-        user_access_level = grp
+       user_access_level = grp
     print(user_access_level)
 
     # Populating the bargraph
@@ -5305,6 +5298,39 @@ def truck_quarantine_list(request):
                 'my_list_data': my_list_data, 'start_day': day, 'end_day': day, 'page_obj': page_obj}
 
     return render(request, 'veoc/truck_quarantine_list.html', data)
+
+
+class AlbumViewSet(viewsets.ModelViewSet):
+    model = truck_quarantine_contacts
+    serializer_class = TruckSerializer
+
+    def get_queryset(self):
+        user_access_level = User.objects.get(username=self.request.user.username).persons.access_level
+        user_level = ""
+        user_group = self.request.user.groups.values_list('id', flat=True)
+        for grp in user_group:
+            user_level = grp
+        if user_level == 1 or user_level == 2:
+            print("inside National")
+            return truck_quarantine_contacts.objects.select_related('patient_contacts'). \
+                filter(patient_contacts__source='Truck Registration').order_by('-patient_contacts__date_of_contact')
+        elif user_level == 7:
+            print("inside Border")
+            return truck_quarantine_contacts.objects.select_related('patient_contacts'). \
+                filter(patient_contacts__source='Truck Registration', border_point__border_name=user_access_level). \
+                order_by('-date_of_contact')
+        else:
+            print("inside non border users")
+            return truck_quarantine_contacts.objects.select_related('patient_contacts'). \
+                filter(patient_contacts__source='Kitu hakuna').order_by('-date_of_contact')
+
+    def get_options(self):
+        return "options", {
+            "patient_contacts": [{'label': obj.source, 'value': obj.id} for obj in quarantine_contacts.objects.all()]
+        }
+
+    class Meta:
+        datatables_extra_json = ('get_options',)
 
 
 @login_required
