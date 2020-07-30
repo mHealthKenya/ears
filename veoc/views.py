@@ -15,6 +15,7 @@ from django.contrib.auth.decorators import login_required, user_passes_test, per
 import csv, io
 import requests
 from pytest import fail
+from django.views.generic import ListView
 from requests.packages.urllib3.exceptions import InsecureRequestWarning
 from django.conf import settings
 from django.core.serializers import serialize
@@ -5007,6 +5008,52 @@ def home_care_list(request):
 
 
 @login_required
+def t_q_list_json(request):
+
+    current_user = request.user
+    u = User.objects.get(username=current_user.username)
+    user_access_level = u.persons.access_level
+    print("Access Level---")
+    print(user_access_level)
+
+    user_level = ""
+    user_group = request.user.groups.values_list('id', flat=True)
+    # print(user_group)
+    for grp in user_group:
+        user_level = grp
+    # print(user_level)
+    global q_data
+
+    if user_level == 1 or user_level == 2:
+        print("inside National")
+        q_data_count = truck_quarantine_contacts.objects.select_related('patient_contacts'). \
+            filter(patient_contacts__source='Truck Registration').count()
+        q_data = truck_quarantine_contacts.objects.select_related('patient_contacts'). \
+            filter(patient_contacts__source='Truck Registration').order_by('-patient_contacts__date_of_contact')
+
+    elif user_level == 7:
+        print("inside Border")
+        # find ways of filtering data based on the border point-------
+        q_data_count = truck_quarantine_contacts.objects.select_related('patient_contacts'). \
+            filter(patient_contacts__source='Truck Registration').count()
+        q_data = truck_quarantine_contacts.objects.select_related('patient_contacts'). \
+            filter(patient_contacts__source='Truck Registration', border_point__border_name=user_access_level)
+
+    else:
+        print("inside non border users")
+        q_data_count = truck_quarantine_contacts.objects.select_related('patient_contacts').filter(
+            source='Kitu hakuna').count()
+        q_data = truck_quarantine_contacts.objects.select_related('patient_contacts'). \
+            filter(patient_contacts__source='Kitu hakuna').order_by('-date_of_contact')
+
+    serialized = serialize('json', q_data)
+    obj_list = json.loads(serialized)
+
+    print(obj_list)
+
+    return HttpResponse(json.dumps(obj_list), content_type="application/json")
+
+@login_required
 def truck_quarantine_list(request):
     global data
 
@@ -5034,48 +5081,79 @@ def truck_quarantine_list(request):
             # border_point = request.POST.get('border_point','')
             date_from = request.POST.get('date_from', '')
             date_to = request.POST.get('date_to', '')
+            id_num = request.POST.get('id_number', '')
 
-            print("inside National")
-            # add a border point filter to enable filtering specific border point--------
-            q_data_count = truck_quarantine_contacts.objects.select_related('patient_contacts'). \
-                filter(patient_contacts__date_of_contact__gte=date_from, patient_contacts__date_of_contact__lte=date_to). \
-                filter(patient_contacts__source='Truck Registration').count()
-            q_data = truck_quarantine_contacts.objects.select_related('patient_contacts') \
-                .filter(patient_contacts__date_of_contact__gte=date_from,
-                        patient_contacts__date_of_contact__lte=date_to,
-                        patient_contacts__source='Truck Registration'). \
-                order_by('-patient_contacts__date_of_contact')
+            if id_num:
+                q_data_count = truck_quarantine_contacts.objects.select_related('patient_contacts'). \
+                    filter(patient_contacts__passport_number=id_num). \
+                    filter(patient_contacts__source='Truck Registration').count()
+                q_data = truck_quarantine_contacts.objects.select_related('patient_contacts') \
+                    .filter(patient_contacts__passport_number=id_num,
+                            patient_contacts__source='Truck Registration'). \
+                    order_by('-patient_contacts__date_of_contact')
+            else:
+                print("inside National")
+                # add a border point filter to enable filtering specific border point--------
+                q_data_count = truck_quarantine_contacts.objects.select_related('patient_contacts'). \
+                    filter(patient_contacts__date_of_contact__gte=date_from, patient_contacts__date_of_contact__lte=date_to). \
+                    filter(patient_contacts__source='Truck Registration').count()
+                q_data = truck_quarantine_contacts.objects.select_related('patient_contacts') \
+                    .filter(patient_contacts__date_of_contact__gte=date_from,
+                            patient_contacts__date_of_contact__lte=date_to,
+                            patient_contacts__source='Truck Registration'). \
+                    order_by('-patient_contacts__date_of_contact')
 
         elif user_level == 7:
             # border_point = request.POST.get('border_point','')
             date_from = request.POST.get('date_from', '')
             date_to = request.POST.get('date_to', '')
+            id_num = request.POST.get('id_number', '')
 
-            print("inside Border")
-            # find ways of filtering data based on the border point-------
-            q_data_count = truck_quarantine_contacts.objects.select_related('patient_contacts'). \
-                filter(patient_contacts__date_of_contact__gte=date_from, patient_contacts__date_of_contact__lte=date_to). \
-                filter(patient_contacts__source='Truck Registration').count()
-            q_data = truck_quarantine_contacts.objects.select_related('patient_contacts'). \
-                filter(border_point__border_name=user_access_level,
-                       patient_contacts__source='Truck Registration',
-                       patient_contacts__date_of_contact__gte=date_from,
-                       patient_contacts__date_of_contact__lte=date_to)
+            if id_num:
+                q_data_count = truck_quarantine_contacts.objects.select_related('patient_contacts'). \
+                    filter(patient_contacts__passport_number=id_num). \
+                    filter(patient_contacts__source='Truck Registration').count()
+                q_data = truck_quarantine_contacts.objects.select_related('patient_contacts') \
+                    .filter(patient_contacts__passport_number=id_num,
+                            patient_contacts__source='Truck Registration'). \
+                    order_by('-patient_contacts__date_of_contact')
+            else:
+                print("inside Border")
+                # find ways of filtering data based on the border point-------
+                q_data_count = truck_quarantine_contacts.objects.select_related('patient_contacts'). \
+                    filter(patient_contacts__date_of_contact__gte=date_from, patient_contacts__date_of_contact__lte=date_to). \
+                    filter(patient_contacts__source='Truck Registration').count()
+                q_data = truck_quarantine_contacts.objects.select_related('patient_contacts'). \
+                    filter(border_point__border_name=user_access_level,
+                           patient_contacts__source='Truck Registration',
+                           patient_contacts__date_of_contact__gte=date_from,
+                           patient_contacts__date_of_contact__lte=date_to). \
+                    order_by('-patient_contacts__date_of_contact')
 
         else:
             # border_point = request.POST.get('border_point','')
             date_from = request.POST.get('date_from', '')
             date_to = request.POST.get('date_to', '')
+            id_num = request.POST.get('id_number', '')
 
-            print("inside non border users")
-            q_data_count = truck_quarantine_contacts.objects.select_related('patient_contacts'). \
-                filter(patient_contacts__date_of_contact__gte=date_from,
-                       patient_contacts__date_of_contact__lte=date_to). \
-                filter(patient_contacts__source='Kitu hakuna').count()
-            q_data = truck_quarantine_contacts.objects.select_related('patient_contacts'). \
-                filter(patient_contacts__source='Kitu hakuna').filter(patient_contacts__date_of_contact__gte=date_from,
-                                                                      date_of_contact__lte=date_to). \
-                order_by('-patient_contacts__date_of_contact')
+            if id_num:
+                q_data_count = truck_quarantine_contacts.objects.select_related('patient_contacts'). \
+                    filter(patient_contacts__passport_number=id_num). \
+                    filter(patient_contacts__source='Truck Registration').count()
+                q_data = truck_quarantine_contacts.objects.select_related('patient_contacts') \
+                    .filter(patient_contacts__passport_number=id_num,
+                            patient_contacts__source='Truck Registration'). \
+                    order_by('-patient_contacts__date_of_contact')
+            else:
+                print("inside non border users")
+                q_data_count = truck_quarantine_contacts.objects.select_related('patient_contacts'). \
+                    filter(patient_contacts__date_of_contact__gte=date_from,
+                           patient_contacts__date_of_contact__lte=date_to). \
+                    filter(patient_contacts__source='Kitu hakuna').count()
+                q_data = truck_quarantine_contacts.objects.select_related('patient_contacts'). \
+                    filter(patient_contacts__source='Kitu hakuna').filter(patient_contacts__date_of_contact__gte=date_from,
+                                                                          date_of_contact__lte=date_to). \
+                    order_by('-patient_contacts__date_of_contact')
 
         paginator = Paginator(q_data, 10)
         page_number = request.GET.get('page')

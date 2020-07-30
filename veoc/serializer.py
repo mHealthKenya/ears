@@ -65,3 +65,12 @@ class EventSerializer(serializers.ModelSerializer):
         model = event
         fields = ('id', 'event_type', 'data_source', 'incident_status', 'county', 'subcounty', 'reporting_region','date_reported',
         'cases', 'deaths', 'remarks','action_taken', 'significant_event', 'created_by', 'updated_by')
+
+
+class QuarantineContactsSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = quarantine_contacts
+        fields = (
+            'id', 'first_name', 'middle_name', 'last_name', 'sex', 'dob', 'passport_number', 'phone_number', 'nationality', 'origin_country', 'created_by',
+        )

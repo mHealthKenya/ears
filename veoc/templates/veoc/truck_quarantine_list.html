@@ -30,6 +30,16 @@
             </form>
             <!-- <button type="submit" class="btn btn-primary" align="right">Update</button> -->
         </div>
+        <div class="panel-body" align="left">
+            <form class="form-inline" method="post" action="{% url 'veoc:truck_quarantine_list' %}">{% csrf_token %}
+                <div class="form-group">
+                    <label for="id_number">Search Passport/ID :</label>
+                    <input class="form-control id_number" type="text" id="id_number" name="id_number" size="45" placeholder="ID Number" required/>
+                </div>
+                <button type="submit" class="btn btn-primary">Search</button>
+            </form>
+            <!-- <button type="submit" class="btn btn-primary" align="right">Update</button> -->
+        </div>
         {#              <div class="panel-body" align="left">#}
         {#                  <form class="form-inline" method="post" action="{% url 'veoc:truck_quarantine_list' %}">#}
         {#                    {% csrf_token %}#}
@@ -75,20 +85,14 @@
                                     <th>Border Point</th>
                                     <th>Enrollment date</th>
                                     <th>Registered by</th>
-                                    {#                            <th>Company Details</th>#}
-                                    {#                            <th>Acommodation</th>#}
                                     <th>Map View</th>
                                     <th>View Profile</th>
-                                    <!-- <th>Edit</th> -->
                                 </tr>
                                 </thead>
                                 <tbody>
                                 {% for q_data in my_list_data %}
                                     {% if q_data.border_point.border_name != "None" %}
                                         <tr>
-                                            {#                                  Check user permission to view names#}
-                                            {#                                    <td>*********</td>#}
-                                            {#                                    <td>*********</td>#}
                                             <td>{{ q_data.patient_contacts.last_name }}</td>
                                             <td>{{ q_data.patient_contacts.first_name }}</td>
                                             {% if q_data.patient_contacts.age == 0 %}
