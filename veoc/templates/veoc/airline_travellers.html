@@ -17,8 +17,11 @@
     <div class="row justify-content-center">
         <div class="col-md-12">
         <div class="card">
-        <header class="card-header">
-            <h4 class="card-title mt-2" align="center">Submit Details for COVID-19 Clearance</h4>
+        <header class="card-header" align="center">
+            <img src="/static/images/emblem.png" style="width:40%; max-width:100px;">
+            <h4>MINISTRY OF HEALTH<br>NOVEL CORONAVIRUS</h4>
+            <h4 class="card-title mt-2" align="center">Travelers Health Surveillance Form</h4>
+            <p>Providing the following information to a Port Health Officer is required under the Public Health Act CAP 242 of the laws of Kenya, and is being collected as part of public health response to the Corona Virus pandemic</p>
         </header>
         <article class="card-body">
         <form class="airline_travellers_form" method="POST"  action="{% url 'veoc:airline_registration' %}">
@@ -180,7 +183,7 @@
                     <input class="form-control" type="text" id="residence" name="residence" placeholder="Residence"/>
                 </div> <!-- form-group end.// -->
                 <div class="col form-group">
-                    <label for="estate">Subloaction/Estate : </label>
+                    <label for="estate">Sublocation/Estate : </label>
                     <input class="form-control" type="text" id="estate" name="estate" placeholder="Subloaction or Estate"/>
                 </div> <!-- form-group end.// -->
                 <div class="col form-group">
