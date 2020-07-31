@@ -31,6 +31,7 @@ from rest_framework import viewsets
 from veoc.serializer import *
 from veoc.tasks import pull_dhis_idsr_data
 from datetime import date, timedelta, datetime
+from django.utils import timezone
 from collections import Counter
 from django import template
 import time
@@ -118,8 +119,11 @@ def airport_register(request):
         for site in quar_site:
             site_name = site.id
 
+        # site_name = quarantine_sites.objects.values_list('id', flat=True).get(site_name="Home")
+        # print("site_name")
+        # print(site_name)
         contact_save = ''
-        current_date = datetime.now()
+        current_date = timezone.now()
         source = "Web Airport Registration"
         # Check if mobile number exists in the table
         details_exist = quarantine_contacts.objects.filter(phone_number=phone_number, first_name=first_name,last_name=last_name,
@@ -740,18 +744,9 @@ def dashboard(request):
     # print(midnight)
     # print(midnight_time)
 
-    for qua_contact in qua_contacts:
-        followup = quarantine_follow_up.objects.all().filter(patient_contacts=qua_contact.id).count()
-        if followup > 0:
-            total_follow_up_stat += 1
+    total_follow_up_stat = quarantine_follow_up.objects.values('patient_contacts').distinct().count()
 
-    # populating the todays quarantine respondents
-    for today_qua_contact in qua_contacts:
-        # today_followup = quarantine_follow_up.objects.all().filter(patient_contacts = today_qua_contact.id).filter(created_at__gte = midnight).count()
-        today_followup = quarantine_follow_up.objects.all().filter(patient_contacts=today_qua_contact.id).filter(
-            Q(created_at__gte=midnight) | Q(created_at__gte=midnight_time)).count()
-        if today_followup > 0:
-            today_follow_up_stat += 1
+    today_follow_up_stat = quarantine_follow_up.objects.filter(Q(created_at__gte=midnight) | Q(created_at__gte=midnight_time)).count()
 
     # Getting gender totals, ongoing, completed
     for gender in qua_contacts:
@@ -782,6 +777,7 @@ def dashboard(request):
 
     user_access_level = ""
     user_group = request.user.groups.values_list('name', flat=True)
+    print("hapa sasa")
     print(user_group)
     for grp in user_group:
         user_access_level = grp
@@ -2725,7 +2721,7 @@ def disease_register(request):
                 if rep_disease:
                     print('saving into dhis data tables')
                     # create current week/year number
-                    dt = datetime.now()
+                    dt = timezone.now()
                     wk_val = dt.isocalendar()[1]
                     yr_val = dt.replace(year=dt.year)
                     final_year = yr_val.year
@@ -2907,7 +2903,7 @@ def save_data(d, request):
     else:
         user_phone = user_phone + str(phone_number)
 
-    current_date = datetime.now()
+    current_date = timezone.now()
 
     # get current user
     current_user = request.user
@@ -3009,7 +3005,7 @@ def quarantine_register(request):
             # print("number not leading with 0")
 
         # get todays date
-        current_date = datetime.now()
+        current_date = timezone.now()
 
         # get current user
         current_user = request.user
@@ -3160,7 +3156,7 @@ def home_care_register(request):
             user_phone = user_phone + str(mobile_number)
             print("number not leading with 0")
 
-        current_date = datetime.now()
+        current_date = timezone.now()
         current_user = request.user
         print(current_user)
         userObject = User.objects.get(pk=current_user.id)
@@ -3512,7 +3508,7 @@ def truck_driver_register(request):
 
         # get todays date
         # current_date = date.today().strftime('%Y-%m-%d')
-        current_date = datetime.now()
+        current_date = timezone.now()
 
         # get current user
         current_user = request.user
@@ -3755,7 +3751,7 @@ def truck_driver_register_new(request):
 
         # get todays date
         # current_date = date.today().strftime('%Y-%m-%d')
-        current_date = datetime.now()
+        current_date = timezone.now()
 
         # get current user
         current_user = request.user
@@ -4175,7 +4171,7 @@ def event_register(request):
             # check if the reported case is confirmed to save in dhis2 data tables
             if status == 'Confirmed':
                 # create current week/year number
-                dt = datetime.now()
+                dt = timezone.now()
                 wk_val = dt.isocalendar()[1]
                 yr_val = dt.replace(year=dt.year)
                 final_year = yr_val.year
@@ -7146,8 +7142,8 @@ def weekly_report(request):
     y_ = 0
     yrs_ = []
     while y_ < 5:
-        dt = datetime.now()
-        yr_val = datetime.now().replace(year=dt.year - y_)
+        dt = timezone.now()
+        yr_val = timezone.now().replace(year=dt.year - y_)
         final_year = yr_val.year
         data = {'year': final_year}
         yrs_.append(data)
@@ -7175,8 +7171,8 @@ def weekly_report_submit(request):
     y_ = 0
     yrs_ = []
     while y_ < 5:
-        dt = datetime.now()
-        yr_val = datetime.now().replace(year=dt.year - y_)
+        dt = timezone.now()
+        yr_val = timezone.now().replace(year=dt.year - y_)
         final_year = yr_val.year
         data = {'year': final_year}
         yrs_.append(data)
@@ -8929,6 +8925,25 @@ def public_document(request):
     values = {'documents': documents}
 
     return render(request, 'veoc/public_documents.html', values)
+
+def airline_reg(request):
+    if request.method == "POST":
+        myid = request.POST.get('id', '')
+        cat = request.POST.get('category', '')
+        descriptn = request.POST.get('description', '')
+        authr = request.POST.get('author', '')
+        file = request.FILES.get('file', '')
+        public = request.POST.get('public', '')
+
+    else:
+        cntry = country.objects.all()
+        county = organizational_units.objects.all().filter(hierarchylevel = 2).order_by('name')
+        day = time.strftime("%Y-%m-%d")
+
+        values = {'country':cntry,'county':county, 'day':day}
+
+
+    return render(request, 'veoc/airline_travellers.html', values)
 
 
 # forgot password function allowing user to change their password

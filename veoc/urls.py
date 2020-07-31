@@ -188,6 +188,7 @@ urlpatterns = [
     url(r'^add_document/$', views.add_document, name='add_document'),
     url(r'^edit_document/$', views.edit_document, name='edit_document'),
     url(r'^public_document/$', views.public_document, name='public_document'),
+    url(r'^airline_reg/$', views.airline_reg, name='airline_reg'),
     url(r'^forgot_password/$', views.forgot_password, name='forgot_password'),
 
     #Feedback section

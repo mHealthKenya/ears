@@ -1,0 +1,389 @@
+{% extends "veoc/travellers_template.html" %}
+
+{% block main %}
+
+<div class="container">
+
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+        <div class="card">
+        <header class="card-header">
+            <h4 class="card-title mt-2">Register</h4>
+        </header>
+        <article class="card-body">
+        <form class="airline_travellers_form" method="POST" action="{% url 'veoc:airport_register' %}" >
+        {% csrf_token %}
+            <div class="form-row">
+                <div class="col form-group">
+                    <label>First name *</label>
+                    <input class="form-control" type="text" id="first_name" name="first_name" placeholder="First Name" required/>
+                </div> <!-- form-group end.// -->
+                <div class="col form-group">
+                    <label>Middle name</label>
+                    <input class="form-control" type="text" id="middle_name" name="middle_name" placeholder="Middle Name"/>
+                </div> <!-- form-group end.// -->
+            </div> <!-- form-row end.// -->
+            <div class="form-row">
+                <div class="col form-group">
+                    <label>Last name*</label>
+                    <input class="form-control" type="text" id="last_name" name="last_name" placeholder="Last Name" required/>
+                </div> <!-- form-group end.// -->
+                <div class="col form-group">
+                    <label for="sex">Gender : *</label>
+                    <select class="form-control" id="sex" name="sex">
+                         <option value="Male">Male</option>
+                         <option value="Female">Female</option>
+                     </select>
+                </div> <!-- form-group end.// -->
+            </div> <!-- form-row end.// -->
+            <div class="form-row">
+                <div class="col form-group">
+                    <label for="dob">Date of Birth : *</label>
+                    <input class="form-control" type="date" value="{{ day }}" id="dob" max='2000-13-13' name="dob">
+                </div> <!-- form-group end.// -->
+                <div class="col form-group">
+                    <label for="date_of_arrival">Date of Arrival in Kenya: *</label>
+                    <input class="form-control" type="date" value="{{ day }}" id="date_of_arrival" max='2000-13-13' name="date_of_arrival">
+                </div> <!-- form-group end.// -->
+            </div> <!-- form-row end.// -->
+            <div class="form-row">
+                <div class="col form-group">
+                    <label for="nationality">Nationality : *</label>
+                     <select class="form-control" name="nationality" id="nationality" required>
+                          <option value="" disabled selected>Select Nationality</option>
+                          {% for cntry in country %}
+                              <option value="{{cntry.name}}">{{cntry.name}}</option>
+                          {% endfor %}
+                      </select>
+                </div> <!-- form-group end.// -->
+                <div class="col form-group">
+                    <label for="country">Country of Origin : *</label>
+                     <select class="form-control" name="country" id="country" onchange="region_filter()" required>
+                          <option value="" disabled selected>Select Country</option>
+                          {% for cntry in country %}
+                              <option value="{{cntry.name}}">{{cntry.name}}</option>
+                          {% endfor %}
+                      </select>
+                </div> <!-- form-group end.// -->
+            </div> <!-- form-row end.// -->
+            <div class="form-row">
+                <div class="col form-group">
+                    <label for="passport_number">ID / Passport Number : *</label>
+                    <input class="form-control" type="text" id="passport_number" name="passport_number" placeholder="Passport Number" required/>
+                </div> <!-- form-group end.// -->
+                <div class="col form-group">
+                    <label for="airline">Airline :* </label>
+                    <input class="form-control" type="text" id="airline" name="airline" size="45" placeholder="Airline" required/>
+                </div> <!-- form-group end.// -->
+            </div> <!-- form-row end.// -->
+            <div class="form-row">
+                <div class="col form-group">
+                    <label for="flight_number">Flight Number :* </label>
+                    <input class="form-control" type="text" id="flight_number" name="flight_number" size="45" placeholder="Flight Number" required/>
+                </div> <!-- form-group end.// -->
+                <div class="col form-group">
+                    <label for="seat_number">Seat Number :* </label>
+                    <input class="form-control" type="text" id="seat_number" name="seat_number" size="45" placeholder="Seat Number" required/>
+                </div> <!-- form-group end.// -->
+            </div> <!-- form-row end.// -->
+            <div class="form-row">
+                <div class="col form-group">
+                    <label for="destination_city">Destination City : </label>
+                    <input class="form-control" type="text" id="destination_city" name="destination_city" size="45" placeholder="Destination City"/>
+                </div> <!-- form-group end.// -->
+                <div class="col form-group">
+                    <label for="countries_visited">Countries Visited : </label>
+                     <select class="form-control" name="countries_visited" id="countries_visited">
+                          <option value="" disabled selected>Select Country</option>
+                          {% for cntry in country %}
+                              <option value="{{cntry.name}}">{{cntry.name}}</option>
+                          {% endfor %}
+                      </select>
+                </div> <!-- form-group end.// -->
+            </div> <!-- form-row end.// -->
+            <div class="form-row">
+                <div class="col form-group">
+                    <label for="fever">Fever (37.5°C or higher):* </label>
+                     <select class="form-control" id="fever" name="fever" required>
+                         <option value="" disabled selected>Select Option</option>
+                         <option value="t">Yes</option>
+                         <option value="f">No</option>
+                     </select>
+                </div> <!-- form-group end.// -->
+                <div class="col form-group">
+                    <label for="feverish">Feverish :* </label>
+                    <select class="form-control" id="feverish" name="feverish" required>
+                        <option value="" disabled selected>Select Option</option>
+                        <option value="t">Yes</option>
+                        <option value="f">No</option>
+                    </select>
+                </div> <!-- form-group end.// -->
+            </div> <!-- form-row end.// -->
+            <div class="form-row">
+                <div class="col form-group">
+                    <label for="chills">Chills :* </label>
+                    <select class="form-control" id="chills" name="chills" required>
+                        <option value="" disabled selected>Select Option</option>
+                        <option value="t">Yes</option>
+                        <option value="f">No</option>
+                    </select>
+                </div> <!-- form-group end.// -->
+                <div class="col form-group">
+                    <label for="cough">Cough :* </label>
+                    <select class="form-control" id="cough" name="cough" required>
+                        <option value="" disabled selected>Select Option</option>
+                        <option value="t">Yes</option>
+                        <option value="f">No</option>
+                  </select>
+                </div> <!-- form-group end.// -->
+            </div> <!-- form-row end.// -->
+            <div class="form-row">
+                <div class="col form-group">
+                    <label for="breathing_difficulty">Difficulty in breathing :* </label>
+                    <select class="form-control" id="breathing_difficulty" name="breathing_difficulty" required>
+                        <option value="" disabled selected>Select Option</option>
+                        <option value="t">Yes</option>
+                        <option value="f">No</option>
+                  </select>
+                </div> <!-- form-group end.// -->
+                <div class="col form-group">
+                    <label for="postal_address">Postal Address : </label>
+                    <input class="form-control" type="text" id="postal_address" name="postal_address" placeholder="Postal Address"/>
+                </div> <!-- form-group end.// -->
+            </div> <!-- form-row end.// -->
+            <div class="form-row">
+                <div class="col form-group">
+                    <label for="callername">Name of Contact Person(Next of kin): </label>
+                    <input class="form-control" type="text" id="nok" name="nok" placeholder="Next of Kin Name"/>
+                </div> <!-- form-group end.// -->
+                <div class="col form-group">
+                    <label for="callername">Phone Number of Contact Person : </label>
+                    <input class="form-control" type="number" id="nok_phone_num" name="nok_phone_num" minlength="10" placeholder="Next of Kin Phone Number"/>
+                </div> <!-- form-group end.// -->
+            </div> <!-- form-row end.// -->
+            <div class="form-row">
+                <div class="col form-group">
+                    <label for="residence">Village/House Number/Hotel : </label>
+                    <input class="form-control" type="text" id="residence" name="residence" placeholder="Residence"/>
+                </div> <!-- form-group end.// -->
+                <div class="col form-group">
+                    <label for="estate">Subloaction/Estate : </label>
+                    <input class="form-control" type="text" id="estate" name="estate" placeholder="Subloaction or Estate"/>
+                </div> <!-- form-group end.// -->
+            </div> <!-- form-row end.// -->
+            <div class="form-group">
+                <label for="phone_number">Phone Number : *</label>
+                <input class="form-control" type="tel" id="phone_number" name="phone_number" onchange="checkPhone()" placeholder="Country Code, Start With +254, e.g +254720000000" required/>
+                <small class="form-text text-muted">We'll never share your phone number with anyone else.</small>
+            </div> <!-- form-group end.// -->
+            <div class="form-group">
+                <label>Email address</label>
+                <input class="form-control" type="email" id="email_address" name="email_address" placeholder="Email Address"/>
+                <small class="form-text text-muted">Enter correct email for generation of QR code</small>
+            </div> <!-- form-group end.// -->
+            <div class="form-group"  style="display: none;">
+                <label for="measured_temperature">Measured Temperature :* </label>
+                <input class="form-control" type=number' id="measured_temperature" name="measured_temperature" value="0.0">
+              </div>
+            <div class="form-group">
+                <button type="submit" id="save_button" class="btn btn-primary btn-block"> Register  </button>
+            </div> <!-- form-group// -->
+        </form>
+        </article> <!-- card-body end .// -->
+        </div> <!-- card.// -->
+        </div> <!-- col.//-->
+    </div> <!-- row.//-->
+
+</div>
+<!--container end.//-->
+
+<br><br>
+<article class="bg-secondary mb-3">
+<div class="card-body text-center">
+
+    <div class="tab-pane fade" id="qr_code_generator" style="display: none;">
+        <hr>
+        <div class="panel panel-default table-responsive">
+            <div class="panel-heading">
+                Travellers QR Code
+            </div>
+            <hr>
+            <div class="invoice-box" id="dvQRCode" style="background-color:white">
+                <table id="dvTable" style="background-color:white">
+                    <tr class="heading">
+                        <div colspan="2">
+                            <div>
+                                <div style="overflow: hidden;">
+                                    <p style="float: left;">CAP 242</p>
+                                    <p style="float: right;">Public Health Revised  2012</p>
+                                </div>
+                            </div>
+                        </div>
+                    </tr>
+                    <div class="information">
+                        <div colspan="2">
+                            <div>
+                                <div style="overflow: hidden;">
+                                    <p style="float: right;">Certificate No. <br><i style="color:#1034A6;"></i> MOH/cap 242/2020</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="top">
+                        <td colspan="2">
+                            <div>
+                                <div>
+                                    <p class="title" style="color:#1034A6; text-align: center">
+
+                                      <img src="/static/images/emblem.png" style="width:40%; max-width:100px;">
+                                      <br>REPUBLIC OF KENYA <br>
+                                  <h3 style="text-align: center">MINISTRY OF HEALTH</h3>
+                                    </p>
+
+                                </div>
+                            </div>
+                        </td>
+                    </div>
+                    <div class="information">
+                        <div colspan="2">
+                            <div>
+                                <div>
+                                    <h4 >
+                                        <br><h2 style="text-align: center"s>SELF REGISTRATION QR CODE</h2>
+                                    </h4>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <tr class="information">
+                        <td colspan="2">
+                            <table>
+                                <tr>
+                                    <td>
+                                        <p id="qr-td" style="float: center;"></p>
+                                    </td>
+                                    <td></td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                    <tr class="information">
+                        <td colspan="2">
+                            <table>
+                                <tr>
+                                    <td><b>This QR Code should be shown to the Port Health Officer for COVID-19 clearance.</b>
+                                    </td>
+                                    <td></td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                    <tr class="information">
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    <tr class="information">
+                        <td></td>
+                        <td></td>
+                    </tr>
+                </table>
+            </div>
+            <div id="elementH"></div>
+        <div>
+        <hr>
+        <button class="btn btn-lg btn-success pull-left" type="button" onclick="saveDiv()"><i class="glyphicon glyphicon-save"></i> Save PDF</button>
+
+        </div>
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block script %}
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootbox.js/4.4.0/bootbox.min.js"> </script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
+    <script src="https://cdn.jsdelivr.net/npm/promise-polyfill"></script>
+    <script src="https://code.jquery.com/jquery-1.12.4.min.js" integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ=" crossorigin="anonymous"></script>
+    <script type="text/javascript" src="lib/jquery.min.js"></script>
+    <script>
+    $(document).ready(function() {
+
+        var travellersForm = $(".airline_travellers_form")
+
+        travellersForm.submit(function(e){
+            e.preventDefault();
+            var thisForm = $(this);
+            var endPoint = thisForm.attr("action") || window.location.href;
+            var method = thisForm.attr("method");
+            var formData = thisForm.serialize();
+
+            uuid = '87655d1fb9994232ba6bdd1e7c523f65'
+            generate_QRCode(uuid);
+
+            Swal.fire({
+                title: "Please wait,Saving Details!",
+                imageUrl: "/static/images/ajax-loader.gif",
+                showConfirmButton: false,
+                allowOutsideClick: false
+            });
+            $.ajax({
+                type:method,
+                url:endPoint,
+                data: formData,
+                success:function(data){
+                    if(data == "error"){
+                      Swal.fire({
+                        title: 'Duplicate Data Entry!!',
+                        text: 'Names and Phone number entered already exist in the system and still ongoing quarantine!!',
+                        icon: 'info'
+                      });
+                    }else {
+                        Swal.fire({
+                            title: 'Success!',
+                            text: 'Travellers Details Saved',
+                            icon: 'success'
+                        });
+                        travellersForm[0].reset();
+                        {# get inserted datas uuid got generation of QRcode pass it to the function generating the code#}
+                        console.log(data);
+                        uuid = '87655d1fb9994232ba6bdd1e7c523f65'
+                        generate_QRCode(uuid);
+                    }
+                },
+                error:function(er){
+                    console.log("Airport Quarantine saving error");
+                    console.log(er.responseText);
+                    Swal.fire({
+                        title: 'Error!',
+                        text: 'Airport Quarantine Details Cannot be Saved',
+                        icon: 'error'
+                    });
+                }
+            });
+
+        });
+
+    });
+
+    function generate_QRCode(uuid){
+        //System QR Code for scanning travellers details
+
+        console.log("Inside generate_QRCode");
+        console.log(uuid);
+        var qrcode = new QRCode(document.getElementById('qr-td'),{
+            width:500,
+            height:500
+        });
+
+        qrcode.makeCode(uuid)
+        console.log("here");
+        var options = {};
+        var pdf = new jsPDF('p', 'pt', 'a4');
+        pdf.addHTML($("#dvQRCode"), 15, 15, options, function() {
+            pdf.save('Travellers_QR_Code.pdf');
+        });
+    }
+
+    </script>
+{% endblock %}
