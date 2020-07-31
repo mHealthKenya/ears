@@ -33,6 +33,7 @@ from rest_framework import viewsets
 from veoc.serializer import *
 from veoc.tasks import pull_dhis_idsr_data
 from datetime import date, timedelta, datetime
+from django.utils import timezone
 from collections import Counter
 from django import template
 import time
@@ -43,7 +44,6 @@ from time import gmtime, strftime
 import uuid
 from django.core.mail import send_mail
 from django.conf import settings
-
 
 @login_required
 def airport_register(request):
@@ -120,8 +120,11 @@ def airport_register(request):
         for site in quar_site:
             site_name = site.id
 
+        # site_name = quarantine_sites.objects.values_list('id', flat=True).get(site_name="Home")
+        # print("site_name")
+        # print(site_name)
         contact_save = ''
-        current_date = datetime.now()
+        current_date = timezone.now()
         source = "Web Airport Registration"
         # Check if mobile number exists in the table
         details_exist = quarantine_contacts.objects.filter(phone_number=phone_number, first_name=first_name,last_name=last_name,
@@ -139,7 +142,7 @@ def airport_register(request):
             # saving values to quarantine_contacts database first
             contact_save = quarantine_contacts.objects.create(first_name=first_name, last_name=last_name, middle_name=middle_name, county=countyObject,
                             subcounty=subcountyObject, ward=wardObject, sex=sex, dob=dob, passport_number=passport_number, phone_number=user_phone,
-                            date_of_contact=date_of_arrival, communication_language=languageObject, nationality=nationality, drugs="None", nok=nok,
+                            date_of_contact=date_of_arrival, communication_language=languageObject, nationality=nationality, drugs="None", nok=nok,email_address=email_address,
                             nok_phone_num=nok_phone_number, cormobidity="None", origin_country=origin_country, quarantine_site=quarantineObject, source=source,
                             contact_uuid=contact_identifier, updated_at=current_date, created_by=userObject, updated_by=userObject, created_at=current_date)
 
@@ -225,6 +228,215 @@ def airport_register(request):
         data = {'country':cntry,'county':county, 'day':day}
 
         return render(request, 'veoc/airport_register.html', data)
+
+def ailrine_registration(request):
+    if request.method == 'POST':
+        first_name = request.POST.get('first_name','')
+        middle_name = request.POST.get('middle_name','')
+        last_name = request.POST.get('last_name','')
+        sex = request.POST.get('sex','')
+        dob = request.POST.get('dob','')
+        nationality = request.POST.get('nationality','')
+        origin_country = request.POST.get('country','')
+        date_of_arrival = request.POST.get('date_of_arrival','')
+        cnty = request.POST.get('county','')
+        sub_cnty = request.POST.get('subcounty','')
+        ward = request.POST.get('ward','')
+        passport_number = request.POST.get('passport_number','')
+        phone_number = request.POST.get('phone_number','')
+        email_address = request.POST.get('email_address','')
+        airline = request.POST.get('airline','')
+        flight_number = request.POST.get('flight_number','')
+        seat_number = request.POST.get('seat_number','')
+        destination_city = request.POST.get('destination_city','')
+        countries_visited = request.POST.get('countries_visited','')
+        temperature = request.POST.get('fever','')
+        feverish = request.POST.get('feverish','')
+        chills = request.POST.get('chills','')
+        cough = request.POST.get('cough','')
+        breathing_difficulty = request.POST.get('breathing_difficulty','')
+        nok = request.POST.get('nok','')
+        nok_phone_number = request.POST.get('nok_phone_num','')
+        residence = request.POST.get('residence','')
+        estate = request.POST.get('estate','')
+        postal_address = request.POST.get('postal_address','')
+        #measured_temperature = Null
+        arrival_airport_code = '0'
+        released = 'f'
+        risk_assessment_referal = 'f'
+        designated_hospital_referal = 'f'
+
+        countyObject = organizational_units.objects.get(organisationunitid = 18)
+        subcountyObject = organizational_units.objects.get(organisationunitid = 18)
+        wardObject = organizational_units.objects.get(organisationunitid = 18)
+
+        # country_code = country.objects.get(name = )
+        user_phone = "+254"
+        # Remove spacing on the number
+        mobile_number = phone_number.replace(" ", "")
+        print(mobile_number)
+        # check if the leading character is 0
+        if str(mobile_number[0]) == "0":
+            user_phone = user_phone + str(mobile_number[1:])
+            print("number leading with 0")
+        elif str(mobile_number[0]) == "+":
+            user_phone = mobile_number
+            print("Save phone number as it is")
+        elif str(mobile_number[0:2]) == "25":
+            user_phone = "+" + str(mobile_number[0:])
+            print("Save phone number with appended +")
+        else:
+            user_phone = user_phone + str(mobile_number)
+            print("number not leading with 0")
+
+        site_name = ''
+
+        # site_name = quarantine_sites.objects.values_list('id', flat=True).get(site_name="Home")
+        # print("site_name")
+        # print(site_name)
+        userObject = User.objects.get(pk=1)
+        site_name = ''
+        quar_site = quarantine_sites.objects.filter(site_name="Home")
+        for site in quar_site:
+            site_name = site.id
+
+        contact_save = ''
+        current_date = timezone.now()
+        source = "Web Airport Self Registration"
+        # Check if mobile number exists in the table
+        details_exist = quarantine_contacts.objects.filter(phone_number=phone_number, first_name=first_name,last_name=last_name,
+                                                           date_of_contact__gte=date.today() - timedelta(days=14))
+        if details_exist:
+            for mob_ex in details_exist:
+                print("Details exist Phone Number" + str(mob_ex.phone_number) + "Registered on :" + str(mob_ex.created_at))
+
+            return HttpResponse("error")
+        else:
+            language = 1
+            quarantineObject = quarantine_sites.objects.get(pk=site_name)
+            languageObject = translation_languages.objects.get(pk=language)
+            contact_identifier = uuid.uuid4().hex
+            # saving values to quarantine_contacts database first
+            contact_save = quarantine_contacts.objects.create(first_name=first_name, last_name=last_name, middle_name=middle_name, county=countyObject,
+                            subcounty=subcountyObject, ward=wardObject, sex=sex, dob=dob, passport_number=passport_number, phone_number=user_phone,
+                            date_of_contact=date_of_arrival, communication_language=languageObject, nationality=nationality, drugs="None", nok=nok,email_address=email_address,
+                            nok_phone_num=nok_phone_number, cormobidity="None", origin_country=origin_country, quarantine_site=quarantineObject, source=source,
+                            contact_uuid=contact_identifier, updated_at=current_date, created_by=userObject, updated_by=userObject, created_at=current_date)
+
+            contact_save.save()
+            print(contact_save.pk)
+            trans_one = transaction.savepoint()
+
+            # patients_contacts_id = contact_save.pk
+            # print(patients_contacts_id)
+            # patientObject = quarantine_contacts.objects.get(pk = patients_contacts_id)
+            if contact_save:
+                print("working")
+                print(temperature)
+                airport_user_save = airline_quarantine.objects.create(airline=airline, flight_number=flight_number, seat_number=seat_number,
+                                          destination_city=destination_city, travel_history=countries_visited, cough=cough, breathing_difficulty=breathing_difficulty,
+                                          fever=feverish, chills=chills, temperature=temperature, arrival_airport_code=arrival_airport_code,
+                                          released=released, risk_assessment_referal=risk_assessment_referal, designated_hospital_refferal=designated_hospital_referal,
+                                          created_at=current_date, updated_at=current_date, patient_contacts=contact_save, created_by=userObject, updated_by=userObject,
+                                          residence=residence, estate=estate, postal_address=postal_address, status='t')
+
+                airport_user_save.save()
+                print(airport_user_save.id)
+            else:
+                print("data not saved in truck quarantine contacts")
+
+
+        cntry = country.objects.all()
+        county = organizational_units.objects.all().filter(hierarchylevel = 2).order_by('name')
+        day = time.strftime("%Y-%m-%d")
+
+        data = {'country':cntry,'county':county, 'day':day}
+
+        return render(request, 'veoc/airline_travellers.html', data)
+
+    else:
+        cntry = country.objects.all()
+        county = organizational_units.objects.all().filter(hierarchylevel = 2).order_by('name')
+        day = time.strftime("%Y-%m-%d")
+
+        data = {'country':cntry,'county':county, 'day':day}
+
+        return render(request, 'veoc/airline_travellers.html', data)
+
+@login_required
+def edit_airport_complete(request):
+    if request.method == 'POST':
+        first_name = request.POST.get('first_name','')
+        middle_name = request.POST.get('middle_name','')
+        last_name = request.POST.get('last_name','')
+
+
+        airport_id = request.POST.get('airport_id','')
+        measured_temperature = request.POST.get('measured_temperature','')
+        arrival_airport_code = request.POST.get('arrival_airport_code','')
+        released = request.POST.get('released','')
+        risk_assessment_referal = request.POST.get('risk_assessment_referal','')
+        designated_hospital_referal = request.POST.get('designated_hospital_referal','')
+
+        # get current user
+        current_user = request.user
+        # print(current_user)
+        userObject = User.objects.get(pk=current_user.id)
+        contact_save = ''
+        current_date = datetime.now()
+        source = "Web Airport Registration"
+
+        contact_identifier = uuid.uuid4().hex
+        # saving values to quarantine_contacts database firstobjects.filter(pk=myid).update
+        airport_user_save = airline_quarantine.objects.filter(patient_contacts_id=airport_id).update(measured_temperature=measured_temperature, arrival_airport_code=arrival_airport_code,
+                                  released=released, risk_assessment_referal=risk_assessment_referal, designated_hospital_refferal=designated_hospital_referal,
+                                 updated_at=current_date, updated_by=userObject)
+        #airport_user_save.save()
+        print(airport_id)
+        print(airline_quarantine.objects.get(pk=2))
+
+
+        cntry = country.objects.all()
+        day = time.strftime("%Y-%m-%d")
+        data = { 'country': cntry, 'start_day': day,
+                'end_day': day}
+
+        return render(request, 'veoc/airport_list_incomplete.html', data)
+
+    else:
+        cntry = country.objects.all()
+        day = time.strftime("%Y-%m-%d")
+        data = { 'country': cntry, 'start_day': day,
+                'end_day': day}
+
+        return render(request, 'veoc/airport_list_incomplete.html', data)
+
+
+@login_required
+def airport_list_incomplete(request):
+    if request.method == "POST":
+        date_from = request.POST.get('date_from', '')
+        date_to = request.POST.get('date_to', '')
+        day = time.strftime("%Y-%m-%d")
+
+        all_data = quarantine_contacts.objects.all().filter(source='Web Airport Registration').filter(
+            date_of_contact__gte=date_from, date_of_contact__lte=date_to).order_by('-date_of_contact')
+        q_data_count = quarantine_contacts.objects.all().filter(source='Web Airport Registration').filter(
+            date_of_contact__gte=date_from, date_of_contact__lte=date_to).count()
+
+        data = {'all_data': all_data, 'all_data_count': q_data_count,'day': day}
+
+    else:
+        all_data = quarantine_contacts.objects.all().filter(source='Web Airport Registration').filter(
+            date_of_contact__lte=date.today() - timedelta(days=14)).order_by('-date_of_contact')
+        q_data_count = quarantine_contacts.objects.all().filter(source='Web Airport Registration').filter(
+            date_of_contact__lte=date.today() - timedelta(days=14)).count()
+        day = time.strftime("%Y-%m-%d")
+
+        data = {'all_data': all_data, 'all_data_count': q_data_count, 'day': day}
+
+    return render(request, 'veoc/airport_list_incomplete.html', data)
+
 
 # export raw data as csv_file
 def export_csv(request):
@@ -741,7 +953,6 @@ def dashboard(request):
     midnight_time = midnight + "+03"
     # print(midnight)
     # print(midnight_time)
-    print("smokie")
     total_follow_up_stat= quarantine_follow_up.objects.values('patient_contacts').distinct().count()
 
     today_follow_up_stat = quarantine_follow_up.objects.filter(Q(created_at__gte=midnight) | Q(created_at__gte=midnight_time)).count()
@@ -775,6 +986,7 @@ def dashboard(request):
 
     user_access_level = ""
     user_group = request.user.groups.values_list('name', flat=True)
+    print("hapa sasa")
     print(user_group)
     for grp in user_group:
        user_access_level = grp
@@ -2718,7 +2930,7 @@ def disease_register(request):
                 if rep_disease:
                     print('saving into dhis data tables')
                     # create current week/year number
-                    dt = datetime.now()
+                    dt = timezone.now()
                     wk_val = dt.isocalendar()[1]
                     yr_val = dt.replace(year=dt.year)
                     final_year = yr_val.year
@@ -2900,7 +3112,7 @@ def save_data(d, request):
     else:
         user_phone = user_phone + str(phone_number)
 
-    current_date = datetime.now()
+    current_date = timezone.now()
 
     # get current user
     current_user = request.user
@@ -3002,7 +3214,7 @@ def quarantine_register(request):
             # print("number not leading with 0")
 
         # get todays date
-        current_date = datetime.now()
+        current_date = timezone.now()
 
         # get current user
         current_user = request.user
@@ -3153,7 +3365,7 @@ def home_care_register(request):
             user_phone = user_phone + str(mobile_number)
             print("number not leading with 0")
 
-        current_date = datetime.now()
+        current_date = timezone.now()
         current_user = request.user
         print(current_user)
         userObject = User.objects.get(pk=current_user.id)
@@ -3505,7 +3717,7 @@ def truck_driver_register(request):
 
         # get todays date
         # current_date = date.today().strftime('%Y-%m-%d')
-        current_date = datetime.now()
+        current_date = timezone.now()
 
         # get current user
         current_user = request.user
@@ -3748,7 +3960,7 @@ def truck_driver_register_new(request):
 
         # get todays date
         # current_date = date.today().strftime('%Y-%m-%d')
-        current_date = datetime.now()
+        current_date = timezone.now()
 
         # get current user
         current_user = request.user
@@ -4168,7 +4380,7 @@ def event_register(request):
             # check if the reported case is confirmed to save in dhis2 data tables
             if status == 'Confirmed':
                 # create current week/year number
-                dt = datetime.now()
+                dt = timezone.now()
                 wk_val = dt.isocalendar()[1]
                 yr_val = dt.replace(year=dt.year)
                 final_year = yr_val.year
@@ -7165,8 +7377,8 @@ def weekly_report(request):
     y_ = 0
     yrs_ = []
     while y_ < 5:
-        dt = datetime.now()
-        yr_val = datetime.now().replace(year=dt.year - y_)
+        dt = timezone.now()
+        yr_val = timezone.now().replace(year=dt.year - y_)
         final_year = yr_val.year
         data = {'year': final_year}
         yrs_.append(data)
@@ -7194,8 +7406,8 @@ def weekly_report_submit(request):
     y_ = 0
     yrs_ = []
     while y_ < 5:
-        dt = datetime.now()
-        yr_val = datetime.now().replace(year=dt.year - y_)
+        dt = timezone.now()
+        yr_val = timezone.now().replace(year=dt.year - y_)
         final_year = yr_val.year
         data = {'year': final_year}
         yrs_.append(data)
@@ -8948,6 +9160,25 @@ def public_document(request):
     values = {'documents': documents}
 
     return render(request, 'veoc/public_documents.html', values)
+
+def airline_reg(request):
+    if request.method == "POST":
+        myid = request.POST.get('id', '')
+        cat = request.POST.get('category', '')
+        descriptn = request.POST.get('description', '')
+        authr = request.POST.get('author', '')
+        file = request.FILES.get('file', '')
+        public = request.POST.get('public', '')
+
+    else:
+        cntry = country.objects.all()
+        county = organizational_units.objects.all().filter(hierarchylevel = 2).order_by('name')
+        day = time.strftime("%Y-%m-%d")
+
+        values = {'country':cntry,'county':county, 'day':day}
+
+
+    return render(request, 'veoc/airline_travellers.html', values)
 
 
 # forgot password function allowing user to change their password

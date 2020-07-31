@@ -398,12 +398,6 @@ def airport_symtomatic(request):
 
     return render(request, 'airport_app/airport_symptomatic.html', data)
 
-
-@login_required
-def complete_airport(request):
-    return render(request, 'airport_app/complete_airport.html')
-
-
 def search_symptoms(f_data):
     temp = f_data.body_temperature
     cough = f_data.cough

@@ -31,7 +31,7 @@ DEBUG = True
 
 ADMINS = [('Jeffa', 'jeffadavid@gmail.com'), ('David', 'djeffa@mhealthkenya.org')]
 
-ALLOWED_HOSTS = ['ears.health.go.ke','41.89.94.122']
+ALLOWED_HOSTS = ['ears.health.go.ke','41.89.94.122', 'ears.mhealthkenya.co.ke','ears-test.mhealthkenya.co.ke', 'localhost','127.0.0.1','192.168.50.2', '41.215.81.58']
 
 # SESSION_EXPIRE_AT_BROWSER_CLOSE = True
 # SESSION_COOKIE_AGE = 5 * 60 #
@@ -123,9 +123,9 @@ WSGI_APPLICATION = 'virtual_eoc.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': os.environ.get('DB_NAME','virtual_eoc'),
+        'NAME': os.environ.get('DB_NAME','postgres'),
         'USER': os.environ.get('DB_USER','postgres'),
-        'PASSWORD': os.environ.get('DB_PASS','P0stgr3s!@#'),
+        'PASSWORD': os.environ.get('DB_PASS','12345678'),
         'HOST': 'localhost',
         'PORT': '5432',
     }

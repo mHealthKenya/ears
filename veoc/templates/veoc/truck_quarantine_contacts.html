@@ -1,0 +1,108 @@
+<head>
+  <style>
+table.dataTable tbody>tr.selected,
+table.dataTable tbody>tr>.selected {
+  background-color: #A2D3F6;
+}
+</style>
+
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.0.0/css/bootstrap.css">
+<link rel="stylesheet" href="https://cdn.datatables.net/1.10.21/css/jquery.dataTables.min.css">
+</head>
+<body>
+
+  <div class="container">
+  <table cellpadding="0" cellspacing="0" border="0" class="dataTable table table-striped" id="example">
+
+  </table>
+</div>
+
+
+  <script src="//code.jquery.com/jquery-1.12.4.js"></script>
+   <script src="//cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
+   <script src="//cdn.datatables.net/1.10.16/js/dataTables.bootstrap4.min.js"></script>
+  <script>
+    $(document).ready(function() {
+
+let json = [
+{"id":8,"street":"","village":"","vehicle_registration":"KBV905G","company_name":"MULTIPE HALIERS","company_phone":"","company_physical_address":"NAIROBI, INDUSTRIAL AREA","company_street":"EMBAKASI","company_building":"","cough":false,"breathing_difficulty":false,"fever":false,"sample_taken":false,"action_taken":"ALLOWED TO PROCEED"},
+{"id":8,"street":"","village":"","vehicle_registration":"KBV905G","company_name":"MULTIPE HALIERS","company_phone":"","company_physical_address":"NAIROBI, INDUSTRIAL AREA","company_street":"EMBAKASI","company_building":"","cough":false,"breathing_difficulty":false,"fever":false,"sample_taken":false,"action_taken":"ALLOWED TO PROCEED"}
+];
+
+var columnDefs = [
+{
+  data: "id"
+},
+{
+  data: "street"
+},
+{
+  data: "village"
+},
+{
+  data: "vehicle_registration"
+},
+{
+  data: "company_name"
+},
+{
+  data: "company_phone"
+},
+{
+  data: "company_physical_address"
+},
+{
+  data: "company_street"
+},
+{
+  data: "company_building"
+},
+{
+  data: "cough"
+},
+{
+  data: "breathing_difficulty"
+},
+{
+  data: "fever"
+},{
+  data: "sample_taken"
+},{
+  data: "action_taken"
+}];
+
+var myTable;
+$.ajax({
+  url: '/api/truck_quarantine_contacts/',//simulate ajax
+  type: 'GET',
+  dataType: 'JSON',
+  data: {json:JSON.stringify(json)}
+}).done((response)=>{
+   myTable = $('#example').DataTable({
+  "sPaginationType": "full_numbers",
+  data: response,
+  columns: columnDefs,
+  responsive: true,
+  columnDefs: [
+          {"className": "dt-center", "targets": "_all"},
+          {
+            "targets": [ 2 ],
+            "visible": false,
+            "searchable": false
+          }
+          ]
+});
+
+  var filteredData =  myTable
+  .rows()
+  .indexes()
+  .filter( function ( value, index ) {
+  console.log(myTable.row(value).data().Status);
+     return myTable.row(value).data().Status === "Taken";
+  } );
+myTable.rows( filteredData )
+.remove()
+.draw();
+});
+});
+  </script>
