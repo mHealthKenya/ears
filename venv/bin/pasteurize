@@ -1,4 +1,4 @@
-#!/var/www/ears_system/venv/bin/python3.8
+#!/var/www/ears_system/venv/bin/python3
 # EASY-INSTALL-ENTRY-SCRIPT: 'future==0.18.2','console_scripts','pasteurize'
 __requires__ = 'future==0.18.2'
 import re

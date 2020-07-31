@@ -31,7 +31,7 @@ DEBUG = True
 
 ADMINS = [('Jeffa', 'jeffadavid@gmail.com'), ('David', 'djeffa@mhealthkenya.org')]
 
-ALLOWED_HOSTS = ['ears.mhealthkenya.co.ke','ears-test.mhealthkenya.co.ke', '41.215.24.110', '41.220.229.138','localhost','127.0.0.1','192.168.50.2','ears.health.go.ke','192.168.10.8','192.168.10.9']
+ALLOWED_HOSTS = ['ears.health.go.ke','41.89.94.122', 'ears.mhealthkenya.co.ke','ears-test.mhealthkenya.co.ke', 'localhost','127.0.0.1','192.168.50.2', '41.215.81.58']
 
 # SESSION_EXPIRE_AT_BROWSER_CLOSE = True
 # SESSION_COOKIE_AGE = 5 * 60 #
@@ -55,6 +55,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'veoc.apps.VeocConfig',
     'rest_framework',
+    'rest_framework_datatables',
     'airport_app'
     # 'django_mobile'
 ]
@@ -76,6 +77,19 @@ MIDDLEWARE = [
     # 'django_mobile.middleware.MobileDetectionMiddleware',
     # 'django_mobile.middleware.SetFlavourMiddleware',
 ]
+
+REST_FRAMEWORK = {
+    'DEFAULT_RENDERER_CLASSES': (
+        'rest_framework.renderers.JSONRenderer',
+        'rest_framework.renderers.BrowsableAPIRenderer',
+        'rest_framework_datatables.renderers.DatatablesRenderer',
+    ),
+    'DEFAULT_FILTER_BACKENDS': (
+        'rest_framework_datatables.filters.DatatablesFilterBackend',
+    ),
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework_datatables.pagination.DatatablesPageNumberPagination',
+    'PAGE_SIZE': 50,
+}
 
 ROOT_URLCONF = 'virtual_eoc.urls'
 
@@ -109,7 +123,7 @@ WSGI_APPLICATION = 'virtual_eoc.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': os.environ.get('DB_NAME','virtual_eoc'),
+        'NAME': os.environ.get('DB_NAME','postgres'),
         'USER': os.environ.get('DB_USER','postgres'),
         'PASSWORD': os.environ.get('DB_PASS','root'),
         'HOST': 'localhost',
@@ -154,7 +168,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/2.0/howto/static-files/
 
 #Enable STATIC_ROOT in hosting server to access the static files
-#STATIC_ROOT =os.path.join(BASE_DIR,'static')
+STATIC_ROOT =os.path.join(BASE_DIR,'static')
 STATIC_URL = '/static/'
 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')

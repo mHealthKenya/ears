@@ -23,6 +23,8 @@ from django.db import IntegrityError, transaction
 from django.db.models import *
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from django.http import FileResponse
+from rest_framework.generics import RetrieveAPIView
+
 from veoc.models import *
 from veoc.forms import *
 from django.views.decorators.csrf import *
@@ -141,7 +143,7 @@ def airport_register(request):
             # saving values to quarantine_contacts database first
             contact_save = quarantine_contacts.objects.create(first_name=first_name, last_name=last_name, middle_name=middle_name, county=countyObject,
                             subcounty=subcountyObject, ward=wardObject, sex=sex, dob=dob, passport_number=passport_number, phone_number=user_phone,
-                            date_of_contact=date_of_arrival, communication_language=languageObject, nationality=nationality, drugs="None", nok=nok,
+                            date_of_contact=date_of_arrival, communication_language=languageObject, nationality=nationality, drugs="None", nok=nok,email_address=email_address,
                             nok_phone_num=nok_phone_number, cormobidity="None", origin_country=origin_country, quarantine_site=quarantineObject, source=source,
                             contact_uuid=contact_identifier, updated_at=current_date, created_by=userObject, updated_by=userObject, created_at=current_date)
 
@@ -227,6 +229,81 @@ def airport_register(request):
         data = {'country':cntry,'county':county, 'day':day}
 
         return render(request, 'veoc/airport_register.html', data)
+
+@login_required
+def edit_airport_complete(request):
+    if request.method == 'POST':
+        first_name = request.POST.get('first_name','')
+        middle_name = request.POST.get('middle_name','')
+        last_name = request.POST.get('last_name','')
+
+
+        airport_id = request.POST.get('airport_id','')
+        measured_temperature = request.POST.get('measured_temperature','')
+        arrival_airport_code = request.POST.get('arrival_airport_code','')
+        released = request.POST.get('released','')
+        risk_assessment_referal = request.POST.get('risk_assessment_referal','')
+        designated_hospital_referal = request.POST.get('designated_hospital_referal','')
+
+        # get current user
+        current_user = request.user
+        # print(current_user)
+        userObject = User.objects.get(pk=current_user.id)
+        contact_save = ''
+        current_date = datetime.now()
+        source = "Web Airport Registration"
+
+        contact_identifier = uuid.uuid4().hex
+        # saving values to quarantine_contacts database firstobjects.filter(pk=myid).update
+        airport_user_save = airline_quarantine.objects.filter(patient_contacts_id=airport_id).update(measured_temperature=measured_temperature, arrival_airport_code=arrival_airport_code,
+                                  released=released, risk_assessment_referal=risk_assessment_referal, designated_hospital_refferal=designated_hospital_referal,
+                                 updated_at=current_date, updated_by=userObject)
+        #airport_user_save.save()
+        print(airport_id)
+        print(airline_quarantine.objects.get(pk=2))
+
+
+        cntry = country.objects.all()
+        day = time.strftime("%Y-%m-%d")
+        data = { 'country': cntry, 'start_day': day,
+                'end_day': day}
+
+        return render(request, 'veoc/airport_list_incomplete.html', data)
+
+    else:
+        cntry = country.objects.all()
+        day = time.strftime("%Y-%m-%d")
+        data = { 'country': cntry, 'start_day': day,
+                'end_day': day}
+
+        return render(request, 'veoc/airport_list_incomplete.html', data)
+
+
+@login_required
+def airport_list_incomplete(request):
+    if request.method == "POST":
+        date_from = request.POST.get('date_from', '')
+        date_to = request.POST.get('date_to', '')
+        day = time.strftime("%Y-%m-%d")
+
+        all_data = quarantine_contacts.objects.all().filter(source='Web Airport Registration').filter(
+            date_of_contact__gte=date_from, date_of_contact__lte=date_to).order_by('-date_of_contact')
+        q_data_count = quarantine_contacts.objects.all().filter(source='Web Airport Registration').filter(
+            date_of_contact__gte=date_from, date_of_contact__lte=date_to).count()
+
+        data = {'all_data': all_data, 'all_data_count': q_data_count,'day': day}
+
+    else:
+        all_data = quarantine_contacts.objects.all().filter(source='Web Airport Registration').filter(
+            date_of_contact__lte=date.today() - timedelta(days=14)).order_by('-date_of_contact')
+        q_data_count = quarantine_contacts.objects.all().filter(source='Web Airport Registration').filter(
+            date_of_contact__lte=date.today() - timedelta(days=14)).count()
+        day = time.strftime("%Y-%m-%d")
+
+        data = {'all_data': all_data, 'all_data_count': q_data_count, 'day': day}
+
+    return render(request, 'veoc/airport_list_incomplete.html', data)
+
 
 # export raw data as csv_file
 def export_csv(request):
@@ -619,7 +696,7 @@ def dashboard(request):
     marquee_call_log = []  # an array that collects all confirmed diseases and maps them to the marquee
     marquee_disease = []  # an array that collects all confirmed diseases and maps them to the marquee
     marquee_events = []  # an array that collects all confirmed diseases and maps them to the marquee
-
+    print("Hello Moto")
     # checks if dictionary has values for the past 7 days
     if len(_dcall_logs) == 0:
         marquee_call_log.append("None reported")
@@ -719,7 +796,7 @@ def dashboard(request):
 
     # picking the highest disease numbers for dashboard diseases
     events_reported_dash_vals = dict(Counter(events_thirty_days_stat).most_common(3))
-
+    print("test est")
     # populating the total quarantine respondents
     qua_contacts = quarantine_contacts.objects.all()
     qua_contacts_comp = quarantine_contacts.objects.filter(created_at__gte=date.today() - timedelta(days=14)).order_by(
@@ -743,8 +820,7 @@ def dashboard(request):
     midnight_time = midnight + "+03"
     # print(midnight)
     # print(midnight_time)
-
-    total_follow_up_stat = quarantine_follow_up.objects.values('patient_contacts').distinct().count()
+    total_follow_up_stat= quarantine_follow_up.objects.values('patient_contacts').distinct().count()
 
     today_follow_up_stat = quarantine_follow_up.objects.filter(Q(created_at__gte=midnight) | Q(created_at__gte=midnight_time)).count()
 
@@ -780,7 +856,7 @@ def dashboard(request):
     print("hapa sasa")
     print(user_group)
     for grp in user_group:
-        user_access_level = grp
+       user_access_level = grp
     print(user_access_level)
 
     # Populating the bargraph
@@ -5226,6 +5302,39 @@ def truck_quarantine_list(request):
                 'my_list_data': my_list_data, 'start_day': day, 'end_day': day, 'page_obj': page_obj}
 
     return render(request, 'veoc/truck_quarantine_list.html', data)
+
+
+class AlbumViewSet(viewsets.ModelViewSet):
+    model = truck_quarantine_contacts
+    serializer_class = TruckSerializer
+
+    def get_queryset(self):
+        user_access_level = User.objects.get(username=self.request.user.username).persons.access_level
+        user_level = ""
+        user_group = self.request.user.groups.values_list('id', flat=True)
+        for grp in user_group:
+            user_level = grp
+        if user_level == 1 or user_level == 2:
+            print("inside National")
+            return truck_quarantine_contacts.objects.select_related('patient_contacts'). \
+                filter(patient_contacts__source='Truck Registration').order_by('-patient_contacts__date_of_contact')
+        elif user_level == 7:
+            print("inside Border")
+            return truck_quarantine_contacts.objects.select_related('patient_contacts'). \
+                filter(patient_contacts__source='Truck Registration', border_point__border_name=user_access_level). \
+                order_by('-date_of_contact')
+        else:
+            print("inside non border users")
+            return truck_quarantine_contacts.objects.select_related('patient_contacts'). \
+                filter(patient_contacts__source='Kitu hakuna').order_by('-date_of_contact')
+
+    def get_options(self):
+        return "options", {
+            "patient_contacts": [{'label': obj.source, 'value': obj.id} for obj in quarantine_contacts.objects.all()]
+        }
+
+    class Meta:
+        datatables_extra_json = ('get_options',)
 
 
 @login_required
