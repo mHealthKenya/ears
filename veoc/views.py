@@ -5249,13 +5249,6 @@ class AlbumViewSet(viewsets.ModelViewSet):
             return truck_quarantine_contacts.objects.select_related('patient_contacts'). \
                 filter(patient_contacts__source='Kitu hakuna').order_by('-date_of_contact')
 
-    def get_options(self):
-        return "options", {
-            "patient_contacts": [{'label': obj.source, 'value': obj.id} for obj in quarantine_contacts.objects.all()]
-        }
-
-    class Meta:
-        datatables_extra_json = ('get_options',)
 
 
 @login_required
