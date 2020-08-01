@@ -419,21 +419,49 @@ def airport_list_incomplete(request):
         date_to = request.POST.get('date_to', '')
         day = time.strftime("%Y-%m-%d")
 
-        all_data = quarantine_contacts.objects.all().filter(source='Web Airport Registration').filter(
-            date_of_contact__gte=date_from, date_of_contact__lte=date_to).order_by('-date_of_contact')
-        q_data_count = quarantine_contacts.objects.all().filter(source='Web Airport Registration').filter(
-            date_of_contact__gte=date_from, date_of_contact__lte=date_to).count()
+        # all_data = quarantine_contacts.objects.all().filter(source='Web Airport Registration').filter(
+        #     date_of_contact__gte=date_from, date_of_contact__lte=date_to).order_by('-date_of_contact')
+        # q_data_count = quarantine_contacts.objects.all().filter(source='Web Airport Registration').filter(
+        #     date_of_contact__gte=date_from, date_of_contact__lte=date_to).count()
 
-        data = {'all_data': all_data, 'all_data_count': q_data_count,'day': day}
+        traveller_details_count = airline_quarantine.objects.filter(measured_temperature = 0).filter(
+            created_at__gte=date_from, created_at__lte=date_to).count()
+
+        traveller_details = airline_quarantine.objects.filter(measured_temperature = 0).filter(
+            created_at__gte=date_from, created_at__lte=date_to).annotate(
+            first_name=F("patient_contacts__first_name"),
+            last_name=F("patient_contacts__last_name"),
+            sex=F("patient_contacts__sex"),
+            age=F("patient_contacts__dob"),
+            passport_number=F("patient_contacts__passport_number"),
+            phone_number=F("patient_contacts__phone_number"),
+            nationality=F("patient_contacts__nationality"),
+            origin_country=F("patient_contacts__origin_country"),
+        )
+
+        data = {'traveller_details_count': traveller_details_count, 'traveller_details': traveller_details, 'day': day}
 
     else:
-        all_data = quarantine_contacts.objects.all().filter(source='Web Airport Registration').filter(
-            date_of_contact__lte=date.today() - timedelta(days=14)).order_by('-date_of_contact')
-        q_data_count = quarantine_contacts.objects.all().filter(source='Web Airport Registration').filter(
-            date_of_contact__lte=date.today() - timedelta(days=14)).count()
+        # all_data = quarantine_contacts.objects.all().filter(source='Web Airport Registration').filter(
+        #     date_of_contact__lte=date.today() - timedelta(days=14)).order_by('-date_of_contact')
+        # q_data_count = quarantine_contacts.objects.all().filter(source='Web Airport Registration').filter(
+        #     date_of_contact__lte=date.today() - timedelta(days=14)).count()
         day = time.strftime("%Y-%m-%d")
 
-        data = {'all_data': all_data, 'all_data_count': q_data_count, 'day': day}
+        traveller_details_count = airline_quarantine.objects.filter(measured_temperature = 0).count()
+
+        traveller_details = airline_quarantine.objects.filter(measured_temperature = 0).annotate(
+            first_name=F("patient_contacts__first_name"),
+            last_name=F("patient_contacts__last_name"),
+            sex=F("patient_contacts__sex"),
+            age=F("patient_contacts__dob"),
+            passport_number=F("patient_contacts__passport_number"),
+            phone_number=F("patient_contacts__phone_number"),
+            nationality=F("patient_contacts__nationality"),
+            origin_country=F("patient_contacts__origin_country"),
+        )
+
+        data = {'traveller_details_count': traveller_details_count, 'traveller_details': traveller_details, 'day': day}
 
     return render(request, 'veoc/airport_list_incomplete.html', data)
 

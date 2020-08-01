@@ -107,8 +107,8 @@
         					<div class="col-md-12">
         						<div class="panel panel-default table-responsive">
         							<div class="panel-heading">
-        								Completed Airport Quarantine Report
-        								<span class="label label-info pull-right" id="totalspan">{{all_data_count}} Completed cases </span>
+        								Self Registered Airport Quarantine Report
+        								<span class="label label-info pull-right" id="totalspan">{{traveller_details_count}} Registrations </span>
         							</div>
         							<div class="padding-md clearfix">
         							<table class="table table-hover" id="quarantine_complete_report">
@@ -122,25 +122,21 @@
                             <th>Passport/ID Number</th>
                             <th>Nationality</th>
                             <th>Origin Country</th>
-                            <th>Enrollment Date</th>
-                            <th>Registered By</th>
-                            <th>Date Created</th>
+                            <th>Date of Registration</th>
                             <th>Complete Registration</th>
                           </tr>
                           </thead>
                           <tbody>
-                          {% for follow in all_data %}
+                          {% for follow in traveller_details %}
                           <tr>
-                            <td>{{ follow.last_name }}</td>
+                            <td>{{ follow.patient_contacts.last_name }}</td>
                             <td>{{ follow.first_name }}</td>
                             <td>{{ follow.age }}</td>
                             <td>{{ follow.sex }}</td>
                             <td>{{ follow.phone_number }}</td>
-                              <td>{{ follow.passport_number }}</td>
-                                <td>{{ follow.nationality }}</td>
+                            <td>{{ follow.passport_number }}</td>
+                            <td>{{ follow.nationality }}</td>
                             <td>{{ follow.origin_country }}</td>
-                            <td>{{ follow.date_of_contact|date:'d-m-Y' }}</td>
-                            <td>{{ follow.created_by }}</td>
                             <td>{{ follow.created_at|date:'d-m-Y' }}</td>
                             <td>
                                 <button type="button" class="btn btn-info btn-sm pull-left edit_button"
