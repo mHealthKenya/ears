@@ -239,9 +239,6 @@ def ailrine_registration(request):
         nationality = request.POST.get('nationality','')
         origin_country = request.POST.get('country','')
         date_of_arrival = request.POST.get('date_of_arrival','')
-        cnty = request.POST.get('county','')
-        sub_cnty = request.POST.get('subcounty','')
-        ward = request.POST.get('ward','')
         passport_number = request.POST.get('passport_number','')
         phone_number = request.POST.get('phone_number','')
         email_address = request.POST.get('email_address','')
@@ -260,7 +257,6 @@ def ailrine_registration(request):
         residence = request.POST.get('residence','')
         estate = request.POST.get('estate','')
         postal_address = request.POST.get('postal_address','')
-        #measured_temperature = Null
         arrival_airport_code = '0'
         released = 'f'
         risk_assessment_referal = 'f'
@@ -332,7 +328,7 @@ def ailrine_registration(request):
             # patientObject = quarantine_contacts.objects.get(pk = patients_contacts_id)
             if contact_save:
                 print("working")
-                print(temperature)
+
                 airport_user_save = airline_quarantine.objects.create(airline=airline, flight_number=flight_number, seat_number=seat_number,
                                           destination_city=destination_city, travel_history=countries_visited, cough=cough, breathing_difficulty=breathing_difficulty,
                                           fever=feverish, chills=chills, temperature=temperature, arrival_airport_code=arrival_airport_code,
@@ -342,6 +338,10 @@ def ailrine_registration(request):
 
                 airport_user_save.save()
                 print(airport_user_save.id)
+                qr_code_id = contact_save.contact_uuid;
+                print(qr_code_id)
+
+                return HttpResponse(qr_code_id)
             else:
                 print("data not saved in truck quarantine contacts")
 
@@ -362,6 +362,9 @@ def ailrine_registration(request):
         data = {'country':cntry,'county':county, 'day':day}
 
         return render(request, 'veoc/airline_travellers.html', data)
+
+def ailrine_registration_qr(request):
+    return render(request, 'veoc/airline_travellers_qr.html')
 
 @login_required
 def edit_airport_complete(request):
@@ -1424,20 +1427,9 @@ def county_dashboard(request):
     midnight_time = midnight + "+03"
     # print(midnight)
     # print(midnight_time)
+    total_follow_up_stat= quarantine_follow_up.objects.values('patient_contacts').distinct().count()
 
-    for qua_contact in qua_contacts:
-        followup = quarantine_follow_up.objects.all().filter(patient_contacts=qua_contact.id).count()
-        if followup > 0:
-            total_follow_up_stat += 1
-
-    # populating the todays quarantine respondents
-    for today_qua_contact in qua_contacts:
-        current_date = date.today().strftime('%Y-%m-%d')
-        today_followup = quarantine_follow_up.objects.all().filter(patient_contacts=today_qua_contact.id).filter(
-            patient_contacts=today_qua_contact.id).filter(
-            Q(created_at__gte=midnight) | Q(created_at__gte=midnight_time)).count()
-        if today_followup > 0:
-            today_follow_up_stat += 1
+    today_follow_up_stat = quarantine_follow_up.objects.filter(Q(created_at__gte=midnight) | Q(created_at__gte=midnight_time)).count()
 
     # Getting gender totals, ongoing, completed
     for gender in qua_contacts:
@@ -1773,20 +1765,9 @@ def subcounty_dashboard(request):
     midnight_time = midnight + "+03"
     # print(midnight)
     # print(midnight_time)
+    total_follow_up_stat= quarantine_follow_up.objects.values('patient_contacts').distinct().count()
 
-    for qua_contact in qua_contacts:
-        followup = quarantine_follow_up.objects.all().filter(patient_contacts=qua_contact.id).count()
-        if followup > 0:
-            total_follow_up_stat += 1
-
-    # populating the todays quarantine respondents
-    for today_qua_contact in qua_contacts:
-        current_date = date.today().strftime('%Y-%m-%d')
-        today_followup = quarantine_follow_up.objects.all().filter(patient_contacts=today_qua_contact.id).filter(
-            patient_contacts=today_qua_contact.id).filter(
-            Q(created_at__gte=midnight) | Q(created_at__gte=midnight_time)).count()
-        if today_followup > 0:
-            today_follow_up_stat += 1
+    today_follow_up_stat = quarantine_follow_up.objects.filter(Q(created_at__gte=midnight) | Q(created_at__gte=midnight_time)).count()
 
     # Getting gender totals, ongoing, completed
     for gender in qua_contacts:
@@ -2120,20 +2101,9 @@ def border_dashboard(request):
     midnight_time = midnight + "+03"
     # print(midnight)
     # print(midnight_time)
+    total_follow_up_stat= quarantine_follow_up.objects.values('patient_contacts').distinct().count()
 
-    for qua_contact in qua_contacts:
-        followup = quarantine_follow_up.objects.all().filter(patient_contacts=qua_contact.id).count()
-        if followup > 0:
-            total_follow_up_stat += 1
-
-    # populating the todays quarantine respondents
-    for today_qua_contact in qua_contacts:
-        current_date = date.today().strftime('%Y-%m-%d')
-        today_followup = quarantine_follow_up.objects.all().filter(patient_contacts=today_qua_contact.id).filter(
-            patient_contacts=today_qua_contact.id).filter(
-            Q(created_at__gte=midnight) | Q(created_at__gte=midnight_time)).count()
-        if today_followup > 0:
-            today_follow_up_stat += 1
+    today_follow_up_stat = quarantine_follow_up.objects.filter(Q(created_at__gte=midnight) | Q(created_at__gte=midnight_time)).count()
 
     # Getting gender totals, ongoing, completed
     for gender in qua_contacts:
@@ -2483,20 +2453,9 @@ def facility_dashboard(request):
     midnight_time = midnight + "+03"
     # print(midnight)
     # print(midnight_time)
+    total_follow_up_stat= quarantine_follow_up.objects.values('patient_contacts').distinct().count()
 
-    for qua_contact in qua_contacts:
-        followup = quarantine_follow_up.objects.all().filter(patient_contacts=qua_contact.id).count()
-        if followup > 0:
-            total_follow_up_stat += 1
-
-    # populating the todays quarantine respondents
-    for today_qua_contact in qua_contacts:
-        current_date = date.today().strftime('%Y-%m-%d')
-        today_followup = quarantine_follow_up.objects.all().filter(patient_contacts=today_qua_contact.id).filter(
-            patient_contacts=today_qua_contact.id).filter(
-            Q(created_at__gte=midnight) | Q(created_at__gte=midnight_time)).count()
-        if today_followup > 0:
-            today_follow_up_stat += 1
+    today_follow_up_stat = quarantine_follow_up.objects.filter(Q(created_at__gte=midnight) | Q(created_at__gte=midnight_time)).count()
 
     # Getting gender totals, ongoing, completed
     for gender in qua_contacts:

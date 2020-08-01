@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <title>Virtual Emergency Operation Center</title>
+<link href="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+<script src="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<!------ Include the above in your HEAD tag ---------->
+
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.8/css/all.css">
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+ <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+ <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+   <script type="text/javascript"
+       src="https://cdn.datatables.net/v/dt/jqc-1.12.3/jszip-2.5.0/pdfmake-0.1.18/dt-1.10.12/b-1.2.2/b-flash-1.2.2/b-html5-1.2.2/b-print-1.2.2/datatables.min.js"></script>
+</head>
+<body>
+
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-12">
+        <div class="card">
+          <div  id="dvQRCode" style="background-color:white">
+        <header class="card-header" align="center">
+            <img src="/static/images/emblem.png" style="width:40%; max-width:100px;">
+            <h4>MINISTRY OF HEALTH<br>NOVEL CORONAVIRUS</h4>
+            <h4 class="card-title mt-2" align="center">Travelers Health Surveillance QR Code</h4>
+            <p>You are required to display this QR Code to a Port Health Officer at the point of arrival, it will inform them that you have duly filled the form.</p>
+        </header><br>
+                 <div id="qr-td" style="float: center;"></div>
+                 <br>
+               </div>
+            <div class="form-group">
+              <button class="btn btn-info" onclick="saveDiv()">Download QR as PDF</button>
+                  <button class="btn btn-info" onclick="printDiv()">Print QR</button>
+            </div> <!-- form-group// -->
+        </div> <!-- card.// -->
+        </div> <!-- col.//-->
+    </div> <!-- row.//-->
+
+</div>
+<!--container end.//-->
+
+<script src="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootbox.js/4.4.0/bootbox.min.js"> </script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
+    <script src="https://cdn.jsdelivr.net/npm/promise-polyfill"></script>
+    <script src="https://code.jquery.com/jquery-1.12.4.min.js" integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ=" crossorigin="anonymous"></script>
+    <script type="text/javascript" src="lib/jquery.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.3.2/jspdf.min.js"></script>
+<script>
+
+    //System QR Code for the attestation
+    var qrcode = new QRCode(document.getElementById('qr-td'),{
+        width:100,
+        height:100
+    });
+    </script>
+    <script>
+
+    function printDiv() {
+          var prtContent = document.getElementById("dvQRCode");
+          var mywindow = window.open('', '', 'left=0,top=0,width=800,height=900,toolbar=0,scrollbars=0,status=0');
+          mywindow.document.write(prtContent.innerHTML);
+
+          mywindow.document.close(); // necessary for IE >= 10
+          mywindow.setTimeout(function(){
+            mywindow.focus();
+            mywindow.print();
+            mywindow.close();
+          }, 1000);
+
+          return true;
+      }
+</script>
+<script>
+function saveDiv() {
+  var options = {};
+  var pdf = new jsPDF('p', 'pt', 'a4');
+  pdf.addHTML($("#dvQRCode"), 15, 15, options, function() {
+    pdf.save('Covid-19 Clearance.pdf');
+  });
+}
+</script>
+</body>
+</html>

@@ -24,7 +24,7 @@ router.register(r'trucker_list', views.AlbumViewSet, 'foobar-detail')
 
 urlpatterns = [
     url(r'^airport_register/$', views.airport_register, name='airport_register'),
-    #url(r'^airport_complete/$', views.airport_complete, name='airport_complete'),
+    url(r'^airline_registration_qr/$', views.ailrine_registration_qr, name='airline_registration_qr'),
     url(r'^edit_airport_complete/$', views.edit_airport_complete, name='edit_airport_complete'),
     url(r'^airport_list_incomplete/$', views.airport_list_incomplete, name='airport_list_incomplete'),
     url(r'^export_csv/$', views.export_csv, name='export_csv'),
