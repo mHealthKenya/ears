@@ -123,9 +123,9 @@ WSGI_APPLICATION = 'virtual_eoc.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': os.environ.get('DB_NAME','postgres'),
+        'NAME': os.environ.get('DB_NAME','virtual_eoc'),
         'USER': os.environ.get('DB_USER','postgres'),
-        'PASSWORD': os.environ.get('DB_PASS','12345678'),
+        'PASSWORD': os.environ.get('DB_PASS','P0stgr3s!@#'),
         'HOST': 'localhost',
         'PORT': '5432',
     }
