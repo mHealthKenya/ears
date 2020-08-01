@@ -340,7 +340,8 @@ def ailrine_registration(request):
                 print(airport_user_save.id)
                 qr_code_id = contact_save.contact_uuid;
                 print(qr_code_id)
-
+                #method to ope
+                # ailrine_registration_qr(request, qr_code_id)
                 return HttpResponse(qr_code_id)
             else:
                 print("data not saved in truck quarantine contacts")
@@ -363,8 +364,13 @@ def ailrine_registration(request):
 
         return render(request, 'veoc/airline_travellers.html', data)
 
-def ailrine_registration_qr(request):
-    return render(request, 'veoc/airline_travellers_qr.html')
+def ailrine_registration_qr(request, qr_code):
+
+    data = {'qr_code':qr_code}
+    print('inside qrcode')
+    print(data)
+
+    return render(request, 'veoc/airline_travellers_qr.html', data)
 
 @login_required
 def edit_airport_complete(request):

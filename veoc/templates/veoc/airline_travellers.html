@@ -318,6 +318,8 @@
                             title: 'Success!',
                             text: 'Travellers Details Saved',
                             icon: 'success'
+{#                        }).then(function(){#}
+{#                            window.location = "{% url 'veoc:airline_registration_qr' %}";#}
                         });
                         travellersForm[0].reset();
                         {# get inserted datas uuid got generation of QRcode pass it to the function generating the code#}
