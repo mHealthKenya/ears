@@ -422,6 +422,50 @@ def edit_airport_complete(request):
 
 
 @login_required
+def airport_list_complete(request):
+    if request.method == "POST":
+        date_from = request.POST.get('date_from', '')
+        date_to = request.POST.get('date_to', '')
+        day = time.strftime("%Y-%m-%d")
+
+        traveller_details_count = airline_quarantine.objects.exclude(measured_temperature = 0).filter(
+            created_at__gte=date_from, created_at__lte=date_to).count()
+
+        traveller_details = airline_quarantine.objects.exclude(measured_temperature = 0).filter(
+            created_at__gte=date_from, created_at__lte=date_to).annotate(
+            first_name=F("patient_contacts__first_name"),
+            last_name=F("patient_contacts__last_name"),
+            sex=F("patient_contacts__sex"),
+            age=F("patient_contacts__dob"),
+            passport_number=F("patient_contacts__passport_number"),
+            phone_number=F("patient_contacts__phone_number"),
+            nationality=F("patient_contacts__nationality"),
+            origin_country=F("patient_contacts__origin_country"),
+        )
+
+        data = {'traveller_details_count': traveller_details_count, 'traveller_details': traveller_details, 'day': day}
+
+    else:
+        day = time.strftime("%Y-%m-%d")
+
+        traveller_details_count = airline_quarantine.objects.exclude(measured_temperature = 0).count()
+
+        traveller_details = airline_quarantine.objects.exclude(measured_temperature = 0).annotate(
+            first_name=F("patient_contacts__first_name"),
+            last_name=F("patient_contacts__last_name"),
+            sex=F("patient_contacts__sex"),
+            age=F("patient_contacts__dob"),
+            passport_number=F("patient_contacts__passport_number"),
+            phone_number=F("patient_contacts__phone_number"),
+            nationality=F("patient_contacts__nationality"),
+            origin_country=F("patient_contacts__origin_country"),
+        )
+
+        data = {'traveller_details_count': traveller_details_count, 'traveller_details': traveller_details, 'day': day}
+
+    return render(request, 'veoc/airline_list_complete.html', data)
+
+@login_required
 def airport_list_incomplete(request):
     if request.method == "POST":
         date_from = request.POST.get('date_from', '')
@@ -473,7 +517,6 @@ def airport_list_incomplete(request):
         data = {'traveller_details_count': traveller_details_count, 'traveller_details': traveller_details, 'day': day}
 
     return render(request, 'veoc/airport_list_incomplete.html', data)
-
 
 # export raw data as csv_file
 def export_csv(request):
