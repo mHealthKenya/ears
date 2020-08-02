@@ -50,7 +50,7 @@
                 </div> <!-- form-group end.// -->
                 <div class="col form-group">
                     <label for="dob">Date of Birth : *</label>
-                    <input class="form-control" type="date" value="{{ day }}" id="dob" max='2000-13-13' name="dob">
+                    <input class="form-control" type="date" value="{{ day }}" id="dob" max='{{day}}' name="dob">
                 </div> <!-- form-group end.// -->
                 </div> <!-- form-row end.// -->
                 <div class="form-row">
@@ -74,7 +74,7 @@
                 </div> <!-- form-group end.// -->
                 <div class="col form-group">
                     <label for="date_of_arrival">Date of Arrival in Kenya: *</label>
-                    <input class="form-control" type="date" value="{{ day }}" id="date_of_arrival" max='2000-13-13' name="date_of_arrival">
+                    <input class="form-control" type="date" value="{{ day }}" id="date_of_arrival" max="{{ maxday }}" min="{{day}}" name="date_of_arrival">
                 </div> <!-- form-group end.// -->
             </div> <!-- form-row end.// -->
             <div class="form-row">
@@ -84,7 +84,7 @@
                 </div> <!-- form-group end.// -->
                 <div class=" col form-group">
                     <label for="phone_number">Phone Number : *</label>
-                    <input class="form-control" type="tel" id="phone_number" name="phone_number" onchange="checkPhone()" placeholder="Country Code, Start With +254, e.g +254720000000" required/>
+                    <input class="form-control" type="tel" id="phone_number" name="phone_number" onchange="checkPhone()" minlength = "7" placeholder="Country Code, Start With +254, e.g +254720000000" required/>
                     <small class="form-text text-muted">This is only for notification purposes.</small>
                 </div> <!-- form-group end.// -->
                 <div class="col form-group">
@@ -96,15 +96,15 @@
                 <div class="form-row">
                 <div class="col form-group">
                     <label for="airline">Airline :* </label>
-                    <input class="form-control" type="text" id="airline" name="airline" size="45" placeholder="Airline" required/>
+                    <input class="form-control" type="text" id="airline" name="airline" size="45" minlength = "2" placeholder="Airline" required/>
                 </div> <!-- form-group end.// -->
                 <div class="col form-group">
                     <label for="flight_number">Flight Number :* </label>
-                    <input class="form-control" type="text" id="flight_number" name="flight_number" size="45" placeholder="Flight Number" required/>
+                    <input class="form-control" type="text" id="flight_number" name="flight_number" size="45" minlength = "2" placeholder="Flight Number" required/>
                 </div> <!-- form-group end.// -->
                 <div class="col form-group">
                     <label for="seat_number">Seat Number :* </label>
-                    <input class="form-control" type="text" id="seat_number" name="seat_number" size="45" placeholder="Seat Number" required/>
+                    <input class="form-control" type="text" id="seat_number" name="seat_number" size="45" minlength = "2"  placeholder="Seat Number" required/>
                 </div> <!-- form-group end.// -->
             </div> <!-- form-row end.// -->
             <div class="form-row">
@@ -286,7 +286,7 @@
     <script type="text/javascript" src="lib/jquery.min.js"></script>
     <script>
     $(document).ready(function() {
-
+      console.log("{{maxday}}")
         var travellersForm = $(".airline_travellers_form")
 
         travellersForm.submit(function(e){

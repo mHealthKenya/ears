@@ -45,6 +45,9 @@ import uuid
 from django.core.mail import send_mail
 from django.conf import settings
 
+from datetime import datetime
+from dateutil.relativedelta import relativedelta
+
 @login_required
 def airport_register(request):
     if request.method == 'POST':
@@ -350,8 +353,9 @@ def ailrine_registration(request):
         cntry = country.objects.all()
         county = organizational_units.objects.all().filter(hierarchylevel = 2).order_by('name')
         day = time.strftime("%Y-%m-%d")
+        maxday = (datetime.now() + timedelta(days=5) ).strftime('%Y-%m-%d')
 
-        data = {'country':cntry,'county':county, 'day':day}
+        data = {'country':cntry,'county':county, 'day':day, 'maxday':maxday}
 
         return render(request, 'veoc/airline_travellers.html', data)
 
@@ -359,8 +363,11 @@ def ailrine_registration(request):
         cntry = country.objects.all()
         county = organizational_units.objects.all().filter(hierarchylevel = 2).order_by('name')
         day = time.strftime("%Y-%m-%d")
+        #date_1 = time.today()
+        maxday = (datetime.now()+ relativedelta(days=5)).strftime('%Y-%m-%d')
+        #maxday = (datetime.now() + timedelta(days=5) ).strftime('%Y-%m-%d')
 
-        data = {'country':cntry,'county':county, 'day':day}
+        data = {'country':cntry,'county':county, 'day':day, 'maxday':maxday}
 
         return render(request, 'veoc/airline_travellers.html', data)
 
