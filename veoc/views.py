@@ -212,20 +212,22 @@ def airport_register(request):
 
                 print(response2.text.encode('utf8'))
 
-        cntry = country.objects.all()
+        cntry = country.objects.all().order_by('name')
+        airline_list = airlines.objects.all().order_by('airline_name')
         county = organizational_units.objects.all().filter(hierarchylevel = 2).order_by('name')
         day = time.strftime("%Y-%m-%d")
 
-        data = {'country':cntry,'county':county, 'day':day}
+        data = {'country':cntry, 'county':county, 'airline_list':airline_list, 'day':day}
 
         return render(request, 'veoc/airport_register.html', data)
 
     else:
-        cntry = country.objects.all()
+        cntry = country.objects.all().order_by('name')
+        airline_list = airlines.objects.all().order_by('airline_name')
         county = organizational_units.objects.all().filter(hierarchylevel = 2).order_by('name')
         day = time.strftime("%Y-%m-%d")
 
-        data = {'country':cntry,'county':county, 'day':day}
+        data = {'country':cntry, 'county':county, 'airline_list':airline_list, 'day':day}
 
         return render(request, 'veoc/airport_register.html', data)
 
@@ -347,20 +349,22 @@ def ailrine_registration(request):
                 print("data not saved in truck quarantine contacts")
 
 
-        cntry = country.objects.all()
+        cntry = country.objects.all().order_by('name')
+        airline_list = airlines.objects.all().order_by('airline_name')
         county = organizational_units.objects.all().filter(hierarchylevel = 2).order_by('name')
         day = time.strftime("%Y-%m-%d")
 
-        data = {'country':cntry,'county':county, 'day':day}
+        data = {'country':cntry, 'county':county, 'airline_list':airline_list, 'day':day}
 
         return render(request, 'veoc/airline_travellers.html', data)
 
     else:
-        cntry = country.objects.all()
+        cntry = country.objects.all().order_by('name')
+        airline_list = airlines.objects.all().order_by('airline_name')
         county = organizational_units.objects.all().filter(hierarchylevel = 2).order_by('name')
         day = time.strftime("%Y-%m-%d")
 
-        data = {'country':cntry,'county':county, 'day':day}
+        data = {'country':cntry, 'county':county, 'airline_list':airline_list, 'day':day}
 
         return render(request, 'veoc/airline_travellers.html', data)
 

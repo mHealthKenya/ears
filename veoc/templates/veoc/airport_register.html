@@ -109,8 +109,12 @@
                     </div>
                      <div class="form-row" id="diagnosis_status_div">
                        <div class="form-group col-md-4">
-                         <label for="airline">Airline :* </label>
-                         <input class="form-control" type="text" id="airline" name="airline" size="45" placeholder="Airline" required/>
+                         <label for="airline">Airline :* </label><select class="form-control" name="airline" id="airline" required>
+                          <option value="" disabled selected>Select Airline</option>
+                          {% for list in airline_list %}
+                              <option value="{{list.airline_name}}">{{list.airline_name}}</option>
+                          {% endfor %}
+                      </select>
                        </div>
                        <div class="form-group col-md-4">
                          <label for="flight_number">Flight Number :* </label>
