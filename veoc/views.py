@@ -459,9 +459,9 @@ def airport_list_complete(request):
     else:
         day = time.strftime("%Y-%m-%d")
 
-        traveller_details_count = airline_quarantine.objects.exclude(measured_temperature = 0).count()
+        traveller_details_count = airline_quarantine.objects.filter(measured_temperature__gt = 0).count()
 
-        traveller_details = airline_quarantine.objects.exclude(measured_temperature = 0).annotate(
+        traveller_details = airline_quarantine.objects.filter(measured_temperature__gt = 0).annotate(
             first_name=F("patient_contacts__first_name"),
             last_name=F("patient_contacts__last_name"),
             sex=F("patient_contacts__sex"),
