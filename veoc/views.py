@@ -45,6 +45,9 @@ import uuid
 from django.core.mail import send_mail
 from django.conf import settings
 
+from datetime import datetime
+from dateutil.relativedelta import relativedelta
+
 @login_required
 def airport_register(request):
     if request.method == 'POST':
@@ -353,6 +356,7 @@ def ailrine_registration(request):
         airline_list = airlines.objects.all().order_by('airline_name')
         county = organizational_units.objects.all().filter(hierarchylevel = 2).order_by('name')
         day = time.strftime("%Y-%m-%d")
+        maxday = (datetime.now() + timedelta(days=5) ).strftime('%Y-%m-%d')
 
         data = {'country':cntry, 'county':county, 'airline_list':airline_list, 'day':day}
 
@@ -363,6 +367,9 @@ def ailrine_registration(request):
         airline_list = airlines.objects.all().order_by('airline_name')
         county = organizational_units.objects.all().filter(hierarchylevel = 2).order_by('name')
         day = time.strftime("%Y-%m-%d")
+        #date_1 = time.today()
+        maxday = (datetime.now()+ relativedelta(days=5)).strftime('%Y-%m-%d')
+        #maxday = (datetime.now() + timedelta(days=5) ).strftime('%Y-%m-%d')
 
         data = {'country':cntry, 'county':county, 'airline_list':airline_list, 'day':day}
 
