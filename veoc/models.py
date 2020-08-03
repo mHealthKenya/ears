@@ -1118,3 +1118,14 @@ class airline_quarantine(models.Model):
 
     def _str_(self):
         return self.patient_contacts.first_name + ' - ' + self.airline + ' - ' + self.flight_number
+
+
+class airlines(models.Model):
+    airline_name = models.CharField(max_length=255, blank=True)
+    iata_designator = models.CharField(max_length=32, blank=True)
+    three_digit_code = models.CharField(max_length=32, blank=True)
+    icao_designator = models.CharField(max_length=255, blank=True)
+    country = models.CharField(max_length=255, blank=True)
+
+    def _str_(self):
+        return self.airline_name

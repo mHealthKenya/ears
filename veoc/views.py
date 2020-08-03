@@ -217,20 +217,22 @@ def airport_register(request):
 
                 print(response2.text.encode('utf8'))
 
-        cntry = country.objects.all()
+        cntry = country.objects.all().order_by('name')
+        airline_list = airlines.objects.all().order_by('airline_name')
         county = organizational_units.objects.all().filter(hierarchylevel = 2).order_by('name')
         day = time.strftime("%Y-%m-%d")
 
-        data = {'country':cntry,'county':county, 'day':day}
+        data = {'country':cntry, 'county':county, 'airline_list':airline_list, 'day':day}
 
         return render(request, 'veoc/airport_register.html', data)
 
     else:
-        cntry = country.objects.all()
+        cntry = country.objects.all().order_by('name')
+        airline_list = airlines.objects.all().order_by('airline_name')
         county = organizational_units.objects.all().filter(hierarchylevel = 2).order_by('name')
         day = time.strftime("%Y-%m-%d")
 
-        data = {'country':cntry,'county':county, 'day':day}
+        data = {'country':cntry, 'county':county, 'airline_list':airline_list, 'day':day}
 
         return render(request, 'veoc/airport_register.html', data)
 
@@ -362,24 +364,26 @@ def ailrine_registration(request):
                 print("data not saved in airline quarantine contacts")
 
 
-        cntry = country.objects.all()
+        cntry = country.objects.all().order_by('name')
+        airline_list = airlines.objects.all().order_by('airline_name')
         county = organizational_units.objects.all().filter(hierarchylevel = 2).order_by('name')
         day = time.strftime("%Y-%m-%d")
         maxday = (datetime.now() + timedelta(days=5) ).strftime('%Y-%m-%d')
 
-        data = {'country':cntry,'county':county, 'day':day, 'maxday':maxday}
+        data = {'country':cntry, 'county':county, 'airline_list':airline_list, 'day':day}
 
         return render(request, 'veoc/airline_travellers.html', data)
 
     else:
-        cntry = country.objects.all()
+        cntry = country.objects.all().order_by('name')
+        airline_list = airlines.objects.all().order_by('airline_name')
         county = organizational_units.objects.all().filter(hierarchylevel = 2).order_by('name')
         day = time.strftime("%Y-%m-%d")
         #date_1 = time.today()
         maxday = (datetime.now()+ relativedelta(days=5)).strftime('%Y-%m-%d')
         #maxday = (datetime.now() + timedelta(days=5) ).strftime('%Y-%m-%d')
 
-        data = {'country':cntry,'county':county, 'day':day, 'maxday':maxday}
+        data = {'country':cntry, 'county':county, 'airline_list':airline_list, 'day':day}
 
         return render(request, 'veoc/airline_travellers.html', data)
 
@@ -467,9 +471,9 @@ def airport_list_complete(request):
     else:
         day = time.strftime("%Y-%m-%d")
 
-        traveller_details_count = airline_quarantine.objects.exclude(measured_temperature = 0).count()
+        traveller_details_count = airline_quarantine.objects.filter(measured_temperature__gt     = 0).count()
 
-        traveller_details = airline_quarantine.objects.exclude(measured_temperature = 0).annotate(
+        traveller_details = airline_quarantine.objects.filter(measured_temperature__gt = 0).annotate(
             first_name=F("patient_contacts__first_name"),
             last_name=F("patient_contacts__last_name"),
             sex=F("patient_contacts__sex"),
