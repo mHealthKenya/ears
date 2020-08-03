@@ -71,6 +71,7 @@ def airport_register(request):
         destination_city = request.POST.get('destination_city','')
         countries_visited = request.POST.get('countries_visited','')
         temperature = request.POST.get('fever','')
+        covid_pcr = request.POST.get('covid_pcr','')
         feverish = request.POST.get('feverish','')
         chills = request.POST.get('chills','')
         cough = request.POST.get('cough','')
@@ -85,6 +86,7 @@ def airport_register(request):
         released = request.POST.get('released','')
         risk_assessment_referal = request.POST.get('risk_assessment_referal','')
         designated_hospital_referal = request.POST.get('designated_hospital_referal','')
+        reference_facility = request.POST.get('reference_facility','')
 
         if origin_country.lower() == "kenya" :
             countyObject = organizational_units.objects.get(name = cnty)
@@ -161,9 +163,9 @@ def airport_register(request):
                 print(temperature)
                 airport_user_save = airline_quarantine.objects.create(airline=airline, flight_number=flight_number, seat_number=seat_number,
                                           destination_city=destination_city, travel_history=countries_visited, cough=cough, breathing_difficulty=breathing_difficulty,
-                                          fever=feverish, chills=chills, temperature=temperature, measured_temperature=measured_temperature, arrival_airport_code=arrival_airport_code,
+                                          covid_pcr=covid_pcr, fever=feverish, chills=chills, temperature=temperature, measured_temperature=measured_temperature, arrival_airport_code=arrival_airport_code,
                                           released=released, risk_assessment_referal=risk_assessment_referal, designated_hospital_refferal=designated_hospital_referal,
-                                          created_at=current_date, updated_at=current_date, patient_contacts=contact_save, created_by=userObject, updated_by=userObject,
+                                          reference_facility=reference_facility, created_at=current_date, updated_at=current_date, patient_contacts=contact_save, created_by=userObject, updated_by=userObject,
                                           residence=residence, estate=estate, postal_address=postal_address, status='t')
 
                 airport_user_save.save()
@@ -251,6 +253,7 @@ def ailrine_registration(request):
         destination_city = request.POST.get('destination_city','')
         countries_visited = request.POST.get('countries_visited','')
         temperature = request.POST.get('fever','')
+        covid_pcr = request.POST.get('covid_pcr','')
         feverish = request.POST.get('feverish','')
         chills = request.POST.get('chills','')
         cough = request.POST.get('cough','')
@@ -264,6 +267,7 @@ def ailrine_registration(request):
         released = 'f'
         risk_assessment_referal = 'f'
         designated_hospital_referal = 'f'
+        reference_facility = request.POST.get('reference_facility','')
 
         countyObject = organizational_units.objects.get(organisationunitid = 18)
         subcountyObject = organizational_units.objects.get(organisationunitid = 18)
@@ -334,8 +338,9 @@ def ailrine_registration(request):
 
                 airport_user_save = airline_quarantine.objects.create(airline=airline, flight_number=flight_number, seat_number=seat_number,
                                           destination_city=destination_city, travel_history=countries_visited, cough=cough, breathing_difficulty=breathing_difficulty,
-                                          fever=feverish, chills=chills, temperature=temperature, arrival_airport_code=arrival_airport_code,
-                                          released=released, risk_assessment_referal=risk_assessment_referal, designated_hospital_refferal=designated_hospital_referal,
+
+                                          covid_pcr=covid_pcr, fever=feverish, chills=chills, temperature=temperature, arrival_airport_code=arrival_airport_code,
+                                          released=released, reference_facility=reference_facility, risk_assessment_referal=risk_assessment_referal, designated_hospital_refferal=designated_hospital_referal,
                                           created_at=current_date, updated_at=current_date, patient_contacts=contact_save, created_by=userObject, updated_by=userObject,
                                           residence=residence, estate=estate, postal_address=postal_address, status='t')
 
@@ -346,8 +351,15 @@ def ailrine_registration(request):
                 #method to ope
                 # ailrine_registration_qr(request, qr_code_id)
                 return HttpResponse(qr_code_id)
+
+                subject = 'Air Traveller QR Code'
+                message = render_to_string('veoc/airline_travellers.html')
+                #'Dear ' + first_name + ',' + '\n' + '\n' + 'You have successfully filled in the travel surveilance form. ' + '\n' + 'You may also download the android app on play store or through this link https://ears.mhealthkenya.co.ke/.' + '\n' + 'Thank You.'
+                email_from = settings.EMAIL_HOST_USER
+                recipient_list = [email]
+                send_mail(subject, message, email_from, recipient_list)
             else:
-                print("data not saved in truck quarantine contacts")
+                print("data not saved in airline quarantine contacts")
 
 
         cntry = country.objects.all()
