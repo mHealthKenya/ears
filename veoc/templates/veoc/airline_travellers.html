@@ -96,12 +96,13 @@
                 <div class="form-row">
                 <div class="col form-group">
                     <label for="airline">Airline :* </label>
-                    <select class="form-control" name="airline" id="airline" required>
-                          <option value="" disabled selected>Select Airline</option>
-                          {% for list in airline_list %}
-                              <option value="{{list.airline_name}}">{{list.airline_name}}</option>
-                          {% endfor %}
-                      </select>
+                    <input class="form-control" type="text" id="airline" name="airline" size="45" minlength = "2" placeholder="Airline" required/>
+{#                    <select class="form-control" name="airline" id="airline" required>#}
+{#                          <option value="" disabled selected>Select Airline</option>#}
+{#                          {% for list in airline_list %}#}
+{#                              <option value="{{list.airline_name}}">{{list.airline_name}}</option>#}
+{#                          {% endfor %}#}
+{#                      </select>#}
                 </div> <!-- form-group end.// -->
                 <div class="col form-group">
                     <label for="flight_number">Flight Number :* </label>
