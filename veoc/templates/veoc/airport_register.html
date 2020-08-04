@@ -128,11 +128,11 @@
                        </div>
                      </div>
                      <div class="form-row" id="diagnosis_status_div">
-                       <div class="form-group col-md-4">
+                       <div class="form-group col-md-6">
                          <label for="destination_city">Destination City : </label>
                          <input class="form-control" type="text" id="destination_city" name="destination_city" size="45" placeholder="Destination City"/>
                        </div>
-                       <div class="form-group col-md-4">
+                       <div class="form-group col-md-6">
                          <label for="countries_visited">Countries Visited : </label>
                          <select class="form-control" name="countries_visited" id="countries_visited">
                               <option value="" disabled selected>Select Country</option>
@@ -140,6 +140,17 @@
                                   <option value="{{cntry.name}}">{{cntry.name}}</option>
                               {% endfor %}
                           </select></div>
+                        </div>
+
+                        <div class="form-row" id="country_details_div">
+                          <div class="col form-group col-md-4">
+                              <label for="feverish"> Negative Covid19 PCR :* </label>
+                              <select class="form-control" id="covid_pcr" name="covid_pcr">
+                                  <option value="" disabled selected>Select Option</option>
+                                  <option value="t">Yes</option>
+                                  <option value="f">No</option>
+                              </select>
+                          </div> <!-- form-group end.// -->
                        <div class="form-group col-md-4">
                          <label for="fever">Fever (37.5°C or higher):* </label>
                          <select class="form-control" id="fever" name="fever" required>
@@ -148,9 +159,8 @@
                              <option value="f">No</option>
                        </select>
                        </div>
-                    </div>
-                    <div class="form-row" id="country_details_div">
-                      <div class="form-group col-md-3">
+
+                      <div class="form-group col-md-4">
                         <label for="feverish">Feverish :* </label>
                         <select class="form-control" id="feverish" name="feverish" required>
                             <option value="" disabled selected>Select Option</option>
@@ -158,7 +168,10 @@
                             <option value="f">No</option>
                       </select>
                       </div>
-                      <div class="form-group col-md-3">
+                    </div>
+
+                    <div class="form-row" id="country_details_div">
+                      <div class="form-group col-md-4">
                         <label for="chills">Chills :* </label>
                         <select class="form-control" id="chills" name="chills" required>
                             <option value="" disabled selected>Select Option</option>
@@ -166,7 +179,7 @@
                             <option value="f">No</option>
                       </select>
                       </div>
-                      <div class="form-group col-md-3">
+                      <div class="form-group col-md-4">
                         <label for="cough">Cough :* </label>
                         <select class="form-control" id="cough" name="cough" required>
                             <option value="" disabled selected>Select Option</option>
@@ -174,7 +187,7 @@
                             <option value="f">No</option>
                       </select>
                       </div>
-                      <div class="form-group col-md-3">
+                      <div class="form-group col-md-4">
                         <label for="breathing_difficulty">Difficulty in breathing :* </label>
                         <select class="form-control" id="breathing_difficulty" name="breathing_difficulty" required>
                             <option value="" disabled selected>Select Option</option>
@@ -236,13 +249,21 @@
                    </div>
                    <div class="form-group col-md-4">
                      <label for="designated_hospital_referal">Designated Hospital Referral  : </label>
-                     <select class="form-control" id="designated_hospital_referal" name="designated_hospital_referal" required>
+                     <select class="form-control" id="designated_hospital_referal" name="designated_hospital_referal"  onchange="facility_filter()" required>
                        <option value="" disabled selected>Select Option</option>
                        <option value="t">Yes</option>
                        <option value="f">No</option>
                  </select>
                    </div>
                    </div>
+
+                    <div class="form-row" id="save_div">
+                   <div class="form-group col-md-4" style="display: none;"id="reference_facility">
+                     <label for="reference_facility">Facility Referred  : </label>
+                     <input class="form-control" type="text" id="reference_facility" name="reference_facility" placeholder="Facility Referred To" />
+                   </div>
+                   </div>
+
                      <div class="form-row" id="save_div">
                        <div class="form-group col-md-12">
                          <button type="submit" id="save_button" class="btn btn-primary">Save</button>
@@ -268,7 +289,6 @@
    <script src="https://cdn.jsdelivr.net/npm/promise-polyfill"></script>
 
     <script>
-
     var today = new Date();
     var dd = today.getDate();
     var mm = today.getMonth()+1; //January is 0!
@@ -284,6 +304,9 @@
     // document.getElementById("datereported").setAttribute("max", today);
 
     $(document).ready(function(e){
+
+
+
       var callsForm = $(".calls_form")
       var call_category = $("#callCategory")
       console.log(call_category);
@@ -389,6 +412,17 @@
         var _county = document.getElementById('county_div');
         console.log(_region)
         if(_region == "KENYA"){
+          _county.style.display = 'block';
+        }else{
+          _county.style.display = 'none';
+        }
+     }
+
+     function facility_filter(){
+        var _region = document.getElementById('designated_hospital_referal').value;
+        var _county = document.getElementById('reference_facility');
+        console.log(_region)
+        if(_region == "t"){
           _county.style.display = 'block';
         }else{
           _county.style.display = 'none';
