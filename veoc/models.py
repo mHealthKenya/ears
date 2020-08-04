@@ -1109,6 +1109,8 @@ class airline_quarantine(models.Model):
     risk_assessment_referal = models.BooleanField(default=True)
     designated_hospital_refferal = models.BooleanField(default=True)
     status = models.BooleanField(default=True)
+    covid_pcr = models.BooleanField(default=False)
+    reference_facility = models.CharField(max_length=255, blank=True)
     created_at = models.DateTimeField(default=datetime.now())
     updated_at = models.DateTimeField(default=datetime.now())
     created_by = models.ForeignKey(User, on_delete=models.DO_NOTHING, related_name='airline_updated_by')
