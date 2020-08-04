@@ -367,7 +367,6 @@
         });
 
         qrcode.makeCode(uuid)
-        console.log("here");
         var options = {};
         var pdf = new jsPDF('p', 'pt', 'a4');
         pdf.addHTML($("#dvQRCode"), 15, 15, options, function() {

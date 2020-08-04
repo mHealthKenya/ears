@@ -354,12 +354,12 @@ def ailrine_registration(request):
                 # ailrine_registration_qr(request, qr_code_id)
                 return HttpResponse(qr_code_id)
 
-                subject = 'Air Traveller QR Code'
-                message = render_to_string('veoc/airline_travellers.html')
+                # subject = 'Air Traveller QR Code'
+                # message = render_to_string('veoc/airline_travellers.html')
                 #'Dear ' + first_name + ',' + '\n' + '\n' + 'You have successfully filled in the travel surveilance form. ' + '\n' + 'You may also download the android app on play store or through this link https://ears.mhealthkenya.co.ke/.' + '\n' + 'Thank You.'
-                email_from = settings.EMAIL_HOST_USER
-                recipient_list = [email]
-                send_mail(subject, message, email_from, recipient_list)
+                # email_from = settings.EMAIL_HOST_USER
+                # recipient_list = [email]
+                # send_mail(subject, message, email_from, recipient_list)
             else:
                 print("data not saved in airline quarantine contacts")
 
@@ -1032,60 +1032,20 @@ def dashboard(request):
 
     # picking the highest disease numbers for dashboard diseases
     events_reported_dash_vals = dict(Counter(events_thirty_days_stat).most_common(3))
-    print("test est")
-    # populating the total quarantine respondents
-    qua_contacts = quarantine_contacts.objects.all()
-    qua_contacts_comp = quarantine_contacts.objects.filter(created_at__gte=date.today() - timedelta(days=14)).order_by(
-        "-created_at")
-    qua_contacts_ong = quarantine_contacts.objects.filter(created_at__lte=date.today() - timedelta(days=14)).order_by(
-        "-created_at")
-    total_follow_up_stat = 0
-    today_follow_up_stat = 0
-    total_male = 0
-    total_female = 0
-    ongoing_male = 0
-    ongoing_female = 0
-    completed_male = 0
-    completed_female = 0
 
-    current_date = date.today().strftime('%Y-%m-%d')
     c_date = date.today()
     today_time = datetime.combine(c_date, datetime.min.time())
-    # midnight = today_time.strftime('%Y-%m-%d')
     midnight = today_time.strftime('%Y-%m-%d %H:%M:%S')
     midnight_time = midnight + "+03"
-    # print(midnight)
-    # print(midnight_time)
+
     total_follow_up_stat= quarantine_follow_up.objects.values('patient_contacts').distinct().count()
-
     today_follow_up_stat = quarantine_follow_up.objects.filter(Q(created_at__gte=midnight) | Q(created_at__gte=midnight_time)).count()
-
-    # Getting gender totals, ongoing, completed
-    for gender in qua_contacts:
-        if gender.sex == "Male":
-            total_male += 1
-        else:
-            total_female += 1
-    for gender in qua_contacts_comp:
-        if gender.sex == "Male":
-            ongoing_male += 1
-        else:
-            ongoing_female += 1
-    for gender in qua_contacts_ong:
-        if gender.sex == "Male":
-            completed_male += 1
-        else:
-            completed_female += 1
-
-    # print("gender numbers....")
-    # print(total_male)
-    # print(total_female)
-    # print("ongoing gender numbers....")
-    # print(ongoing_male)
-    # print(ongoing_female)
-    # print("completed gender numbers....")
-    # print(completed_male)
-    # print(completed_female)
+    total_male = quarantine_contacts.objects.filter(sex__iexact = 'Male').count()
+    total_female = quarantine_contacts.objects.filter(sex__iexact = 'Female').count()
+    ongoing_male = quarantine_contacts.objects.filter(sex__iexact = 'Male').filter(created_at__gte=date.today() - timedelta(days=14)).order_by("-created_at").count()
+    ongoing_female = quarantine_contacts.objects.filter(sex__iexact = 'Female').filter(created_at__gte=date.today() - timedelta(days=14)).order_by("-created_at").count()
+    completed_male = quarantine_contacts.objects.filter(sex__iexact = 'Male').filter(created_at__lte=date.today() - timedelta(days=14)).order_by("-created_at").count()
+    completed_female = quarantine_contacts.objects.filter(sex__iexact = 'Female').filter(created_at__lte=date.today() - timedelta(days=14)).order_by("-created_at").count()
 
     user_access_level = ""
     user_group = request.user.groups.values_list('name', flat=True)
@@ -1123,7 +1083,7 @@ def dashboard(request):
                 # print(data_record)
         data_val.append(data_record)
     series.append(series_data)
-    print(series)
+    # print(series)
 
     # pie_chart disease data
     chart_d_type = dhis_disease_type.objects.all().order_by('name')
@@ -1185,21 +1145,8 @@ def dashboard(request):
 
             # counter += 1
 
-    print(ongoing_cases)
-    print(completed_cases)
-
-    # **************************
-    #     combinded_array = myDict()
-    #     qua_completed_contacts = quarantine_contacts.objects.filter(quarantine_site_id = qua_site.id).filter(created_at__gte = date.today()- timedelta(days=14)).count()
-    #     qua_ongoing_contacts = quarantine_contacts.objects.filter(quarantine_site_id = qua_site.id).filter(created_at__lte = date.today()- timedelta(days=14)).count()
-    #
-    #     combinded_array.add("ongoing",qua_ongoing_contacts)
-    #     combinded_array.add("completed",qua_completed_contacts)
-    #     print("------")
-    #     # print(combinded_array)
-    #
-    #     ongoing_cases[qua_site.site_name] = combinded_array
     # print(ongoing_cases)
+    # print(completed_cases)
 
     # pulling eoc status as set by only the eoc manager
     set_eoc_status = eoc_status.objects.all().exclude(active=False)
@@ -1478,60 +1425,19 @@ def county_dashboard(request):
     # print(completed_cases)
 
     # populating the total quarantine respondents
-    qua_contacts = quarantine_contacts.objects.all().filter(county=user_county_id)
-    qua_contacts_comp = quarantine_contacts.objects.filter(county=user_county_id).filter(
-        created_at__gte=date.today() - timedelta(days=14)).order_by("-created_at")
-    qua_contacts_ong = quarantine_contacts.objects.filter(county=user_county_id).filter(
-        created_at__lte=date.today() - timedelta(days=14)).order_by("-created_at")
-    total_follow_up_stat = 0
-    today_follow_up_stat = 0
-    total_male = 0
-    total_female = 0
-    ongoing_male = 0
-    ongoing_female = 0
-    completed_male = 0
-    completed_female = 0
-
-    current_date = date.today().strftime('%Y-%m-%d')
     c_date = date.today()
     today_time = datetime.combine(c_date, datetime.min.time())
     midnight = today_time.strftime('%Y-%m-%d %H:%M:%S')
     midnight_time = midnight + "+03"
-    # print(midnight)
-    # print(midnight_time)
+
     total_follow_up_stat= quarantine_follow_up.objects.values('patient_contacts').distinct().count()
-
     today_follow_up_stat = quarantine_follow_up.objects.filter(Q(created_at__gte=midnight) | Q(created_at__gte=midnight_time)).count()
-
-    # Getting gender totals, ongoing, completed
-    for gender in qua_contacts:
-        if gender.sex == "Male":
-            total_male += 1
-        else:
-            total_female += 1
-    for gender in qua_contacts_comp:
-        if gender.sex == "Male":
-            ongoing_male += 1
-        else:
-            ongoing_female += 1
-    for gender in qua_contacts_ong:
-        if gender.sex == "Male":
-            completed_male += 1
-        else:
-            completed_female += 1
-
-    # print("gender numbers....")
-    # print(total_male)
-    # print(total_female)
-    # print("ongoing gender numbers....")
-    # print(ongoing_male)
-    # print(ongoing_female)
-    # print("completed gender numbers....")
-    # print(completed_male)
-    # print(completed_female)
-
-    # print(total_follow_up_stat)
-    # print(today_follow_up_stat)
+    total_male = quarantine_contacts.objects.filter(sex__iexact = 'Male').count()
+    total_female = quarantine_contacts.objects.filter(sex__iexact = 'Female').count()
+    ongoing_male = quarantine_contacts.objects.filter(sex__iexact = 'Male').filter(created_at__gte=date.today() - timedelta(days=14)).order_by("-created_at").count()
+    ongoing_female = quarantine_contacts.objects.filter(sex__iexact = 'Female').filter(created_at__gte=date.today() - timedelta(days=14)).order_by("-created_at").count()
+    completed_male = quarantine_contacts.objects.filter(sex__iexact = 'Male').filter(created_at__lte=date.today() - timedelta(days=14)).order_by("-created_at").count()
+    completed_female = quarantine_contacts.objects.filter(sex__iexact = 'Female').filter(created_at__lte=date.today() - timedelta(days=14)).order_by("-created_at").count()
 
     # pulling eoc status as set by only the eoc manager
     set_eoc_status = eoc_status.objects.all().exclude(active=False)
@@ -1816,60 +1722,19 @@ def subcounty_dashboard(request):
     # print(completed_cases)
 
     # populating the total quarantine respondents
-    qua_contacts = quarantine_contacts.objects.all().filter(subcounty=user_county_id)
-    qua_contacts_comp = quarantine_contacts.objects.filter(subcounty=user_county_id).filter(
-        created_at__gte=date.today() - timedelta(days=14)).order_by("-created_at")
-    qua_contacts_ong = quarantine_contacts.objects.filter(subcounty=user_county_id).filter(
-        created_at__lte=date.today() - timedelta(days=14)).order_by("-created_at")
-    total_follow_up_stat = 0
-    today_follow_up_stat = 0
-    total_male = 0
-    total_female = 0
-    ongoing_male = 0
-    ongoing_female = 0
-    completed_male = 0
-    completed_female = 0
-
-    current_date = date.today().strftime('%Y-%m-%d')
     c_date = date.today()
     today_time = datetime.combine(c_date, datetime.min.time())
     midnight = today_time.strftime('%Y-%m-%d %H:%M:%S')
     midnight_time = midnight + "+03"
-    # print(midnight)
-    # print(midnight_time)
+
     total_follow_up_stat= quarantine_follow_up.objects.values('patient_contacts').distinct().count()
-
     today_follow_up_stat = quarantine_follow_up.objects.filter(Q(created_at__gte=midnight) | Q(created_at__gte=midnight_time)).count()
-
-    # Getting gender totals, ongoing, completed
-    for gender in qua_contacts:
-        if gender.sex == "Male":
-            total_male += 1
-        else:
-            total_female += 1
-    for gender in qua_contacts_comp:
-        if gender.sex == "Male":
-            ongoing_male += 1
-        else:
-            ongoing_female += 1
-    for gender in qua_contacts_ong:
-        if gender.sex == "Male":
-            completed_male += 1
-        else:
-            completed_female += 1
-
-    # print("gender numbers....")
-    # print(total_male)
-    # print(total_female)
-    # print("ongoing gender numbers....")
-    # print(ongoing_male)
-    # print(ongoing_female)
-    # print("completed gender numbers....")
-    # print(completed_male)
-    # print(completed_female)
-
-    # print(total_follow_up_stat)
-    # print(today_follow_up_stat)
+    total_male = quarantine_contacts.objects.filter(sex__iexact = 'Male').count()
+    total_female = quarantine_contacts.objects.filter(sex__iexact = 'Female').count()
+    ongoing_male = quarantine_contacts.objects.filter(sex__iexact = 'Male').filter(created_at__gte=date.today() - timedelta(days=14)).order_by("-created_at").count()
+    ongoing_female = quarantine_contacts.objects.filter(sex__iexact = 'Female').filter(created_at__gte=date.today() - timedelta(days=14)).order_by("-created_at").count()
+    completed_male = quarantine_contacts.objects.filter(sex__iexact = 'Male').filter(created_at__lte=date.today() - timedelta(days=14)).order_by("-created_at").count()
+    completed_female = quarantine_contacts.objects.filter(sex__iexact = 'Female').filter(created_at__lte=date.today() - timedelta(days=14)).order_by("-created_at").count()
 
     # pulling eoc status as set by only the eoc manager
     set_eoc_status = eoc_status.objects.all().exclude(active=False)
@@ -2152,60 +2017,19 @@ def border_dashboard(request):
     # print(completed_cases)
 
     # populating the total quarantine respondents
-    qua_contacts = quarantine_contacts.objects.all().filter(subcounty=user_county_id)
-    qua_contacts_comp = quarantine_contacts.objects.filter(subcounty=user_county_id).filter(
-        created_at__gte=date.today() - timedelta(days=14)).order_by("-created_at")
-    qua_contacts_ong = quarantine_contacts.objects.filter(subcounty=user_county_id).filter(
-        created_at__lte=date.today() - timedelta(days=14)).order_by("-created_at")
-    total_follow_up_stat = 0
-    today_follow_up_stat = 0
-    total_male = 0
-    total_female = 0
-    ongoing_male = 0
-    ongoing_female = 0
-    completed_male = 0
-    completed_female = 0
-
-    current_date = date.today().strftime('%Y-%m-%d')
     c_date = date.today()
     today_time = datetime.combine(c_date, datetime.min.time())
     midnight = today_time.strftime('%Y-%m-%d %H:%M:%S')
     midnight_time = midnight + "+03"
-    # print(midnight)
-    # print(midnight_time)
+
     total_follow_up_stat= quarantine_follow_up.objects.values('patient_contacts').distinct().count()
-
     today_follow_up_stat = quarantine_follow_up.objects.filter(Q(created_at__gte=midnight) | Q(created_at__gte=midnight_time)).count()
-
-    # Getting gender totals, ongoing, completed
-    for gender in qua_contacts:
-        if gender.sex == "Male":
-            total_male += 1
-        else:
-            total_female += 1
-    for gender in qua_contacts_comp:
-        if gender.sex == "Male":
-            ongoing_male += 1
-        else:
-            ongoing_female += 1
-    for gender in qua_contacts_ong:
-        if gender.sex == "Male":
-            completed_male += 1
-        else:
-            completed_female += 1
-
-    # print("gender numbers....")
-    # print(total_male)
-    # print(total_female)
-    # print("ongoing gender numbers....")
-    # print(ongoing_male)
-    # print(ongoing_female)
-    # print("completed gender numbers....")
-    # print(completed_male)
-    # print(completed_female)
-
-    # print(total_follow_up_stat)
-    # print(today_follow_up_stat)
+    total_male = quarantine_contacts.objects.filter(sex__iexact = 'Male').count()
+    total_female = quarantine_contacts.objects.filter(sex__iexact = 'Female').count()
+    ongoing_male = quarantine_contacts.objects.filter(sex__iexact = 'Male').filter(created_at__gte=date.today() - timedelta(days=14)).order_by("-created_at").count()
+    ongoing_female = quarantine_contacts.objects.filter(sex__iexact = 'Female').filter(created_at__gte=date.today() - timedelta(days=14)).order_by("-created_at").count()
+    completed_male = quarantine_contacts.objects.filter(sex__iexact = 'Male').filter(created_at__lte=date.today() - timedelta(days=14)).order_by("-created_at").count()
+    completed_female = quarantine_contacts.objects.filter(sex__iexact = 'Female').filter(created_at__lte=date.today() - timedelta(days=14)).order_by("-created_at").count()
 
     # pulling eoc status as set by only the eoc manager
     set_eoc_status = eoc_status.objects.all().exclude(active=False)
@@ -2504,50 +2328,19 @@ def facility_dashboard(request):
     _total_completed_quarantine = quarantine_contacts.objects.all().filter(quarantine_site__id=site_id).filter(
         created_at__lte=date.today() - timedelta(days=14)).order_by("-created_at").count()
 
-    qua_contacts = quarantine_contacts.objects.all().filter(quarantine_site__id=site_id)
-    qua_contacts_comp = quarantine_contacts.objects.filter(quarantine_site__id=site_id).filter(
-        created_at__gte=date.today() - timedelta(days=14)).order_by("-created_at")
-    qua_contacts_ong = quarantine_contacts.objects.filter(quarantine_site__id=site_id).filter(
-        created_at__lte=date.today() - timedelta(days=14)).order_by("-created_at")
-    total_follow_up_stat = 0
-    today_follow_up_stat = 0
-    total_male = 0
-    total_female = 0
-    ongoing_male = 0
-    ongoing_female = 0
-    completed_male = 0
-    completed_female = 0
-
-    current_date = date.today().strftime('%Y-%m-%d')
     c_date = date.today()
     today_time = datetime.combine(c_date, datetime.min.time())
     midnight = today_time.strftime('%Y-%m-%d %H:%M:%S')
     midnight_time = midnight + "+03"
-    # print(midnight)
-    # print(midnight_time)
+
     total_follow_up_stat= quarantine_follow_up.objects.values('patient_contacts').distinct().count()
-
     today_follow_up_stat = quarantine_follow_up.objects.filter(Q(created_at__gte=midnight) | Q(created_at__gte=midnight_time)).count()
-
-    # Getting gender totals, ongoing, completed
-    for gender in qua_contacts:
-        if gender.sex == "Male":
-            total_male += 1
-        else:
-            total_female += 1
-    for gender in qua_contacts_comp:
-        if gender.sex == "Male":
-            ongoing_male += 1
-        else:
-            ongoing_female += 1
-    for gender in qua_contacts_ong:
-        if gender.sex == "Male":
-            completed_male += 1
-        else:
-            completed_female += 1
-
-    # print(total_follow_up_stat)
-    # print(today_follow_up_stat)
+    total_male = quarantine_contacts.objects.filter(quarantine_site__id=site_id).filter(sex__iexact = 'Male').count()
+    total_female = quarantine_contacts.objects.filter(quarantine_site__id=site_id).filter(sex__iexact = 'Female').count()
+    ongoing_male = quarantine_contacts.objects.filter(quarantine_site__id=site_id).filter(sex__iexact = 'Male').filter(created_at__gte=date.today() - timedelta(days=14)).order_by("-created_at").count()
+    ongoing_female = quarantine_contacts.objects.filter(quarantine_site__id=site_id).filter(sex__iexact = 'Female').filter(created_at__gte=date.today() - timedelta(days=14)).order_by("-created_at").count()
+    completed_male = quarantine_contacts.objects.filter(quarantine_site__id=site_id).filter(sex__iexact = 'Male').filter(created_at__lte=date.today() - timedelta(days=14)).order_by("-created_at").count()
+    completed_female = quarantine_contacts.objects.filter(quarantine_site__id=site_id).filter(sex__iexact = 'Female').filter(created_at__lte=date.today() - timedelta(days=14)).order_by("-created_at").count()
 
     # pulling eoc status as set by only the eoc manager
     set_eoc_status = eoc_status.objects.all().exclude(active=False)
