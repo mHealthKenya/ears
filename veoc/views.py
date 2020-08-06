@@ -271,6 +271,9 @@ def ailrine_registration(request):
         designated_hospital_referal = 'f'
         reference_facility = request.POST.get('reference_facility','')
 
+        print('eggs')
+        print(date_of_arrival);
+
         countyObject = organizational_units.objects.get(organisationunitid = 18)
         subcountyObject = organizational_units.objects.get(organisationunitid = 18)
         wardObject = organizational_units.objects.get(organisationunitid = 18)
@@ -347,8 +350,8 @@ def ailrine_registration(request):
                                           residence=residence, estate=estate, postal_address=postal_address, status='t')
 
                 airport_user_save.save()
-                print(airport_user_save.id)
-                qr_code_id = contact_save.contact_uuid;
+                contact_id = contact_save.id
+                qr_code_id = quarantine_contacts.objects.filter(pk=contact_id).values_list('contact_uuid', flat=True).last()
                 print(qr_code_id)
                 #method to ope
                 # ailrine_registration_qr(request, qr_code_id)
