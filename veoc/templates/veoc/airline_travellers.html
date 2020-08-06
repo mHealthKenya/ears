@@ -283,7 +283,7 @@
                             <table>
                                 <tr>
                                     <td>
-                                        <p id="qr-td" style="float: center;"></p><br><br>
+                                        <br><p id="qr-td" style="float: center;">&nbsp</p><br>
                                     </td>
                                     <td></td>
                                 </tr>
@@ -489,6 +489,7 @@ function daysInMonth(dob_month, dob_year) {
         pdf.addHTML($("#dvQRCode"), 15, 15, options, function() {
             pdf.save('Travellers_QR_Code.pdf');
             pdf = new jsPDF('p', 'pt', 'a4');
+            location.reload(true);
         });
     }
 
