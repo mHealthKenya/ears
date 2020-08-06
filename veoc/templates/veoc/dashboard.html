@@ -1,4 +1,5 @@
 {% extends "veoc/main_template.html" %}
+{% load humanize %}
 
 {% block main %}
     <script type="text/javascript"
@@ -154,7 +155,7 @@
             </div>
         </div>
     </div> -->
-
+    <!-- pie chart numbers -->
     <div class="row">
         <div class="col-sm-4">
             <div class="well">
@@ -180,6 +181,143 @@
                     <h2 class="panel-title" align="center" style="color: #ffffff">. </h2>
                 </div>
                 <div id="completed_piechart" style="height: 300px; width: 100%;">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- DataTable numbers -->
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="well">
+                <div class="panel-heading" style="background-color:#3c8dbc">
+                    <h2 class="panel-title" align="center" style="color: #ffffff">Jitenge System Rollout Numbers</h2>
+                </div>
+                <div class="padding-md clearfix">
+                    <table class="table table-hover" id="call_logs_report">
+                        <thead class="thead-dark">
+                        <tr>
+                            <th>Parameter</th>
+                            <th>Cummulative</th>
+                            <th>Recent(Last 14 days)</th>
+                            <th>Today({{ day }})</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <td>Number of registrations</td>
+                            <td>{{ total_registrations|intcomma }}</td>
+                            <td>{{ fourteen_day_registrations|intcomma }}</td>
+                            <td>{{ today_registrations|intcomma }}</td>
+                        </tr>
+                        <tr>
+                            <td>Number of enrolled truckers</td>
+                            <td>{{ total_truck_drivers|intcomma }}</td>
+                            <td>{{ fourteen_days_truck_drivers|intcomma }}</td>
+                            <td>{{ today_truck_drivers|intcomma }}</td>
+                        </tr>
+                        <tr>
+                            <td>Number enrolled in quarantine facilities</td>
+                            <td>{{ total_quarantine_facilities|intcomma }}</td>
+                            <td>{{ fourteen_days_quarantine_facilities|intcomma }}</td>
+                            <td>{{ today_quarantine_facilities|intcomma }}</td>
+                        </tr>
+                        <tr>
+                            <td>Number enrolled in home based care</td>
+                            <td>{{ total_home_care_module|intcomma }}</td>
+                            <td>{{ fourteen_days_home_care_module|intcomma }}</td>
+                            <td>{{ today_home_care_module|intcomma }}</td>
+                        </tr>
+                        <tr>
+                            <td>Number enrolled in airport travel</td>
+                            <td>{{ total_airline_module|intcomma }}</td>
+                            <td>{{ fourteen_days_airline_module|intcomma }}</td>
+                            <td>{{ today_airline_module|intcomma }}</td>
+                        </tr>
+                        <tr>
+                            <td>Number ever used Jitenge</td>
+                            <td>{{ total_ever_used_jitenge|intcomma }}</td>
+                            <td>{{ fourteen_days_ever_used_jitenge|intcomma }}</td>
+                            <td>{{ today_ever_used_jitenge|intcomma }}</td>
+                        </tr>
+                        <tr>
+                            <td>Number reporting symptomatic</td>
+                            <td>{{ total_symptomatic|intcomma }}</td>
+                            <td>{{ fourteen_days_symptomatic|intcomma }}</td>
+                            <td>{{ today_symptomatic|intcomma }}</td>
+                        </tr>
+                        <tr>
+                            <td>Number Unresponsive</td>
+                            <td>{{ total_unresponsive|intcomma }}</td>
+                            <td>{{ fourteen_days_unresponsive|intcomma }}</td>
+                            <td>{{ today_unresponsive|intcomma }}</td>
+                        </tr>
+                        <tr>
+                            <td>Number of lab manifest filled</td>
+                            <td>{{ total_lab_manifest_filled|intcomma }}</td>
+                            <td>{{ fourteen_days_lab_manifest_filled|intcomma }}0</td>
+                            <td>{{ today_lab_manifest_filled|intcomma }}</td>
+                        </tr>
+                        <tr>
+                            <td>Number of samples with test results</td>
+                            <td>{{ total_lab_test_results|intcomma }}</td>
+                            <td>{{ fourteen_days_lab_test_results|intcomma }}</td>
+                            <td>{{ today_lab_test_results|intcomma }}</td>
+                        </tr>
+                        <tr>
+                            <td>Number of unmatched results</td>
+                            <td>{{ total_pending_matched_results|intcomma }}</td>
+                            <td>{{ fourteen_days_unmatched_results }}</td>
+                            <td>{{ today_unmatched_results|intcomma }}</td>
+                        </tr>
+                        <tr>
+                            <td>Number received results tested positive</td>
+                            <td>{{ total_results_positive|intcomma }}</td>
+                            <td>{{ fourteen_days_results_positive|intcomma }}</td>
+                            <td>{{ today_results_positive|intcomma }}</td>
+                        </tr>
+{#                        <tr>#}
+{#                            <td>% positivity rate</td>#}
+{#                            <td>15 %</td>#}
+{#                            <td>5 %</td>#}
+{#                        </tr>#}
+{#                        <tr>#}
+{#                            <td>#(%) testing positive after entry</td>#}
+{#                            <td>50</td>#}
+{#                            <td>10</td>#}
+{#                        </tr>#}
+                      </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+{#        <div class="col-sm-6++">#}
+{#            <div class="well">#}
+{#                <div class="panel-heading" style="background-color:#3c8dbc">#}
+{#                    <h2 class="panel-title" align="center" style="color: #ffffff">. </h2>#}
+{#                </div>#}
+{#                <div id="completed_piechart" style="height: 300px; width: 100%;">#}
+{#                </div>#}
+{#            </div>#}
+{#        </div>#}
+    </div>
+
+    <div class="row">
+        <div class="col-sm-6">
+            <div class="well">
+                <div class="panel-heading" style="background-color:#3c8dbc">
+                    <h2 class="panel-title" align="center" style="color: #ffffff"> Jitenge Follow Up Numbers </h2>
+                </div>
+                <div id="barFollowUpContainer" style="height: 300px; width: 100%;">
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6">
+            <div class="well">
+                <div class="panel-heading" style="background-color:#3c8dbc">
+                    <h2 class="panel-title" align="center" style="color: #ffffff"> Jitenge Follow Up Percentages </h2>
+                </div>
+                <div id="barFollowUp2Container" style="height: 300px; width: 100%;">
                 </div>
             </div>
         </div>
@@ -374,6 +512,141 @@
                 colorByPoint: true,
                 data: valx
             }],
+        });
+
+        //Follow up bar graph one
+        var followup_vals = [];
+        var cats = [];
+        var dat = [];
+        {% if follow_up_graph_list %}
+            {% for key, value in follow_up_graph_list.items %}
+                followup_vals.push({name: '{{ key }}', y: {{ value }}, drilldown: '{{ key }}'});
+                cats.push({{ key }});
+                dat.push({{ value }})
+            {% endfor %}
+        {% else %}
+            followup_vals.push({name: 'None', y: 0, drilldown: 'None'})
+
+        {% endif %}
+
+         Highcharts.chart('barFollowUpContainer', {
+            chart: {
+                type: 'column'
+            },
+            title: {
+                text: 'No of clients reporting symptoms for 14 days follow up'
+            },
+            xAxis: {
+                type: 'category'
+            },
+            yAxis: {
+                title: {
+                    text: 'Number of Clients'
+                }
+            },
+            legend: {
+                enabled: false
+            },
+            plotOptions: {
+                series: {
+                    borderWidth: 0,
+                    dataLabels: {
+                        enabled: true,
+                        format: '{point.y:1f}'
+                    }
+                }
+            },
+            tooltip: {
+                headerFormat: '<span style="font-size:11px">{series.name}</span><br>',
+                pointFormat: '<span style="color:{point.color}">{point.name}</span>: <b>{point.y:2f}</b> No of clients<br/>'
+            },
+            series: [{
+                name: 'Follow Up Day',
+                colorByPoint: true,
+                data: followup_vals
+            }],
+        });
+
+        //Follow up bar graph 2
+        Highcharts.chart('barFollowUp2Container', {
+            chart: {
+                zoomType: 'xy'
+            },
+            title: {
+                text: 'Eligible clients who have reported and as a percentage within the last 14 days'
+            },
+            xAxis: [{
+                categories: cats,
+                crosshair: true
+            }],
+            yAxis: [{ // Primary yAxis
+                labels: {
+                    format: '{value} ',
+                    style: {
+                        color: Highcharts.getOptions().colors[1]
+                    }
+                },
+                title: {
+                    text: 'Number of clients',
+                    style: {
+                        color: Highcharts.getOptions().colors[1]
+                    }
+                }
+            }, { // Secondary yAxis
+                title: {
+                    text: 'Percentage Reporting',
+                    style: {
+                        color: Highcharts.getOptions().colors[0]
+                    }
+                },
+                labels: {
+                    format: '{value} %',
+                    style: {
+                        color: Highcharts.getOptions().colors[0]
+                    }
+                },
+                opposite: true
+            }],
+            tooltip: {
+                shared: true
+            },
+            legend: {
+                layout: 'vertical',
+                align: 'left',
+                x: 120,
+                verticalAlign: 'top',
+                y: 100,
+                floating: true,
+                backgroundColor:
+                    Highcharts.defaultOptions.legend.backgroundColor || // theme
+                    'rgba(255,255,255,0.25)'
+            },
+            series: [{
+                name: 'Total eligible',
+                type: 'column',
+                yAxis: 1,
+                data: dat,
+                tooltip: {
+                    valueSuffix: ' '
+                }
+
+            }, {
+                name: 'Number reporting',
+                type: 'column',
+                yAxis: 1,
+                data: dat,
+                tooltip: {
+                    valueSuffix: ' '
+                }
+
+            },{
+                name: 'Percentage Reporting',
+                type: 'spline',
+                data: [7.0, 6.9, 9.5, 14.5, 18.2, 21.5, 25.2, 26.5, 23.3, 18.3, 13.9, 9.6, 10.5, 16.2],
+                tooltip: {
+                    valueSuffix: '%'
+                }
+            }]
         });
 
         var centers = []

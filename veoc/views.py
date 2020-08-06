@@ -332,23 +332,19 @@ def ailrine_registration(request):
             print(contact_save.pk)
             trans_one = transaction.savepoint()
 
-            # patients_contacts_id = contact_save.pk
-            # print(patients_contacts_id)
-            # patientObject = quarantine_contacts.objects.get(pk = patients_contacts_id)
             if contact_save:
                 print("working")
 
                 airport_user_save = airline_quarantine.objects.create(airline=airline, flight_number=flight_number, seat_number=seat_number,
                                           destination_city=destination_city, travel_history=countries_visited, cough=cough, breathing_difficulty=breathing_difficulty,
-
                                           covid_pcr=covid_pcr, fever=feverish, chills=chills, temperature=temperature, arrival_airport_code=arrival_airport_code,
                                           released=released, reference_facility=reference_facility, risk_assessment_referal=risk_assessment_referal, designated_hospital_refferal=designated_hospital_referal,
                                           created_at=current_date, updated_at=current_date, patient_contacts=contact_save, created_by=userObject, updated_by=userObject,
                                           residence=residence, estate=estate, postal_address=postal_address, status='t')
 
                 airport_user_save.save()
-                print(airport_user_save.id)
-                qr_code_id = contact_save.contact_uuid;
+                contact_id = contact_save.id
+                qr_code_id = quarantine_contacts.objects.filter(pk=contact_id).values_list('contact_uuid', flat=True).last()
                 print(qr_code_id)
                 #method to ope
                 # ailrine_registration_qr(request, qr_code_id)
@@ -1047,6 +1043,67 @@ def dashboard(request):
     completed_male = quarantine_contacts.objects.filter(sex__iexact = 'Male').filter(created_at__lte=date.today() - timedelta(days=14)).order_by("-created_at").count()
     completed_female = quarantine_contacts.objects.filter(sex__iexact = 'Female').filter(created_at__lte=date.today() - timedelta(days=14)).order_by("-created_at").count()
 
+    #dashboard table numbers
+    total_truck_drivers = quarantine_contacts.objects.filter(Q(source = 'Truck Registration') | Q(source = 'RECDTS')).count()
+    fourteen_days_truck_drivers = quarantine_contacts.objects.filter(Q(source = 'Truck Registration') | Q(source = 'RECDTS')).filter(created_at__lte=date.today() - timedelta(days=14)).count()
+    today_truck_drivers = quarantine_contacts.objects.filter(Q(source = 'Truck Registration') | Q(source = 'RECDTS')).filter(Q(created_at__gte=midnight) | Q(created_at__gte=midnight_time)).count()
+    total_quarantine_facilities = quarantine_contacts.objects.filter(Q(source = 'EMR') | Q(source = 'Web Registration') | Q(source = 'Self Registration')).count()
+    fourteen_days_quarantine_facilities = quarantine_contacts.objects.filter(Q(source = 'EMR') | Q(source = 'Web Registration') | Q(source = 'Self Registration')).filter(created_at__lte=date.today() - timedelta(days=14)).count()
+    today_quarantine_facilities = quarantine_contacts.objects.filter(Q(source = 'EMR') | Q(source = 'Web Registration') | Q(source = 'Self Registration')).filter(Q(created_at__gte=midnight) | Q(created_at__gte=midnight_time)).count()
+    total_home_care_module = quarantine_contacts.objects.filter(Q(source = 'Web Homecare Module') | Q(source = 'Jitenge Homecare Module')).count()
+    fourteen_days_home_care_module = quarantine_contacts.objects.filter(Q(source = 'Web Homecare Module') | Q(source = 'Jitenge Homecare Module')).filter(created_at__lte=date.today() - timedelta(days=14)).count()
+    today_home_care_module = quarantine_contacts.objects.filter(Q(source = 'Web Homecare Module') | Q(source = 'Jitenge Homecare Module')).filter(Q(created_at__gte=midnight) | Q(created_at__gte=midnight_time)).count()
+    total_airline_module = quarantine_contacts.objects.filter(Q(source = 'Airline Registration') | Q(source = 'Web Airport Self Registration')).count()
+    fourteen_days_airline_module = quarantine_contacts.objects.filter(Q(source__iexact = 'Airline Registration') | Q(source__iexact = 'Web Airport Self Registration')).count()#.filter(created_at__lte=datetime.today() - timedelta(days=14)).count()
+    today_airline_module = quarantine_contacts.objects.filter(Q(source = 'Airline Registration') | Q(source = 'Web Airport Self Registration')).filter(Q(created_at__gte=midnight) | Q(created_at__gte=midnight_time)).count()
+    total_ever_used_jitenge = quarantine_follow_up.objects.values('patient_contacts').distinct().count()
+    fourteen_days_ever_used_jitenge = quarantine_follow_up.objects.values('patient_contacts').filter(created_at__lte=date.today() - timedelta(days=14)).distinct().count()
+    today_ever_used_jitenge = quarantine_follow_up.objects.values('patient_contacts').filter(Q(created_at__gte=midnight) | Q(created_at__gte=midnight_time)).count()
+    total_symptomatic = quarantine_follow_up.objects.filter(Q(body_temperature__gte = 37.5) | Q(fever__iexact = 'Yes') | Q(cough__iexact = 'Yes') | Q(difficulty_breathing__iexact = 'Yes')).count()
+    fourteen_days_symptomatic = quarantine_follow_up.objects.filter(Q(body_temperature__gte = 37.5) | Q(fever__iexact = 'Yes') | Q(cough__iexact = 'Yes') | Q(difficulty_breathing__iexact = 'Yes')).filter(created_at__lte=date.today() - timedelta(days=14)).count()
+    today_symptomatic = quarantine_follow_up.objects.filter(Q(body_temperature__gte = 37.5) | Q(fever__iexact = 'Yes') | Q(cough__iexact = 'Yes') | Q(difficulty_breathing__iexact = 'Yes')).filter(Q(created_at__gte=midnight) | Q(created_at__gte=midnight_time)).count()
+    total_registrations = quarantine_contacts.objects.all().count()
+    fourteen_day_registrations = quarantine_contacts.objects.filter(created_at__lte=date.today() - timedelta(days=14)).count()
+    today_registrations = quarantine_contacts.objects.filter(Q(created_at__gte=midnight) | Q(created_at__gte=midnight_time)).count()
+    total_unresponsive = total_registrations - total_ever_used_jitenge
+    fourteen_days_unresponsive = fourteen_day_registrations - fourteen_days_ever_used_jitenge
+    today_unresponsive = today_registrations - today_ever_used_jitenge
+    total_lab_manifest_filled = truck_quarantine_lab.objects.all().count()
+    fourteen_days_lab_manifest_filled = truck_quarantine_lab.objects.filter(created_at__lte=date.today() - timedelta(days=14)).count()
+    today_lab_manifest_filled = truck_quarantine_lab.objects.filter(Q(created_at__gte=midnight) | Q(created_at__gte=midnight_time)).count()
+    total_lab_test_results = covid_results.objects.all().count()
+    fourteen_days_lab_test_results = covid_results.objects.filter(created_at__lte=date.today() - timedelta(days=14)).count()
+    today_lab_test_results = covid_results.objects.filter(Q(created_at__gte=midnight) | Q(created_at__gte=midnight_time)).count()
+    unique_contacts_with_res = covid_results.objects.values('patient_contacts').distinct().count()
+    fourteen_days_unique_contacts_with_res = covid_results.objects.filter(created_at__lte=date.today() - timedelta(days=14)).values('patient_contacts').distinct().count()
+    today_unique_contacts_with_res = covid_results.objects.filter(Q(created_at__gte=midnight) | Q(created_at__gte=midnight_time)).values('patient_contacts').distinct().count()
+    total_pending_matched_results = total_registrations - unique_contacts_with_res
+    fourteen_days_unmatched_results = fourteen_day_registrations - fourteen_days_unique_contacts_with_res
+    today_unmatched_results = today_registrations - today_unique_contacts_with_res
+    total_results_positive = covid_results.objects.filter(result__iexact = 'Positive').count()
+    fourteen_days_results_positive = covid_results.objects.filter(result__iexact = 'Positive').filter(created_at__lte=date.today() - timedelta(days=14)).count()
+    today_results_positive = covid_results.objects.filter(result__iexact = 'Positive').filter(Q(created_at__gte=midnight) | Q(created_at__gte=midnight_time)).count()
+
+    #follow up graph
+    follow_up_graph_list = {}
+    # loop = 14
+    # for n in loop:
+    #     follow_up_graph_list[n+1] = quarantine_follow_up.objects.filter(follow_up_day = n).count()
+    follow_up_graph_list['1'] = quarantine_follow_up.objects.filter(follow_up_day = 1).count()
+    follow_up_graph_list['2'] = quarantine_follow_up.objects.filter(follow_up_day = 2).count()
+    follow_up_graph_list['3'] = quarantine_follow_up.objects.filter(follow_up_day = 3).count()
+    follow_up_graph_list['4'] = quarantine_follow_up.objects.filter(follow_up_day = 4).count()
+    follow_up_graph_list['5'] = quarantine_follow_up.objects.filter(follow_up_day = 5).count()
+    follow_up_graph_list['6'] = quarantine_follow_up.objects.filter(follow_up_day = 6).count()
+    follow_up_graph_list['7'] = quarantine_follow_up.objects.filter(follow_up_day = 7).count()
+    follow_up_graph_list['8'] = quarantine_follow_up.objects.filter(follow_up_day = 8).count()
+    follow_up_graph_list['9'] = quarantine_follow_up.objects.filter(follow_up_day = 9).count()
+    follow_up_graph_list['10'] = quarantine_follow_up.objects.filter(follow_up_day = 10).count()
+    follow_up_graph_list['11'] = quarantine_follow_up.objects.filter(follow_up_day = 11).count()
+    follow_up_graph_list['12'] = quarantine_follow_up.objects.filter(follow_up_day = 12).count()
+    follow_up_graph_list['13'] = quarantine_follow_up.objects.filter(follow_up_day = 13).count()
+    follow_up_graph_list['14'] = quarantine_follow_up.objects.filter(follow_up_day = 14).count()
+
     user_access_level = ""
     user_group = request.user.groups.values_list('name', flat=True)
     print("hapa sasa")
@@ -1193,7 +1250,46 @@ def dashboard(request):
         'sub_elements': sub_call_stat, 'quarantine_completed_cases': completed_cases,
         'disease_reported_dash_vals': disease_reported_dash_vals, 'quarantine_ongoing_cases': ongoing_cases,
         'pie_diseases': cases, 'pie_events': event_cases, 'dhis_graph_data': dhis_cases,
-        'eoc_status': eoc_Status, 'set_eoc_status': set_eoc_status
+        'eoc_status': eoc_Status, 'set_eoc_status': set_eoc_status,
+        'day': time.strftime("%d-%m-%Y"),
+
+        'total_registrations':total_registrations,
+        'fourteen_day_registrations':fourteen_day_registrations,
+        'today_registrations':today_registrations,
+        'today_truck_drivers':today_truck_drivers,
+        'total_truck_drivers': total_truck_drivers,
+        'fourteen_days_truck_drivers':fourteen_days_truck_drivers,
+        'total_quarantine_facilities': total_quarantine_facilities,
+        'fourteen_days_quarantine_facilities':fourteen_days_quarantine_facilities,
+        'today_quarantine_facilities':today_quarantine_facilities,
+        'total_home_care_module': total_home_care_module,
+        'fourteen_days_home_care_module': fourteen_days_home_care_module,
+        'today_home_care_module':today_home_care_module,
+        'total_airline_module': total_airline_module,
+        'fourteen_days_airline_module':fourteen_days_airline_module,
+        'today_airline_module':today_airline_module,
+        'total_ever_used_jitenge': total_ever_used_jitenge,
+        'total_symptomatic':total_symptomatic,
+        'fourteen_days_symptomatic':fourteen_days_symptomatic,
+        'today_symptomatic':today_symptomatic,
+        'fourteen_days_ever_used_jitenge':fourteen_days_ever_used_jitenge,
+        'today_ever_used_jitenge':today_ever_used_jitenge,
+        'total_unresponsive':total_unresponsive,
+        'fourteen_days_unresponsive':fourteen_days_unresponsive,
+        'today_unresponsive':today_unresponsive,
+        'total_lab_manifest_filled': total_lab_manifest_filled,
+        'fourteen_days_lab_manifest_filled':fourteen_days_lab_manifest_filled,
+        'today_lab_manifest_filled':today_lab_manifest_filled,
+        'total_lab_test_results':total_lab_test_results,
+        'fourteen_days_lab_test_results':fourteen_days_lab_test_results,
+        'today_lab_test_results':today_lab_test_results,
+        'total_pending_matched_results':total_pending_matched_results,
+        'fourteen_days_unmatched_results':fourteen_days_unmatched_results,
+        'today_unmatched_results':today_unmatched_results,
+        'total_results_positive':total_results_positive,
+        'fourteen_days_results_positive': fourteen_days_results_positive,
+        'today_results_positive':today_results_positive,
+        'follow_up_graph_list':follow_up_graph_list
     })
 
     return HttpResponse(template.render(context.flatten()))
