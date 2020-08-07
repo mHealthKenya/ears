@@ -1086,23 +1086,13 @@ def dashboard(request):
 
     #follow up graph
     follow_up_graph_list = {}
-    # loop = 14
-    # for n in loop:
-    #     follow_up_graph_list[n+1] = quarantine_follow_up.objects.filter(follow_up_day = n).count()
-    follow_up_graph_list['1'] = quarantine_follow_up.objects.filter(follow_up_day = 1).count()
-    follow_up_graph_list['2'] = quarantine_follow_up.objects.filter(follow_up_day = 2).count()
-    follow_up_graph_list['3'] = quarantine_follow_up.objects.filter(follow_up_day = 3).count()
-    follow_up_graph_list['4'] = quarantine_follow_up.objects.filter(follow_up_day = 4).count()
-    follow_up_graph_list['5'] = quarantine_follow_up.objects.filter(follow_up_day = 5).count()
-    follow_up_graph_list['6'] = quarantine_follow_up.objects.filter(follow_up_day = 6).count()
-    follow_up_graph_list['7'] = quarantine_follow_up.objects.filter(follow_up_day = 7).count()
-    follow_up_graph_list['8'] = quarantine_follow_up.objects.filter(follow_up_day = 8).count()
-    follow_up_graph_list['9'] = quarantine_follow_up.objects.filter(follow_up_day = 9).count()
-    follow_up_graph_list['10'] = quarantine_follow_up.objects.filter(follow_up_day = 10).count()
-    follow_up_graph_list['11'] = quarantine_follow_up.objects.filter(follow_up_day = 11).count()
-    follow_up_graph_list['12'] = quarantine_follow_up.objects.filter(follow_up_day = 12).count()
-    follow_up_graph_list['13'] = quarantine_follow_up.objects.filter(follow_up_day = 13).count()
-    follow_up_graph_list['14'] = quarantine_follow_up.objects.filter(follow_up_day = 14).count()
+    for n in range(14):
+        follow_up_graph_list[n+1] = quarantine_follow_up.objects.filter(follow_up_day = n+1).count()
+
+    #eligibility graph
+    total_eligible_follow_up = {}
+    for m in range(13, -1, -1):
+        total_eligible_follow_up[m+1] = quarantine_contacts.objects.filter(created_at__lte=date.today() - timedelta(days=m+1)).count()
 
     user_access_level = ""
     user_group = request.user.groups.values_list('name', flat=True)
@@ -1123,23 +1113,23 @@ def dashboard(request):
     data_val = []
     data_record = []
 
-    for cnty in counties:
-        call_count = call_log.objects.all().filter(county_id=cnty.id).filter(
-            date_reported__gte=date.today() - timedelta(days=1)).count()
-        sub_counties = organizational_units.objects.all().filter(parentid=cnty.organisationunitid).order_by('name')
-        if call_count > 0:
-            # print(call_count)
-            call_stats[cnty.name] = call_count
-        for subcnty in sub_counties:
-            call_subcny = call_log.objects.all().filter(subcounty_id=subcnty.id).filter(county_id=cnty.id).count()
-            if call_subcny > 0:
-                sub_call_stat[subcnty.name, cnty.name] = call_subcny
-
-                val = {'name': cnty.name, 'id': cnty.name}
-                data_record = [subcnty.name, call_subcny]
-                # print(data_record)
-        data_val.append(data_record)
-    series.append(series_data)
+    # for cnty in counties:
+    #     call_count = call_log.objects.all().filter(county_id=cnty.id).filter(
+    #         date_reported__gte=date.today() - timedelta(days=1)).count()
+    #     sub_counties = organizational_units.objects.all().filter(parentid=cnty.organisationunitid).order_by('name')
+    #     if call_count > 0:
+    #         # print(call_count)
+    #         call_stats[cnty.name] = call_count
+    #     for subcnty in sub_counties:
+    #         call_subcny = call_log.objects.all().filter(subcounty_id=subcnty.id).filter(county_id=cnty.id).count()
+    #         if call_subcny > 0:
+    #             sub_call_stat[subcnty.name, cnty.name] = call_subcny
+    #
+    #             val = {'name': cnty.name, 'id': cnty.name}
+    #             data_record = [subcnty.name, call_subcny]
+    #             # print(data_record)
+    #     data_val.append(data_record)
+    # series.append(series_data)
     # print(series)
 
     # pie_chart disease data
@@ -1289,7 +1279,8 @@ def dashboard(request):
         'total_results_positive':total_results_positive,
         'fourteen_days_results_positive': fourteen_days_results_positive,
         'today_results_positive':today_results_positive,
-        'follow_up_graph_list':follow_up_graph_list
+        'follow_up_graph_list':follow_up_graph_list,
+        'total_eligible_follow_up':total_eligible_follow_up
     })
 
     return HttpResponse(template.render(context.flatten()))
@@ -3490,7 +3481,6 @@ def truck_driver_profile(request, profileid):
         )
 
     lab_results = covid_results.objects.filter(patient_contacts = profileid)
-    # print(lab_data)
 
     labs = testing_labs.objects.all()
     cntry = country.objects.all()
@@ -3501,7 +3491,6 @@ def truck_driver_profile(request, profileid):
     data = {'patient_contact_object': patient_contact_object, 'lab_data': lab_data, 'patient_details':patient_details, 'lab_res': lab_res, 'lab_results': lab_results,
             'lab_res_count':lab_res_count,  'labs': labs, 'lab_res_types':lab_res_types, 'samp_types':samp_types, 'day':day, 'country': cntry,
             'follow_up_details':follow_up_details, 'follow_up_details_count':follow_up_details_count, "pic": quarantine_contacts.objects.get(id=profileid)}
-
 
     return render(request, 'veoc/truck_driver_profile.html', data)
 
@@ -5259,21 +5248,21 @@ def truck_quarantine_list(request):
             if id_num:
                 q_data_count = truck_quarantine_contacts.objects.select_related('patient_contacts'). \
                     filter(patient_contacts__passport_number=id_num). \
-                    filter(patient_contacts__source='Truck Registration').count()
+                    filter(Q(patient_contacts__source='Truck Registration') | Q(patient_contacts__source='RECDTS')).count()
                 q_data = truck_quarantine_contacts.objects.select_related('patient_contacts') \
-                    .filter(patient_contacts__passport_number=id_num,
-                            patient_contacts__source='Truck Registration'). \
+                    .filter(patient_contacts__passport_number=id_num).\
+                     filter(Q(patient_contacts__source='Truck Registration') | Q(patient_contacts__source='RECDTS')). \
                     order_by('-patient_contacts__date_of_contact')
             else:
                 print("inside National")
                 # add a border point filter to enable filtering specific border point--------
                 q_data_count = truck_quarantine_contacts.objects.select_related('patient_contacts'). \
                     filter(patient_contacts__date_of_contact__gte=date_from, patient_contacts__date_of_contact__lte=date_to). \
-                    filter(patient_contacts__source='Truck Registration').count()
+                    filter(Q(patient_contacts__source='Truck Registration') | Q(patient_contacts__source='RECDTS')).count()
                 q_data = truck_quarantine_contacts.objects.select_related('patient_contacts') \
                     .filter(patient_contacts__date_of_contact__gte=date_from,
-                            patient_contacts__date_of_contact__lte=date_to,
-                            patient_contacts__source='Truck Registration'). \
+                            patient_contacts__date_of_contact__lte=date_to). \
+                            filter(Q(patient_contacts__source='Truck Registration') | Q(patient_contacts__source='RECDTS')). \
                     order_by('-patient_contacts__date_of_contact')
 
         elif user_level == 7:
@@ -5285,22 +5274,22 @@ def truck_quarantine_list(request):
             if id_num:
                 q_data_count = truck_quarantine_contacts.objects.select_related('patient_contacts'). \
                     filter(patient_contacts__passport_number=id_num). \
-                    filter(patient_contacts__source='Truck Registration').count()
+                    filter(Q(patient_contacts__source='Truck Registration') | Q(patient_contacts__source='RECDTS')).count()
                 q_data = truck_quarantine_contacts.objects.select_related('patient_contacts') \
-                    .filter(patient_contacts__passport_number=id_num,
-                            patient_contacts__source='Truck Registration'). \
+                    .filter(patient_contacts__passport_number=id_num). \
+                     filter(Q(patient_contacts__source='Truck Registration') | Q(patient_contacts__source='RECDTS')). \
                     order_by('-patient_contacts__date_of_contact')
             else:
                 print("inside Border")
                 # find ways of filtering data based on the border point-------
                 q_data_count = truck_quarantine_contacts.objects.select_related('patient_contacts'). \
                     filter(patient_contacts__date_of_contact__gte=date_from, patient_contacts__date_of_contact__lte=date_to). \
-                    filter(patient_contacts__source='Truck Registration').count()
+                    filter(Q(patient_contacts__source='Truck Registration') | Q(patient_contacts__source='RECDTS')).count()
                 q_data = truck_quarantine_contacts.objects.select_related('patient_contacts'). \
                     filter(border_point__border_name=user_access_level,
-                           patient_contacts__source='Truck Registration',
                            patient_contacts__date_of_contact__gte=date_from,
                            patient_contacts__date_of_contact__lte=date_to). \
+                    filter(Q(patient_contacts__source='Truck Registration') | Q(patient_contacts__source='RECDTS')). \
                     order_by('-patient_contacts__date_of_contact')
 
         else:

@@ -264,12 +264,12 @@
                             <td>{{ fourteen_days_lab_test_results|intcomma }}</td>
                             <td>{{ today_lab_test_results|intcomma }}</td>
                         </tr>
-                        <tr>
-                            <td>Number of unmatched results</td>
-                            <td>{{ total_pending_matched_results|intcomma }}</td>
-                            <td>{{ fourteen_days_unmatched_results }}</td>
-                            <td>{{ today_unmatched_results|intcomma }}</td>
-                        </tr>
+{#                        <tr>#}
+{#                            <td>Number of unmatched results</td>#}
+{#                            <td>{{ total_pending_matched_results|intcomma }}</td>#}
+{#                            <td>{{ fourteen_days_unmatched_results }}</td>#}
+{#                            <td>{{ today_unmatched_results|intcomma }}</td>#}
+{#                        </tr>#}
                         <tr>
                             <td>Number received results tested positive</td>
                             <td>{{ total_results_positive|intcomma }}</td>
@@ -315,7 +315,7 @@
         <div class="col-sm-6">
             <div class="well">
                 <div class="panel-heading" style="background-color:#3c8dbc">
-                    <h2 class="panel-title" align="center" style="color: #ffffff"> Jitenge Follow Up Percentages </h2>
+                    <h2 class="panel-title" align="center" style="color: #ffffff"> Jitenge Follow Up Percentages as at {{ day }}</h2>
                 </div>
                 <div id="barFollowUp2Container" style="height: 300px; width: 100%;">
                 </div>
@@ -567,6 +567,24 @@
             }],
         });
 
+        var eligible = []
+        var percentage = []
+
+        {% if total_eligible_follow_up %}
+            {% for key, value in total_eligible_follow_up.items %}
+                eligible.push({{ value }})
+            {% endfor %}
+        {% endif %}
+
+        for(let i = 0; i < eligible.length; i++){
+            console.log(eligible[i]);
+            eli = eligible[i];
+            numb = dat[i];
+            tot = numb/eli *100
+            console.log(tot.toFixed(2));
+            percentage.push(tot);
+        }
+
         //Follow up bar graph 2
         Highcharts.chart('barFollowUp2Container', {
             chart: {
@@ -581,26 +599,26 @@
             }],
             yAxis: [{ // Primary yAxis
                 labels: {
-                    format: '{value} ',
+                    format: '{value} %',
                     style: {
                         color: Highcharts.getOptions().colors[1]
                     }
                 },
                 title: {
-                    text: 'Number of clients',
+                    text: 'Percentage Reporting',
                     style: {
                         color: Highcharts.getOptions().colors[1]
                     }
                 }
             }, { // Secondary yAxis
                 title: {
-                    text: 'Percentage Reporting',
+                    text: 'Number of clients',
                     style: {
                         color: Highcharts.getOptions().colors[0]
                     }
                 },
                 labels: {
-                    format: '{value} %',
+                    format: '{value} ',
                     style: {
                         color: Highcharts.getOptions().colors[0]
                     }
@@ -625,7 +643,7 @@
                 name: 'Total eligible',
                 type: 'column',
                 yAxis: 1,
-                data: dat,
+                data: eligible,
                 tooltip: {
                     valueSuffix: ' '
                 }
@@ -642,9 +660,9 @@
             },{
                 name: 'Percentage Reporting',
                 type: 'spline',
-                data: [7.0, 6.9, 9.5, 14.5, 18.2, 21.5, 25.2, 26.5, 23.3, 18.3, 13.9, 9.6, 10.5, 16.2],
+                data: percentage,
                 tooltip: {
-                    valueSuffix: '%'
+                    valueSuffix: ' %'
                 }
             }]
         });

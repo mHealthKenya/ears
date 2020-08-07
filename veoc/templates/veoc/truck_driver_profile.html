@@ -455,7 +455,14 @@
                                         {% else %}
                                             <td>Unknown</td>
                                         {% endif %}
-                                        <td>{{ lab.date_lab_confirmation|date:'d-m-Y' }}</td>
+                                         {% if lab.date_lab_confirmation %}
+                                             <td>Unknown</td>
+                                         {% else %}
+                                            {% for res in lab_results %}
+                                                <td>{{ res.date_tested }}</td>
+                                            {% endfor %}
+                                         {% endif %}
+{#                                        <td>{{ lab.date_lab_confirmation|date:'d-m-Y' }}</td>#}
                                         <td>{{ lab.sample_identifier }}</td>
                                     </tr>
                                 {% endfor %}
@@ -468,27 +475,28 @@
                     <hr>
                     <div class="panel panel-default table-responsive">
                         <div class="panel-heading">
-                            Laboratory Certificate
+                            Latest Laboratory Certificate in the System
                         </div>
-                        <div class="panel-body" align="center">
-                            <form class="form-inline" method="post" action="{% url 'veoc:lab_certificate' %}">
-                                {% csrf_token %}
-                                <div class="form-group">
-                                    <label for="site"><b>Show Certificate by Test Date :&nbsp; &nbsp; </b></label>
-                                    <select class="form-control" id="lab_id" name="lab_id">
-                                        <option value="" disabled selected>Select testing date</option>
-                                        {% for lab in lab_res %}
-                                            <option value="{{ lab.id }}">{{ lab.date_specimen_collected|date:'d-m-Y' }}</option>
-                                        {% endfor %}
-                                    </select>
-                                </div>
-                                <button type="submit" class="btn btn-primary" align="right">Update</button>
-                            </form>
-                        </div>
+{#                        <div class="panel-body" align="center">#}
+{#                            <form class="form-inline" method="post" action="{% url 'veoc:lab_certificate' %}">#}
+{#                                {% csrf_token %}#}
+{#                                <div class="form-group">#}
+{#                                    <label for="site"><b>Show Certificate by Test Date :&nbsp; &nbsp; </b></label>#}
+{#                                    <select class="form-control" id="lab_id" name="lab_id">#}
+{#                                        <option value="" disabled selected>Select testing date</option>#}
+{#                                        {% for lab in lab_res %}#}
+{#                                            <option value="{{ lab.id }}">{{ lab.date_specimen_collected|date:'d-m-Y' }}</option>#}
+{#                                        {% endfor %}#}
+{#                                    </select>#}
+{#                                </div>#}
+{#                                <button type="submit" class="btn btn-primary" align="right">Update</button>#}
+{#                            </form>#}
+{#                        </div>#}
                         <hr>
                         <div class="invoice-box" id="dvContainer1" style="background-color:white">
                             {% for lab in lab_results %}
                                 {% if forloop.last %}
+{#                                    {% if forloop.last and lab.date_tested > fourteen_days_date %}#}
                                     <table cellpadding="0" cellspacing="0">
                                         <tr class="top">
                                             <td colspan="2">
@@ -535,12 +543,6 @@
                                             <td><i>{{ lab.patient_contacts.sex }}</i></td>
                                         </tr>
                                         <tr class="item">
-                                            <td>Date Sample Collected</td>
-                                            {% for res in lab_res %}
-                                                <td><i>{{ res.date_specimen_collected|date:'d-m-Y' }}</td>
-                                            {% endfor %}
-                                        </tr>
-                                        <tr class="item">
                                             <td>Date Test Confirmation</td>
                                             <td><i>{{ lab.date_tested }}</i></td>
                                         </tr>
@@ -554,13 +556,7 @@
                                         </tr>
                                         <tr class="item">
                                             <td>Sample Type</td>
-                                            {% for res in lab_res %}
-                                                {% if res.specimen_type.name %}
-                                                    <td><i>{{ res.specimen_type.name }}</i></td>
-                                                {% else %}
-                                                    <td><i>Nasopharygneal & Oropharygneal swabs</i></td>
-                                                {% endif %}
-                                            {% endfor %}
+                                            <td><i>Nasopharygneal & Oropharygneal swabs</i></td>
                                         <tr class="item">
                                         <td>Results Received by</td>
                                         {% for pat in patient_details %}
