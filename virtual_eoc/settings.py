@@ -127,7 +127,7 @@ DATABASES = {
         'NAME': os.environ.get('DB_NAME','virtual_eoc'),
         'USER': os.environ.get('DB_USER','postgres'),
         'PASSWORD': os.environ.get('DB_PASS','P0stgr3s!@#'),
-        'HOST': 'localhost',
+        'HOST': '41.89.94.122',
         'PORT': '5432',
     }
 }
