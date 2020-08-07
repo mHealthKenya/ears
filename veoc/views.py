@@ -271,6 +271,9 @@ def ailrine_registration(request):
         designated_hospital_referal = 'f'
         reference_facility = request.POST.get('reference_facility','')
 
+        print('eggs')
+        print(date_of_arrival);
+
         countyObject = organizational_units.objects.get(organisationunitid = 18)
         subcountyObject = organizational_units.objects.get(organisationunitid = 18)
         wardObject = organizational_units.objects.get(organisationunitid = 18)
