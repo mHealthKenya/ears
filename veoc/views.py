@@ -397,11 +397,6 @@ def ailrine_registration_qr(request, qr_code):
 @login_required
 def edit_airport_complete(request):
     if request.method == 'POST':
-        first_name = request.POST.get('first_name','')
-        middle_name = request.POST.get('middle_name','')
-        last_name = request.POST.get('last_name','')
-
-
         airport_id = request.POST.get('airport_id','')
         measured_temperature = request.POST.get('measured_temperature','')
         arrival_airport_code = request.POST.get('arrival_airport_code','')
@@ -424,21 +419,71 @@ def edit_airport_complete(request):
                                  updated_at=current_date, updated_by=userObject)
         #airport_user_save.save()
         print(airport_id)
-        print(airline_quarantine.objects.get(pk=2))
 
-
-        cntry = country.objects.all()
         day = time.strftime("%Y-%m-%d")
-        data = { 'country': cntry, 'start_day': day,
-                'end_day': day}
 
+        traveller_details_count = airline_quarantine.objects.filter(measured_temperature = 0).count()
+
+        traveller_details = airline_quarantine.objects.filter(measured_temperature = 0).annotate(
+            first_name=F("patient_contacts__first_name"),
+            last_name=F("patient_contacts__last_name"),
+            sex=F("patient_contacts__sex"),
+            age=F("patient_contacts__dob"),
+            passport_number=F("patient_contacts__passport_number"),
+            phone_number=F("patient_contacts__phone_number"),
+            nationality=F("patient_contacts__nationality"),
+            origin_country=F("patient_contacts__origin_country"),
+        ).order_by('-patient_contacts__date_of_contact')
+
+        paginator = Paginator(traveller_details, 10)
+        page_number = request.GET.get('page')
+        try:
+            page_obj = paginator.page(page_number)
+        except PageNotAnInteger:
+            page_obj = paginator.page(1)
+        except EmptyPage:
+            page_obj = paginator.page(paginator.num_pages)
+
+        my_list_data = page_obj
+        print(my_list_data)
+        day = time.strftime("%Y-%m-%d")
+        success = "Traveler Details Submitted Successfully"
+        data = {'my_list_data':my_list_data, 'page_obj':page_obj, 'traveller_details_count': traveller_details_count, 'traveller_details': traveller_details, 'day': day, 'success':success}
+
+
+        #return HttpResponse("Success")
         return render(request, 'veoc/airport_list_incomplete.html', data)
 
     else:
-        cntry = country.objects.all()
+
         day = time.strftime("%Y-%m-%d")
-        data = { 'country': cntry, 'start_day': day,
-                'end_day': day}
+
+        traveller_details_count = airline_quarantine.objects.filter(measured_temperature = 0).count()
+
+        traveller_details = airline_quarantine.objects.filter(measured_temperature = 0).annotate(
+            first_name=F("patient_contacts__first_name"),
+            last_name=F("patient_contacts__last_name"),
+            sex=F("patient_contacts__sex"),
+            age=F("patient_contacts__dob"),
+            passport_number=F("patient_contacts__passport_number"),
+            phone_number=F("patient_contacts__phone_number"),
+            nationality=F("patient_contacts__nationality"),
+            origin_country=F("patient_contacts__origin_country"),
+        ).order_by('-patient_contacts__date_of_contact')
+
+        paginator = Paginator(traveller_details, 10)
+        page_number = request.GET.get('page')
+        try:
+            page_obj = paginator.page(page_number)
+        except PageNotAnInteger:
+            page_obj = paginator.page(1)
+        except EmptyPage:
+            page_obj = paginator.page(paginator.num_pages)
+
+        my_list_data = page_obj
+        print(my_list_data)
+        day = time.strftime("%Y-%m-%d")
+        data = {'my_list_data':my_list_data, 'page_obj':page_obj, 'traveller_details_count': traveller_details_count, 'traveller_details': traveller_details, 'day': day}
 
         return render(request, 'veoc/airport_list_incomplete.html', data)
 

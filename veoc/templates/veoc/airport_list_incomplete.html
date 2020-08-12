@@ -14,94 +14,83 @@
         			</div><!-- /breadcrumb-->
 
               <div class="panel-heading"><b>COVID19 Airport Quarantine Complete Cases Report</b></div>
+              <!-- Edit Quarantine modal -->
               <div class="modal fade" id="edit_quarantine_modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-                   aria-hidden="true">
-                  <div class="modal-dialog" role="document">
-                      <div class="modal-content">
-                          <div class="modal-header">
-                              <h5 class="modal-title" id="exampleModalLabel">Airport Patient Complete Details</h5>
-                              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                  <span aria-hidden="true">&times;</span>
-                              </button>
-                          </div>
+                aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h5 class="modal-title" id="exampleModalLabel">Border Point Edit</h5>
+                      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                      </button>
+                    </div>
+                    <div class="modal-body">
+                      <form method="post" class="quarantine_register_form" action="{% url 'veoc:edit_airport_complete' %}">
+                        {% csrf_token %}
                           <div class="modal-body">
-                              <form method="post" action="{% url 'veoc:edit_airport_complete' %}">
-                                  {% csrf_token %}
-                                  <div class="modal-body">
-                                      <div class="form-group" style="display: none;">
-                                          <input class="form-control id" name="id" style="display: none;">
-                                      </div>
-                                      <div class="form-row" id="gender_details_div">
-                                        {% for follow in all_data %}
-                                        <input class="form-control" type="hidden" id="airport_id" name="airport_id"
-                                     value="{{ follow.id}}" />
-                                          <div class="form-group col-md-4">
-                                              <label for="f_name">First Name : *</label>
-                                              <input class="form-control f_name" type="text" id="f_name" name="first_name"
-                                                     value="{{ follow.first_name}}" />
-
+                            <div class="form-group" style="display: block;">
+                                <input type="hidden" class="form-control edit_id" id="airport_id" name="airport_id" style="display: block;">
+                            </div>
+                            <div class="form-row" id="country_details_div">
+                              <div class="form-group col-md-4">
+                                    <label>First Name :</label>
+                                  <input type="text" class="form-control edit_first_name"  name="first_name" disabled>
+                                </div>
+                              <div class="form-group col-md-4">
+                                    <label>Last Names :</label>
+                                  <input type="text" class="form-control edit_last_name" name="last_name" disabled>
+                                </div>
+                              <div class="form-group col-md-4">
+                                    <label>ID/ Passport Number :</label>
+                                  <input type="number" class="form-control edit_passport_number" name="passport_number" disabled>
+                                </div>
+                                </div>
+                                <div class="form-row" id="country_details_div">
+                                          <div class="form-group col-md-6">
+                                            <label for="measured_temperature">Measured Temperature :* </label>
+                                            <input class="form-control" type=number step=0.01 id="measured_temperature" name="measured_temperature" onchange="checkTemp()" maxlength="5" placeholder="Measured Temperature" required>
                                           </div>
-
-                                          <div class="form-group col-md-4">
-                                              <label for="l_name">Last Name : *</label>
-                                              <input class="form-control l_name" type="text" id="l_name" name="last_name"
-                                                     value="{{follow.last_name}}" required/>
+                                          <div class="form-group col-md-6">
+                                            <label for="arrival_airport_code">Arrival Airport Code :* </label>
+                                            <input class="form-control" type="text" id="arrival_airport_code" name="arrival_airport_code" placeholder="Arrival Airport Code" required/>
                                           </div>
-                                          <div class="form-group col-md-4">
-                                              <label for="m_name">Middle Name : </label>
-                                              <input class="form-control m_name" type="text" id="m_name" name="middle_name"
-                                                     value="{{follow.middle_name}}"/>
-                                          </div>
-                                          {% endfor %}
-                                      </div>
-                                      <div class="">
-                                      <div class="form-row" id="country_details_div">
-                                        <div class="form-group col-md-6">
-                                          <label for="measured_temperature">Measured Temperature :* </label>
-                                          <input class="form-control" type=number step=0.01 id="measured_temperature" name="measured_temperature" onchange="checkTemp()" maxlength="5" placeholder="Measured Temperature" required>
-                                        </div>
-                                        <div class="form-group col-md-6">
-                                          <label for="arrival_airport_code">Arrival Airport Code :* </label>
-                                          <input class="form-control" type="text" id="arrival_airport_code" name="arrival_airport_code" placeholder="Arrival Airport Code" required/>
-                                        </div>
-                                     </div>
-                                     <div class="form-row" id="save_div">
-                                     <div class="form-group col-md-4">
-                                       <label for="released">Released :* </label>
-                                       <select class="form-control" id="released" name="released" required>
-                                           <option value="" disabled selected>Select Option</option>
-                                           <option value="t">Yes</option>
-                                           <option value="f">No</option>
-                                     </select>
-                                     </div>
-                                     <div class="form-group col-md-4">
-                                       <label for="risk_assessment_referal">Risk Assesment Referral : </label>
-                                         <select class="form-control" id="risk_assessment_referal" name="risk_assessment_referal" required>
-                                             <option value="" disabled selected>Select Option</option>
-                                             <option value="t">Yes</option>
-                                             <option value="f">No</option>
-                                       </select>
-                                     </div>
-                                     <div class="form-group col-md-4">
-                                       <label for="designated_hospital_referal">Designated Hospital Referral  : </label>
-                                       <select class="form-control" id="designated_hospital_referal" name="designated_hospital_referal" required>
-                                         <option value="" disabled selected>Select Option</option>
-                                         <option value="t">Yes</option>
-                                         <option value="f">No</option>
-                                   </select>
-                                     </div>
-                                     </div>
-                                     </div>
-                                  </div>
-                                  <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
-                                  <button type="submit" id="adddescriptionbtn" class="btn btn-success btn-sm pull-right">Save
-                                      Changes
-                                  </button>
-                              </form>
-                          </div>
-                      </div>
+                                       </div>
+                                       <div class="form-row" id="save_div">
+                                            <div class="form-group col-md-4">
+                                              <label for="released">Released :* </label>
+                                              <select class="form-control" id="released" name="released" required>
+                                                  <option value="" disabled selected>Select Option</option>
+                                                  <option value="t">Yes</option>
+                                                  <option value="f">No</option>
+                                            </select>
+                                            </div>
+                                            <div class="form-group col-md-4">
+                                              <label for="risk_assessment_referal">Risk Assesment Referral : </label>
+                                                <select class="form-control" id="risk_assessment_referal" name="risk_assessment_referal" required>
+                                                    <option value="" disabled selected>Select Option</option>
+                                                    <option value="t">Yes</option>
+                                                    <option value="f">No</option>
+                                              </select>
+                                            </div>
+                                            <div class="form-group col-md-4">
+                                              <label for="designated_hospital_referal">Designated Hospital Referral  : </label>
+                                              <select class="form-control" id="designated_hospital_referal" name="designated_hospital_referal" required>
+                                                <option value="" disabled selected>Select Option</option>
+                                                <option value="t">Yes</option>
+                                                <option value="f">No</option>
+                                          </select>
+                                            </div>
+                                            </div>
+                                </div>
+                            <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                            <button type="submit" id="addeditsitebtn" class="btn btn-success btn-sm pull-right">Save Changes</button>
+                        </form>
+                    </div>
                   </div>
+                </div>
               </div>
+
         			<div class="padding-md">
         				<div class="row">
         					<div class="col-md-12">
@@ -193,7 +182,68 @@
 {% endblock %}
 
 {% block script %}
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
   <script>
+    $(document).on( "click", '.edit_button',function(e) {
+      var id = $(this).data('id');
+      var first_name = $(this).data('first_name');
+      var last_name = $(this).data('last_name');
+      var passport_number = $(this).data('passport_number');
+
+      console.log(id);
+
+      $(".edit_id").val(id);
+      $(".edit_first_name").val(first_name);
+      $(".edit_last_name").val(last_name);
+      $(".edit_passport_number").val(passport_number);
+  });
+
+
+  var quarantineForm = $(".quarantine_register_form")
+
+  quarantineForm.submit(function(e){
+    e.preventDefault();
+    console.log("inside quarantineForm");
+    var thisForm = $(this);
+    var endPoint = thisForm.attr("action") || window.location.href;
+    var method = thisForm.attr("method");
+    var formData = thisForm.serialize();
+
+    Swal.fire({
+      title: "Please wait!, Saving Details!",
+      imageUrl: "/static/images/ajax-loader.gif",
+      showConfirmButton: false,
+      allowOutsideClick: false
+    });
+    $.ajax({
+      type:method,
+      url:endPoint,
+      data: formData,
+      success:function(){
+        Swal.fire({
+          title: 'Success!',
+          text: 'Traveler Details Saved',
+          icon: 'success',
+          timer: 3000
+        });
+        quarantineForm[0].reset();
+        location.reload(true);
+      },
+      error:function(er){
+        console.log("Traveler Details Saving Error");
+        console.log(er.responseText);
+        Swal.fire({
+          title: 'Error!',
+          text: 'Traveler Details Cannot be Saved',
+          icon: 'error'
+        });
+      }
+    });
+
+  });
+
+
+
     $(document).ready(function () {
           $('#quarantine_complete_report').DataTable({
               "order": [],
