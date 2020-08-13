@@ -397,11 +397,6 @@ def ailrine_registration_qr(request, qr_code):
 @login_required
 def edit_airport_complete(request):
     if request.method == 'POST':
-        first_name = request.POST.get('first_name','')
-        middle_name = request.POST.get('middle_name','')
-        last_name = request.POST.get('last_name','')
-
-
         airport_id = request.POST.get('airport_id','')
         measured_temperature = request.POST.get('measured_temperature','')
         arrival_airport_code = request.POST.get('arrival_airport_code','')
@@ -424,21 +419,71 @@ def edit_airport_complete(request):
                                  updated_at=current_date, updated_by=userObject)
         #airport_user_save.save()
         print(airport_id)
-        print(airline_quarantine.objects.get(pk=2))
 
-
-        cntry = country.objects.all()
         day = time.strftime("%Y-%m-%d")
-        data = { 'country': cntry, 'start_day': day,
-                'end_day': day}
 
+        traveller_details_count = airline_quarantine.objects.filter(measured_temperature = 0).count()
+
+        traveller_details = airline_quarantine.objects.filter(measured_temperature = 0).annotate(
+            first_name=F("patient_contacts__first_name"),
+            last_name=F("patient_contacts__last_name"),
+            sex=F("patient_contacts__sex"),
+            age=F("patient_contacts__dob"),
+            passport_number=F("patient_contacts__passport_number"),
+            phone_number=F("patient_contacts__phone_number"),
+            nationality=F("patient_contacts__nationality"),
+            origin_country=F("patient_contacts__origin_country"),
+        ).order_by('-patient_contacts__date_of_contact')
+
+        paginator = Paginator(traveller_details, 10)
+        page_number = request.GET.get('page')
+        try:
+            page_obj = paginator.page(page_number)
+        except PageNotAnInteger:
+            page_obj = paginator.page(1)
+        except EmptyPage:
+            page_obj = paginator.page(paginator.num_pages)
+
+        my_list_data = page_obj
+        print(my_list_data)
+        day = time.strftime("%Y-%m-%d")
+        success = "Traveler Details Submitted Successfully"
+        data = {'my_list_data':my_list_data, 'page_obj':page_obj, 'traveller_details_count': traveller_details_count, 'traveller_details': traveller_details, 'day': day, 'success':success}
+
+
+        #return HttpResponse("Success")
         return render(request, 'veoc/airport_list_incomplete.html', data)
 
     else:
-        cntry = country.objects.all()
+
         day = time.strftime("%Y-%m-%d")
-        data = { 'country': cntry, 'start_day': day,
-                'end_day': day}
+
+        traveller_details_count = airline_quarantine.objects.filter(measured_temperature = 0).count()
+
+        traveller_details = airline_quarantine.objects.filter(measured_temperature = 0).annotate(
+            first_name=F("patient_contacts__first_name"),
+            last_name=F("patient_contacts__last_name"),
+            sex=F("patient_contacts__sex"),
+            age=F("patient_contacts__dob"),
+            passport_number=F("patient_contacts__passport_number"),
+            phone_number=F("patient_contacts__phone_number"),
+            nationality=F("patient_contacts__nationality"),
+            origin_country=F("patient_contacts__origin_country"),
+        ).order_by('-patient_contacts__date_of_contact')
+
+        paginator = Paginator(traveller_details, 10)
+        page_number = request.GET.get('page')
+        try:
+            page_obj = paginator.page(page_number)
+        except PageNotAnInteger:
+            page_obj = paginator.page(1)
+        except EmptyPage:
+            page_obj = paginator.page(paginator.num_pages)
+
+        my_list_data = page_obj
+        print(my_list_data)
+        day = time.strftime("%Y-%m-%d")
+        data = {'my_list_data':my_list_data, 'page_obj':page_obj, 'traveller_details_count': traveller_details_count, 'traveller_details': traveller_details, 'day': day}
 
         return render(request, 'veoc/airport_list_incomplete.html', data)
 
@@ -463,9 +508,21 @@ def airport_list_complete(request):
             phone_number=F("patient_contacts__phone_number"),
             nationality=F("patient_contacts__nationality"),
             origin_country=F("patient_contacts__origin_country"),
-        )
+        ).order_by('-patient_contacts__date_of_contact')
 
-        data = {'traveller_details_count': traveller_details_count, 'traveller_details': traveller_details, 'day': day}
+        paginator = Paginator(traveller_details, 10)
+        page_number = request.GET.get('page')
+        try:
+            page_obj = paginator.page(page_number)
+        except PageNotAnInteger:
+            page_obj = paginator.page(1)
+        except EmptyPage:
+            page_obj = paginator.page(paginator.num_pages)
+
+        my_list_data = page_obj
+        day = time.strftime("%Y-%m-%d")
+
+        data = {'my_list_data':my_list_data, 'page_obj':page_obj, 'traveller_details_count': traveller_details_count, 'traveller_details': traveller_details, 'day': day}
 
     else:
         day = time.strftime("%Y-%m-%d")
@@ -481,40 +538,120 @@ def airport_list_complete(request):
             phone_number=F("patient_contacts__phone_number"),
             nationality=F("patient_contacts__nationality"),
             origin_country=F("patient_contacts__origin_country"),
-        )
+        ).order_by('-patient_contacts__date_of_contact')
 
-        data = {'traveller_details_count': traveller_details_count, 'traveller_details': traveller_details, 'day': day}
+        paginator = Paginator(traveller_details, 10)
+        page_number = request.GET.get('page')
+        try:
+            page_obj = paginator.page(page_number)
+        except PageNotAnInteger:
+            page_obj = paginator.page(1)
+        except EmptyPage:
+            page_obj = paginator.page(paginator.num_pages)
+
+        my_list_data = page_obj
+        day = time.strftime("%Y-%m-%d")
+
+        data = {'my_list_data':my_list_data, 'page_obj':page_obj, 'traveller_details_count': traveller_details_count, 'traveller_details': traveller_details, 'day': day}
 
     return render(request, 'veoc/airline_list_complete.html', data)
 
 @login_required
 def airport_list_incomplete(request):
+    global data
+
+    # check logged users access level to display relevant records -- national, county, SubCounty
+    current_user = request.user
+    u = User.objects.get(username=current_user.username)
+    user_access_level = u.persons.access_level
+    print("Access Level---")
+    print(user_access_level)
+
+    user_level = ""
+    user_group = request.user.groups.values_list('id', flat=True)
+    # print(user_group)
+    for grp in user_group:
+        user_level = grp
+    # print(user_level)
+
     if request.method == "POST":
-        date_from = request.POST.get('date_from', '')
-        date_to = request.POST.get('date_to', '')
-        day = time.strftime("%Y-%m-%d")
+        if user_level == 1 or user_level == 2:
+            date_from = request.POST.get('date_from', '')
+            date_to = request.POST.get('date_to', '')
+            day = time.strftime("%Y-%m-%d")
 
-        # all_data = quarantine_contacts.objects.all().filter(source='Web Airport Registration').filter(
-        #     date_of_contact__gte=date_from, date_of_contact__lte=date_to).order_by('-date_of_contact')
-        # q_data_count = quarantine_contacts.objects.all().filter(source='Web Airport Registration').filter(
-        #     date_of_contact__gte=date_from, date_of_contact__lte=date_to).count()
+            print("inside National")
 
-        traveller_details_count = airline_quarantine.objects.filter(measured_temperature = 0).filter(
-            created_at__gte=date_from, created_at__lte=date_to).count()
+            # all_data = quarantine_contacts.objects.all().filter(source='Web Airport Registration').filter(
+            #     date_of_contact__gte=date_from, date_of_contact__lte=date_to).order_by('-date_of_contact')
+            # q_data_count = quarantine_contacts.objects.all().filter(source='Web Airport Registration').filter(
+            #     date_of_contact__gte=date_from, date_of_contact__lte=date_to).count()
 
-        traveller_details = airline_quarantine.objects.filter(measured_temperature = 0).filter(
-            created_at__gte=date_from, created_at__lte=date_to).annotate(
-            first_name=F("patient_contacts__first_name"),
-            last_name=F("patient_contacts__last_name"),
-            sex=F("patient_contacts__sex"),
-            age=F("patient_contacts__dob"),
-            passport_number=F("patient_contacts__passport_number"),
-            phone_number=F("patient_contacts__phone_number"),
-            nationality=F("patient_contacts__nationality"),
-            origin_country=F("patient_contacts__origin_country"),
-        )
+            traveller_details_count = airline_quarantine.objects.filter(measured_temperature = 0).filter(
+                created_at__gte=date_from, created_at__lte=date_to).count()
 
-        data = {'traveller_details_count': traveller_details_count, 'traveller_details': traveller_details, 'day': day}
+            traveller_details = airline_quarantine.objects.filter(measured_temperature = 0).filter(
+                created_at__gte=date_from, created_at__lte=date_to).annotate(
+                first_name=F("patient_contacts__first_name"),
+                last_name=F("patient_contacts__last_name"),
+                sex=F("patient_contacts__sex"),
+                age=F("patient_contacts__dob"),
+                passport_number=F("patient_contacts__passport_number"),
+                phone_number=F("patient_contacts__phone_number"),
+                nationality=F("patient_contacts__nationality"),
+                origin_country=F("patient_contacts__origin_country"),
+            )
+
+        elif user_level == 7:
+            date_from = request.POST.get('date_from', '')
+            date_to = request.POST.get('date_to', '')
+
+            traveller_details_count = airline_quarantine.objects.filter(measured_temperature = 0).filter(
+                created_at__gte=date_from, created_at__lte=date_to).count()
+
+            traveller_details = airline_quarantine.objects.filter(measured_temperature = 0).filter(
+                created_at__gte=date_from, created_at__lte=date_to).annotate(
+                first_name=F("patient_contacts__first_name"),
+                last_name=F("patient_contacts__last_name"),
+                sex=F("patient_contacts__sex"),
+                age=F("patient_contacts__dob"),
+                passport_number=F("patient_contacts__passport_number"),
+                phone_number=F("patient_contacts__phone_number"),
+                nationality=F("patient_contacts__nationality"),
+                origin_country=F("patient_contacts__origin_country"),
+            )
+        else:
+            date_from = request.POST.get('date_from', '')
+            date_to = request.POST.get('date_to', '')
+
+            traveller_details_count = airline_quarantine.objects.filter(measured_temperature = 0).filter(
+                created_at__gte=date_from, created_at__lte=date_to).count()
+
+            traveller_details = airline_quarantine.objects.filter(measured_temperature = 0).filter(
+                created_at__gte=date_from, created_at__lte=date_to).annotate(
+                first_name=F("patient_contacts__first_name"),
+                last_name=F("patient_contacts__last_name"),
+                sex=F("patient_contacts__sex"),
+                age=F("patient_contacts__dob"),
+                passport_number=F("patient_contacts__passport_number"),
+                phone_number=F("patient_contacts__phone_number"),
+                nationality=F("patient_contacts__nationality"),
+                origin_country=F("patient_contacts__origin_country"),
+            ).order_by('-patient_contacts__date_of_contact')
+
+            paginator = Paginator(traveller_details, 10)
+            page_number = request.GET.get('page')
+            try:
+                page_obj = paginator.page(page_number)
+            except PageNotAnInteger:
+                page_obj = paginator.page(1)
+            except EmptyPage:
+                page_obj = paginator.page(paginator.num_pages)
+
+            my_list_data = page_obj
+            day = time.strftime("%Y-%m-%d")
+
+            data = {'my_list_data':my_list_data, 'page_obj':page_obj, 'traveller_details_count': traveller_details_count, 'traveller_details': traveller_details, 'day': day}
 
     else:
         # all_data = quarantine_contacts.objects.all().filter(source='Web Airport Registration').filter(
@@ -534,9 +671,22 @@ def airport_list_incomplete(request):
             phone_number=F("patient_contacts__phone_number"),
             nationality=F("patient_contacts__nationality"),
             origin_country=F("patient_contacts__origin_country"),
-        )
+        ).order_by('-patient_contacts__date_of_contact')
 
-        data = {'traveller_details_count': traveller_details_count, 'traveller_details': traveller_details, 'day': day}
+        paginator = Paginator(traveller_details, 10)
+        page_number = request.GET.get('page')
+        try:
+            page_obj = paginator.page(page_number)
+        except PageNotAnInteger:
+            page_obj = paginator.page(1)
+        except EmptyPage:
+            page_obj = paginator.page(paginator.num_pages)
+
+        my_list_data = page_obj
+        print(my_list_data)
+        day = time.strftime("%Y-%m-%d")
+
+        data = {'my_list_data':my_list_data, 'page_obj':page_obj,'traveller_details_count': traveller_details_count, 'traveller_details': traveller_details, 'day': day}
 
     return render(request, 'veoc/airport_list_incomplete.html', data)
 
