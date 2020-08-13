@@ -3484,6 +3484,7 @@ def truck_driver_profile(request, profileid):
         )
 
     lab_results = covid_results.objects.filter(patient_contacts = profileid)
+    valid_results = covid_results.objects.filter(patient_contacts = profileid).filter(created_at__gte=date.today() - timedelta(days=14))
 
     labs = testing_labs.objects.all()
     cntry = country.objects.all()
@@ -3492,7 +3493,7 @@ def truck_driver_profile(request, profileid):
     day = time.strftime("%Y-%m-%d")
 
     data = {'patient_contact_object': patient_contact_object, 'lab_data': lab_data, 'patient_details':patient_details, 'lab_res': lab_res, 'lab_results': lab_results,
-            'lab_res_count':lab_res_count,  'labs': labs, 'lab_res_types':lab_res_types, 'samp_types':samp_types, 'day':day, 'country': cntry,
+            'lab_res_count':lab_res_count,  'labs': labs, 'lab_res_types':lab_res_types, 'samp_types':samp_types, 'day':day, 'country': cntry, 'valid_results':valid_results,
             'follow_up_details':follow_up_details, 'follow_up_details_count':follow_up_details_count, "pic": quarantine_contacts.objects.get(id=profileid)}
 
     return render(request, 'veoc/truck_driver_profile.html', data)
