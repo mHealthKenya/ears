@@ -1,4 +1,7 @@
-<link href="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
 <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
 
 <!------ Include the above in your HEAD tag ---------->
@@ -16,6 +19,16 @@
 
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js"></script>
 
+<style>
+/* Responsive layout - when the screen is less than 600px wide, make the two columns stack on top of each other instead of next to each other */
+@media screen and (max-width: 600px) {
+  .col-25, .col-75, input[type=submit] {
+    width: 100%;
+    margin-top: 0;
+  }
+}
+</style>
+</head>
 <div class="container">
 <br>
     <div class="row justify-content-center">
@@ -23,38 +36,40 @@
         <div class="card">
         <header class="card-header" align="center">
             <img src="/static/images/emblem.png" style="width:40%; max-width:100px;">
-            <h4>MINISTRY OF HEALTH<br>NOVEL CORONAVIRUS</h4>
+            <h4>MINISTRY OF HEALTH<br></h4>
             <h4 class="card-title mt-2" align="center">Travelers Health Surveillance Form</h4>
-            <p>Providing the following information to a Port Health Officer is required under the Public Health Act CAP 242 of the laws of Kenya, and is being collected as part of public health response to the Corona Virus pandemic</p>
+            <p>Providing the following information to a Port Health Officer is required under the Public Health Act CAP 242 of the laws of Kenya, and is being collected as part of public health response to the Corona Virus pandemic.</p>
         </header>
         <article class="card-body">
         <form class="airline_travellers_form" method="POST"  action="{% url 'veoc:airline_registration' %}">
         {% csrf_token %}
+        <h6> Kindly note that fields marked with <span style="color:red">*</span> are required, they must be filled before submitting the form.</h6>
+        <br>
             <div class="form-row">
                 <div class="col form-group">
-                    <label>First name *</label>
+                    <label>First name:  <span style="color:red">*</span></label>
                     <input class="form-control" type="text" id="first_name" name="first_name" placeholder="First Name, example Jane" required/>
                 </div> <!-- form-group end.// -->
                 <div class="col form-group">
-                    <label>Middle name</label>
+                    <label>Middle name:</label>
                     <input class="form-control" type="text" id="middle_name" name="middle_name" placeholder="Middle Name"/>
                 </div> <!-- form-group end.// -->
                 <div class="col form-group">
-                    <label>Last name*</label>
+                    <label>Last name:  <span style="color:red">*</span></label>
                     <input class="form-control" type="text" id="last_name" name="last_name" placeholder="Last Name, example Doe" required/>
                 </div> <!-- form-group end.// -->
                 </div>
                 <div class="form-row">
                 <div class="col form-group">
-                    <label for="sex">Gender : *</label>
-                    <select class="form-control" id="sex" name="sex">
+                    <label for="sex">Gender :  <span style="color:red">*</span></label>
+                    <select class="form-control" id="sex" name="sex" required>
                       <option value="" disabled selected>Select your Gender</option>
                          <option value="Male">Male</option>
                          <option value="Female">Female</option>
                      </select>
                 </div> <!-- form-group end.// -->
                 <div class="col form-group">
-                    <label for="dob">Date of Birth : *</label>
+                    <label for="dob">Date of Birth :  <span style="color:red">*</span></label>
                     <div class="demo form-row">
                       <select class="form-control col-4" id="dob_days" required>
                         <option value="" disabled selected>Select Day</option>
@@ -71,7 +86,7 @@
                 </div> <!-- form-row end.// -->
                 <div class="form-row">
                 <div class="col form-group">
-                    <label for="nationality">Nationality : *</label>
+                    <label for="nationality">Nationality :  <span style="color:red">*</span></label>
                      <select class="form-control" name="nationality" id="nationality" required>
                           <option value="" disabled selected>Select Nationality</option>
                           {% for cntry in country %}
@@ -80,7 +95,7 @@
                       </select>
                 </div> <!-- form-group end.// -->
                 <div class="col form-group">
-                    <label for="country">Country of Origin : *</label>
+                    <label for="country">Country of Origin :  <span style="color:red">*</span></label>
                      <select class="form-control" name="country" id="country" onchange="region_filter()" required>
                           <option value="" disabled selected>Select Country</option>
                           {% for cntry in country %}
@@ -89,7 +104,7 @@
                       </select>
                 </div> <!-- form-group end.// -->
                 <div class="col form-group">
-                    <label for="date_of_arrival">Date of Arrival in Kenya: *</label>
+                    <label for="date_of_arrival">Date of Arrival in Kenya:  <span style="color:red">*</span></label>
                     <!--<input class="form-control" type="date" value="{{ day }}" id="date_of_arrival" max="{{ maxday }}" min="{{day}}" name="date_of_arrival">-->
                     <div class="demo form-row">
                       <select class="form-control col-4" id="days" required>
@@ -108,22 +123,23 @@
             </div> <!-- form-row end.// -->
             <div class="form-row">
                 <div class="col form-group">
-                    <label for="passport_number">ID / Passport Number : *</label>
+                    <label for="passport_number">ID / Passport Number :  <span style="color:red">*</span></label>
                     <input class="form-control" type="text" id="passport_number" name="passport_number" placeholder="National ID or Passport Number" required/>
                 </div> <!-- form-group end.// -->
                 <div class=" col form-group">
-                    <label for="phone_number">Phone Number : *</label>
+                    <label for="phone_number">Phone Number : <span style="color:red">*</span></label>
                     <input class="form-control" type="tel" id="phone_number" name="phone_number" onchange="checkPhone()" minlength = "6" placeholder=" e.g 720000000" required/>
                     <small class="form-text text-muted">This is only for notification purposes.</small>
                 </div> <!-- form-group end.// -->
                 <div class="col form-group">
                     <label>Email address</label>
                     <input class="form-control" type="email" id="email_address" name="email_address" placeholder="Email Address: example@gmail.com"/>
+                    <small class="form-text text-muted"><span style="color:red">Confirmation QR Code will be sent to this email.</span></small>
                 </div> <!-- form-group end.// -->
               </div> <!-- form-row end.// -->
                 <div class="form-row">
                 <div class="col form-group">
-                    <label for="airline">Airline :* </label>
+                    <label for="airline">Airline : <span style="color:red">*</span> </label>
                     <input class="form-control" type="text" id="airline" name="airline" size="45" minlength = "2" placeholder="Airline, example: Kenya Airways" required/>
 {#                    <select class="form-control" name="airline" id="airline" required>#}
 {#                          <option value="" disabled selected>Select Airline</option>#}
@@ -133,32 +149,32 @@
 {#                      </select>#}
                 </div> <!-- form-group end.// -->
                 <div class="col form-group">
-                    <label for="flight_number">Flight Number :* </label>
+                    <label for="flight_number">Flight Number : <span style="color:red">*</span> </label>
                     <input class="form-control" type="text" id="flight_number" name="flight_number" size="45" minlength = "2" placeholder="Flight Number" required/>
                 </div> <!-- form-group end.// -->
                 <div class="col form-group">
-                    <label for="seat_number">Seat Number :* </label>
+                    <label for="seat_number">Seat Number : <span style="color:red">*</span> </label>
                     <input class="form-control" type="text" id="seat_number" name="seat_number" size="45" minlength = "2"  placeholder="Seat Number" required/>
                 </div> <!-- form-group end.// -->
             </div> <!-- form-row end.// -->
             <div class="form-row">
                 <div class="col form-group">
                     <label for="destination_city">Destination City : </label>
-                    <input class="form-control" type="text" id="destination_city" name="destination_city" size="45" placeholder="Destination City, example Nairobi"/>
+                    <input class="form-control" type="text" id="destination_city" name="destination_city" size="45" placeholder="Destination City, Example: Nairobi"/>
                 </div> <!-- form-group end.// -->
                 <div class="col form-group">
                     <label for="countries_visited">Countries Visited : </label>
                      <select class="form-control" name="countries_visited" id="countries_visited" >
-                          <option value="" disabled selected>Select Country</option>
+                          <option value="" disabled selected>Which country have you recently visited?</option>
                           {% for cntry in country %}
                               <option value="{{cntry.name}}">{{cntry.name}}</option>
                           {% endfor %}
                       </select>
                 </div> <!-- form-group end.// -->
                 <div class="col form-group">
-                    <label for="fever">Fever (37.5°C or higher):* </label>
+                    <label for="fever">Fever (37.5°C or higher): <span style="color:red">*</span> </label>
                      <select class="form-control" id="fever" name="fever" required>
-                         <option value="" disabled selected>Select Option</option>
+                         <option value="" disabled selected>Do you have a fever?</option>
                          <option value="t">Yes</option>
                          <option value="f">No</option>
                      </select>
@@ -166,25 +182,25 @@
                 </div>
                 <div class="form-row">
                 <div class="col form-group">
-                    <label for="feverish">Feverish :* </label>
+                    <label for="feverish">Feverish : <span style="color:red">*</span> </label>
                     <select class="form-control" id="feverish" name="feverish" required>
-                        <option value="" disabled selected>Select Option</option>
+                        <option value="" disabled selected>Are you feeling feverish?</option>
                         <option value="t">Yes</option>
                         <option value="f">No</option>
                     </select>
                 </div> <!-- form-group end.// -->
                 <div class="col form-group">
-                    <label for="covid_pcr"> Negative Covid19 PCR :* </label>
-                    <select class="form-control" id="covid_pcr" name="covid_pcr">
-                        <option value="" disabled selected>Select Option</option>
+                    <label for="covid_pcr"> Negative Covid19 PCR : <span style="color:red">*</span> </label>
+                    <select class="form-control" id="covid_pcr" name="covid_pcr" required>
+                        <option value="" disabled selected>Do you have a Negative PCR certificate?</option>
                         <option value="t">Yes</option>
                         <option value="f">No</option>
                     </select>
                 </div> <!-- form-group end.// -->
                 <div class="col form-group">
-                    <label for="chills">Chills :* </label>
+                    <label for="chills">Chills : <span style="color:red">*</span> </label>
                     <select class="form-control" id="chills" name="chills" required>
-                        <option value="" disabled selected>Select Option</option>
+                        <option value="" disabled selected>Do you have chills?</option>
                         <option value="t">Yes</option>
                         <option value="f">No</option>
                     </select>
@@ -192,9 +208,9 @@
               </div>
               <div class="form-row">
                 <div class="col form-group">
-                    <label for="cough">Cough :* </label>
+                    <label for="cough">Cough : <span style="color:red">*</span> </label>
                     <select class="form-control" id="cough" name="cough" required>
-                        <option value="" disabled selected>Select Option</option>
+                        <option value="" disabled selected>Do you have a cough?</option>
                         <option value="t">Yes</option>
                         <option value="f">No</option>
                   </select>
@@ -202,7 +218,7 @@
                 <div class="col form-group">
                     <label for="breathing_difficulty">Difficulty in breathing :* </label>
                     <select class="form-control" id="breathing_difficulty" name="breathing_difficulty" required>
-                        <option value="" disabled selected>Select Option</option>
+                        <option value="" disabled selected>Are you having difficulty breathing</option>
                         <option value="t">Yes</option>
                         <option value="f">No</option>
                   </select>
@@ -211,11 +227,11 @@
                 <div class="form-row">
                 <div class="col form-group">
                     <label for="callername">Name of Contact Person (Next of Kin): </label>
-                    <input class="form-control" type="text" id="nok" name="nok" placeholder="Next of Kin Name"/>
+                    <input class="form-control" type="text" id="nok" name="nok" placeholder="Name of your Next of Kin "/>
                 </div> <!-- form-group end.// -->
                 <div class="col form-group">
                     <label for="callername">Phone Number of Contact Person : </label>
-                    <input class="form-control" type="number" id="nok_phone_num" name="nok_phone_num" minlength="10" placeholder="Next of Kin Phone Number"/>
+                    <input class="form-control" type="number" id="nok_phone_num" name="nok_phone_num" minlength="10" placeholder="Phone Number of your Next of Kin"/>
                 </div> <!-- form-group end.// -->
             </div> <!-- form-row end.// -->
 
@@ -271,7 +287,7 @@
                                 <div>
                                     <header class="card-header" align="center">
                                         <img src="/static/images/emblem.png" style="width:40%; max-width:100px;">
-                                        <h4>MINISTRY OF HEALTH<br>NOVEL CORONAVIRUS QR CODE</h4>
+                                        <h4>MINISTRY OF HEALTH<br>COVID-19 TRAVELERS HEALTH SURVEILLANCE FORM QR CODE</h4>
                                     </header>
 
                                 </div>
@@ -294,7 +310,7 @@
                         <td colspan="2">
                             <table>
                                 <tr>
-                                    <td><b>This QR Code should be shown to the Port Health Officer for COVID-19 clearance.</b>
+                                    <td><b>This QR Code should be displayed to the Port health Official upon arrival at the airport.</b>
                                     </td>
                                     <td></td>
                                 </tr>
@@ -383,7 +399,7 @@ function daysInMonth(dob_month, dob_year) {
           var monthNames = [ "January", "February", "March", "April", "May", "June",
         "July", "August", "September", "October", "November", "December" ];
 
-    for (i = new Date().getFullYear(); i > 1900; i--){
+    for (i = new Date().getFullYear(); i > 2019; i--){
         $('#years').append($('<option />').val(i).html(i));
     }
 

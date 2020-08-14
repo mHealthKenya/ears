@@ -48,6 +48,8 @@ from django.conf import settings
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
 
+from .serializer import TruckSerializer
+
 @login_required
 def airport_register(request):
     if request.method == 'POST':
@@ -5370,6 +5372,13 @@ def t_q_list_json(request):
     return HttpResponse(json.dumps(obj_list), content_type="application/json")
 
 @login_required
+def truck_quarantine_contacts_view(request):
+    #q_data = truck_quarantine_contacts.objects.select_related('patient_contacts'). \
+    #    filter(patient_contacts__source='Truck Registration').order_by('-patient_contacts__date_of_contact')
+
+    return render(request, 'veoc/truck_quarantine_contacts.html')
+
+@login_required
 def truck_quarantine_list(request):
     global data
 
@@ -5528,8 +5537,10 @@ def truck_quarantine_list(request):
     return render(request, 'veoc/truck_quarantine_list.html', data)
 
 
-class AlbumViewSet(viewsets.ModelViewSet):
-    model = truck_quarantine_contacts
+class TruckViewSet(viewsets.ModelViewSet):
+    #model = truck_quarantine_contacts
+    #queryset = disease.objects.all()
+    queryset = truck_quarantine_contacts.objects.all()
     serializer_class = TruckSerializer
 
     def get_queryset(self):
@@ -5551,6 +5562,10 @@ class AlbumViewSet(viewsets.ModelViewSet):
             print("inside non border users")
             return truck_quarantine_contacts.objects.select_related('patient_contacts'). \
                 filter(patient_contacts__source='Kitu hakuna').order_by('-date_of_contact')
+
+
+
+
 
 
 

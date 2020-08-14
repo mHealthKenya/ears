@@ -89,7 +89,7 @@ REST_FRAMEWORK = {
         'rest_framework_datatables.filters.DatatablesFilterBackend',
     ),
     'DEFAULT_PAGINATION_CLASS': 'rest_framework_datatables.pagination.DatatablesPageNumberPagination',
-    'PAGE_SIZE': 50,
+    'PAGE_SIZE': 10,
 }
 
 ROOT_URLCONF = 'virtual_eoc.urls'
@@ -127,7 +127,7 @@ DATABASES = {
         'NAME': os.environ.get('DB_NAME','virtual_eoc'),
         'USER': os.environ.get('DB_USER','postgres'),
         'PASSWORD': os.environ.get('DB_PASS','P0stgr3s!@#'),
-        'HOST': '127.0.0.1',
+        'HOST': '197.232.82.136',
         'PORT': '5432',
     }
 }
