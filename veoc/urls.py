@@ -20,7 +20,7 @@ router.register('incident_status', views.incident_status_view)
 # router.register('organizational_units', views.organizational_unit_view)
 router.register('diseases', views.DiseaseView)
 router.register('events', views.EventView)
-router.register(r'trucker_list', views.AlbumViewSet, 'foobar-detail')
+router.register(r'truck_quarantine_contacts', views.TruckViewSet)
 
 urlpatterns = [
     url(r'^airport_register/$', views.airport_register, name='airport_register'),
@@ -79,6 +79,8 @@ urlpatterns = [
     url(r'^home_care_list/$', views.home_care_list, name='home_care_list'),
     # url(r'^t_q_list_json/$', views.t_q_list_json, name='t_q_list_json'),
     url(r'^truck_quarantine_list/$', views.truck_quarantine_list, name='truck_quarantine_list'),
+    url(r'^truck_quarantine_contacts/$', views.truck_quarantine_contacts_view, name='truck_quarantine_contacts'),
+    url(r'^api/', include(router.urls)),
     url(r'^quarantine_site_report/$', views.quarantine_site_data, name='quarantine_site_data'),
     url(r'^follow_up/$', views.follow_up, name='follow_up'),
     url(r'^symptomatic_cases/$', views.symptomatic_cases, name='symptomatic_cases'),
