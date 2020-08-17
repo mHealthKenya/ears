@@ -4775,7 +4775,11 @@ def daily_reports(request):
         disease_types = dhis_disease_type.objects.all()
         # watchers = mytimetable.objects.all().filter(from_date__lte = datefilter, to_date__gte = datefilter)
 
-        data = {'date_filter': datefilter, 'significant_calls': sign_calls, 'significant_diseases': sign_diseases,
+        #converting the sting date to date object
+        date_time_obj = datetime.strptime(datefilter, '%Y-%m-%d').date()
+        print(date_time_obj)
+
+        data = {'date_filter': date_time_obj, 'significant_calls': sign_calls, 'significant_diseases': sign_diseases,
                 'significant_events': sign_events, 'significant_events_none': significant_events_none,
                 'kenya_disease': kenya_disease,
                 'kenya_events': kenya_events, 'ea_disease': ea_disease, 'ea_events': ea_events,
