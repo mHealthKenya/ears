@@ -31,13 +31,26 @@
 
           <div class="panel panel-default">
               <div class="panel-heading">SELECTED DATE REPORT</div>
-              <div class="panel-body" id="daily_report">
+              <div class="panel-body" id="daily_report" style="background-color:white">
                 <!-- <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMcAAAA8AQAAAAD6K5OxAAAAWElEQVR4nGP6jwP8Y2LABags86umZIVb16Yp7m6XrCqUn+admSekfDzw1TEHurlgVGZUZlRmVGbwyLC19ETsKvPL2blL71jHXelJJknv7lquF7M6QC8XAACY0jJfF8ukTQAAAABJRU5ErkJggg==" width="400" height="300"> -->
-                  <br>
-                  <h3 align="center"><u>EOC DAILY REPORT</u></h3>
+              <div class="top">
+                    <td colspan="2">
+                        <div>
+                            <div>
+                                <p class="title" style="color:#1034A6; text-align: center">
+
+                                  <img src="/static/images/emblem.png" style="width:40%; max-width:100px;">
+                                  <br>REPUBLIC OF KENYA <br>
+                              <h3 style="text-align: center">EOC DAILY REPORT</h3>
+                                </p>
+
+                            </div>
+                        </div>
+                    </td>
+                </div>
                   <br>
                   <P>
-                  <h4 align="left"><b><i>Report Date: {{ date_filter }}</i></b></h4>
+                  <h4 align="left"><b><i>Report Date: {{ date_filter|date:'d-m-Y' }}</i></b></h4>
                   <br>
                   <P>
                   <h4 align="left"><b><i>Saction A: Significant Incidents</i></b></h4>
@@ -100,13 +113,14 @@
                   <p>
                   <h4 align="left"><b><i>Section D: Reported Incidents</i></b></h4>
                   <p>
-                  <ol type="a">
-                    <li><i>Region: Kenya</i></li>
+                  <ol>
+                    <li><i>Below are all reported incidents in the last 24hours. The Incidents are categorized in the different regions the EOC is monitoring.</i></li>
                     <P>
                     <div class="table-responsive">
                          <table class="table table-bordered table-hover">
                           <tr>
-                            <td><b>Reported Incident</b></td>
+                            <td><b>Reporting Region</b></td>
+                            <td><b>Incident</b></td>
                             <td><b>Remarks</b></td>
                             <td><b>Confirmation Status</b></td>
                             <td><b>Incident Status</b></td>
@@ -115,6 +129,7 @@
                           {% if kenya_disease|length > 0 %}
                             {% for k_disease in kenya_disease %}
                             <tr>
+                                <td>Kenya</td>
                                 <td>{{ k_disease.disease_type.name }}, {{ k_disease.reporting_region.region_description }}</td>
                                 <td>{{ k_disease.remarks }}</td>
                                 <td>{{ k_disease.incident_status.status_description }}</td>
@@ -127,109 +142,61 @@
                                 </td>
                             </tr>
                             {% endfor %}
-                          {% else %}
-                            <td>None reported</td>
-                            <td>Nill</td>
-                            <td>Nill</td>
-                            <td>Nill</td>
                           {% endif %}
-                        </table>
-                    </div>
-                    <li><i>Region: East Africa</i></li>
-                    <P>
-                    <div class="table-responsive">
-                        <table class="table table-bordered table-hover">
-                          <tr>
-                            <td><b>Reported Incident</b></td>
-                            <td><b>Remarks</b></td>
-                            <td><b>Confirmation Status</b></td>
-                            <td><b>Incident Status</b></td>
-                          </tr>
-                          <!-- Check if ea_disease has data -->
                           {% if ea_disease|length > 0 %}
-                          {% for e_disease in ea_disease %}
-                          <tr>
-                              <td>{{ e_disease.disease_type.name }}, {{ e_disease.reporting_region.region_description }}</td>
-                              <td>{{ e_disease.remarks }}</td>
-                              <td>{{ e_disease.incident_status.status_description }}</td>
-                              <td>
-                                {% if e_disease.case_status == "True" %}
-                                  Closed Case
-                                {% else %}
-                                  Ongoing case
-                                {% endif %}
-                              </td>
-                          </tr>
-                          {% endfor %}
-                          {% else %}
-                            <td>None reported</td>
-                            <td>Nill</td>
-                            <td>Nill</td>
-                            <td>Nill</td>
+                              {% for e_disease in ea_disease %}
+                                  <tr>
+                                      <td>East Africa</td>
+                                      <td>{{ e_disease.disease_type.name }}, {{ e_disease.reporting_region.region_description }}</td>
+                                      <td>{{ e_disease.remarks }}</td>
+                                      <td>{{ e_disease.incident_status.status_description }}</td>
+                                      <td>
+                                        {% if e_disease.case_status == "True" %}
+                                          Closed Case
+                                        {% else %}
+                                          Ongoing case
+                                        {% endif %}
+                                      </td>
+                                    </tr>
+                              {% endfor %}
                           {% endif %}
-                        </table>
-                    </div>
-                    <li><i>Region: Africa</i></li>
-                    <P>
-                    <div class="table-responsive">
-                        <table class="table table-bordered table-hover">
-                          <tr>
-                            <td><b>Reported Incident</b></td>
-                            <td><b>Remarks</b></td>
-                            <td><b>Confirmation Status</b></td>
-                            <td><b>Incident Status</b></td>
-                          </tr>
-                          <!-- Check if africa_disease has data -->
                           {% if africa_disease|length > 0 %}
-                          {% for a_disease in africa_disease %}
-                          <tr>
-                              <td>{{ a_disease.disease_type.name }}, {{ a_disease.reporting_region.region_description }}</td>
-                              <td>{{ a_disease.remarks }}</td>
-                              <td>{{ a_disease.incident_status.status_description }}</td>
-                              <td>
-                                {% if a_disease.case_status == "True" %}
-                                  Closed Case
-                                {% else %}
-                                  Ongoing case
-                                {% endif %}
-                              </td>
-                          </tr>
-                          {% endfor %}
-                          {% else %}
-                            <td>None reported</td>
-                            <td>Nill</td>
-                            <td>Nill</td>
-                            <td>Nill</td>
+                              {% for a_disease in africa_disease %}
+                                  <tr>
+                                      <td>Africa</td>
+                                      <td>{{ a_disease.disease_type.name }}, {{ a_disease.reporting_region.region_description }}</td>
+                                      <td>{{ a_disease.remarks }}</td>
+                                      <td>{{ a_disease.incident_status.status_description }}</td>
+                                      <td>
+                                        {% if a_disease.case_status == "True" %}
+                                          Closed Case
+                                        {% else %}
+                                          Ongoing case
+                                        {% endif %}
+                                      </td>
+                                  </tr>
+                              {% endfor %}
                           {% endif %}
-                        </table>
-                    </div>
-                    <li><i>Region: Global</i></li>
-                    <P>
-                    <div class="table-responsive">
-                        <table class="table table-bordered table-hover">
-                          <tr>
-                            <td><b>Reported Incident</b></td>
-                            <td><b>Remarks</b></td>
-                            <td><b>Confirmation Status</b></td>
-                            <td><b>Incident Status</b></td>
-                          </tr>
-                          <!-- Check if africa_disease has data -->
+                             <!-- Check if africa_disease has data -->
                           {% if global_disease|length > 0 %}
-                          {% for g_disease in global_disease %}
-                          <tr>
-                              <td>{{ g_disease.disease_type.name }}, {{ g_disease.reporting_region.region_description }}</td>
-                              <td>{{ g_disease.remarks }}</td>
-                              <td>{{ g_disease.incident_status.status_description }}</td>
-                              <td>
-                                {% if g_disease.case_status == "True" %}
-                                  Closed Case
-                                {% else %}
-                                  Ongoing case
-                                {% endif %}
-                              </td>
-                          </tr>
-                          {% endfor %}
-                          {% else %}
+                              {% for g_disease in global_disease %}
+                                  <tr>
+                                      <td>Global</td>
+                                      <td>{{ g_disease.disease_type.name }}, {{ g_disease.reporting_region.region_description }}</td>
+                                      <td>{{ g_disease.remarks }}</td>
+                                      <td>{{ g_disease.incident_status.status_description }}</td>
+                                      <td>
+                                        {% if g_disease.case_status == "True" %}
+                                          Closed Case
+                                        {% else %}
+                                          Ongoing case
+                                        {% endif %}
+                                      </td>
+                                  </tr>
+                              {% endfor %}
+                         {% endif %}
+                          {% if global_disease|length == 0 and africa_disease|length == 0 and kenya_disease|length == 0 and kenya_disease|length == 0%}
+                            <td>None</td>
                             <td>None reported</td>
                             <td>Nill</td>
                             <td>Nill</td>
@@ -333,19 +300,22 @@
                       {% endfor %}
                   </ol>
                   <p>
+              <br>
               </div><!-- panel-body -->
           </div><!-- /div panel-default -->
 
           <div class="panel panel-default">
             <div class="panel-heading">DOWNLOAD FILTERED REPORT</div>
             <div class="panel-body" align="center">
-              <div class="col-sm-6">
-                  <input class="btn btn-primary btn-lg btn-block" id="btndownload" type="button" value="Download"/>
-              </div>
-              <div class="col-sm-6">
-                  <!-- <a href="javascript:pdf()" class="btn btn-primary btn-lg btn-block">Send Report</a> -->
-                  <button class="btn btn-primary btn-lg btn-block" onclick="javascript:demoFromHTML();">PDF</button>
-              </div>
+                <div>
+                <hr>
+                    <div class="col-sm-6">
+                        <button class="btn btn-primary btn-lg btn-block" type="button" onclick="saveDiv()"><i class="glyphicon glyphicon-save"></i>Download PDF</button>
+                    </div>
+                    <div class="col-sm-6">
+                        <button class="btn btn-primary btn-lg btn-block" onclick="javascript:PrintElem();" type="submit" id="btnAttPrint"><i class="glyphicon glyphicon-print"></i> Print Report</button>
+                    </div>
+                </div>
             </div>
           </div><!-- /div panel-default -->
         </div>
@@ -363,88 +333,37 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.1.4/jspdf.plugin.autotable.js" integrity="sha256-tTIwg5mtxIyCrUsrwXWynz9S/Pl6Kfz3yr/wo6nANJ0=" crossorigin="anonymous"></script>
 
     <script>
-      function demoFromHTML() {
-          var pdf = new jsPDF('p', 'pt', 'letter');
-          // source can be HTML-formatted string, or a reference
-          // to an actual DOM element from which the text will be scraped.
-          source = $('#daily_report')[0];
 
-          // we support special element handlers. Register them with jQuery-style
-          // ID selector for either ID or node name. ("#iAmID", "div", "span" etc.)
-          // There is no support for any other type of selectors
-          // (class, of compound) at this time.
-          specialElementHandlers = {
-              // element with id of "bypass" - jQuery style selector
-              '#bypassme': function (element, renderer) {
-                  // true = "handled elsewhere, bypass text extraction"
-                  return true
-              }
-          };
-          margins = {
-              top: 100,
-              bottom: 60,
-              left: 40,
-              width: 600
-          };
-          // all coords and widths are in jsPDF instance's declared units
-          // 'inches' in this case
-          pdf.fromHTML(
-          source, // HTML string or DOM elem ref.
-          margins.left, // x coord
-          margins.top, { // y coord
-              'width': margins.width, // max width of content on PDF
-              'elementHandlers': specialElementHandlers
-          },
+    $(document).ready(function(){
+        console.log({{ kenya_disease|length }});
+        console.log({{ ea_disease|length }});
+        console.log({{ africa_disease|length }});
+        console.log({{ global_disease|length }});
+    })
+        //Generate PDF
+        function saveDiv() {
+          var options = {};
+          var pdf = new jsPDF('p', 'pt', 'a4');
+          pdf.addHTML($("#daily_report"), 15, 15, options, function() {
+            pdf.save('eoc_daily_report.pdf');
+          });
+        };
 
-          function (dispose) {
-              // dispose: object with X, Y of the last line add to the PDF
-              //          this allow the insertion of new lines after html
-              pdf.save('Report_Test.pdf');
-          }, );
+        function PrintElem() {
+        var prtContent = document.getElementById("daily_report");
+        var mywindow = window.open('', '', 'left=0,top=0,width=800,height=900,toolbar=0,scrollbars=0,status=0');
+        mywindow.document.write(prtContent.innerHTML);
 
-          // pdf.fromHTML(source);
-          // pdf.save('Report_Test.pdf');
-      }
+        mywindow.document.close(); // necessary for IE >= 10
+        mywindow.setTimeout(function(){
+          mywindow.focus();
+          mywindow.print();
+          mywindow.close();
+        }, 1000);
 
-      var specialElementHandlers = {
-  // element with id of "bypass" - jQuery style selector
-  '.no-export': function(element, renderer) {
-    // true = "handled elsewhere, bypass text extraction"
-    return true;
-  }
-};
+        return true;
+    }
 
-function exportPDF() {
-
-  var doc = new jsPDF('p', 'pt', 'a4');
-  //A4 - 595x842 pts
-  //https://www.gnu.org/software/gv/manual/html_node/Paper-Keywords-and-paper-size-in-points.html
-
-
-  //Html source
-  var source = document.getElementById('daily_report').innerHTML;
-
-  var margins = {
-    top: 10,
-    bottom: 10,
-    left: 10,
-    width: 595
-  };
-
-  doc.fromHTML(
-    source, // HTML string or DOM elem ref.
-    margins.left,
-    margins.top, {
-      'width': margins.width,
-      'elementHandlers': specialElementHandlers
-    },
-
-    function(dispose) {
-      // dispose: object with X, Y of the last line add to the PDF
-      //          this allow the insertion of new lines after html
-      doc.save('GoodTest.pdf');
-    }, margins);
-}
 
   </script>
 

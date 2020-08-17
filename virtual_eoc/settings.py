@@ -103,7 +103,7 @@ REST_FRAMEWORK = {
         'rest_framework_datatables.filters.DatatablesFilterBackend',
     ),
     'DEFAULT_PAGINATION_CLASS': 'rest_framework_datatables.pagination.DatatablesPageNumberPagination',
-    'PAGE_SIZE': 50,
+    'PAGE_SIZE': 100,
 }
 
 ROOT_URLCONF = 'virtual_eoc.urls'

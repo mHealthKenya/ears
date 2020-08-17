@@ -126,7 +126,7 @@ class TruckSerializer(serializers.ModelSerializer):
                                                        + data['patient_contacts']['date_of_contact']
                                                        + "\" data-phone_number=\""
                                                        + data['patient_contacts']['phone_number'] +
-                                                       "\" title=\"Open Map View\"> <i class=\"fa fa-map-marker\">\ " \
+                                                       "\" title=\"Open Map View\"> <i class=\"fa fa-map-marker\"> " \
                                                        "</i> </button>"})
 
         return data

@@ -9,18 +9,18 @@
         			<div id="breadcrumb">
         				<ul class="breadcrumb">
         					 <li><i class="fa fa-home"></i><a href="{% url 'veoc:access_dashboard' %}"> Dashboard</a></li>
-        					 <li class="active">Completed Airport Quarantine Report</li>
+        					 <li class="active">Completed Airport Traveler Report</li>
         				</ul>
         			</div><!-- /breadcrumb-->
 
-              <div class="panel-heading"><b>COVID19 Airport Quarantine Complete Cases Report</b></div>
+              <div class="panel-heading"><b>COVID19 Airport Traveler Complete Cases Report</b></div>
 
         			<div class="padding-md">
         				<div class="row">
         					<div class="col-md-12">
         						<div class="panel panel-default table-responsive">
         							<div class="panel-heading">
-        								Completed Airport Quarantine Report
+        								Completed Airport Traveler Report
         								<span class="label label-info pull-right" id="totalspan">{{all_data_count}} Completed cases </span>
         							</div>
         							<div class="padding-md clearfix">
@@ -99,7 +99,11 @@
     $(document).ready(function () {
           $('#quarantine_complete_report').DataTable({
               "order": [],
-              dom: 'Bfrtip',
+              dom: 'Blfrtip',
+              lengthMenu: [
+              [ 10, 25, 50, -1 ],
+              [ '10 rows', '25 rows', '50 rows', 'Show all' ]
+              ],
               buttons: [
                   'copy', 'csv', 'excel', 'pdf', 'print'
               ]

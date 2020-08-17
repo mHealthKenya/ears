@@ -48,6 +48,8 @@ from django.conf import settings
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
 
+from .serializer import TruckSerializer
+
 @login_required
 def airport_register(request):
     if request.method == 'POST':
@@ -4773,7 +4775,11 @@ def daily_reports(request):
         disease_types = dhis_disease_type.objects.all()
         # watchers = mytimetable.objects.all().filter(from_date__lte = datefilter, to_date__gte = datefilter)
 
-        data = {'date_filter': datefilter, 'significant_calls': sign_calls, 'significant_diseases': sign_diseases,
+        #converting the sting date to date object
+        date_time_obj = datetime.strptime(datefilter, '%Y-%m-%d').date()
+        print(date_time_obj)
+
+        data = {'date_filter': date_time_obj, 'significant_calls': sign_calls, 'significant_diseases': sign_diseases,
                 'significant_events': sign_events, 'significant_events_none': significant_events_none,
                 'kenya_disease': kenya_disease,
                 'kenya_events': kenya_events, 'ea_disease': ea_disease, 'ea_events': ea_events,
@@ -5370,6 +5376,13 @@ def t_q_list_json(request):
     return HttpResponse(json.dumps(obj_list), content_type="application/json")
 
 @login_required
+def truck_quarantine_contacts_view(request):
+    #q_data = truck_quarantine_contacts.objects.select_related('patient_contacts'). \
+    #    filter(patient_contacts__source='Truck Registration').order_by('-patient_contacts__date_of_contact')
+
+    return render(request, 'veoc/truck_quarantine_contacts.html')
+
+@login_required
 def truck_quarantine_list(request):
     global data
 
@@ -5528,8 +5541,10 @@ def truck_quarantine_list(request):
     return render(request, 'veoc/truck_quarantine_list.html', data)
 
 
-class AlbumViewSet(viewsets.ModelViewSet):
-    model = truck_quarantine_contacts
+class TruckViewSet(viewsets.ModelViewSet):
+    #model = truck_quarantine_contacts
+    #queryset = disease.objects.all()
+    queryset = truck_quarantine_contacts.objects.all()
     serializer_class = TruckSerializer
 
     def get_queryset(self):
@@ -5551,6 +5566,10 @@ class AlbumViewSet(viewsets.ModelViewSet):
             print("inside non border users")
             return truck_quarantine_contacts.objects.select_related('patient_contacts'). \
                 filter(patient_contacts__source='Kitu hakuna').order_by('-date_of_contact')
+
+
+
+
 
 
 
