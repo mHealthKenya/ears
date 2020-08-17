@@ -4,6 +4,7 @@
   <div class="container">
     <div class="row">
       <div class="col-sm-12">
+
         <table id="albums" class="table table-striped table-bordered" style="width:100%">
           <thead>
             <tr>
@@ -43,9 +44,21 @@
           var table = $('#albums').DataTable({
             "order": [],
             dom: 'Bfrtip',
+            responsive: true,
+            DisplayLength: 100,
+            scrollX: true,
+            lengthMenu: [[10, 25, 50, -1], [10, 25, 50, "All"]],
             buttons: [
-                'copy', 'csv', 'excel', 'pdf', 'print'
-            ],
+            {
+                  extend: 'excelHtml5',
+                  exportOptions: {
+                   modifier : {
+                       order : 'index', // 'current', 'applied','index', 'original'
+                       page : 'all', // 'all', 'current'
+                       search : 'none' // 'none', 'applied', 'removed'
+                   },
+                   columns: [ 0, 1, 2, 3, 4, 5, 6, 7, 8 ]
+                  }}],
               "serverSide": true,
               "ajax": "/api/truck_quarantine_contacts/?format=datatables",
               "columns": [
@@ -60,7 +73,7 @@
                   {"data": "border_point.border_name"},
                   {"data": "patient_contacts.first_name"},
                   {"data": "patient_contacts.first_name"},
-                  {"data": "patient_contacts.truck_info", "searchable": false"},
+                  {"data": "patient_contacts.truck_info", "searchable": false},
                   {"data": "patient_contacts.truck_prof", "searchable": false},
 
               ]
