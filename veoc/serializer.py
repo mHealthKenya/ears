@@ -96,7 +96,7 @@ class TruckSerializer(serializers.ModelSerializer):
     border_point = serializers.PrimaryKeyRelatedField(queryset=border_points.objects.all())
 
     class Meta:
-        model = truck_quarantine_contacts        
+        model = truck_quarantine_contacts
         fields = ('company_phone', 'patient_contacts', 'company_street', 'breathing_difficulty', 'border_point',)
 
     def to_representation(self, value):
@@ -126,7 +126,7 @@ class TruckSerializer(serializers.ModelSerializer):
                                                        + data['patient_contacts']['date_of_contact']
                                                        + "\" data-phone_number=\""
                                                        + data['patient_contacts']['phone_number'] +
-                                                       "\" title=\"Open Map View\"> <i class=\"fa fa-map-marker\">\ " \
+                                                       "\" title=\"Open Map View\"> <i class=\"fa fa-map-marker\"> " \
                                                        "</i> </button>"})
 
         return data
