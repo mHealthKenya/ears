@@ -81,7 +81,7 @@
                       <option value="" disabled selected>Select Year</option>
                     </select>
                     <input type="hidden" name="dob" id="dob" required>
-</div>
+                </div>
                 </div> <!-- form-group end.// -->
                 </div> <!-- form-row end.// -->
                 <div class="form-row">
@@ -118,7 +118,7 @@
                     </select>
                     <input type="hidden" name="date_of_arrival" id="date_of_arrival" required>
                     <span id="message"></span>
-</div>
+                </div>
                 </div> <!-- form-group end.// -->
             </div> <!-- form-row end.// -->
             <div class="form-row">
@@ -140,13 +140,13 @@
                 <div class="form-row">
                 <div class="col form-group">
                     <label for="airline">Airline : <span style="color:red">*</span> </label>
-                    <input class="form-control" type="text" id="airline" name="airline" size="45" minlength = "2" placeholder="Airline, example: Kenya Airways" required/>
-{#                    <select class="form-control" name="airline" id="airline" required>#}
-{#                          <option value="" disabled selected>Select Airline</option>#}
-{#                          {% for list in airline_list %}#}
-{#                              <option value="{{list.airline_name}}">{{list.airline_name}}</option>#}
-{#                          {% endfor %}#}
-{#                      </select>#}
+{#                    <input class="form-control" type="text" id="airline" name="airline" size="45" minlength = "2" placeholder="Airline, example: Kenya Airways" required/>#}
+                    <select class="form-control" name="airline" id="airline" required>
+                          <option value="" disabled selected>Select Airline</option>
+                          {% for list in airline_list %}
+                              <option value="{{list.airline_name}}">{{list.airline_name}}</option>
+                          {% endfor %}
+                      </select>
                 </div> <!-- form-group end.// -->
                 <div class="col form-group">
                     <label for="flight_number">Flight Number : <span style="color:red">*</span> </label>
@@ -403,10 +403,10 @@ function daysInMonth(dob_month, dob_year) {
         $('#years').append($('<option />').val(i).html(i));
     }
 
-    for (i = 1; i < 13; i++){
+    for (i = 8; i < 9; i++){
         $('#months').append($('<option />').val(i).html(i));
     }
-    for (i = 1; i < 32; i++){
+    for (i = 17; i < 24; i++){
         $('#days').append($('<option />').val(i).html(i));
     }
      updateNumberOfDays();
