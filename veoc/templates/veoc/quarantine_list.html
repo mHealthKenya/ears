@@ -57,7 +57,7 @@
         								Self Quarantine
         								<span class="label label-info pull-right" id="totalspan">{{quarantine_data_count}} Reported cases </span>
         							</div>
-                      
+
         							<div class="padding-md clearfix">
         							<table class="table table-hover" id="quarantine_report">
         								<thead class="thead-dark">
@@ -302,7 +302,11 @@
     $(document).ready(function () {
           $('#quarantine_report').DataTable({
               "order": [],
-              dom: 'Bfrtip',
+              dom: 'Blfrtip',
+              lengthMenu: [
+              [ 10, 25, 50, -1 ],
+              [ '10 rows', '25 rows', '50 rows', 'Show all' ]
+              ],
               buttons: [
                   'copy', 'csv', 'excel', 'pdf', 'print'
               ]
