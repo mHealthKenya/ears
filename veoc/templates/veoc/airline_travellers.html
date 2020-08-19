@@ -406,7 +406,11 @@ function daysInMonth(dob_month, dob_year) {
     for (i = 8; i < 9; i++){
         $('#months').append($('<option />').val(i).html(i));
     }
-    for (i = 17; i < 24; i++){
+    var currentdate = new Date(Date.now()).getDate();
+    var maxdate = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000);
+    var newmaxdate = maxdate.getDate();
+    console.log(newmaxdate);
+    for (i = currentdate; i < newmaxdate; i++){
         $('#days').append($('<option />').val(i).html(i));
     }
      updateNumberOfDays();
@@ -422,6 +426,7 @@ function daysInMonth(dob_month, dob_year) {
         month=$('#months').val();
         year=$('#years').val();
         days=$('#days').val();
+
 
 
         //$('#message').html(year+"/"+month+"/"+days);
