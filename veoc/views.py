@@ -48,7 +48,8 @@ from django.conf import settings
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
 
-from .serializer import TruckSerializer
+#from .serializer import TruckSerializer
+
 
 @login_required
 def airport_register(request):
@@ -5504,6 +5505,7 @@ def truck_quarantine_list(request):
             # add a border point filter to enable filtering specific border point--------
             q_data_count = truck_quarantine_contacts.objects.select_related('patient_contacts'). \
                 filter(patient_contacts__source='Truck Registration').count()
+            print(q_data_count)
             q_data = truck_quarantine_contacts.objects.select_related('patient_contacts'). \
                 filter(patient_contacts__source='Truck Registration').order_by('-patient_contacts__date_of_contact')
 
@@ -5533,6 +5535,7 @@ def truck_quarantine_list(request):
 
         print(page_obj.number)
         my_list_data = page_obj
+        print(q_data_count)
 
         day = time.strftime("%Y-%m-%d")
         data = {'quarantine_data_count': q_data_count, 'border_points': bord_points,
