@@ -1,6 +1,10 @@
 {% extends "veoc/main_template.html" %}
 
 {% block main %}
+
+    <script type="text/javascript"
+        src="https://cdn.datatables.net/v/dt/jqc-1.12.3/jszip-2.5.0/pdfmake-0.1.18/dt-1.10.12/b-1.2.2/b-flash-1.2.2/b-html5-1.2.2/b-print-1.2.2/datatables.min.js"></script>
+
             <div id="main-container">
         			<div id="breadcrumb">
         				<ul class="breadcrumb">
@@ -41,7 +45,7 @@
                           </tr>
                           </thead>
                           <tbody>
-                          {% for follow in follow_data %}
+                          {% for follow in page_obj %}
                           <tr>
                             <td>{{ follow.patient_contacts.last_name }}</td>
                             <td>{{ follow.patient_contacts.first_name }}</td>
@@ -90,7 +94,6 @@
                         {% endfor %}
                       </tbody>
     							</table>
-                                    <!--
                                     <div class="pagination">
                                 <span class="step-links">
                                     {% if page_obj.has_previous %}
@@ -112,7 +115,6 @@
 {#                                    {% endfor %}#}
                                 </span>
                             </div>
-                          -->
                 </div>
               </div>
     				</div>
@@ -124,26 +126,13 @@
 
 {% block script %}
 
-<script src="https://code.jquery.com/jquery-3.5.1.js"></script>
-<script src="https://code.jquery.com/jquery-3.4.1.js" type="text/javascript"></script>
-<script src="https://code.jquery.com/jquery-3.4.1.min.js" type="text/javascript"></script>
-<script src="https://code.jquery.com/ui/jquery-ui-git.js" type="text/javascript"></script>
-<link href="https://code.jquery.com/ui/jquery-ui-git.css" rel="Stylesheet" type="text/css" />
-
-<script type="text/javascript"
-    src="https://cdn.datatables.net/v/dt/jqc-1.12.3/jszip-2.5.0/pdfmake-0.1.18/dt-1.10.12/b-1.2.2/b-flash-1.2.2/b-html5-1.2.2/b-print-1.2.2/datatables.min.js"></script>
-
-
   <script>
     $(document).ready(function () {
           $('#events_report').DataTable({
               "order": [],
-              "processing": true,
               dom: 'Blfrtip',
-              lengthMenu: [
-              [ 10, 25, 50, 100 ],
-              [ '10 rows', '25 rows', '50 rows', '100 rows' ]
-              ],
+              "processing": true,
+              
               buttons: [
                   'copy', 'csv', 'excel', 'pdf', 'print'
               ]
