@@ -580,7 +580,7 @@
                         {% if valid_results %}
                             {% for lab in valid_results %}
                                 <!--Check if date of testing is within last 14 days to showcase validity-->
-                                {% if forloop.last and lab.result == "Negative" %}
+                                {% if forloop.last and lab.result|upper == "NEGATIVE" %}
                                     <table id="dvTable" style="background-color:white">
                                         <tr class="heading">
                                             <div colspan="2">

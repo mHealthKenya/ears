@@ -772,7 +772,7 @@ class covid_results(models.Model):
     source = models.CharField(max_length=200)
 
     def __str__(self):
-        return self.patient_contacts.first_name + ' - ' + self.patient_contacts.phone_number
+        return self.patient_contacts.first_name + ' - ' + self.patient_contacts.phone_number + ' - ' + self.date_tested
 
 class testing_labs(models.Model):
     name=models.CharField(max_length=200)

@@ -3638,6 +3638,7 @@ def truck_driver_profile(request, profileid):
 
     lab_results = covid_results.objects.filter(patient_contacts = profileid)
     valid_results = covid_results.objects.filter(patient_contacts = profileid).filter(created_at__gte=date.today() - timedelta(days=14))
+    print(valid_results)
 
     labs = testing_labs.objects.all()
     cntry = country.objects.all()
