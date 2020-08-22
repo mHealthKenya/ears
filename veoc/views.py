@@ -6982,7 +6982,16 @@ def truck_ongoing_quarantine(request):
         quar_sites = weighbridge_sites.objects.all().order_by('weighbridge_name')
         day = time.strftime("%Y-%m-%d")
 
-        data = {'all_data': all_data, 'all_data_count': q_data_count, 'weigh_name': quar_sites, 'day': day}
+        paginator = Paginator(all_data, 10)
+        page_number = request.GET.get('page')
+        try:
+            page_obj = paginator.page(page_number)
+        except PageNotAnInteger:
+            page_obj = paginator.page(1)
+        except EmptyPage:
+            page_obj = paginator.page(paginator.num_pages)
+
+        data = {'all_data': all_data, 'all_data_count': q_data_count, 'weigh_name': quar_sites, 'day': day, 'page_obj': page_obj}
 
     return render(request, 'veoc/truck_ongoing_complete.html', data)
 
@@ -7021,8 +7030,17 @@ def truck_complete_quarantine(request):
         bord_sites = border_points.objects.all().order_by('border_name')
         day = time.strftime("%Y-%m-%d")
 
+        paginator = Paginator(all_data, 10)
+        page_number = request.GET.get('page')
+        try:
+            page_obj = paginator.page(page_number)
+        except PageNotAnInteger:
+            page_obj = paginator.page(1)
+        except EmptyPage:
+            page_obj = paginator.page(paginator.num_pages)
+
         data = {'all_data': all_data, 'all_data_count': q_data_count, 'weigh_name': quar_sites,
-                'border_points': bord_sites, 'day': day}
+                'border_points': bord_sites, 'day': day, 'page_obj': page_obj}
 
     return render(request, 'veoc/truck_quarantine_complete.html', data)
 
