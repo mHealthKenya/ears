@@ -45,7 +45,7 @@
                           </tr>
                           </thead>
                           <tbody>
-                          {% for follow in follow_data %}
+                          {% for follow in page_obj %}
                           <tr>
                             <td>{{ follow.patient_contacts.last_name }}</td>
                             <td>{{ follow.patient_contacts.first_name }}</td>
@@ -79,7 +79,7 @@
                         {% endfor %}
                       </tbody>
     							</table>
-                                    <!--<div class="pagination">
+                                    <div class="pagination">
                                 <span class="step-links">
                                     {% if page_obj.has_previous %}
                                         <a href="?page=1">&laquo; first</a>
@@ -99,7 +99,7 @@
 {#                                        <a href="{{ i }}">{{ i }}</a>#}
 {#                                    {% endfor %}#}
                                 </span>
-                            </div>-->
+                            </div>
                 </div>
               </div>
     				</div>
@@ -116,10 +116,8 @@
           $('#events_report').DataTable({
               "order": [],
               dom: 'Blfrtip',
-              lengthMenu: [
-              [ 10, 25, 50, -1 ],
-              [ '10 rows', '25 rows', '50 rows', 'Show all' ]
-              ],
+              "processing": true,
+              
               buttons: [
                   'copy', 'csv', 'excel', 'pdf', 'print'
               ]
