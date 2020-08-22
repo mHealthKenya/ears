@@ -90,10 +90,11 @@
     $(document).ready(function () {
           $('#quarantine_complete_report').DataTable({
               "order": [],
+              "processing": true,
               dom: 'Blfrtip',
               lengthMenu: [
-              [ 10, 25, 50, -1 ],
-              [ '10 rows', '25 rows', '50 rows', 'Show all' ]
+              [ 10, 25, 50, 100 ],
+              [ '10 rows', '25 rows', '50 rows', '100 rows' ]
               ],
               buttons: [
                   'copy', 'csv', 'excel', 'pdf', 'print'

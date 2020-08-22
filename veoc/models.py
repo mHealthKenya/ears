@@ -643,7 +643,7 @@ class quarantine_contacts(models.Model):
         return int((datetime.now().date() - self.dob).days / 365.25)
 
 class quarantine_follow_up(models.Model):
-    patient_contacts = models.ForeignKey(quarantine_contacts, on_delete=models.DO_NOTHING, related_name='followup_contact')
+    patient_contacts = models.ForeignKey(quarantine_contacts, on_delete=models.DO_NOTHING, related_name='follow_up_contact')
     self_quarantine = models.BooleanField(default=False)
     thermal_gun = models.CharField(max_length=20)
     body_temperature = models.FloatField(blank=False)
@@ -706,7 +706,7 @@ class border_points(models.Model):
 
 class truck_quarantine_contacts(models.Model):
     person_phone_regex = RegexValidator(regex=r'^\+?1?\d{10,15}$', message="Phone number must be entered in the format: '+999999999'. Up to 15 digits allowed.")
-
+    #patient_follow_up = models.ForeignKey(quarantine_follow_up, on_delete=models.DO_NOTHING, related_name='follow_up_contact')
     patient_contacts = models.ForeignKey(quarantine_contacts, on_delete=models.DO_NOTHING, related_name='truck_quarantine_contacts')
     street = models.CharField(max_length=50, blank=True)
     village = models.CharField(max_length=50, blank=True)
@@ -731,11 +731,11 @@ class truck_quarantine_contacts(models.Model):
     date_check_out = models.DateField(default=date.today)
     driver_image = models.ImageField(upload_to='Truker_Image/', null=True)
 
-    class Meta:
-        ordering = ['fever']
+    #class Meta:
+        #ordering = ['id']
 
     def __str__(self):
-        return self.patient_contacts.first_name + ' - ' + self.patient_contacts.last_name + ' - ' + self.patient_contacts.sex + ' - ' + self.patient_contacts.phone_number + ' - ' + self.patient_contacts.passport_number + ' - ' + self.patient_contacts.nationality + ' - ' + self.patient_contacts.origin_country   + self.border_point.border_name
+        return self.patient_contacts.first_name + ' - ' + self.patient_contacts.last_name + ' - ' + self.patient_contacts.sex + ' - ' + self.patient_contacts.phone_number + ' - ' + self.patient_contacts.passport_number + ' - ' + self.patient_contacts.nationality + ' - ' + self.patient_contacts.origin_country + ' - ' + self.border_point.border_name # + ' - ' + self.patient_follow_up.follow_up_day + ' - ' + self.patient_follow_up.thermal_gun + ' - ' + self.patient_follow_up.body_temperature + ' - ' + self.patient_follow_up.cough + ' - ' + self.patient_follow_up.difficulty_breathing + ' - ' + self.patient_follow_up.fever + ' - ' + self.patient_follow_up.comment
 
 class quarantine_revisit(models.Model):
     patient_contacts = models.ForeignKey(quarantine_contacts, on_delete=models.DO_NOTHING, related_name='revisit_contact')

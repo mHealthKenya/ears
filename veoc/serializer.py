@@ -90,23 +90,32 @@ class BorderSerializer(serializers.ModelSerializer):
         model = border_points
         fields = '__all__'
 
+class FollowUpSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = quarantine_follow_up
+        fields = '__all__'
+
 
 class TruckSerializer(serializers.ModelSerializer):
     patient_contacts = serializers.PrimaryKeyRelatedField(queryset=quarantine_contacts.objects.all())
+    #patient_followup = serializers.PrimaryKeyRelatedField(queryset=quarantine_follow_up.objects.all())
     border_point = serializers.PrimaryKeyRelatedField(queryset=border_points.objects.all())
 
     class Meta:
         model = truck_quarantine_contacts
-        fields = ('company_phone', 'patient_contacts', 'company_street', 'breathing_difficulty', 'border_point',)
+        fields = ('company_phone', 'patient_contacts', 'company_street', 'breathing_difficulty', 'border_point')#, 'patient_followup')
 
     def to_representation(self, value):
         data = super().to_representation(value)
         print(value)
         con_serializer = QuarantineSerializer(value.patient_contacts)
+        #con_serializer2 = FollowUpSerializer(value.patient_followup)
         mode_serializer = BorderSerializer(value.border_point)
         data['patient_contacts'] = con_serializer.data
+        #data['patient_followup'] = con_serializer2.data
         data['border_point'] = mode_serializer.data
         data['patient_contacts']['created_by'] = User.objects.get(id=data['patient_contacts']['created_by']).username
+        #data['patient_followup']['created_by'] = User.objects.get(id=data['patient_contacts']['created_by']).username
         date1 = datetime.strptime(str(date.today()), '%Y-%m-%d')
         date2 = datetime.strptime(data['patient_contacts']['dob'], '%Y-%m-%d')
         diff = relativedelta.relativedelta(date1, date2)
