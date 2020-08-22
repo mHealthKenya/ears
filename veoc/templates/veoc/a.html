@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Rolling Stone Top 500 albums of all time</title>
+  <meta name="description" content="Rolling Stone magazine's 2012 list of 500 greatest albums of all time with genres.">
+  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.0.0/css/bootstrap.css">
+  <link rel="stylesheet" href="//cdn.datatables.net/1.10.16/css/dataTables.bootstrap4.min.css">
+</head>
+
+<body>
+  <div class="container">
+    <div class="row">
+      <div class="col-sm-12">
+        <table id="albums" class="table table-striped table-bordered" style="width:100%" data-server-side="true" data-ajax="/trucker_list/?format=datatables">
+          <thead>
+            <tr>
+              <th data-data="company_phone">Phone</th>
+              <th data-data="patient_contacts.last_name">Album name</th>
+              <th data-data="company_street">Year</th>
+                <th data-data="patient_contacts.id">Registered by</th>
+              <th data-data="patient_contacts.nok">Year</th>
+              <th data-data="patient_contacts.first_name">Year</th>
+
+            </tr>
+          </thead>
+            <tbody>
+            </tbody>
+            <tfoot>
+            <tr>
+                <th>Name</th>
+                <th>Position</th>
+                <th>Office</th>
+                <th>Age</th>
+                <th>Start date</th>
+                <th>Salary</th>
+            </tr>
+        </tfoot>
+        </table>
+          <label>
+              <input type="text" id="column3_search">
+          </label>
+      </div>
+    </div>
+  </div>
+  <script src="//code.jquery.com/jquery-1.12.4.js"></script>
+  <script src="//cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
+  <script src="//cdn.datatables.net/1.10.16/js/dataTables.bootstrap4.min.js"></script>
+  <script>
+      $(document).ready(function() {
+          $('#albums').DataTable();
+      });
+      var table = $('#albums').DataTable();
+
+// #column3_search is a <input type="text"> element
+$('#column3_search').on( 'keyup', function () {
+    table
+        .columns( 3 )
+        .search( this.value )
+        .draw();
+} );
+  </script>
+</body>
+</html>

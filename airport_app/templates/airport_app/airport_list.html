@@ -304,7 +304,11 @@
         $(document).ready(function () {
             $('#home_care_report').DataTable({
                 "order": [],
-                dom: 'Bfrtip',
+                dom: 'Blfrtip',
+                lengthMenu: [
+                [ 10, 25, 50, -1 ],
+                [ '10 rows', '25 rows', '50 rows', 'Show all' ]
+                ],
                 buttons: [
                     'copy', 'csv', 'excel', 'pdf', 'print'
                 ]

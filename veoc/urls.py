@@ -182,6 +182,7 @@ urlpatterns = [
     url(r'^add_contact/', views.add_contact,name='add_contact'),
 
     #Document managers
+    url(r'^jitenge_reports/$', views.jitenge_reports, name='jitenge_reports'),
     url(r'^minutes/$', views.minutes, name='minutes'),
     url(r'^sitreps/$', views.sitreps, name='sitreps'),
     url(r'^protocol/$', views.protocol, name='protocol'),

@@ -9017,6 +9017,15 @@ def add_contact(request):
 
     return render(request, 'veoc/contact.html', values)
 
+def jitenge_reports(request):
+    document_categories = repository_categories.objects.all()
+    documents_count = document_repository.objects.filter(category=10).count
+    documents = document_repository.objects.filter(category=10)
+
+    values = {'document_categories': document_categories, 'documents_count': documents_count,
+              'documents': documents}
+
+    return render(request, 'veoc/jitenge_reports.html', values)
 
 def minutes(request):
     document_categories = repository_categories.objects.all()
