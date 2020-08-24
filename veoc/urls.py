@@ -196,6 +196,7 @@ urlpatterns = [
     url(r'^edit_document/$', views.edit_document, name='edit_document'),
     url(r'^public_document/$', views.public_document, name='public_document'),
     url(r'^airline_registration/$', views.ailrine_registration, name='airline_registration'),
+    url(r'^follow_up_registration/$', views.follow_up_registration, name='follow_up_registration'),
     url(r'^forgot_password/$', views.forgot_password, name='forgot_password'),
 
     #Feedback section

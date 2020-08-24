@@ -239,6 +239,10 @@ def airport_register(request):
 
         return render(request, 'veoc/airport_register.html', data)
 
+def follow_up_registration(request):
+
+    return render(request, 'veoc/self_follow_up.html')
+
 def ailrine_registration(request):
     if request.method == 'POST':
         first_name = request.POST.get('first_name','')
