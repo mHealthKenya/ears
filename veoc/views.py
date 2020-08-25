@@ -3586,7 +3586,7 @@ def home_care_register(request):
 def truck_driver_profile(request, profileid):
 
     patient_contact_object = quarantine_contacts.objects.filter(id = profileid)
-    print(patient_contact_object)
+    # print(patient_contact_object)
 
     lab_res = truck_quarantine_lab.objects.filter(patient_contacts = profileid)
     lab_res_count = truck_quarantine_lab.objects.filter(patient_contacts = profileid).count()
@@ -3603,6 +3603,7 @@ def truck_driver_profile(request, profileid):
             origin_country=F("patient_contacts__origin_country"),
             quarantine_site=F("patient_contacts__quarantine_site_id__site_name"),
             source=F("patient_contacts__source"),
+            contact_uuid=F("patient_contacts__contact_uuid"),
             date_of_contact=F("patient_contacts__date_of_contact"),
             created_by=F("patient_contacts__created_by_id__username"),
         )
@@ -3641,8 +3642,47 @@ def truck_driver_profile(request, profileid):
         )
 
     lab_results = covid_results.objects.filter(patient_contacts = profileid)
-    valid_results = covid_results.objects.filter(patient_contacts = profileid).filter(created_at__gte=date.today() - timedelta(days=14))
-    print(valid_results)
+    print(lab_results)
+
+    received_test_dates = []
+    #get all dates tested as string
+    all_dates_tested = covid_results.objects.filter(patient_contacts = profileid).values_list('date_tested', flat=True)
+    print("here....")
+    print(all_dates_tested)
+    for test_date in all_dates_tested:
+        #convert the string dates to dateObject and put them in a list
+        date_time_obj = datetime.strptime(test_date, '%Y-%m-%d').date()
+        received_test_dates.append(date_time_obj)
+        print(received_test_dates)
+    #sort dates in ascending order
+    received_test_dates.sort()
+    print(received_test_dates)
+
+    #conver the last date into string
+    # latest_date = str(received_test_dates[-1])
+    # result_validity_days = date.today() - received_test_dates[-1]#timedelta(days=14)
+    # print(result_validity_days)
+    #
+    # if result_validity_days.days > 14 :
+    #     print('invalid date')
+    # else:
+    #     print("valid date")
+
+    valid_results = ''
+    result_expiry_date = ''
+    if received_test_dates:
+        result_validity_days = date.today() - received_test_dates[-1]
+        result_expiry_date = received_test_dates[-1] + timedelta(days=15)
+        print(result_validity_days)
+        print(received_test_dates[-1])
+        print(result_expiry_date)
+        if result_validity_days.days < 14 :
+            #seach by latest string date_tested
+            valid_results = covid_results.objects.filter(patient_contacts = profileid).filter(date_tested = str(received_test_dates[-1]))
+        else:
+            print("Results exist but expired!!")
+    else:
+        print("Never received any result for the driver!!")
 
     labs = testing_labs.objects.all()
     cntry = country.objects.all()
@@ -3650,7 +3690,7 @@ def truck_driver_profile(request, profileid):
     samp_types = covid_sample_types.objects.all().order_by('id')
     day = time.strftime("%Y-%m-%d")
 
-    data = {'patient_contact_object': patient_contact_object, 'lab_data': lab_data, 'patient_details':patient_details, 'lab_res': lab_res, 'lab_results': lab_results,
+    data = {'patient_contact_object': patient_contact_object, 'lab_data': lab_data, 'patient_details':patient_details, 'lab_res': lab_res, 'lab_results': lab_results, 'result_expiry_date': result_expiry_date,
             'lab_res_count':lab_res_count,  'labs': labs, 'lab_res_types':lab_res_types, 'samp_types':samp_types, 'day':day, 'country': cntry, 'valid_results':valid_results,
             'follow_up_details':follow_up_details, 'follow_up_details_count':follow_up_details_count, "pic": quarantine_contacts.objects.get(id=profileid)}
 
