@@ -35,7 +35,7 @@
 </head>
 <div class="container">
 <br>
-    <div class="form_display_div" style="display: none;">
+    <div class="form_display_div">
         <div class="row justify-content-center">
             <div class="col-md-12">
             <div class="card">
@@ -46,23 +46,29 @@
             </header>
             <article class="card-body">
             <form class="airline_travellers_form">
-            {% csrf_token %}
             <h6> Fields marked with <span style="color:red">*</span> are required, they must be filled before submitting the form.</h6>
+            <div>
+                <hr>
+                <h7><u>Reporting for <span style="color:red"> : </span> <span id="client_names"></span></u></h7>
+            </div>
             <br>
+                <div class="form-group" style="display: none;">
+                    <input class="form-control" id="client_id" name="client_id">
+                </div>
                 <div class="form-row">
                     <div class="col form-group">
-                        <label for="sex">DO you have a thermal gum or temperature ?* <span style="color:red">*</span></label>
-                        <select class="form-control" id="thermal_gun" name="thermal_gun" required>
+                        <label for="sex">Do you have a thermal gum or temperature ? <span style="color:red">*</span></label>
+                        <select class="form-control" id="thermal_gun" name="thermal_gun" onchange="check_temperature()" required>
                           <option value="" disabled selected>Select your response</option>
-                             <option value="Yes">Yes</option>
-                             <option value="No">No</option>
+                             <option value="YES">Yes</option>
+                             <option value="NO">No</option>
                          </select>
                     </div> <!-- form-group end.// -->
                 </div> <!-- form-row end.// -->
-                <div class="form-row">
+                <div class="form-row" id="temperature_div" style="display: none;">
                     <div class="col form-group">
                         <label for="destination_city">Enter Body temperature in degrees : </label>
-                        <input class="form-control" type="text" id="temperature" name="temperature" size="45" placeholder="Enter temperature in degrees"/>
+                        <input class="form-control" type=number step=0.01 id="temperature" name="temperature" onchange="checkTemp()" placeholder="Enter temperature in degrees"/>
                     </div> <!-- form-group end.// -->
                 </div> <!-- form-row end.// -->
                 <div class="form-row">
@@ -70,28 +76,28 @@
                         <label for="fever">Have you developed fever ?* <span style="color:red">*</span> </label>
                          <select class="form-control" id="fever" name="fever" required>
                              <option value="" disabled selected>Select response</option>
-                             <option value="t">Yes</option>
-                             <option value="f">No</option>
+                             <option value="YES">Yes</option>
+                             <option value="NO">No</option>
                          </select>
                     </div> <!-- form-group end.// -->
                 </div> <!-- form-row end.// -->
                 <div class="form-row">
                     <div class="col form-group">
-                        <label for="fever">Have you developed cough ?* <span style="color:red">*</span> </label>
+                        <label for="fever">Have you developed cough ? <span style="color:red">*</span> </label>
                          <select class="form-control" id="cough" name="cough" required>
                              <option value="" disabled selected>Select response</option>
-                             <option value="t">Yes</option>
-                             <option value="f">No</option>
+                             <option value="YES">Yes</option>
+                             <option value="NO">No</option>
                          </select>
                     </div> <!-- form-group end.// -->
                 </div> <!-- form-row end.// -->
                 <div class="form-row">
                     <div class="col form-group">
-                        <label for="fever">Do you have difficulty in breathing ?* <span style="color:red">*</span> </label>
+                        <label for="fever">Do you have difficulty in breathing ? <span style="color:red">*</span> </label>
                          <select class="form-control" id="breathing" name="breathing" required>
                              <option value="" disabled selected>Do you have a fever?</option>
-                             <option value="t">Yes</option>
-                             <option value="f">No</option>
+                             <option value="YES">Yes</option>
+                             <option value="NO">No</option>
                          </select>
                     </div> <!-- form-group end.// -->
                 </div> <!-- form-row end.// -->
@@ -101,11 +107,11 @@
                         <textarea class="form-control" id="comments" rows="3" name="comments" placeholder="Enter any additional comments"></textarea>
                     </div> <!-- form-group end.// -->
                 </div> <!-- form-row end.// -->
-                <div class="form-group">
-                    <button type="submit" id="save_button" class="btn btn-primary btn-block"> Submit  </button>
-                </div> <!-- form-group// -->
-
             </form>
+                <div>
+                    <hr>
+                    <button class="btn btn-lg btn-primary btn-block" type="button" onclick="submit_follow_up()"><i class="glyphicon glyphicon-save"></i> Submit</button>
+                </div>
             </article> <!-- card-body end .// -->
             </div> <!-- card.// -->
             </div> <!-- col.//-->
@@ -124,27 +130,27 @@
                     <article class="card-body">
                         <form class="phone_number_form">
                             <h6>Enter phone number to search for existing details. Starting with the country code (e.g +254700000000)</h6>
-                            {% csrf_token %}
                             <div class="form-row">
                                 <div class=" col form-group">
                                     <label for="phone_number">Phone Number : <span style="color:red">*</span></label>
-                                    <input class="form-control" type="tel" id="phone_number" name="phone_number" onchange="checkPhone()" minlength = "6" required/>
+                                    <input class="form-control" type="tel" id="phone_number" name="phone_number" required/>
                                     <span id="valid-msg" class="hide" style="color:green; display:none">Valid</span>
                                     <span id="error-msg" class="hide" style="color:red"></span>
                                     <small class="form-text text-muted">Select the correct country code first.</small>
                                 </div> <!-- form-group end.// -->
                             </div> <!-- form-row end.// -->
-                            <div class="form-group">
-                                <button type="submit" id="save_button" class="btn btn-primary btn-block"> Submit  </button>
-                            </div> <!-- form-group// -->
                         </form>
+                        <div>
+                            <hr>
+                            <button class="btn btn-lg btn-primary btn-block" type="button" onclick="check_number()"><i class="glyphicon glyphicon-save"></i> Submit</button>
+                        </div>
                     </article> <!-- card-body end .// -->
                 </div> <!-- card.// -->
             </div> <!-- col.//-->
         </div> <!-- row.//-->
     </div> <!--phone_num_div-->
 
-    <div class="names_registered_div" style="display: none;">
+    <div class="names_registered_div">
         <div class="row justify-content-center">
             <div class="col-md-12">
                 <div class="card">
@@ -156,19 +162,18 @@
                     <article class="card-body">
                         <form class="names_selection_form">
                             <h6> Select name of respondent to continue </h6>
-                            {% csrf_token %}
                             <div class="form-row">
                                 <div class="col form-group">
-                                    <label for="nationality">Select user reporting :  <span style="color:red">*</span></label>
                                     <select class="form-control" name="user" id="user" required>
                                         <option value="" disabled selected>Select Names</option>
                                     </select>
                                 </div> <!-- form-group end.// -->
                             </div> <!-- form-row end.// -->
-                            <div class="form-group">
-                                <button type="submit" id="save_button" class="btn btn-primary btn-block" onclick="show_follow_up_form()">Submit</button>
-                            </div> <!-- form-group// -->
                         </form>
+                        <div>
+                            <hr>
+                            <button class="btn btn-lg btn-primary btn-block" type="button" onclick="show_follow_up_form()"><i class="glyphicon glyphicon-save"></i> Submit</button>
+                        </div>
                     </article> <!-- card-body end .// -->
                 </div> <!-- card.// -->
             </div> <!-- col.//-->
@@ -187,95 +192,176 @@
 <script>
     $(document).ready(function() {
 
-        var travellersForm = $(".airline_travellers_form")
+        $(".names_registered_div").hide();
+        $(".phone_num_div").show();
+        $(".form_display_div").hide();
 
-        travellersForm.submit(function(e){
-            e.preventDefault();
-            var thisForm = $(this);
-            var endPoint = thisForm.attr("action") || window.location.href;
-            var method = thisForm.attr("method");
-            var formData = thisForm.serialize();
+    });
 
+    function check_number(){
+        var phone_number = $('#phone_number').val();
+        while(phone_number.charAt(0) === '+'){
+         phone_number = phone_number.substring(1);
+        }
+        console.log(phone_number);
+
+        if(phone_number.length < 10){
             Swal.fire({
-                title: "Please wait,Saving Details!",
-                imageUrl: "/static/images/ajax-loader.gif",
-                showConfirmButton: false,
-                allowOutsideClick: false
+                title: 'Phone Number Error!',
+                text: 'Please enter a valid Phone Number!',
+                icon: 'error'
             });
-            $.ajax({
-                type:method,
-                url:endPoint,
-                data: formData,
-                success:function(data){
-                    if(data == "error"){
-                      Swal.fire({
-                        title: 'Duplicate Data Entry!!',
-                        text: 'Names and Phone number entered already exist in the system and still ongoing quarantine!!',
-                        icon: 'info'
-                      });
-                    }else {
-                        Swal.fire({
-                            title: 'Success!',
-                            text: 'Travellers Details Saved',
-                            icon: 'success'
-                        });
-                        travellersForm[0].reset();
+        }else{
+            var settings = {
+              "url": "http://ears-api.mhealthkenya.co.ke/api/search/client",
+              "method": "POST",
+              "timeout": 0,
+              "headers": {
+                "Authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjbGllbnQiOnsiaWQiOjY1MDAzLCJmaXJzdF9uYW1lIjoiU2FsbHlhbm5lIiwibWlkZGxlX25hbWUiOiIiLCJsYXN0X25hbWUiOiJXZXN0b24iLCJzZXgiOiJGZW1hbGUiLCJkb2IiOiIxOTcxLTA4LTI0IiwicGFzc3BvcnRfbnVtYmVyIjoiNTYwNzA0ODYyIiwicGhvbmVfbnVtYmVyIjoiKzI1NDcwNzU1MDMwNCIsImVtYWlsX2FkZHJlc3MiOiIiLCJvcmlnaW5fY291bnRyeSI6IlRIQUlMQU5EIiwicGxhY2Vfb2ZfZGlhZ25vc2lzIjoiIiwiZGF0ZV9vZl9jb250YWN0IjoiMjAyMC0wOC0xNCIsImNvbnRhY3RfdXVpZCI6ImMxZmYwMjc0M2VkZTQxNDM5MjEzNWY0ZjQzZjI1MjY3IiwiY29udGFjdF9zdGF0ZSI6IiIsImNvdW50eV9pZCI6MjYyMCwic3ViY291bnR5X2lkIjoyNjIwLCJ3YXJkX2lkIjoyNjIwLCJzb3VyY2UiOiJXZWIgQWlycG9ydCBTZWxmIFJlZ2lzdHJhdGlvbiIsImNyZWF0ZWRfYnlfaWQiOjEsInVwZGF0ZWRfYnlfaWQiOjEsImNyZWF0ZWRfYXQiOiIyMDIwLTA4LTE0VDIwOjQwOjUyLjAwMFoiLCJ1cGRhdGVkX2F0IjoiMjAyMC0wOC0xNFQyMDo0MTowMi4wMDBaIiwibmF0aW9uYWxpdHkiOiJVTklURUQgS0lOR0RPTSIsImNvcm1vYmlkaXR5IjoiTm9uZSIsImRydWdzIjoiTm9uZSIsIm5vayI6IkxpbGlhbiBNdW5lbmUiLCJub2tfcGhvbmVfbnVtIjoiMDcwNzU1MDMwNCIsInF1YXJhbnRpbmVfc2l0ZV9pZCI6MSwicGh5c2ljYWxfYWRkcmVzcyI6IiIsImNvbW11bmljYXRpb25fbGFuZ3VhZ2VfaWQiOjEsImFjdGl2ZV9mb2xsb3dfdXAiOnRydWUsImRyaXZlcl9uYXRpb25hbF9pZCI6bnVsbCwiYWdlIjpudWxsLCJlbWFpbF9zZW50IjoxLCJjcmVhdGVkQXQiOiIyMDIwLTA4LTE0VDIwOjQwOjUyLjAwMFoiLCJ1cGRhdGVkQXQiOiIyMDIwLTA4LTE0VDIwOjQxOjAyLjAwMFoifSwiaWF0IjoxNTk4MjQwMjQxfQ.Kt3gZvUeAEHFTwE1wCUeM10DMb-_wqjjrOIGBIjgyfM",
+                "Content-Type": "application/json"
+              },
+              "data": JSON.stringify({"phone_no":phone_number}),
+            };
+
+            $.ajax(settings).done(function (response) {
+                console.log(response);
+
+                if(response.clients.length > 0){
+
+                    $("#user").empty();
+                    var please_select = "<option value=''>Please Select name to confirm parson : </option>";
+                    $("#user").append(please_select);
+
+                    $(".names_registered_div").show();
+                    $(".phone_num_div").hide();
+                    $(".form_display_div").hide();
+
+                    for (i=0; i < response.clients.length; i++) {
+                        var option_tag = "<option value='" + response.clients[i].id + "' data-user_names='" +response.clients[i].first_name + " " + response.clients[i].last_name + "'>" + response.clients[i].first_name + " " + response.clients[i].last_name + "</option>";
+                        $("#user").append(option_tag);
                     }
-                },
-                error:function(er){
-                    console.log("Airport Quarantine saving error");
-                    console.log(er.responseText);
+
+                }else{
                     Swal.fire({
-                        title: 'Error!',
-                        text: 'Airport Quarantine Details Cannot be Saved',
+                        title: 'Phone Number Error!',
+                        text: 'Phone Number entered is NOT registered in the system',
                         icon: 'error'
                     });
                 }
             });
-        });
 
-        var phone_number_form = $(".phone_number_form");
-        var formData = thisForm.serialize();
-
-        var settings = {
-            "async": true,
-            "crossDomain": true,
-            "url": "",
-            "data": formData,
-            "method": "GET",
-            "headers": {
-                "cache-control": "no-cache",
-                "postman-token": "376d32db-5367-9d3f-fee5-00319590bf22"
-            }
         }
 
-        $.ajax(settings).done(function (response) {
-            console.log(response);
-            //Check if response has values
-            //if(response){
-            // }else{
-            // }
-            $(".user").empty();
-            var please_select = "<option value=''>Please Select user : </option>";
-            $(".user").append(please_select);
-            $(".names_registered_div").show();
-            $(".phone_num_div").hide();
-            $(".form_display_div").hide();
-            $.each(response, function (i, value) {
-                var option_tag = "<option value='" + value.first_name + "'>" + value.first_name + "</option>";
-                $(".user").append(option_tag);
-            });
-        });
+    }
 
+    //function to set up client id on the form
+    $('#user').change(function () {
+        console.log("inside change function")
+        var client_id=$(this).find('option:selected').attr('value');
+        var client_names=$(this).find('option:selected').attr('data-user_names');
+        console.log(client_id);
+        console.log(client_names);
+        $('#client_id').val(client_id);
+        document.getElementById("client_names").innerHTML = client_names;
     });
 
+    //function to manage followup divs displaying
     function show_follow_up_form() {
 
-        var phone_number_form = $(".names_selection_form");
-        console.log(phone_number_form);
-        $(".names_registered_div").hide();
-        $(".phone_num_div").hide();
-        $(".form_display_div").show();
+        var user = $('#user').val();
+        console.log(user);
+
+        if(user.trim() === ""){
+            Swal.fire({
+                title: 'Input Error!',
+                text: 'Please select your name as the respondent',
+                icon: 'error'
+            });
+        }else{
+            $(".phone_num_div").hide();
+            $(".names_registered_div").hide();
+            $(".form_display_div").show();
+        }
+
+    }
+
+    //Function to display temperature input
+    function check_temperature(){
+        var thermal_gun = $('#thermal_gun').val();
+        console.log(thermal_gun);
+        if(thermal_gun == 'YES'){
+            $("#temperature_div").show();
+        }else{
+            $("#temperature_div").hide();
+        }
+    }
+
+    //Validation function for temperature input
+    function checkTemp(){
+       var temp = $('#temperature').val();
+       if(temp.length > 4 || temp.length < 2){
+         console.log("Enter valid temperature");
+         Swal.fire({
+           title: 'error!',
+           text: 'Enter a valid temperature measure',
+           icon: 'error'
+         });
+         document.getElementById("temperature").focus();
+       }else if(temp < 34 || temp > 45){
+         Swal.fire({
+           title: 'error!',
+           text: 'Temperature value should be between 34 and 45 Degrees',
+           icon: 'error'
+         });
+         document.getElementById("temperature").focus();
+       }
+     }
+
+    //function to submit followup entries
+    function submit_follow_up(){
+
+        var thermal_gun = $('#thermal_gun').val();
+        var temperature = $('#temperature').val();
+        var client_id = $('#client_id').val();
+        var fever = $('#fever').val();
+        var cough = $('#cough').val();
+        var breathing = $('#breathing').val();
+        var comments = $('#comments').val();
+
+        if(temperature.length === 0){
+            temperature = 0;
+        }
+
+        var settings = {
+          "url": "http://ears-api.mhealthkenya.co.ke/api/response",
+          "method": "POST",
+          "timeout": 0,
+          "headers": {
+            "Authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjbGllbnQiOnsiaWQiOjY1MDAzLCJmaXJzdF9uYW1lIjoiU2FsbHlhbm5lIiwibWlkZGxlX25hbWUiOiIiLCJsYXN0X25hbWUiOiJXZXN0b24iLCJzZXgiOiJGZW1hbGUiLCJkb2IiOiIxOTcxLTA4LTI0IiwicGFzc3BvcnRfbnVtYmVyIjoiNTYwNzA0ODYyIiwicGhvbmVfbnVtYmVyIjoiKzI1NDcwNzU1MDMwNCIsImVtYWlsX2FkZHJlc3MiOiIiLCJvcmlnaW5fY291bnRyeSI6IlRIQUlMQU5EIiwicGxhY2Vfb2ZfZGlhZ25vc2lzIjoiIiwiZGF0ZV9vZl9jb250YWN0IjoiMjAyMC0wOC0xNCIsImNvbnRhY3RfdXVpZCI6ImMxZmYwMjc0M2VkZTQxNDM5MjEzNWY0ZjQzZjI1MjY3IiwiY29udGFjdF9zdGF0ZSI6IiIsImNvdW50eV9pZCI6MjYyMCwic3ViY291bnR5X2lkIjoyNjIwLCJ3YXJkX2lkIjoyNjIwLCJzb3VyY2UiOiJXZWIgQWlycG9ydCBTZWxmIFJlZ2lzdHJhdGlvbiIsImNyZWF0ZWRfYnlfaWQiOjEsInVwZGF0ZWRfYnlfaWQiOjEsImNyZWF0ZWRfYXQiOiIyMDIwLTA4LTE0VDIwOjQwOjUyLjAwMFoiLCJ1cGRhdGVkX2F0IjoiMjAyMC0wOC0xNFQyMDo0MTowMi4wMDBaIiwibmF0aW9uYWxpdHkiOiJVTklURUQgS0lOR0RPTSIsImNvcm1vYmlkaXR5IjoiTm9uZSIsImRydWdzIjoiTm9uZSIsIm5vayI6IkxpbGlhbiBNdW5lbmUiLCJub2tfcGhvbmVfbnVtIjoiMDcwNzU1MDMwNCIsInF1YXJhbnRpbmVfc2l0ZV9pZCI6MSwicGh5c2ljYWxfYWRkcmVzcyI6IiIsImNvbW11bmljYXRpb25fbGFuZ3VhZ2VfaWQiOjEsImFjdGl2ZV9mb2xsb3dfdXAiOnRydWUsImRyaXZlcl9uYXRpb25hbF9pZCI6bnVsbCwiYWdlIjpudWxsLCJlbWFpbF9zZW50IjoxLCJjcmVhdGVkQXQiOiIyMDIwLTA4LTE0VDIwOjQwOjUyLjAwMFoiLCJ1cGRhdGVkQXQiOiIyMDIwLTA4LTE0VDIwOjQxOjAyLjAwMFoifSwiaWF0IjoxNTk4MjQwMjQxfQ.Kt3gZvUeAEHFTwE1wCUeM10DMb-_wqjjrOIGBIjgyfM",
+            "Content-Type": "application/json"
+          },
+          "data": JSON.stringify({"client_id":client_id,"thermal_gun":thermal_gun,"body_temp":temperature,fever:fever,"cough":cough,"difficult_breathing":breathing,"comment":comments}),
+        };
+
+
+        $.ajax(settings).done(function (response) {
+          console.log(response.message);
+            var msg = response.message;
+            if(response.success === "false"){
+                Swal.fire({
+                   title: 'Response!',
+                   text: msg,
+                   icon: 'error'
+                 });
+            }else{
+                Swal.fire({
+                   title: 'Response!',
+                   text: msg,
+                   icon: 'success'
+                 });
+            }
+
+        });
 
     }
 

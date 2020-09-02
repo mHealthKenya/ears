@@ -539,15 +539,24 @@
                                         <tr class="item">
                                             <td>Sample Type</td>
                                             <td><i>Nasopharygneal & Oropharygneal swabs</i></td>
+                                        </tr>
                                         <tr class="item">
-                                        <td>Results Received by</td>
-                                        {% for pat in patient_details %}
-                                            <td><i>{{ pat.border_point.team_lead_names }}</i></td>
-                                        {% endfor %}
-                                    </tr>
-                                        <tr class="item last">
-                                            <td>Date Results Received</td>
-                                            <td><i>{{ lab.created_at|date:'d-m-Y' }}</i></td>
+                                            <td>Testing Lab</td>
+                                            <td><i>{{ lab.lab }}</i></td>
+                                        </tr>
+                                        <tr class="item">
+                                            <td>Certificate Expiry date</td>
+                                            <td><i>{{ result_expiry_date|date:'d-m-Y' }}</i></td>
+                                        </tr>
+                                        <tr class="item">
+                                            <td>Lab Results Source</td>
+                                            <td><i>{{ lab.source }}</i></td>
+                                        </tr>
+                                        <tr class="item">
+                                            <td>Registration POE Lead Officer</td>
+                                            {% for pat in patient_details %}
+                                                <td><i>{{ pat.border_point.team_lead_names }}</i></td>
+                                            {% endfor %}
                                         </tr>
                                         <tr class="total">
                                             <td>Lab Results</td>
@@ -672,6 +681,9 @@
                                             <td></td>
                                         </tr>
                                         <tr class="information">
+                                            <td>Attestation expiry date: <i><b>{{ result_expiry_date|date:'d-m-Y' }}</b></i></td>
+                                        </tr>
+                                        <tr class="information">
                                             <td></td>
                                             <td></td>
                                         </tr>
@@ -689,7 +701,7 @@
                                         </tr>
                                         <tr class="information">
                                             {% for pat in patient_details %}
-                                                <td>Border Officer Name: <i><b>{{ pat.border_point.team_lead_names }}</b></i></td>
+                                                <td>Registration POE Lead Officer: <i><b>{{ pat.border_point.team_lead_names }}</b></i></td>
                                             {% endfor %}
                                             <td><p id="qr-td" style="float: right;"></p></td>
                                         </tr>
@@ -862,13 +874,9 @@
         });
 
         var msg = ""
-        {% for lab in lab_res %}
-            {% if forloop.last %}
-                {% for l in patient_details %}
-                    msg = "{{ lab.test_sample_uuid }}"
-                    qrcode.makeCode(msg)
-                {% endfor %}
-            {% endif %}
+        {% for l in patient_details %}
+            msg = "{{ l.contact_uuid }}"
+            qrcode.makeCode(msg)
         {% endfor %}
 
     });

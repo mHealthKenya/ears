@@ -186,7 +186,6 @@ urlpatterns = [
     url(r'^add_contact/', views.add_contact,name='add_contact'),
 
     #Document managers
-    url(r'^jitenge_reports/$', views.jitenge_reports, name='jitenge_reports'),
     url(r'^minutes/$', views.minutes, name='minutes'),
     url(r'^sitreps/$', views.sitreps, name='sitreps'),
     url(r'^protocol/$', views.protocol, name='protocol'),
@@ -195,6 +194,7 @@ urlpatterns = [
     url(r'^publications/$', views.publications, name='publications'),
     url(r'^case_documents/$', views.case_documents, name='case_documents'),
     url(r'^others/$', views.others, name='others'),
+    url(r'^jitenge_reports/$', views.jitenge_reports, name='jitenge_reports'),
     url(r'^sops/$', views.sops, name='sops'),
     url(r'^add_document/$', views.add_document, name='add_document'),
     url(r'^edit_document/$', views.edit_document, name='edit_document'),
