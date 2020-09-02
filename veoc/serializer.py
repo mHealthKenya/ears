@@ -82,7 +82,7 @@ class EventSerializer(serializers.ModelSerializer):
 class QuarantineSerializer(serializers.ModelSerializer):
     class Meta:
         model = quarantine_contacts
-        fields = '__all__'
+        fields = ('id', 'first_name', 'last_name', 'passport_number', 'phone_number', 'contact_uuid')
 
 
 class BorderSerializer(serializers.ModelSerializer):

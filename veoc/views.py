@@ -48,6 +48,8 @@ from django.conf import settings
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
 
+from rest_framework.response import Response
+
 #from .serializer import TruckSerializer
 
 
@@ -822,6 +824,29 @@ class incident_status_view(viewsets.ModelViewSet):
 class organizational_unit_view(viewsets.ModelViewSet):
     queryset = organizational_units.objects.all()
     serializer_class = OrganizationalUnitsSerializer
+
+class QuarantineViewSet(viewsets.ModelViewSet):
+    #queryset = quarantine_contacts.objects.all().order_by('created_at')
+    serializer_class = QuarantineSerializer
+
+    def get_queryset(self):
+        ios_user = quarantine_contacts.objects.all()
+        return ios_user
+
+    def retrieve(self, request, *args, **kwargs):
+        params = kwargs
+        cars = quarantine_contacts.objects.filter(phone_number= params['pk'])
+        serializer = QuarantineSerializer(cars, many=True)
+        print(params['pk'])
+        print(serializer.data)
+        return Response(serializer.data)
+
+#    def get_queryset(self):
+#        queryset = quarantine_contacts.objects.all().order_by('created_at')
+#        phone_no = self.request.query_params.get('phone_number', '')
+#        if phone_no:
+#            return queryset.filter(phone_number=phone_no)
+#        return queryset
 
 
 class myDict(dict):
