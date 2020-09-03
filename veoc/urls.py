@@ -21,6 +21,9 @@ router.register('incident_status', views.incident_status_view)
 router.register('diseases', views.DiseaseView)
 router.register('events', views.EventView)
 router.register(r'truck_quarantine_contacts', views.TruckViewSet)
+router.register(r'quarantine_contacts', views.QuarantineViewSet, 'quarantine_contacts')
+#router.register('/rest/FooBar', views.FooBarViewSet, base_name='foobar')
+#router.register(r'quarantine_contacts/<int:id>', views.QuarantineViewSet, 'quarantine_contacts')
 
 urlpatterns = [
     url(r'^airport_register/$', views.airport_register, name='airport_register'),
@@ -81,6 +84,7 @@ urlpatterns = [
     url(r'^truck_quarantine_list/$', views.truck_quarantine_list, name='truck_quarantine_list'),
     url(r'^truck_quarantine_contacts/$', views.truck_quarantine_contacts_view, name='truck_quarantine_contacts'),
     url(r'^api/', include(router.urls)),
+    url(r'api-auth/', include('rest_framework.urls', namespace='rest_framework')),
     url(r'^quarantine_site_report/$', views.quarantine_site_data, name='quarantine_site_data'),
     url(r'^follow_up/$', views.follow_up, name='follow_up'),
     url(r'^symptomatic_cases/$', views.symptomatic_cases, name='symptomatic_cases'),
