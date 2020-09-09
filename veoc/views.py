@@ -5539,10 +5539,10 @@ def truck_quarantine_list(request):
             if id_num:
                 q_data_count = truck_quarantine_contacts.objects.select_related('patient_contacts'). \
                     filter(patient_contacts__passport_number=id_num). \
-                    filter(patient_contacts__source='Truck Registration').count()
+                    filter(Q(patient_contacts__source='Truck Registration') | Q(patient_contacts__source='RECDTS')).count()
                 q_data = truck_quarantine_contacts.objects.select_related('patient_contacts') \
-                    .filter(patient_contacts__passport_number=id_num,
-                            patient_contacts__source='Truck Registration'). \
+                    .filter(patient_contacts__passport_number=id_num). \
+                     filter(Q(patient_contacts__source='Truck Registration') | Q(patient_contacts__source='RECDTS')). \
                     order_by('-patient_contacts__date_of_contact')
             else:
                 print("inside non border users")
@@ -5574,18 +5574,18 @@ def truck_quarantine_list(request):
             print("inside National")
             # add a border point filter to enable filtering specific border point--------
             q_data_count = truck_quarantine_contacts.objects.select_related('patient_contacts'). \
-                filter(patient_contacts__source='Truck Registration').count()
+                filter(Q(patient_contacts__source='Truck Registration') | Q(patient_contacts__source='RECDTS')).count()
             print(q_data_count)
             q_data = truck_quarantine_contacts.objects.select_related('patient_contacts'). \
-                filter(patient_contacts__source='Truck Registration').order_by('-patient_contacts__date_of_contact')
+                filter(Q(patient_contacts__source='Truck Registration') | Q(patient_contacts__source='RECDTS')).order_by('-patient_contacts__date_of_contact')
 
         elif user_level == 7:
             print("inside Border")
             # find ways of filtering data based on the border point-------
             q_data_count = truck_quarantine_contacts.objects.select_related('patient_contacts'). \
-                filter(patient_contacts__source='Truck Registration').count()
+                filter(Q(patient_contacts__source='Truck Registration') | Q(patient_contacts__source='RECDTS')).count()
             q_data = truck_quarantine_contacts.objects.select_related('patient_contacts'). \
-                filter(patient_contacts__source='Truck Registration', border_point__border_name=user_access_level)
+                filter(Q(patient_contacts__source='Truck Registration') | Q(patient_contacts__source='RECDTS'))
 
         else:
             print("inside non border users")
