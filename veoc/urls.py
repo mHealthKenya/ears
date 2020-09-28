@@ -22,6 +22,7 @@ router.register('diseases', views.DiseaseView)
 router.register('events', views.EventView)
 router.register(r'truck_quarantine_contacts', views.TruckViewSet)
 router.register(r'quarantine_contacts', views.QuarantineViewSet, 'quarantine_contacts')
+router.register(r'quarantine_contacts_filtered', views.QuarantineFilterViewSet, 'quarantine_contacts_filtered')
 #router.register('/rest/FooBar', views.FooBarViewSet, base_name='foobar')
 #router.register(r'quarantine_contacts/<int:id>', views.QuarantineViewSet, 'quarantine_contacts')
 
