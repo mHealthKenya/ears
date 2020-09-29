@@ -916,6 +916,40 @@ class v_lab_results(models.Model):
         managed = False
         db_table = 'v_lab_results'
 
+class v_airline_registrations(models.Model):
+    id = models.BigIntegerField(primary_key=True)
+    contact_id = models.CharField(max_length=200)
+    first_name = models.CharField(max_length=200)
+    middle_name = models.CharField(max_length=200)
+    last_name = models.CharField(max_length=200)
+    sex = models.CharField(max_length=200)
+    dob = models.CharField(max_length=200)
+    passport_number = models.CharField(max_length=200)
+    phone_number = models.CharField(max_length=200)
+    email_address = models.CharField(max_length=200)
+    origin_country = models.CharField(max_length=200)
+    nationality = models.CharField(max_length=200)
+    county = models.CharField(max_length=200)
+    subcounty = models.CharField(max_length=200)
+    airline = models.CharField(max_length=200)
+    flight_number = models.CharField(max_length=200)
+    seat_number = models.CharField(max_length=200)
+    destination_city = models.CharField(max_length=200)
+    travel_history = models.CharField(max_length=200)
+    on_transit = models.CharField(max_length=200)
+    residence = models.CharField(max_length=200)
+    estate = models.CharField(max_length=200)
+    source = models.CharField(max_length=200)
+    quarantine_site = models.CharField(max_length=200)
+    sms_communication_language = models.CharField(max_length=200)
+    date_of_contact = models.CharField(max_length=200)
+    created_at = models.CharField(max_length=200)
+
+    class Meta:
+        managed = False
+        db_table = 'v_airline_registrations'
+
+
 class quarantine_list_view(models.Model):
     id = models.BigIntegerField(primary_key=True)
     _id = models.CharField(max_length=200)
@@ -1134,3 +1168,12 @@ class airlines(models.Model):
 
     def _str_(self):
         return self.airline_name
+
+
+class destination_cities(models.Model):
+    city_name = models.CharField(max_length=255, blank=False)
+    country_code = models.CharField(max_length=32, blank=True)
+    country = models.CharField(max_length=255, blank=True)
+
+    def _str_(self):
+        return self.city_name

@@ -31,6 +31,20 @@
                                         </thead>
                                         <tbody>
                                         <tr>
+                                          <td>Airline Registrations</td>
+                                          <td>A list of all registrations done from the airline module into the system. With destination town, airline name, seat number, and whether they are on transit, source of registration and language preference</td>
+                                          <td>
+                                              <a href="{% url 'veoc:raw_airline_registrations_csv' %}" class="btn btn-info btn-sm"><i class="fa fa-download" aria-hidden="true"></i> Download</a>
+                                          </td>
+                                        </tr>
+                                        <tr>
+                                          <td>Laboratory Results</td>
+                                          <td>A list of all lab results pulled from integrations with both CHAI system and the NPHL system. These are lab results for registrations in jitenge, filtered by source of data, county and sub county.</td>
+                                          <td>
+                                              <a href="{% url 'veoc:raw_lab_results_csv' %}" class="btn btn-info btn-sm"><i class="fa fa-download" aria-hidden="true"></i> Download</a>
+                                          </td>
+                                        </tr>
+                                         <tr>
                                           <td>Quarantine Registrations</td>
                                           <td>A list of all registrations done into the system from different source. With county and subcounty data, source of registration and language preference</td>
                                           <td>
@@ -42,13 +56,6 @@
                                           <td>Table of all follow up data. Both for the different source of registrations</td>
                                           <td>
                                               <a href="{% url 'veoc:raw_follow_up_csv' %}" class="btn btn-info btn-sm"><i class="fa fa-download" aria-hidden="true"></i> Download</a>
-                                          </td>
-                                        </tr>
-                                        <tr>
-                                          <td>Laboratory Results</td>
-                                          <td>A list of all lab results pulled from integrations with both CHAI system and the NPHL system. These are lab results for registrations in jitenge, filtered by source of data, county and sub county.</td>
-                                          <td>
-                                              <a href="{% url 'veoc:raw_lab_results_csv' %}" class="btn btn-info btn-sm"><i class="fa fa-download" aria-hidden="true"></i> Download</a>
                                           </td>
                                         </tr>
                                     </tbody>

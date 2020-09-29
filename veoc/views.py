@@ -782,6 +782,23 @@ def raw_lab_results_csv(request):
         writer.writerow(obj)
     return response
 
+def raw_airline_registrations_csv(request):
+    lab_data = v_airline_registrations.objects.values_list('contact_id', 'first_name', 'middle_name', 'last_name', 'sex', 'dob', 'passport_number', 'phone_number',
+                'email_address', 'origin_country', 'nationality', 'county', 'subcounty', 'airline', 'flight_number', 'seat_number', 'destination_city', 'travel_history',
+                'on_transit', 'residence', 'estate', 'source', 'quarantine_site', 'sms_communication_language', 'date_of_contact', 'created_at')
+
+    response = HttpResponse(content_type='text/csv')
+    response['Content-Disposition'] = 'attachment;  filename="raw_airline_registrations.csv"'
+    writer = csv.writer(response)
+    writer.writerow(['contact_id', 'first_name', 'middle_name', 'last_name', 'sex', 'dob', 'passport_number', 'phone_number', 'email_address', 'origin_country',
+                     'nationality', 'county', 'subcounty', 'airline', 'flight_number', 'seat_number', 'destination_city', 'travel_history', 'on_transit',
+                     'residence', 'estate', 'source', 'quarantine_site', 'sms_communication_language', 'date_of_contact', 'created_at'])
+
+    for obj in lab_data:
+        writer.writerow(obj)
+    return response
+
+
 # Create your views here.
 contacts = contact_type.objects.all()
 
