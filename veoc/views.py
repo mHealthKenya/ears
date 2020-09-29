@@ -858,6 +858,22 @@ class QuarantineViewSet(viewsets.ModelViewSet):
         print(serializer.data)
         return Response(serializer.data)
 
+class QuarantineFilterViewSet(viewsets.ModelViewSet):
+    #queryset = quarantine_contacts.objects.all().order_by('created_at')
+    serializer_class = QuarantineSerializer
+
+    def get_queryset(self):
+        ios_user = quarantine_contacts.objects.all()
+        return ios_user
+
+    def retrieve(self, request, *args, **kwargs):
+        params = kwargs
+        cars2 = quarantine_contacts.objects.filter(created_by_id= params['pk'])
+        serializer = QuarantineSerializer(cars2, many=True)
+        print(params['pk'])
+        print(serializer.data)
+        return Response(serializer.data)
+
 #    def get_queryset(self):
 #        queryset = quarantine_contacts.objects.all().order_by('created_at')
 #        phone_no = self.request.query_params.get('phone_number', '')

@@ -132,7 +132,7 @@
                 </div> <!-- form-group end.// -->
                 <div class=" col form-group">
                     <label for="phone_number">Phone Number : <span style="color:red">*</span></label>
-                    <input class="form-control" type="tel" id="phone_number" name="phone_number" onchange="checkPhone()" minlength = "6" required/>
+                    <input class="form-control" type="tel" id="phone_number" name="phone_number" onchange="checkPhone()" minlength = "6" maxlength = "14" required/>
                     <span id="valid-msg" class="hide" style="color:green; display:none">Valid</span>
                     <span id="error-msg" class="hide" style="color:red"></span>
                     <small class="form-text text-muted">Select the correct country code first.</small>
@@ -448,7 +448,7 @@ function daysInMonth(dob_month, dob_year) {
         $('#years').append($('<option />').val(i).html(i));
     }
 
-    for (i = 8; i < 10; i++){
+    for (i = 9; i < 12; i++){
         $('#months').append($('<option />').val(i).html(i));
     }
     var currentdate = new Date(Date.now()).getDate();
