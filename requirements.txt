@@ -12,7 +12,7 @@ chardet==3.0.4
 colorama==0.4.1
 coverage==5.1
 distlib==0.3.0
-Django==2.0
+Django==2.2.13
 django-datatables-view==1.19.1
 django-qr-code==1.2.0
 djangorestframework==3.9.4
