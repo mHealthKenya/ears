@@ -34,7 +34,7 @@ pkginfo==1.5.0.1
 pluggy==0.13.1
 psycopg2-binary==2.8.5
 py==1.9.0
-Pygments==2.6.1
+Pygments==2.7.4
 PyInstaller==3.5
 PyMySQL==0.7.5
 pyparsing==2.4.7
